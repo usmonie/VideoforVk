@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Video for Vk</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+
+    <string name="login">Login with VK</string>
+    <string name="welcome_text">To use the application you need to log in through VK</string>
+    <string name="error_login">Something went wrong</string>
+</resources>

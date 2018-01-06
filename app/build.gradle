@@ -1,0 +1,64 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+android {
+    compileSdkVersion 27
+    defaultConfig {
+        applicationId "akhmedoff.usman.videoforvk"
+        minSdkVersion 21
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        buildConfigField('String', 'VK_APP_ID', vk_app_id)
+        buildConfigField('String', 'VK_APP_KEY', vk_app_key)
+        buildConfigField('String', 'VK_APP_SERVICE_KEY', vk_app_service_key)
+    }
+    buildTypes {
+
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            buildConfigField('String', 'VK_APP_ID', vk_app_id)
+            buildConfigField('String', 'VK_APP_KEY', vk_app_key)
+            buildConfigField('String', 'VK_APP_SERVICE_KEY', vk_app_service_key)
+        }
+    }
+}
+
+dependencies {
+    // App's dependencies, including test
+    implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
+    implementation "com.android.support:cardview-v7:$supportLibraryVersion"
+    implementation "com.android.support:design:$supportLibraryVersion"
+    implementation "com.android.support:recyclerview-v7:$supportLibraryVersion"
+    implementation "com.android.support:support-v4:$supportLibraryVersion"
+    implementation "android.arch.persistence.room:runtime:$roomVersion"
+    implementation 'com.google.firebase:firebase-core:11.8.0'
+    kapt "android.arch.persistence.room:compiler:$roomVersion"
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0-beta4'
+
+    implementation "android.arch.lifecycle:extensions:$archLifecycleVersion"
+    annotationProcessor "android.arch.lifecycle:compiler:$archLifecycleVersion"
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
+
+    implementation 'com.squareup.okhttp3:okhttp:3.9.1'
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.github.bumptech.glide:glide:4.4.0'
+
+    implementation 'com.google.android.exoplayer:exoplayer:2.6.0'
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.6.0'
+    implementation 'com.google.android.exoplayer:exoplayer-dash:2.6.0'
+    implementation 'com.google.android.exoplayer:exoplayer-ui:2.6.0'
+}
+
+
+apply plugin: 'com.google.gms.google-services'
