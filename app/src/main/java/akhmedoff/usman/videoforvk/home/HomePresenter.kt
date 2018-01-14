@@ -8,13 +8,13 @@ class HomePresenter(private val videoRepository: VideoRepository) : BasePresente
 
     override fun onPresenterCreated() {
         super.onPresenterCreated()
-        videoRepository.getVideos().observe(view, Observer { response ->
+        videoRepository.getVideos().observe(view, Observer {
             when {
-                response != null
-                        && response.isSuccessfull
-                        && response.response != null
-                        && response.response.count > 0 ->
-                    view.showList(response.response.items!!)
+                it != null
+                        && it.isSuccessfull
+                        && it.response != null
+                        && it.response.count > 0 ->
+                    view.showList(it.response.items!!)
                 else -> {
 
                 }

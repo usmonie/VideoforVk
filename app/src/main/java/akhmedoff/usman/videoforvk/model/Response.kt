@@ -21,6 +21,15 @@ class Response<T> {
         code = 500
     }
 
+    constructor(auth: Auth) {
+        response = auth as T
+        errorMessage = null
+        code = when {
+            auth.isSuccessfull -> 200
+            else -> 500
+        }
+    }
+
     var isSuccessfull = false
         get() = code in 200..300
 }

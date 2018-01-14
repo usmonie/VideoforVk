@@ -16,7 +16,6 @@ android {
 
         buildConfigField('String', 'VK_APP_ID', vk_app_id)
         buildConfigField('String', 'VK_APP_KEY', vk_app_key)
-        buildConfigField('String', 'VK_APP_SERVICE_KEY', vk_app_service_key)
     }
     buildTypes {
 
@@ -26,7 +25,6 @@ android {
 
             buildConfigField('String', 'VK_APP_ID', vk_app_id)
             buildConfigField('String', 'VK_APP_KEY', vk_app_key)
-            buildConfigField('String', 'VK_APP_SERVICE_KEY', vk_app_service_key)
         }
     }
 }
@@ -58,6 +56,9 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer-core:2.6.0'
     implementation 'com.google.android.exoplayer:exoplayer-dash:2.6.0'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.6.0'
+
+    implementation 'com.squareup.okio:okio:1.13.0'
+
 }
 
 

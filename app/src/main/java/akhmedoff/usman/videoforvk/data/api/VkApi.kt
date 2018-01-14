@@ -1,11 +1,10 @@
 package akhmedoff.usman.videoforvk.data.api
 
-import akhmedoff.usman.videoforvk.model.Response
-import akhmedoff.usman.videoforvk.model.ResponseVideo
-import akhmedoff.usman.videoforvk.model.User
+import akhmedoff.usman.videoforvk.model.*
 import android.arch.lifecycle.LiveData
 import retrofit2.http.GET
 import retrofit2.http.Query
+import retrofit2.http.Url
 
 interface VkApi {
     @GET("users.get")
@@ -18,7 +17,7 @@ interface VkApi {
     fun getVideos(@Query("owner_id") ownerId: Int? = null,
                   @Query("videos") videos: String? = null,
                   @Query("album_id") albumId: String? = null,
-                  @Query("count") count: Int = 15,
+                  @Query("count") count: Int = 1,
                   @Query("offset") offset: Long = 0,
                   @Query("access_token") token: String,
                   @Query("extended") extended: Boolean = true,
@@ -31,6 +30,15 @@ interface VkApi {
                    @Query("extended") extended: Boolean = true,
                    @Query("filters") filters: String,
                    @Query("access_token") token: String,
-                   @Query("v") v: String = "5.69")
+                   @Query("v") v: String = "5.69"): LiveData<ResponseCatalog>
 
+    @GET
+    fun auth(@Url url: String,
+             @Query("grant_type") grantType: String = "password",
+             @Query("client_id") clientId: String,
+             @Query("client_secret") clientSecret: String,
+             @Query("username") username: String,
+             @Query("password") password: String,
+             @Query("scope") scope: String,
+             @Query("v") v: String = "5.69"): LiveData<Response<Auth>>
 }

@@ -8,4 +8,6 @@
     <string name="login">Login with VK</string>
     <string name="welcome_text">To use the application you need to log in through VK</string>
     <string name="error_login">Something went wrong</string>
+    <string name="password_hint">Password</string>
+    <string name="username_hint">Phone number or e-mail</string>
 </resources>

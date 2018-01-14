@@ -20,12 +20,12 @@ class VideoDeserializer : JsonDeserializer<ResponseVideo> {
             val itemJson = it.asJsonObject
 
             val fileJson = itemJson.get("files").asJsonObject
-            val files = Files(fileJson.get("mp4_240").asString,
-                    fileJson.get("mp4_360").asString,
-                    fileJson.get("mp4_480").asString,
-                    fileJson.get("mp4_720").asString,
-                    fileJson.get("mp4_1080").asString,
-                    fileJson.get("external").asString)
+            val files = Files(fileJson.get("mp4_240")?.asString,
+                    fileJson.get("mp4_360")?.asString,
+                    fileJson.get("mp4_480")?.asString,
+                    fileJson.get("mp4_720")?.asString,
+                    fileJson.get("mp4_1080")?.asString,
+                    fileJson.get("external")?.asString)
 
             val likesJson = itemJson.get("likes").asJsonObject
             val likes = Likes(likesJson.get("user_likes").asBoolean,
@@ -35,32 +35,32 @@ class VideoDeserializer : JsonDeserializer<ResponseVideo> {
             val reposts = Reposts(repostsJson.get("count").asInt,
                     repostsJson.get("user_reposted").asBoolean)
 
-            items.add(Item(jsonObject.get("id").asLong,
-                    jsonObject.get("owner_id").asLong,
-                    jsonObject.get("title").asString,
-                    jsonObject.get("duration").asInt,
-                    jsonObject.get("description").asString,
-                    jsonObject.get("date").asLong,
-                    jsonObject.get("comments").asInt,
-                    jsonObject.get("views").asInt,
-                    jsonObject.get("width").asInt,
-                    jsonObject.get("height").asInt,
-                    jsonObject.get("photo_130").asString,
-                    jsonObject.get("photo_320").asString,
-                    jsonObject.get("photo_800").asString,
-                    jsonObject.get("adding_date").asInt,
-                    jsonObject.get("first_frame_320").asString,
-                    jsonObject.get("first_frame_160").asString,
-                    jsonObject.get("first_frame_130").asString,
-                    jsonObject.get("first_frame_800").asString,
+            items.add(Item(jsonObject.get("id")?.asLong,
+                    jsonObject.get("owner_id")?.asLong,
+                    jsonObject.get("title")?.asString,
+                    jsonObject.get("duration")?.asInt,
+                    jsonObject.get("description")?.asString,
+                    jsonObject.get("date")?.asLong,
+                    jsonObject.get("comments")?.asInt,
+                    jsonObject.get("views")?.asInt,
+                    jsonObject.get("width")?.asInt,
+                    jsonObject.get("height")?.asInt,
+                    jsonObject.get("photo_130")?.asString,
+                    jsonObject.get("photo_320")?.asString,
+                    jsonObject.get("photo_800")?.asString,
+                    jsonObject.get("adding_date")?.asInt,
+                    jsonObject.get("first_frame_320")?.asString,
+                    jsonObject.get("first_frame_160")?.asString,
+                    jsonObject.get("first_frame_130")?.asString,
+                    jsonObject.get("first_frame_800")?.asString,
                     files,
-                    jsonObject.get("player").asString,
-                    jsonObject.get("can_add").asBoolean,
-                    jsonObject.get("can_comment").asBoolean,
-                    jsonObject.get("can_repost").asBoolean,
+                    jsonObject.get("player")?.asString,
+                    jsonObject.get("can_add")?.asBoolean,
+                    jsonObject.get("can_comment")?.asBoolean,
+                    jsonObject.get("can_repost")?.asBoolean,
                     likes,
                     reposts,
-                    jsonObject.get("repeat").asBoolean))
+                    jsonObject.get("repeat")?.asBoolean))
         }
 
         val profilesJson = jsonObject.get("profiles").asJsonArray
