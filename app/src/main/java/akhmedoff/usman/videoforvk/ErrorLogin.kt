@@ -9,3 +9,4 @@ enum class ErrorLogin {
     PASSWORD_SHORT,
     USERNAME_SHORT
 }
+
