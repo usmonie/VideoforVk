@@ -2,7 +2,7 @@ package akhmedoff.usman.videoforvk.model
 
 import com.google.gson.annotations.SerializedName
 
-data class Group(
+class Group(
         @SerializedName("id") val id: Long,
         @SerializedName("name") val name: String,
         @SerializedName("screen_name") val screenName: String,

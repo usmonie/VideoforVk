@@ -23,8 +23,8 @@ class HomeRecyclerAdapter : RecyclerView.Adapter<AbstractViewHolder>() {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = when (viewType) {
-        TYPE_CATALOG -> VideoViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.video_item, parent, false))
-        else -> VideoViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.video_item, parent, false))
+        TYPE_CATALOG -> VideoViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.recomendation_item, parent, false))
+        else -> VideoViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.recomendation_item, parent, false))
     }
 
     override fun onBindViewHolder(holder: AbstractViewHolder, position: Int) {
@@ -36,7 +36,6 @@ class HomeRecyclerAdapter : RecyclerView.Adapter<AbstractViewHolder>() {
     fun setItems(update: List<Item>) {
         items.addAll(update)
         notifyDataSetChanged()
-
     }
 
     override fun onViewRecycled(holder: AbstractViewHolder) {

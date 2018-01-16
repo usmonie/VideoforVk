@@ -12,8 +12,7 @@ class HomePresenter(private val videoRepository: VideoRepository) : BasePresente
             when {
                 it != null
                         && it.isSuccessfull
-                        && it.response != null
-                        && it.response.count > 0 ->
+                        && it.response != null ->
                     view.showList(it.response.items!!)
                 else -> {
 

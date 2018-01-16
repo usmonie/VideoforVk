@@ -45,7 +45,6 @@ val okHttp: OkHttpClient by lazy {
 
 val vkApi: VkApi by lazy {
     val gsonBuilder = GsonBuilder().apply {
-
         registerTypeAdapter(User::class.java, UserDeserializer())
         registerTypeAdapter(ResponseVideo::class.java, VideoDeserializer())
     }

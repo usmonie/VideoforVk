@@ -11,20 +11,20 @@ class UserDeserializer : JsonDeserializer<User> {
     override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): User {
         val jsonObject = json?.asJsonObject!!
 
-        return User(jsonObject.get("id").asLong,
-                jsonObject.get("first_name").asString,
-                jsonObject.get("last_name").asString,
-                jsonObject.get("nickname").asString,
-                jsonObject.get("screen_name").asString,
-                jsonObject.get("photo_100").asString,
-                jsonObject.get("photo_max").asString,
-                jsonObject.get("photo_max_orig").asString,
-                jsonObject.get("photo_id").asString,
-                jsonObject.get("has_photo").asBoolean,
-                jsonObject.get("is_friend").asBoolean,
-                jsonObject.get("friend_status").asBoolean,
-                jsonObject.get("online").asBoolean,
-                jsonObject.get("status").asString,
-                jsonObject.get("is_favorite").asBoolean)
+        return User(jsonObject["id"].asLong,
+                jsonObject["first_name"].asString,
+                jsonObject["last_name"].asString,
+                jsonObject["nickname"].asString,
+                jsonObject["screen_name"].asString,
+                jsonObject["photo_100"].asString,
+                jsonObject["photo_max"].asString,
+                jsonObject["photo_max_orig"].asString,
+                jsonObject["photo_id"].asString,
+                jsonObject["has_photo"].asBoolean,
+                jsonObject["is_friend"].asBoolean,
+                jsonObject["friend_status"].asBoolean,
+                jsonObject["online"].asBoolean,
+                jsonObject["status"].asString,
+                jsonObject["is_favorite"].asBoolean)
     }
 }

@@ -1,6 +1,6 @@
 package akhmedoff.usman.videoforvk.model
 
-data class Files(
+class Files(
         val mp4240: String? = null,
         val mp4360: String? = null,
         val mp4480: String? = null,

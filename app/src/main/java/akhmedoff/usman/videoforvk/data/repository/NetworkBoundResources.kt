@@ -73,7 +73,6 @@ internal constructor(private val appExecutors: AppExecutors) {
     @WorkerThread
     protected fun processResponse(response: Response<RequestType>) =
             response.response!!
-
     @WorkerThread
     protected abstract fun saveCallResult(item: RequestType)
 

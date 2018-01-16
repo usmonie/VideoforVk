@@ -7,4 +7,4 @@
     android:clipChildren="true"
     android:clipToPadding="true"
     android:scrollbars="vertical"
-    tools:listitem="@layout/video_item" />
+    tools:listitem="@layout/recomendation_item" />

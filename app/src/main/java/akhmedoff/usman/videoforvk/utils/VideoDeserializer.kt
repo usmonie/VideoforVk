@@ -8,92 +8,95 @@ import java.lang.reflect.Type
 
 class VideoDeserializer : JsonDeserializer<ResponseVideo> {
 
-    override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): ResponseVideo {
+    override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): ResponseVideo {
 
-        val jsonObject = json?.asJsonObject?.get("response")?.asJsonObject!!
+        val jsonObject = json.asJsonObject["response"].asJsonObject
 
-        val itemsJson = jsonObject.get("items").asJsonArray
+        val itemsJson = jsonObject["items"].asJsonArray
 
         val items = mutableListOf<Item>()
 
         itemsJson.forEach {
             val itemJson = it.asJsonObject
 
-            val fileJson = itemJson.get("files").asJsonObject
-            val files = Files(fileJson.get("mp4_240")?.asString,
-                    fileJson.get("mp4_360")?.asString,
-                    fileJson.get("mp4_480")?.asString,
-                    fileJson.get("mp4_720")?.asString,
-                    fileJson.get("mp4_1080")?.asString,
-                    fileJson.get("external")?.asString)
+            val fileJson = itemJson["files"].asJsonObject
+            val files = Files(fileJson["mp4_240"]?.asString,
+                    fileJson["mp4_360"]?.asString,
+                    fileJson["mp4_480"]?.asString,
+                    fileJson["mp4_720"]?.asString,
+                    fileJson["mp4_1080"]?.asString,
+                    fileJson["external"]?.asString)
 
-            val likesJson = itemJson.get("likes").asJsonObject
-            val likes = Likes(likesJson.get("user_likes").asBoolean,
-                    likesJson.get("count").asInt)
+            val likesJson = itemJson["likes"].asJsonObject
+            val likes = Likes(likesJson["user_likes"].asBoolean,
+                    likesJson["count"].asInt)
 
-            val repostsJson = itemJson.get("reposts").asJsonObject
-            val reposts = Reposts(repostsJson.get("count").asInt,
-                    repostsJson.get("user_reposted").asBoolean)
+            val repostsJson = itemJson["reposts"].asJsonObject
+            val reposts = Reposts(repostsJson["count"].asInt,
+                    repostsJson["user_reposted"].asBoolean)
+            val item = Item()
 
-            items.add(Item(jsonObject.get("id")?.asLong,
-                    jsonObject.get("owner_id")?.asLong,
-                    jsonObject.get("title")?.asString,
-                    jsonObject.get("duration")?.asInt,
-                    jsonObject.get("description")?.asString,
-                    jsonObject.get("date")?.asLong,
-                    jsonObject.get("comments")?.asInt,
-                    jsonObject.get("views")?.asInt,
-                    jsonObject.get("width")?.asInt,
-                    jsonObject.get("height")?.asInt,
-                    jsonObject.get("photo_130")?.asString,
-                    jsonObject.get("photo_320")?.asString,
-                    jsonObject.get("photo_800")?.asString,
-                    jsonObject.get("adding_date")?.asInt,
-                    jsonObject.get("first_frame_320")?.asString,
-                    jsonObject.get("first_frame_160")?.asString,
-                    jsonObject.get("first_frame_130")?.asString,
-                    jsonObject.get("first_frame_800")?.asString,
-                    files,
-                    jsonObject.get("player")?.asString,
-                    jsonObject.get("can_add")?.asBoolean,
-                    jsonObject.get("can_comment")?.asBoolean,
-                    jsonObject.get("can_repost")?.asBoolean,
-                    likes,
-                    reposts,
-                    jsonObject.get("repeat")?.asBoolean))
+            item.id = itemJson["id"].asJsonPrimitive.asLong
+            item.ownerId = itemJson["owner_id"].asLong
+            item.title = itemJson["title"].asString
+            item.duration = itemJson["duration"].asInt
+            item.description = itemJson["description"].asString
+            item.date = itemJson["date"].asLong
+            item.comments = itemJson["comments"].asInt
+            item.views = itemJson["views"].asInt
+            item.width = itemJson["width"]?.asInt
+            item.height = itemJson["height"]?.asInt
+            itemJson["photo_130"].apply { item.photo130 = it.toString() }
+            itemJson["photo_320"].apply { item.photo320 = it.toString() }
+            itemJson["photo_800"].apply { item.photo800 = it.toString() }
+            item.addingDate = itemJson["adding_date"].asInt
+            itemJson["first_frame_320"].apply { item.firstFrame320 = it.toString() }
+            itemJson["first_frame_160"].apply { item.firstFrame160 = it.toString() }
+            itemJson["first_frame_130"].apply { item.firstFrame130 = it.toString() }
+            itemJson["first_frame_800"].apply { item.firstFrame800 = it.toString() }
+            item.files = files
+            item.player = itemJson["player"].asString
+            item.canAdd = itemJson["can_add"].asBoolean
+            item.canComment = itemJson["can_comment"].asBoolean
+            item.canRepost = itemJson["can_repost"].asBoolean
+            item.likes = likes
+            item.reposts = reposts
+            item.repeat = itemJson["repeat"].asBoolean
+
+            items.add(item)
         }
 
-        val profilesJson = jsonObject.get("profiles").asJsonArray
+        val profilesJson = jsonObject["profiles"].asJsonArray
 
         val profiles = mutableListOf<User>()
 
         profilesJson.forEach {
             val profileJson = it.asJsonObject
 
-            profiles.add(User(profileJson.get("id").asLong,
-                    profileJson.get("first_name").asString,
-                    profileJson.get("last_name").asString))
+            profiles.add(User(profileJson["id"].asLong,
+                    profileJson["first_name"].asString,
+                    profileJson["last_name"].asString))
         }
 
-        val groupsJson = jsonObject.get("groups").asJsonArray
+        val groupsJson = jsonObject["groups"].asJsonArray
 
         val groups = mutableListOf<Group>()
 
         groupsJson.forEach {
             val groupJson = it.asJsonObject
 
-            groups.add(Group(groupJson.get("id").asLong,
-                    groupJson.get("name").asString,
-                    groupJson.get("screen_name").asString,
-                    groupJson.get("is_closed").asBoolean,
-                    groupJson.get("type").asString,
-                    groupJson.get("is_admin").asBoolean,
-                    groupJson.get("is_member").asBoolean,
-                    groupJson.get("photo_50").asString,
-                    groupJson.get("photo_100").asString,
-                    groupJson.get("photo_200").asString))
+            groups.add(Group(groupJson["id"].asLong,
+                    groupJson["name"].asString,
+                    groupJson["screen_name"].asString,
+                    groupJson["is_closed"].asBoolean,
+                    groupJson["type"].asString,
+                    groupJson["is_admin"].asBoolean,
+                    groupJson["is_member"].asBoolean,
+                    groupJson["photo_50"].asString,
+                    groupJson["photo_100"].asString,
+                    groupJson["photo_200"].asString))
         }
 
-        return ResponseVideo(jsonObject.get("count").asInt, items, profiles, groups)
+        return ResponseVideo(jsonObject["count"].asInt, items, profiles, groups)
     }
 }

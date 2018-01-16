@@ -20,7 +20,7 @@ import com.google.android.exoplayer2.util.Util
 class VideoViewHolder(itemView: View) : AbstractViewHolder(itemView) {
     private val simpleExoPlayerView: SimpleExoPlayerView by lazy { itemView.findViewById<SimpleExoPlayerView>(R.id.video_player_small) }
 
-    private val player: SimpleExoPlayer
+    val player: SimpleExoPlayer
 
     private lateinit var mp4VideoUri: Uri
     private val dataSourceFactory: DefaultDataSourceFactory
@@ -28,6 +28,7 @@ class VideoViewHolder(itemView: View) : AbstractViewHolder(itemView) {
     init {
         val bandwidthMeter = DefaultBandwidthMeter()
         val videoTrackSelectionFactory = AdaptiveTrackSelection.Factory(bandwidthMeter)
+
         val trackSelector = DefaultTrackSelector(videoTrackSelectionFactory)
 
         player = ExoPlayerFactory.newSimpleInstance(DefaultRenderersFactory(context), trackSelector)
@@ -35,8 +36,7 @@ class VideoViewHolder(itemView: View) : AbstractViewHolder(itemView) {
         simpleExoPlayerView.requestFocus()
 
         simpleExoPlayerView.player = player
-        val bandwidthMeterA = DefaultBandwidthMeter()
-        dataSourceFactory = DefaultDataSourceFactory(itemView.context, Util.getUserAgent(itemView.context, "vk"), bandwidthMeterA)
+        dataSourceFactory = DefaultDataSourceFactory(itemView.context, Util.getUserAgent(itemView.context, "vk"), bandwidthMeter)
     }
 
     override fun onAttachedToWindow() {
@@ -44,7 +44,6 @@ class VideoViewHolder(itemView: View) : AbstractViewHolder(itemView) {
         val loopingSource = LoopingMediaSource(videoSource)
 
         player.prepare(loopingSource)
-
         player.playWhenReady = true
     }
 
@@ -53,18 +52,16 @@ class VideoViewHolder(itemView: View) : AbstractViewHolder(itemView) {
     }
 
     override fun bind(item: Item) {
-
         mp4VideoUri = when {
-            item.files?.external != null -> Uri.parse(item.files?.external!!)
-            item.files?.mp4480 != null -> Uri.parse(item.files?.mp4480!!)
-            item.files?.mp4360 != null -> Uri.parse(item.files?.mp4360!!)
-            else -> Uri.parse(item.files?.mp4240!!)
+            item.files.external != null -> Uri.parse(item.files.external!!)
+            item.files.mp4480 != null -> Uri.parse(item.files.mp4480!!)
+            item.files.mp4360 != null -> Uri.parse(item.files.mp4360!!)
+            else -> Uri.parse(item.files.mp4240!!)
         }
     }
 
     override fun unBind() {
         player.playWhenReady = false
         player.release()
-
     }
 }
