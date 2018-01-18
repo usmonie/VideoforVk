@@ -14,7 +14,7 @@ class VideoDeserializer : JsonDeserializer<ResponseVideo> {
 
         val itemsJson = jsonObject["items"].asJsonArray
 
-        val items = mutableListOf<Item>()
+        val items = mutableListOf<Video>()
 
         itemsJson.forEach {
             val itemJson = it.asJsonObject
@@ -34,14 +34,14 @@ class VideoDeserializer : JsonDeserializer<ResponseVideo> {
             val repostsJson = itemJson["reposts"].asJsonObject
             val reposts = Reposts(repostsJson["count"].asInt,
                     repostsJson["user_reposted"].asBoolean)
-            val item = Item()
+            val item = Video()
 
-            item.id = itemJson["id"].asJsonPrimitive.asLong
-            item.ownerId = itemJson["owner_id"].asLong
+            item.id = itemJson["id"].asJsonPrimitive.asInt
+            item.ownerId = itemJson["owner_id"].asInt
             item.title = itemJson["title"].asString
             item.duration = itemJson["duration"].asInt
             item.description = itemJson["description"].asString
-            item.date = itemJson["date"].asLong
+            item.date = itemJson["date"].asInt
             item.comments = itemJson["comments"].asInt
             item.views = itemJson["views"].asInt
             item.width = itemJson["width"]?.asInt

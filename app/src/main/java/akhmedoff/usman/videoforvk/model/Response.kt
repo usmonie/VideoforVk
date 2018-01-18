@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 import retrofit2.Response as RetrofitResponse
 
 class Response<T> {
-    @SerializedName("response")
+    @SerializedName("responseCatalog")
     val response: T?
     val errorMessage: String?
     val code: Int
@@ -21,13 +21,10 @@ class Response<T> {
         code = 500
     }
 
-    constructor(auth: Auth) {
-        response = auth as T
+    constructor(auth: T) {
+        response = auth
         errorMessage = null
-        code = when {
-            auth.isSuccessfull -> 200
-            else -> 500
-        }
+        code = 200
     }
 
     var isSuccessfull = false

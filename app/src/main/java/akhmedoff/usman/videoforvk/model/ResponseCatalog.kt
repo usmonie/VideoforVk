@@ -1,5 +1,6 @@
 package akhmedoff.usman.videoforvk.model
 
-
-class ResponseCatalog {
-}
+data class ResponseCatalog(
+		val catalogs: List<Catalog>,
+		val next: String
+)

@@ -10,4 +10,5 @@
     <string name="error_login">Something went wrong</string>
     <string name="password_hint">Password</string>
     <string name="username_hint">Phone number or e-mail</string>
+    <string name="see_all_category_button"><u>see all</u></string>
 </resources>

@@ -8,9 +8,8 @@ import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
 import java.util.*
 
-
 /**
- * A generic class that can provide a resource backed by both the sqlite database and the network.
+ * A generic class that can provide a resource backed by both the SQLite database and the network.
  *
  *
  * You can read more about it in the [Architecture
@@ -18,7 +17,7 @@ import java.util.*
  * @param <ResultType>
  * @param <RequestType>
 </RequestType></ResultType> */
-abstract class NetworkBoundResource<ResultType, RequestType> @MainThread
+abstract class NetworkBoundResources<ResultType, RequestType> @MainThread
 internal constructor(private val appExecutors: AppExecutors) {
 
     private val result = MediatorLiveData<ResultType>()
@@ -31,7 +30,7 @@ internal constructor(private val appExecutors: AppExecutors) {
             if (shouldFetch(data)) {
                 fetchFromNetwork(dbSource)
             } else {
-                result.addSource(dbSource) { setValue(it) }
+                result.addSource(dbSource, this::setValue)
             }
         }
     }

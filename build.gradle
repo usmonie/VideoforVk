@@ -1,7 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.2.10'
+    ext.kotlin_version = '1.2.20'
 
     ext.gradlePluginVersion = '3.0.1'
     repositories {
@@ -32,7 +32,6 @@ task clean(type: Delete) {
 ext {
     // App dependencies
     supportLibraryVersion = '27.0.2'
-    guavaVersion = '22.0-android'
     junitVersion = '4.12'
     mockitoVersion = '2.8.47'
     hamcrestVersion = '1.3'

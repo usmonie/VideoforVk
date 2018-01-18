@@ -1,20 +1,32 @@
 package akhmedoff.usman.videoforvk.home
 
 import akhmedoff.usman.videoforvk.base.BaseContract
-import akhmedoff.usman.videoforvk.model.Item
+import akhmedoff.usman.videoforvk.model.Catalog
+import akhmedoff.usman.videoforvk.model.VideoCatalog
 
 interface HomeContract {
 
     interface View : BaseContract.View {
         var homePresenter: Presenter
-        fun showList(items: List<Item>)
 
-        fun showVideo(id: Int)
+        fun showList(videos: List<Catalog>)
+
+        fun showVideo(video: VideoCatalog)
+
+        fun showCatalog(catalog: Catalog)
 
         fun showCatalogs()
+
+        fun showLoading()
+
+        fun hideLoading()
+
+        fun shoErrorLoading()
     }
 
     interface Presenter : BaseContract.Presenter<View> {
-        fun clickItem(id: Int)
+        fun clickCatalog(catalog: Catalog)
+
+        fun clickVideo(video: VideoCatalog)
     }
 }

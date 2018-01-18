@@ -15,7 +15,6 @@ class SplashActivity : BaseActivity<SplashContract.View, SplashContract.Presente
     override fun onCreate(savedInstanceState: Bundle?) {
         splashPresenter = SplashPresenter(UserRepository(UserSettings.getUserSettings(applicationContext), vkApi))
         super.onCreate(savedInstanceState)
-
     }
 
     override fun showMain() {

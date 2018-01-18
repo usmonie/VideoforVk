@@ -4,14 +4,17 @@ import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.base.BaseFragment
 import akhmedoff.usman.videoforvk.data.local.UserSettings
 import akhmedoff.usman.videoforvk.data.repository.VideoRepository
-import akhmedoff.usman.videoforvk.model.Item
+import akhmedoff.usman.videoforvk.model.Catalog
+import akhmedoff.usman.videoforvk.model.VideoCatalog
 import akhmedoff.usman.videoforvk.utils.vkApi
+import akhmedoff.usman.videoforvk.view.AbstractRecyclerAdapter.OnClickListener
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView.VERTICAL
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : BaseFragment<HomeContract.View, HomeContract.Presenter>(), HomeContract.View {
@@ -25,7 +28,15 @@ class HomeFragment : BaseFragment<HomeContract.View, HomeContract.Presenter>(), 
                         UserSettings.getUserSettings(context?.applicationContext!!), vkApi))
         super.onCreate(savedInstanceState)
 
-        adapter = HomeRecyclerAdapter()
+        adapter = HomeRecyclerAdapter(object : OnClickListener<VideoCatalog> {
+            override fun onClick(item: VideoCatalog) {
+                presenter.clickVideo(item)
+            }
+        }, object : OnClickListener<Catalog> {
+            override fun onClick(item: Catalog) {
+                presenter.clickCatalog(item)
+            }
+        })
         adapter.setHasStableIds(true)
     }
 
@@ -46,9 +57,26 @@ class HomeFragment : BaseFragment<HomeContract.View, HomeContract.Presenter>(), 
         home_recycler.drawingCacheQuality = View.DRAWING_CACHE_QUALITY_HIGH
     }
 
-    override fun showList(items: List<Item>) = adapter.setItems(items)
+    override fun showList(videos: List<Catalog>) = adapter.setItems(videos)
 
-    override fun showVideo(id: Int) {
+    override fun showVideo(video: VideoCatalog) {
+        Toast.makeText(context, video.title, Toast.LENGTH_LONG).show()
+    }
+
+    override fun showCatalog(catalog: Catalog) {
+        Toast.makeText(context, catalog.name, Toast.LENGTH_LONG).show()
+    }
+
+    override fun showLoading() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun hideLoading() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun shoErrorLoading() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun showCatalogs() {

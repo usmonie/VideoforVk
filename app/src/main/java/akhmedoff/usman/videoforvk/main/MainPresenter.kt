@@ -18,7 +18,6 @@ class MainPresenter : BasePresenter<MainContract.View>(), MainContract.Presenter
             view.showProfile()
             true
         }
-
         else -> false
     }
 }

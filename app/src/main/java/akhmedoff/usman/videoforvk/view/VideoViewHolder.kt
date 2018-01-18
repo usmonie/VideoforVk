@@ -1,67 +1,27 @@
 package akhmedoff.usman.videoforvk.view
 
-import akhmedoff.usman.videoforvk.App.Companion.context
 import akhmedoff.usman.videoforvk.R
-import akhmedoff.usman.videoforvk.model.Item
-import android.net.Uri
+import akhmedoff.usman.videoforvk.model.VideoCatalog
 import android.view.View
-import com.google.android.exoplayer2.DefaultRenderersFactory
-import com.google.android.exoplayer2.ExoPlayerFactory
-import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.source.ExtractorMediaSource
-import com.google.android.exoplayer2.source.LoopingMediaSource
-import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.ui.SimpleExoPlayerView
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.util.Util
+import android.widget.ImageView
+import android.widget.TextView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 
-class VideoViewHolder(itemView: View) : AbstractViewHolder(itemView) {
-    private val simpleExoPlayerView: SimpleExoPlayerView by lazy { itemView.findViewById<SimpleExoPlayerView>(R.id.video_player_small) }
-
-    val player: SimpleExoPlayer
-
-    private lateinit var mp4VideoUri: Uri
-    private val dataSourceFactory: DefaultDataSourceFactory
-
-    init {
-        val bandwidthMeter = DefaultBandwidthMeter()
-        val videoTrackSelectionFactory = AdaptiveTrackSelection.Factory(bandwidthMeter)
-
-        val trackSelector = DefaultTrackSelector(videoTrackSelectionFactory)
-
-        player = ExoPlayerFactory.newSimpleInstance(DefaultRenderersFactory(context), trackSelector)
-        player.volume = 0f
-        simpleExoPlayerView.requestFocus()
-
-        simpleExoPlayerView.player = player
-        dataSourceFactory = DefaultDataSourceFactory(itemView.context, Util.getUserAgent(itemView.context, "vk"), bandwidthMeter)
-    }
-
-    override fun onAttachedToWindow() {
-        val videoSource = ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(mp4VideoUri, null, null)
-        val loopingSource = LoopingMediaSource(videoSource)
-
-        player.prepare(loopingSource)
-        player.playWhenReady = true
-    }
-
-    override fun onDetachedFromWindow() {
-        player.playWhenReady = false
-    }
-
-    override fun bind(item: Item) {
-        mp4VideoUri = when {
-            item.files.external != null -> Uri.parse(item.files.external!!)
-            item.files.mp4480 != null -> Uri.parse(item.files.mp4480!!)
-            item.files.mp4360 != null -> Uri.parse(item.files.mp4360!!)
-            else -> Uri.parse(item.files.mp4240!!)
+class VideoViewHolder(itemView: View) : AbstractViewHolder<VideoCatalog>(itemView) {
+    private val videoFrame: ImageView by lazy { itemView.findViewById<ImageView>(R.id.video_frame) }
+    private val videoTitle: TextView by lazy { itemView.findViewById<TextView>(R.id.video_title) }
+    override fun bind(item: VideoCatalog) {
+        val imageUri = when {
+            item.photo800 != null -> item.photo800
+            item.photo640 != null -> item.photo640
+            else -> item.photo320
         }
-    }
-
-    override fun unBind() {
-        player.playWhenReady = false
-        player.release()
+        Glide
+            .with(videoFrame.context)
+            .load(imageUri?.replace("\"", ""))
+            .apply(RequestOptions().centerCrop())
+            .into(videoFrame)
+        videoTitle.text = item.title
     }
 }

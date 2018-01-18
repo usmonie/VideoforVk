@@ -12,7 +12,7 @@ import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : BaseActivity<LoginContract.View, LoginContract.Presenter>(),
-        LoginContract.View {
+    LoginContract.View {
 
     override lateinit var loginPresenter: LoginContract.Presenter
 

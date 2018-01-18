@@ -15,9 +15,9 @@ interface VkApi {
 
     @GET("video.get")
     fun getVideos(@Query("owner_id") ownerId: Int? = null,
-                  @Query("videos") videos: String? = null,
+                  @Query("catalogs") videos: String? = null,
                   @Query("album_id") albumId: String? = null,
-                  @Query("count") count: Int = 1,
+                  @Query("count") count: Int = 10,
                   @Query("offset") offset: Long = 0,
                   @Query("access_token") token: String,
                   @Query("extended") extended: Boolean = true,
@@ -25,12 +25,12 @@ interface VkApi {
 
     @GET("video.getCatalog")
     fun getCatalog(@Query("count") count: Int = 10,
-                   @Query("items_count") itemsCount: Int = 10,
+                   @Query("items_count") itemsCount: Int = 5,
                    @Query("from") from: String? = null,
-                   @Query("extended") extended: Boolean = true,
-                   @Query("filters") filters: String,
+                   @Query("filters") filters: String = "other",
                    @Query("access_token") token: String,
-                   @Query("v") v: String = "5.69"): LiveData<ResponseCatalog>
+                   @Query("v") v: String = "5.69"
+    ): LiveData<Response<ResponseCatalog>>
 
     @GET
     fun auth(@Url url: String,
