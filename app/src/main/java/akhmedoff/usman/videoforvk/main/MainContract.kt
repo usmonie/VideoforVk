@@ -1,6 +1,7 @@
 package akhmedoff.usman.videoforvk.main
 
 import akhmedoff.usman.videoforvk.base.BaseContract
+import android.support.v4.app.Fragment
 
 interface MainContract {
 
@@ -17,6 +18,8 @@ interface MainContract {
 
     interface Presenter : BaseContract.Presenter<MainContract.View> {
 
-        fun navigate(id: Int): Boolean
+        fun navigate(id: Int)
+
+        fun updateCurrentFragment(it: Fragment)
     }
 }

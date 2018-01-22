@@ -17,7 +17,12 @@ class LoginActivity : BaseActivity<LoginContract.View, LoginContract.Presenter>(
     override lateinit var loginPresenter: LoginContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        loginPresenter = LoginPresenter(UserRepository(UserSettings.getUserSettings(applicationContext), vkApi))
+        loginPresenter = LoginPresenter(
+            UserRepository(
+                UserSettings.getUserSettings(applicationContext),
+                vkApi
+            )
+        )
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)

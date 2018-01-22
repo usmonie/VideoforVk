@@ -10,9 +10,9 @@ interface BaseContract {
 
     interface Presenter<V : BaseContract.View> {
 
-        val stateBundle: Bundle
+        fun getStateBundle(): Bundle?
 
-        val view: V
+        var view: V?
 
         val isViewAttached: Boolean
 
@@ -24,5 +24,6 @@ interface BaseContract {
 
         fun onPresenterCreated()
         fun onPresenterDestroy()
+
     }
 }

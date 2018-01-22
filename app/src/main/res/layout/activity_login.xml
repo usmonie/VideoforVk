@@ -25,7 +25,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="@string/welcome_text"
+        android:text="@string/login.welcome.text"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:textSize="14sp"
@@ -41,7 +41,7 @@
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
-        android:text="@string/login"
+        android:text="@string/login.button.text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -61,7 +61,7 @@
             android:id="@+id/username_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/username_hint"
+            android:hint="@string/login.username.hint"
             android:inputType="textWebEmailAddress"
             android:singleLine="true" />
     </android.support.design.widget.TextInputLayout>
@@ -81,7 +81,7 @@
             android:id="@+id/password_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/password_hint"
+            android:hint="@string/login.password.hint"
             android:inputType="textWebPassword"
             android:singleLine="true" />
     </android.support.design.widget.TextInputLayout>

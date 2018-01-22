@@ -14,6 +14,7 @@ class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), 
 
     private val onNavigationItemSelectedListener = OnNavigationItemSelectedListener {
         mainPresenter.navigate(it.itemId)
+        false
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,20 +23,22 @@ class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), 
         setContentView(R.layout.activity_main)
 
         homeFragment = HomeFragment()
-        supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.content, homeFragment)
-                .commitAllowingStateLoss()
 
+        supportFragmentManager.addOnBackStackChangedListener {
+            val fragments = supportFragmentManager.fragments
+            fragments.forEach {
+                if (it.isVisible)
+                    presenter.updateCurrentFragment(it)
+            }
+        }
         navigation.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
-        navigation.selectedItemId = R.id.navigation_home
     }
 
     override fun showHome() {
         supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.content, homeFragment)
-                .commitAllowingStateLoss()
+            .beginTransaction()
+            .replace(R.id.content, homeFragment)
+            .commitAllowingStateLoss()
     }
 
     override fun showProfile() {
@@ -47,4 +50,11 @@ class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), 
     }
 
     override fun initPresenter(): MainContract.Presenter = mainPresenter
+
+    override fun onBackPressed() {
+        when {
+            supportFragmentManager.backStackEntryCount > 0 -> supportFragmentManager.popBackStack()
+            else -> super.onBackPressed()
+        }
+    }
 }

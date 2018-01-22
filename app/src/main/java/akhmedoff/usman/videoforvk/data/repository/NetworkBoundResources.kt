@@ -16,7 +16,7 @@ import java.util.*
  * Guide](https://developer.android.com/arch).
  * @param <ResultType>
  * @param <RequestType>
-</RequestType></ResultType> */
+ */
 abstract class NetworkBoundResources<ResultType, RequestType> @MainThread
 internal constructor(private val appExecutors: AppExecutors) {
 
@@ -71,7 +71,8 @@ internal constructor(private val appExecutors: AppExecutors) {
 
     @WorkerThread
     protected fun processResponse(response: Response<RequestType>) =
-            response.response!!
+        response.response!!
+
     @WorkerThread
     protected abstract fun saveCallResult(item: RequestType)
 

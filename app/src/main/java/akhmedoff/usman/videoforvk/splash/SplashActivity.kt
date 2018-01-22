@@ -9,11 +9,17 @@ import akhmedoff.usman.videoforvk.utils.vkApi
 import android.content.Intent
 import android.os.Bundle
 
-class SplashActivity : BaseActivity<SplashContract.View, SplashContract.Presenter>(), SplashContract.View {
+class SplashActivity : BaseActivity<SplashContract.View, SplashContract.Presenter>(),
+    SplashContract.View {
     override lateinit var splashPresenter: SplashContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        splashPresenter = SplashPresenter(UserRepository(UserSettings.getUserSettings(applicationContext), vkApi))
+        splashPresenter = SplashPresenter(
+            UserRepository(
+                UserSettings.getUserSettings(applicationContext),
+                vkApi
+            )
+        )
         super.onCreate(savedInstanceState)
     }
 

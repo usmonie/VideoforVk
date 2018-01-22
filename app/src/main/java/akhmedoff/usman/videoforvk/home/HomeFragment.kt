@@ -7,6 +7,7 @@ import akhmedoff.usman.videoforvk.data.repository.VideoRepository
 import akhmedoff.usman.videoforvk.model.Catalog
 import akhmedoff.usman.videoforvk.model.VideoCatalog
 import akhmedoff.usman.videoforvk.utils.vkApi
+import akhmedoff.usman.videoforvk.video.VideoFragment
 import akhmedoff.usman.videoforvk.view.AbstractRecyclerAdapter.OnClickListener
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -24,8 +25,10 @@ class HomeFragment : BaseFragment<HomeContract.View, HomeContract.Presenter>(), 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         homePresenter = HomePresenter(
-                VideoRepository(
-                        UserSettings.getUserSettings(context?.applicationContext!!), vkApi))
+            VideoRepository(
+                UserSettings.getUserSettings(context?.applicationContext!!), vkApi
+            )
+        )
         super.onCreate(savedInstanceState)
 
         adapter = HomeRecyclerAdapter(object : OnClickListener<VideoCatalog> {
@@ -40,9 +43,10 @@ class HomeFragment : BaseFragment<HomeContract.View, HomeContract.Presenter>(), 
         adapter.setHasStableIds(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View =
-            inflater.inflate(R.layout.fragment_home, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = inflater.inflate(R.layout.fragment_home, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -57,10 +61,15 @@ class HomeFragment : BaseFragment<HomeContract.View, HomeContract.Presenter>(), 
         home_recycler.drawingCacheQuality = View.DRAWING_CACHE_QUALITY_HIGH
     }
 
-    override fun showList(videos: List<Catalog>) = adapter.setItems(videos)
+    override fun showList(videos: List<Catalog>) = adapter.replace(videos.toMutableList())
 
     override fun showVideo(video: VideoCatalog) {
-        Toast.makeText(context, video.title, Toast.LENGTH_LONG).show()
+        val videoFragment = VideoFragment.create(video)
+        fragmentManager!!
+            .beginTransaction()
+            .replace(R.id.content, videoFragment)
+            .addToBackStack("")
+            .commitAllowingStateLoss()
     }
 
     override fun showCatalog(catalog: Catalog) {
@@ -68,15 +77,12 @@ class HomeFragment : BaseFragment<HomeContract.View, HomeContract.Presenter>(), 
     }
 
     override fun showLoading() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun hideLoading() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun shoErrorLoading() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun showErrorLoading() {
     }
 
     override fun showCatalogs() {

@@ -35,9 +35,23 @@ val okHttp: OkHttpClient by lazy {
         }
 
         val request = original.newBuilder()
-                .header("User-Agent", String.format(Locale.US, "VKAndroidApp/%s-%d (Android %s; SDK %d; %s; %s %s; %s)", str, Integer.valueOf(appbuild), VERSION.RELEASE, Integer.valueOf(VERSION.SDK_INT), Build.CPU_ABI, Build.MANUFACTURER, Build.MODEL, System.getProperty("user.language")))
-                .method(original.method(), original.body())
-                .build()
+            .header(
+                "User-Agent",
+                String.format(
+                    Locale.US,
+                    "VKAndroidApp/%s-%d (Android %s; SDK %d; %s; %s %s; %s)",
+                    str,
+                    Integer.valueOf(appbuild),
+                    VERSION.RELEASE,
+                    Integer.valueOf(VERSION.SDK_INT),
+                    Build.CPU_ABI,
+                    Build.MANUFACTURER,
+                    Build.MODEL,
+                    System.getProperty("user.language")
+                )
+            )
+            .method(original.method(), original.body())
+            .build()
 
         it.proceed(request)
     }
@@ -56,10 +70,10 @@ val vkApi: VkApi by lazy {
     val gson = gsonBuilder.create()
 
     Retrofit.Builder()
-            .client(okHttp)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .addCallAdapterFactory(LiveDataCallAdapterFactory())
-            .baseUrl("https://api.vk.com/method/")
-            .build()
-            .create(VkApi::class.java)
+        .client(okHttp)
+        .addConverterFactory(GsonConverterFactory.create(gson))
+        .addCallAdapterFactory(LiveDataCallAdapterFactory())
+        .baseUrl("https://api.vk.com/method/")
+        .build()
+        .create(VkApi::class.java)
 }

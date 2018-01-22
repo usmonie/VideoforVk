@@ -6,7 +6,13 @@ import android.os.Looper
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
-class AppExecutors @JvmOverloads constructor(private val diskIO: Executor = Executors.newSingleThreadExecutor(), private val networkIO: Executor = Executors.newFixedThreadPool(3), private val mainThread: Executor = MainThreadExecutor()) {
+class AppExecutors @JvmOverloads constructor(
+    private val diskIO: Executor = Executors.newSingleThreadExecutor(),
+    private val networkIO: Executor = Executors.newFixedThreadPool(
+        3
+    ),
+    private val mainThread: Executor = MainThreadExecutor()
+) {
 
     fun diskIO(): Executor {
         return diskIO

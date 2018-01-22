@@ -1,7 +1,7 @@
 package akhmedoff.usman.videoforvk.model
 
 class Video : Item() {
-    var addingDate: Int = 0
+    var addingDate: Long = 0
     var firstFrame320: String? = null
     var firstFrame160: String? = null
     var firstFrame130: String? = null

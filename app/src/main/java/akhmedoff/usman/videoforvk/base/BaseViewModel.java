@@ -7,14 +7,14 @@ public final class BaseViewModel<V extends BaseContract.View, P extends BaseCont
 
     private P presenter;
 
+    P getPresenter() {
+        return this.presenter;
+    }
+
     void setPresenter(P presenter) {
         if (this.presenter == null) {
             this.presenter = presenter;
         }
-    }
-
-    P getPresenter() {
-        return this.presenter;
     }
 
     @Override

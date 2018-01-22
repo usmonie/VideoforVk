@@ -9,6 +9,7 @@
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
+        style="@style/Widget.Design.BottomNavigationView.BottomNavigationView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="?android:attr/windowBackground"

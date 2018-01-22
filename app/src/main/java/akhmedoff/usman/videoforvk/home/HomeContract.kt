@@ -21,12 +21,14 @@ interface HomeContract {
 
         fun hideLoading()
 
-        fun shoErrorLoading()
+        fun showErrorLoading()
     }
 
     interface Presenter : BaseContract.Presenter<View> {
         fun clickCatalog(catalog: Catalog)
 
         fun clickVideo(video: VideoCatalog)
+
+        fun loadCatalogs(items: Int = 10, filters: String = "other")
     }
 }
