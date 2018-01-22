@@ -36,9 +36,17 @@ class LoginActivity : BaseActivity<LoginContract.View, LoginContract.Presenter>(
     }
 
     override fun errorPassword(error: ErrorLogin) {
+        if (error == ErrorLogin.PASSWORD_SHORT) {
+            password_input_layout.error = resources.getText(R.string.password_too_short)
+            password_input_layout.isErrorEnabled = true
+        }
     }
 
     override fun errorUsername(error: ErrorLogin) {
+        if (error == ErrorLogin.USERNAME_SHORT) {
+            username_input_layout.error = resources.getText(R.string.username_too_short)
+            username_input_layout.isErrorEnabled = true
+        }
     }
 
     override fun onErrorLogin() {

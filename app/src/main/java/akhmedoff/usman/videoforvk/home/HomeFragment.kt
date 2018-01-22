@@ -40,6 +40,7 @@ class HomeFragment : BaseFragment<HomeContract.View, HomeContract.Presenter>(), 
                 presenter.clickCatalog(item)
             }
         })
+
         adapter.setHasStableIds(true)
     }
 

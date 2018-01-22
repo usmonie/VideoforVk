@@ -10,6 +10,7 @@ import akhmedoff.usman.videoforvk.model.User
 import akhmedoff.usman.videoforvk.model.Video
 import akhmedoff.usman.videoforvk.utils.vkApi
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -28,6 +29,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_video.*
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 class VideoFragment : BaseFragment<VideoContract.View, VideoContract.Presenter>(),
     VideoContract.View {
@@ -87,6 +89,15 @@ class VideoFragment : BaseFragment<VideoContract.View, VideoContract.Presenter>(
     }
 
     private fun initExoPlayer(item: Video) {
+        if (item.files.external != null && item.files.external!!.contains("youtube")) {
+            startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(item.files.external)
+                )
+            )
+        }
+
         val mp4VideoUri = Uri.parse(
             when {
                 item.files.hls != null -> item.files.hls
@@ -119,9 +130,8 @@ class VideoFragment : BaseFragment<VideoContract.View, VideoContract.Presenter>(
             else -> ExtractorMediaSource.Factory(dataSourceFactory)
         }.createMediaSource(mp4VideoUri, null, null)
 // Prepare the player with the source.
-        player?.prepare(videoSource)
 
-        player?.playWhenReady = true
+        player?.prepare(videoSource)
     }
 
     override fun showGroupOwnerInfo(group: Group) {
@@ -150,7 +160,6 @@ class VideoFragment : BaseFragment<VideoContract.View, VideoContract.Presenter>(
 
     override fun startVideo() {
         player?.playWhenReady = true
-
     }
 
     override fun stopVideo() {

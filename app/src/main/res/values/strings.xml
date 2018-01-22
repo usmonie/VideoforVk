@@ -7,11 +7,13 @@
 
     <string name="login.button.text">Login with VK</string>
     <string name="login.welcome.text">To use the application you need to log in through VK</string>
-    <string name="error.login">Something went wrong</string>
+    <string name="error.login">Something went wrong, check your login or password</string>
     <string name="login.password.hint">Password</string>
     <string name="login.username.hint">Phone number or e-mail</string>
     <string name="see_all_category_button"><u>see all</u></string>
 
     <string name="user.name" formatted="false">%firstName %lastName</string>
     <string name="data.format" formatted="false">%t %d %m, %y</string>
+    <string name="password_too_short">Password is short or empty</string>
+    <string name="username_too_short">Username is short or empty</string>
 </resources>
