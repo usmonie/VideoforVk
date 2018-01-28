@@ -9,12 +9,15 @@ import akhmedoff.usman.videoforvk.model.Item
 import akhmedoff.usman.videoforvk.model.User
 import akhmedoff.usman.videoforvk.model.Video
 import akhmedoff.usman.videoforvk.utils.vkApi
+import android.app.Dialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import com.google.android.exoplayer2.DefaultControlDispatcher
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.Player
@@ -28,11 +31,15 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_video.*
+import kotlinx.android.synthetic.main.playback_exo_control_view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
 class VideoFragment : BaseFragment<VideoContract.View, VideoContract.Presenter>(),
     VideoContract.View {
+
+    private lateinit var fullscreenDialog: Dialog
+
     companion object {
 
         private const val VIDEO_ID = "video_id"
@@ -50,6 +57,7 @@ class VideoFragment : BaseFragment<VideoContract.View, VideoContract.Presenter>(
     override lateinit var videoPresenter: VideoPresenter
 
     private var player: SimpleExoPlayer? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         videoPresenter = VideoPresenter(
             VideoRepository(
@@ -64,6 +72,11 @@ class VideoFragment : BaseFragment<VideoContract.View, VideoContract.Presenter>(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View = inflater.inflate(R.layout.fragment_video, container, false)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        fullscreen_toggle.setOnClickListener { videoPresenter.clickFullscreen() }
+    }
 
     override fun showVideo(item: Video) {
         initVideoInfo(item)
@@ -83,7 +96,6 @@ class VideoFragment : BaseFragment<VideoContract.View, VideoContract.Presenter>(
             "dd MMM HH:mm",
             Locale.getDefault()
         ).format(date)
-
     }
 
     private fun initExoPlayer(item: Video) {
@@ -141,6 +153,7 @@ class VideoFragment : BaseFragment<VideoContract.View, VideoContract.Presenter>(
         player?.prepare(videoSource)
     }
 
+
     override fun showGroupOwnerInfo(group: Group) {
         owner_name.text = group.name
         Picasso.with(context).load(group.photo100).into(owner_photo)
@@ -164,6 +177,15 @@ class VideoFragment : BaseFragment<VideoContract.View, VideoContract.Presenter>(
 
     }
 
+    override fun initFullscreen() {
+        fullscreenDialog =
+                object : Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen) {
+                    override fun onBackPressed() {
+                        presenter.clickFullscreen()
+                    }
+                }
+    }
+
     override fun startVideo() {
         player?.playWhenReady = true
     }
@@ -177,9 +199,33 @@ class VideoFragment : BaseFragment<VideoContract.View, VideoContract.Presenter>(
     }
 
     override fun showFullscreen() {
+        (simpleExoPlayerView.parent as ViewGroup).removeView(simpleExoPlayerView)
+        fullscreenDialog.addContentView(
+            simpleExoPlayerView,
+            ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+        )
+        fullscreen_toggle.setImageDrawable(
+            ContextCompat.getDrawable(
+                context!!,
+                R.drawable.ic_fullscreen_exit_white_24dp
+            )
+        )
+        fullscreenDialog.show()
     }
 
     override fun showSmallScreen() {
+        (simpleExoPlayerView.parent as ViewGroup).removeView(simpleExoPlayerView)
+        (collapsing_toolbar as FrameLayout).addView(simpleExoPlayerView)
+        fullscreenDialog.dismiss()
+        fullscreen_toggle.setImageDrawable(
+            ContextCompat.getDrawable(
+                context!!,
+                R.drawable.ic_fullscreen_white_24dp
+            )
+        )
     }
 
     override fun initPresenter(): VideoContract.Presenter = videoPresenter

@@ -25,10 +25,12 @@ interface HomeContract {
     }
 
     interface Presenter : BaseContract.Presenter<View> {
+        fun refresh()
+
         fun clickCatalog(catalog: Catalog)
 
         fun clickVideo(video: VideoCatalog)
 
-        fun loadCatalogs(items: Int = 10, filters: String = "other")
+        fun loadCatalogs(next: String?, items: Int = 10, filters: String = "other")
     }
 }

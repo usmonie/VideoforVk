@@ -10,6 +10,8 @@ interface VideoContract {
     interface View : BaseContract.View {
         var videoPresenter: VideoPresenter
 
+        fun initFullscreen()
+
         fun showGroupOwnerInfo(group: Group)
 
         fun showUserOwnerInfo(user: User)
@@ -38,7 +40,5 @@ interface VideoContract {
         fun loadVideo(id: String)
 
         fun clickFullscreen()
-
-        fun clickSmallScreen()
     }
 }

@@ -9,6 +9,8 @@ import android.arch.lifecycle.OnLifecycleEvent
 class VideoPresenter(private val videoRepository: VideoRepository) :
     BasePresenter<VideoContract.View>(), VideoContract.Presenter {
 
+    private var isFullscreen: Boolean = false
+
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun onStart() {
         view?.let {
@@ -40,10 +42,19 @@ class VideoPresenter(private val videoRepository: VideoRepository) :
     }
 
     override fun clickFullscreen() {
+        isFullscreen = when (isFullscreen) {
+            true -> {
+                view?.showSmallScreen()
+                false
+            }
+            false -> {
+                view?.initFullscreen()
+                view?.showFullscreen()
+                true
+            }
+        }
     }
 
-    override fun clickSmallScreen() {
-    }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     fun onPause() {

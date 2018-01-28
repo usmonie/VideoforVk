@@ -61,6 +61,8 @@ class HomeFragment : BaseFragment<HomeContract.View, HomeContract.Presenter>(), 
         home_recycler.setItemViewCacheSize(15)
         home_recycler.isDrawingCacheEnabled = true
         home_recycler.drawingCacheQuality = View.DRAWING_CACHE_QUALITY_HIGH
+        update_home_layout.setOnRefreshListener { homePresenter.refresh() }
+
     }
 
     override fun showList(videos: List<Catalog>) = adapter.replace(videos.toMutableList())
@@ -79,13 +81,15 @@ class HomeFragment : BaseFragment<HomeContract.View, HomeContract.Presenter>(), 
     }
 
     override fun showLoading() {
-
+        update_home_layout.isRefreshing = true
     }
 
     override fun hideLoading() {
+        update_home_layout.isRefreshing = false
     }
 
     override fun showErrorLoading() {
+
     }
 
     override fun showCatalogs() {

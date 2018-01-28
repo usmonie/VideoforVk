@@ -10,22 +10,22 @@ class LoginPresenter(private val repository: UserRepository) : BasePresenter<Log
 
     override fun login() {
         view?.let {
-            if (view!!.getUsername().isBlank()) {
-                view?.errorUsername(ErrorLogin.EMPTY_USERNAME)
+            if (it.getUsername().isBlank()) {
+                it.errorUsername(ErrorLogin.EMPTY_USERNAME)
                 return
             }
-            if (view!!.getPassword().isBlank()) {
-                view?.errorPassword(ErrorLogin.EMPTY_PASSWORD)
+            if (it.getPassword().isBlank()) {
+                it.errorPassword(ErrorLogin.EMPTY_PASSWORD)
                 return
             }
 
-            repository.auth(view!!.getUsername(), view!!.getPassword()).observe(view!!, Observer {
+            repository.auth(it.getUsername(), it.getPassword()).observe(it, Observer { response ->
                 when {
-                    it != null && it.isSuccessfull && it.response != null && it.response.isSuccessfull -> {
-                        it.response.accessToken?.let { token -> repository.saveToken(token) }
-                        view!!.startMain()
+                    response != null && response.isSuccessfull && response.response != null && response.response.isSuccessfull -> {
+                        response.response.accessToken?.let { token -> repository.saveToken(token) }
+                        it.startMain()
                     }
-                    else -> view!!.onErrorLogin()
+                    else -> it.onErrorLogin()
                 }
             })
         }

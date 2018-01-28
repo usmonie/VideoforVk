@@ -14,27 +14,29 @@ class HomePresenter(private val videoRepository: VideoRepository) :
     private var response: ResponseCatalog? = null
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    fun onStart() {
-        loadCatalogs()
-    }
+    fun onStart() = loadCatalogs(null)
 
-    override fun loadCatalogs(items: Int, filters: String) {
+    override fun refresh() = loadCatalogs(null)
+
+    override fun loadCatalogs(next: String?, items: Int, filters: String) {
+        view?.showLoading()
+
         view?.let {
             videoRepository
-                .getCatalog(items, response?.next, filters)
+                .getCatalog(items, next, filters)
                 .observe(
-                    view!!,
-                    Observer {
-                        response = it?.response
-                        view?.showLoading()
+                    it,
+                    Observer { responseCatalog ->
+                        response = responseCatalog?.response
 
                         when {
-                            it?.response != null -> {
-                                view?.hideLoading()
-                                view?.showList(it.response.catalogs)
+                            responseCatalog?.response != null -> {
+                                it.showList(responseCatalog.response.catalogs)
                             }
-                            else -> view?.showErrorLoading()
+                            else -> it.showErrorLoading()
                         }
+                        it.hideLoading()
+
                     }
                 )
         }
