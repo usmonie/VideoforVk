@@ -11,6 +11,7 @@ import akhmedoff.usman.videoforvk.model.Video
 import akhmedoff.usman.videoforvk.utils.vkApi
 import android.app.Dialog
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
@@ -91,9 +92,9 @@ class VideoFragment : BaseFragment<VideoContract.View, VideoContract.Presenter>(
         video_desc.text = item.description
         video_desc.linksClickable = true
 
-        val date = Date(item.addingDate)
+        val date = Date(item.date)
         video_data.text = SimpleDateFormat(
-            "dd MMM HH:mm",
+            "HH:mm, dd MMM ",
             Locale.getDefault()
         ).format(date)
     }
@@ -128,10 +129,10 @@ class VideoFragment : BaseFragment<VideoContract.View, VideoContract.Presenter>(
                         startActivity(
                             Intent(
                                 Intent.ACTION_VIEW,
-                                Uri.parse(item.files.external)
+                                Uri.parse(it)
                             )
                         )
-                        return super.dispatchSetPlayWhenReady(player, false)
+                        return false
                     }
                     return super.dispatchSetPlayWhenReady(player, playWhenReady)
                 }
@@ -184,6 +185,8 @@ class VideoFragment : BaseFragment<VideoContract.View, VideoContract.Presenter>(
                         presenter.clickFullscreen()
                     }
                 }
+
+        fullscreenDialog.requestWindowFeature(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
     }
 
     override fun startVideo() {
@@ -219,6 +222,7 @@ class VideoFragment : BaseFragment<VideoContract.View, VideoContract.Presenter>(
     override fun showSmallScreen() {
         (simpleExoPlayerView.parent as ViewGroup).removeView(simpleExoPlayerView)
         (collapsing_toolbar as FrameLayout).addView(simpleExoPlayerView)
+
         fullscreenDialog.dismiss()
         fullscreen_toggle.setImageDrawable(
             ContextCompat.getDrawable(

@@ -164,22 +164,20 @@ internal class GravityDelegate(
             // We should return the child if it's visible width
             // is greater than 0.5 of it's total width.
             // In a RTL configuration, we need to check the start point and in LTR the end point
-            if (isRtlHorizontal) {
-                visibleWidth = (helper.totalSpace - helper.getDecoratedStart(child)).toFloat() /
+            visibleWidth = when {
+                isRtlHorizontal -> (helper.totalSpace - helper.getDecoratedStart(child)).toFloat() /
                         helper.getDecoratedMeasurement(child)
-            } else {
-                visibleWidth = helper.getDecoratedEnd(child).toFloat() /
+                else -> helper.getDecoratedEnd(child).toFloat() /
                         helper.getDecoratedMeasurement(child)
             }
 
             // If we're at the end of the list, we shouldn't snap
             // to avoid having the last item not completely visible.
             val endOfList: Boolean
-            if (!reverseLayout) {
-                endOfList = layoutManager
+            endOfList = when {
+                !reverseLayout -> layoutManager
                     .findLastCompletelyVisibleItemPosition() == layoutManager.getItemCount() - 1
-            } else {
-                endOfList = layoutManager
+                else -> layoutManager
                     .findFirstCompletelyVisibleItemPosition() == 0
             }
 
@@ -227,37 +225,32 @@ internal class GravityDelegate(
 
             val visibleWidth: Float
 
-            if (isRtlHorizontal) {
-                visibleWidth = helper.getDecoratedEnd(child).toFloat() /
+            visibleWidth = when {
+                isRtlHorizontal -> helper.getDecoratedEnd(child).toFloat() /
                         helper.getDecoratedMeasurement(child)
-            } else {
-                visibleWidth = (helper.totalSpace - helper.getDecoratedStart(child)).toFloat() /
+                else -> (helper.totalSpace - helper.getDecoratedStart(child)).toFloat() /
                         helper.getDecoratedMeasurement(child)
             }
 
             // If we're at the start of the list, we shouldn't snap
             // to avoid having the first item not completely visible.
             val startOfList: Boolean
-            if (!reverseLayout) {
-                startOfList = layoutManager
+            startOfList = when {
+                !reverseLayout -> layoutManager
                     .findFirstCompletelyVisibleItemPosition() == 0
-            } else {
-                startOfList = layoutManager
+                else -> layoutManager
                     .findLastCompletelyVisibleItemPosition() == layoutManager.getItemCount() - 1
             }
 
-            return if (visibleWidth > 0.5f && !startOfList) {
-                child
-            } else if (snapLastItem && startOfList) {
-                child
-            } else if (startOfList) {
-                null
-            } else {
-                // If the child wasn't returned, we need to return the previous view
-                if (reverseLayout)
-                    layoutManager.findViewByPosition(lastChild + offset)
-                else
-                    layoutManager.findViewByPosition(lastChild - offset)
+            return when {
+                visibleWidth > 0.5f && !startOfList -> child
+                snapLastItem && startOfList -> child
+                startOfList -> null
+                else -> // If the child wasn't returned, we need to return the previous view
+                    when {
+                        reverseLayout -> layoutManager.findViewByPosition(lastChild + offset)
+                        else -> layoutManager.findViewByPosition(lastChild - offset)
+                    }
             }
         }
         return null
