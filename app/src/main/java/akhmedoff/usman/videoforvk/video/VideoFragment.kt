@@ -9,14 +9,15 @@ import akhmedoff.usman.videoforvk.model.Item
 import akhmedoff.usman.videoforvk.model.User
 import akhmedoff.usman.videoforvk.model.Video
 import akhmedoff.usman.videoforvk.utils.vkApi
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.android.exoplayer2.DefaultControlDispatcher
 import com.google.android.exoplayer2.ExoPlayerFactory
+import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
@@ -30,12 +31,12 @@ import kotlinx.android.synthetic.main.fragment_video.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 class VideoFragment : BaseFragment<VideoContract.View, VideoContract.Presenter>(),
     VideoContract.View {
     companion object {
 
         private const val VIDEO_ID = "video_id"
+
         fun create(item: Item): VideoFragment {
             val fragment = VideoFragment()
             val bundle = Bundle()
@@ -47,8 +48,8 @@ class VideoFragment : BaseFragment<VideoContract.View, VideoContract.Presenter>(
     }
 
     override lateinit var videoPresenter: VideoPresenter
-    private var player: SimpleExoPlayer? = null
 
+    private var player: SimpleExoPlayer? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         videoPresenter = VideoPresenter(
             VideoRepository(
@@ -64,15 +65,12 @@ class VideoFragment : BaseFragment<VideoContract.View, VideoContract.Presenter>(
         savedInstanceState: Bundle?
     ): View = inflater.inflate(R.layout.fragment_video, container, false)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        arguments?.getString(VIDEO_ID)?.let { videoPresenter.loadVideo(it) }
-    }
-
     override fun showVideo(item: Video) {
         initVideoInfo(item)
         initExoPlayer(item)
     }
+
+    override fun getVideoId() = arguments!!.getString(VIDEO_ID)!!
 
     private fun initVideoInfo(item: Video) {
         video_title.text = item.title
@@ -89,15 +87,6 @@ class VideoFragment : BaseFragment<VideoContract.View, VideoContract.Presenter>(
     }
 
     private fun initExoPlayer(item: Video) {
-        if (item.files.external != null && item.files.external!!.contains("youtube")) {
-            startActivity(
-                Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse(item.files.external)
-                )
-            )
-        }
-
         val mp4VideoUri = Uri.parse(
             when {
                 item.files.hls != null -> item.files.hls
@@ -114,23 +103,41 @@ class VideoFragment : BaseFragment<VideoContract.View, VideoContract.Presenter>(
         val videoTrackSelectionFactory = AdaptiveTrackSelection.Factory(bandwidthMeter)
         val trackSelector = DefaultTrackSelector(videoTrackSelectionFactory)
 
-// 2. Create the player
+        // 2. Create the player
         player = ExoPlayerFactory.newSimpleInstance(context, trackSelector)
 
+        simpleExoPlayerView.setControlDispatcher(
+            object : DefaultControlDispatcher() {
+                override fun dispatchSetPlayWhenReady(
+                    player: Player?,
+                    playWhenReady: Boolean
+                ): Boolean {
+                    item.files.external?.let {
+                        startActivity(
+                            Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse(item.files.external)
+                            )
+                        )
+                        return super.dispatchSetPlayWhenReady(player, false)
+                    }
+                    return super.dispatchSetPlayWhenReady(player, playWhenReady)
+                }
+            })
         simpleExoPlayerView.player = player
 
-// Produces DataSource instances through which media data is loaded.
+        // Produces DataSource instances through which media data is loaded.
         val dataSourceFactory = DefaultDataSourceFactory(
             context,
             Util.getUserAgent(context, "yourApplicationName"), bandwidthMeter
         )
-// This is the MediaSource representing the media to be played.
+        // This is the MediaSource representing the media to be played.
         val videoSource = when {
             item.files.hls != null -> HlsMediaSource.Factory(dataSourceFactory)
             else -> ExtractorMediaSource.Factory(dataSourceFactory)
         }.createMediaSource(mp4VideoUri, null, null)
-// Prepare the player with the source.
 
+        // Prepare the player with the source.
         player?.prepare(videoSource)
     }
 
@@ -139,7 +146,6 @@ class VideoFragment : BaseFragment<VideoContract.View, VideoContract.Presenter>(
         Picasso.with(context).load(group.photo100).into(owner_photo)
     }
 
-    @SuppressLint("SetTextI18n")
     override fun showUserOwnerInfo(user: User) {
         owner_name.text =
                 String.format(

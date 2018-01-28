@@ -9,34 +9,40 @@ import android.arch.lifecycle.OnLifecycleEvent
 class VideoPresenter(private val videoRepository: VideoRepository) :
     BasePresenter<VideoContract.View>(), VideoContract.Presenter {
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    fun onStart() {
+        view?.let {
+            loadVideo(it.getVideoId())
+        }
+    }
+
     override fun loadVideo(id: String) {
         view?.let {
             videoRepository
                 .getVideo(id)
-                .observe(view!!, Observer {
+                .observe(it, Observer { response ->
                     when {
-                        it?.response != null -> {
-                            view!!.showVideo(it.response.items[0])
+                        response?.response != null -> {
                             when {
-                                it.response.groups != null && it.response.groups.isNotEmpty() -> view!!.showGroupOwnerInfo(
-                                    it.response.groups[0]
+                                response.response.groups != null -> it.showGroupOwnerInfo(
+                                    response.response.groups[0]
                                 )
-                                it.response.profiles != null && it.response.profiles.isNotEmpty() -> view!!.showUserOwnerInfo(
-                                    it.response.profiles[0]
+                                response.response.profiles != null -> it.showUserOwnerInfo(
+                                    response.response.profiles[0]
                                 )
                             }
+                            it.showVideo(response.response.items[0])
                         }
                     }
                 })
         }
+
     }
 
     override fun clickFullscreen() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun clickSmallScreen() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)

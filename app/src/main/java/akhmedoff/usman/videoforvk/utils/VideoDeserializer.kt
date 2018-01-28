@@ -24,15 +24,27 @@ class VideoDeserializer : JsonDeserializer<ResponseVideo> {
             val itemJson = it.asJsonObject
 
             val fileJson = itemJson["files"].asJsonObject
-            val files = Files(
-                stringToUrlFormat(fileJson["mp4_240"]?.toString()),
-                stringToUrlFormat(fileJson["mp4_360"]?.toString()),
-                stringToUrlFormat(fileJson["mp4_480"]?.toString()),
-                stringToUrlFormat(fileJson["mp4_720"]?.toString()),
-                stringToUrlFormat(fileJson["mp4_1080"]?.toString()),
-                stringToUrlFormat(fileJson["external"]?.toString()),
-                stringToUrlFormat(fileJson["hls"]?.toString())
-            )
+            var external = stringToUrlFormat(fileJson["external"]?.toString())
+
+            var mp4240 = stringToUrlFormat(fileJson["mp4_240"]?.toString())
+            val mp4360 = stringToUrlFormat(fileJson["mp4_360"]?.toString())
+            val mp4480 = stringToUrlFormat(fileJson["mp4_480"]?.toString())
+            val mp4720 = stringToUrlFormat(fileJson["mp4_720"]?.toString())
+            val mp41080 = stringToUrlFormat(fileJson["mp4_1080"]?.toString())
+            val hls = stringToUrlFormat(fileJson["hls"]?.toString())
+
+            if (external != null && (external.endsWith(".mp4") || external.contains("vk.com"))) {
+                mp4240 = external
+                external = null
+            }
+            val files = Files()
+            files.mp4240 = mp4240
+            files.mp4360 = mp4360
+            files.mp4480 = mp4480
+            files.mp4720 = mp4720
+            files.mp41080 = mp41080
+            files.hls = hls
+            files.external = external
 
             val likesJson = itemJson["likes"].asJsonObject
             val likes = Likes(

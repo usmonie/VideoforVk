@@ -30,6 +30,8 @@ interface VideoContract {
 
         fun stopVideo()
 
+        fun getVideoId(): String
+
     }
 
     interface Presenter : BaseContract.Presenter<View> {

@@ -5,14 +5,16 @@ import akhmedoff.usman.videoforvk.data.repository.VideoRepository
 import akhmedoff.usman.videoforvk.model.Catalog
 import akhmedoff.usman.videoforvk.model.ResponseCatalog
 import akhmedoff.usman.videoforvk.model.VideoCatalog
+import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.Observer
+import android.arch.lifecycle.OnLifecycleEvent
 
 class HomePresenter(private val videoRepository: VideoRepository) :
     BasePresenter<HomeContract.View>(), HomeContract.Presenter {
     private var response: ResponseCatalog? = null
 
-    override fun onPresenterCreated() {
-        super.onPresenterCreated()
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    fun onStart() {
         loadCatalogs()
     }
 

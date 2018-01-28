@@ -8,7 +8,7 @@ import retrofit2.http.Url
 
 interface VkApi {
     companion object {
-        val API_VERSION = "5.71"
+        const val API_VERSION = "5.71"
     }
 
     @GET("users.get")

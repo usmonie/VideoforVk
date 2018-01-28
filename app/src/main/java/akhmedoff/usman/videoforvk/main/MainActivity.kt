@@ -5,12 +5,17 @@ import akhmedoff.usman.videoforvk.base.BaseActivity
 import akhmedoff.usman.videoforvk.home.HomeFragment
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView.OnNavigationItemSelectedListener
+import android.support.v4.app.Fragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), MainContract.View {
+    companion object {
+        const val CURRENT_FRAGMENT_KEY = "current_fragment"
+    }
+
     override lateinit var mainPresenter: MainContract.Presenter
 
-    private lateinit var homeFragment: HomeFragment
+    private lateinit var fragment: Fragment
 
     private val onNavigationItemSelectedListener = OnNavigationItemSelectedListener {
         mainPresenter.navigate(it.itemId)
@@ -22,13 +27,16 @@ class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        homeFragment = HomeFragment()
+        if (savedInstanceState == null) {
+            mainPresenter.navigate(R.id.navigation_home)
+        }
 
         supportFragmentManager.addOnBackStackChangedListener {
             val fragments = supportFragmentManager.fragments
             fragments.forEach {
-                if (it.isVisible)
+                if (it.isVisible) {
                     presenter.updateCurrentFragment(it)
+                }
             }
         }
         navigation.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
@@ -37,7 +45,7 @@ class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), 
     override fun showHome() {
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.content, homeFragment)
+            .replace(R.id.content, HomeFragment(), CURRENT_FRAGMENT_KEY)
             .commitAllowingStateLoss()
     }
 

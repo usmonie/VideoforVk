@@ -4,6 +4,7 @@ import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.base.BaseFragment
 import akhmedoff.usman.videoforvk.data.local.UserSettings
 import akhmedoff.usman.videoforvk.data.repository.VideoRepository
+import akhmedoff.usman.videoforvk.main.MainActivity.Companion.CURRENT_FRAGMENT_KEY
 import akhmedoff.usman.videoforvk.model.Catalog
 import akhmedoff.usman.videoforvk.model.VideoCatalog
 import akhmedoff.usman.videoforvk.utils.vkApi
@@ -68,7 +69,7 @@ class HomeFragment : BaseFragment<HomeContract.View, HomeContract.Presenter>(), 
         val videoFragment = VideoFragment.create(video)
         fragmentManager!!
             .beginTransaction()
-            .replace(R.id.content, videoFragment)
+            .replace(R.id.content, videoFragment, CURRENT_FRAGMENT_KEY)
             .addToBackStack("")
             .commitAllowingStateLoss()
     }
@@ -78,6 +79,7 @@ class HomeFragment : BaseFragment<HomeContract.View, HomeContract.Presenter>(), 
     }
 
     override fun showLoading() {
+
     }
 
     override fun hideLoading() {

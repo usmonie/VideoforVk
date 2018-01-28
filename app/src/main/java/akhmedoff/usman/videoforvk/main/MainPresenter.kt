@@ -2,8 +2,6 @@ package akhmedoff.usman.videoforvk.main
 
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.base.BasePresenter
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.OnLifecycleEvent
 import android.support.v4.app.Fragment
 
 class MainPresenter : BasePresenter<MainContract.View>(), MainContract.Presenter {
@@ -20,10 +18,5 @@ class MainPresenter : BasePresenter<MainContract.View>(), MainContract.Presenter
 
     override fun updateCurrentFragment(it: Fragment) {
 
-    }
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    fun onStart() {
-        navigate(itemNavigationId)
     }
 }
