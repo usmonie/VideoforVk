@@ -5,7 +5,7 @@ import akhmedoff.usman.videoforvk.base.BasePresenter
 import android.support.v4.app.Fragment
 
 class MainPresenter : BasePresenter<MainContract.View>(), MainContract.Presenter {
-    var itemNavigationId: Int = R.id.navigation_home
+    private var itemNavigationId: Int = R.id.navigation_home
 
     override fun navigate(id: Int) {
         itemNavigationId = id

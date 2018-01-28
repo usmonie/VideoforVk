@@ -21,7 +21,7 @@ class LoginPresenter(private val repository: UserRepository) : BasePresenter<Log
 
             repository.auth(it.getUsername(), it.getPassword()).observe(it, Observer { response ->
                 when {
-                    response != null && response.isSuccessfull && response.response != null && response.response.isSuccessfull -> {
+                    response?.response != null && response.response.isSuccessfull -> {
                         response.response.accessToken?.let { token -> repository.saveToken(token) }
                         it.startMain()
                     }
