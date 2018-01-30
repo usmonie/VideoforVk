@@ -10,7 +10,7 @@ interface BaseContract {
 
     interface Presenter<V : BaseContract.View> {
 
-        fun getStateBundle(): Bundle?
+        val state: Bundle
 
         var view: V?
 

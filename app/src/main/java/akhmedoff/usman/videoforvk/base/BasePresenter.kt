@@ -6,7 +6,9 @@ import android.os.Bundle
 
 abstract class BasePresenter<V : BaseContract.View> : LifecycleObserver, BaseContract.Presenter<V> {
 
-    var state: Bundle? = null
+    override val state: Bundle by lazy {
+        Bundle()
+    }
 
     override var view: V? = null
 
@@ -30,17 +32,7 @@ abstract class BasePresenter<V : BaseContract.View> : LifecycleObserver, BaseCon
     }
 
     override fun onPresenterDestroy() {
-        if (state != null && !state!!.isEmpty) {
-            state!!.clear()
-        }
-    }
-
-    override fun getStateBundle(): Bundle {
-        if (state == null) {
-            state = Bundle()
-
-        }
-        return state!!
+        if (!state.isEmpty) state.clear()
     }
 
     override fun onPresenterCreated() {

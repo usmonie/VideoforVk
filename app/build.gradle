@@ -6,6 +6,10 @@ apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 android {
+    sourceSets {
+        test.java.srcDirs += 'src/test/kotlin'
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
+    }
     compileSdkVersion 27
     defaultConfig {
         applicationId "akhmedoff.usman.videoforvk"
@@ -31,6 +35,11 @@ android {
 }
 
 dependencies {
+    testCompile 'org.jetbrains.kotlin:kotlin-stdlib:1.2.21'
+    testCompile 'org.jetbrains.kotlin:kotlin-test-junit:1.2.21'
+    testCompile "com.nhaarman:mockito-kotlin:1.1.0"
+    testCompile 'org.amshove.kluent:kluent:1.14'
+
     // App's dependencies
     implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
     implementation "com.android.support:cardview-v7:$supportLibraryVersion"
