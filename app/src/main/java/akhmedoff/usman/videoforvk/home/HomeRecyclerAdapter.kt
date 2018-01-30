@@ -9,8 +9,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 
 class HomeRecyclerAdapter(
-    private val videoClickListener: AbstractRecyclerAdapter.OnClickListener<VideoCatalog>,
-    private val allClickListener: OnClickListener<Catalog>
+    private val videoClickListener: AbstractRecyclerAdapter.OnClickListener<VideoCatalog>
 ) : AbstractRecyclerAdapter<Catalog>() {
     override fun areItemsTheSame(oldItem: Catalog, newItem: Catalog): Boolean =
         oldItem.id == newItem.id
@@ -27,9 +26,6 @@ class HomeRecyclerAdapter(
             ),
             videoClickListener
         )
-        holder.seeAllButton.setOnClickListener {
-            allClickListener.onClick(items!![holder.adapterPosition])
-        }
 
         holder
     }

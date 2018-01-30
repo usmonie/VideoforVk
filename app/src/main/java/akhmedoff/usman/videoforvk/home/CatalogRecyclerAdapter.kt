@@ -17,7 +17,7 @@ class CatalogRecyclerAdapter(private val videoClickListener: OnClickListener<Vid
 
     override fun createHolder(parent: ViewGroup, viewType: Int): VideoViewHolder {
         val holder = VideoViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.video_item, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.catalog_video_item, parent, false)
         )
 
         holder.itemView.setOnClickListener { videoClickListener.onClick(items!![holder.adapterPosition]) }

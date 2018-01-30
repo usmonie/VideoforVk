@@ -25,8 +25,8 @@ abstract class AbstractRecyclerAdapter<T> : RecyclerView.Adapter<AbstractViewHol
 
     override fun getItemId(position: Int) = items?.get(position)?.hashCode()?.toLong() ?: 0L
 
-    @SuppressLint("StaticFieldLeak")
     @MainThread
+    @SuppressLint("StaticFieldLeak")
     fun replace(update: MutableList<T>?) {
         dataVersion++
         when {
@@ -48,8 +48,8 @@ abstract class AbstractRecyclerAdapter<T> : RecyclerView.Adapter<AbstractViewHol
                 val startVersion = dataVersion
                 val oldItems = items
                 object : AsyncTask<Void, Void, DiffUtil.DiffResult>() {
-                    override fun doInBackground(vararg voids: Void): DiffUtil.DiffResult {
-                        return DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+                    override fun doInBackground(vararg voids: Void) =
+                        DiffUtil.calculateDiff(object : DiffUtil.Callback() {
                             override fun getOldListSize() = oldItems?.size ?: 0
 
                             override fun getNewListSize() = update.size
@@ -78,13 +78,10 @@ abstract class AbstractRecyclerAdapter<T> : RecyclerView.Adapter<AbstractViewHol
                                 )
                             }
                         })
-                    }
 
                     override fun onPostExecute(diffResult: DiffUtil.DiffResult) {
-                        if (startVersion != dataVersion) {
-                            // ignore update
-                            return
-                        }
+                        // ignore update
+                        if (startVersion != dataVersion) return
                         items = update
                         diffResult.dispatchUpdatesTo(this@AbstractRecyclerAdapter)
                     }

@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="false"
-        app:expanded="false"
+        app:expanded="true"
         app:title="@string/app_name">
 
         <android.support.design.widget.CollapsingToolbarLayout
@@ -45,7 +45,7 @@
             android:clipToPadding="true"
             android:scrollbars="vertical"
             app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior"
-            tools:listitem="@layout/recommendation_item" />
+            tools:listitem="@layout/catalog_item" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 </android.support.design.widget.CoordinatorLayout>

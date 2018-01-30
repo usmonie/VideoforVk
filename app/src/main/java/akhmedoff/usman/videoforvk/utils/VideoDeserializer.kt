@@ -13,7 +13,6 @@ class VideoDeserializer : JsonDeserializer<ResponseVideo> {
         typeOfT: Type,
         context: JsonDeserializationContext
     ): ResponseVideo {
-
         val jsonObject = json.asJsonObject["response"].asJsonObject
 
         val itemsJson = jsonObject["items"].asJsonArray

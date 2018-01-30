@@ -36,10 +36,6 @@ class HomeFragment : BaseFragment<HomeContract.View, HomeContract.Presenter>(), 
             override fun onClick(item: VideoCatalog) {
                 presenter.clickVideo(item)
             }
-        }, object : OnClickListener<Catalog> {
-            override fun onClick(item: Catalog) {
-                presenter.clickCatalog(item)
-            }
         })
 
         adapter.setHasStableIds(true)
@@ -55,7 +51,6 @@ class HomeFragment : BaseFragment<HomeContract.View, HomeContract.Presenter>(), 
 
         val layoutManager = LinearLayoutManager(context, VERTICAL, false)
         home_recycler.layoutManager = layoutManager
-
         home_recycler.adapter = adapter
 
         home_recycler.setItemViewCacheSize(15)
@@ -68,11 +63,11 @@ class HomeFragment : BaseFragment<HomeContract.View, HomeContract.Presenter>(), 
 
     override fun showVideo(video: VideoCatalog) {
         val videoFragment = VideoFragment.create(video)
-        fragmentManager!!
-            .beginTransaction()
-            .replace(R.id.content, videoFragment, CURRENT_FRAGMENT_KEY)
-            .addToBackStack("")
-            .commitAllowingStateLoss()
+        fragmentManager
+            ?.beginTransaction()
+            ?.replace(R.id.content, videoFragment, CURRENT_FRAGMENT_KEY)
+            ?.addToBackStack("")
+            ?.commitAllowingStateLoss()
     }
 
     override fun showCatalog(catalog: Catalog) {

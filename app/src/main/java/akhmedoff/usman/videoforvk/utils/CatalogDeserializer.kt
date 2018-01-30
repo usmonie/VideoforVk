@@ -35,17 +35,17 @@ class CatalogDeserializer : JsonDeserializer<ResponseCatalog> {
 
                 item.id = videoJson["id"].asJsonPrimitive.asInt
                 item.ownerId = videoJson["owner_id"].asInt
-                item.title = videoJson["title"].toString()
+                item.title = stringToUrlFormat(videoJson["title"].toString())!!
                 videoJson["duration"]?.let { item.duration = it.asInt }
                 videoJson["description"]?.let { item.description = it.toString() }
                 videoJson["date"]?.let { item.date = it.asLong }
                 item.comments = videoJson["comments"].asInt
                 item.views = videoJson["views"].asInt
                 item.accessKey = videoJson["access_key"].toString()
-                videoJson["photo_130"].let { item.photo130 = it.toString() }
-                videoJson["photo_320"].let { item.photo320 = it.toString() }
-                videoJson["photo_640"]?.let { item.photo640 = it.toString() }
-                videoJson["photo_800"]?.let { item.photo800 = it.toString() }
+                videoJson["photo_130"].let { item.photo130 = stringToUrlFormat(it.toString())!! }
+                videoJson["photo_320"].let { item.photo320 = stringToUrlFormat(it.toString())!! }
+                videoJson["photo_640"]?.let { item.photo640 = stringToUrlFormat(it.toString()) }
+                videoJson["photo_800"]?.let { item.photo800 = stringToUrlFormat(it.toString()) }
                 item.platform = videoJson["platform"]?.toString()
                 item.canAdd = videoJson["can_add"].asBoolean
                 videoJson["type"]?.let { item.type = it.toString() }
