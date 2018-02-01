@@ -15,4 +15,6 @@
     <string name="data.format" formatted="false">%t %d %m, %y</string>
     <string name="password_too_short">Password is short or empty</string>
     <string name="username_too_short">Username is short or empty</string>
+    <string name="follow">Follow</string>
+    <string name="followed">Followed</string>
 </resources>

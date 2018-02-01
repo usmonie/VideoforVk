@@ -42,8 +42,8 @@ class CatalogDeserializer : JsonDeserializer<ResponseCatalog> {
                 item.comments = videoJson["comments"].asInt
                 item.views = videoJson["views"].asInt
                 item.accessKey = videoJson["access_key"].toString()
-                videoJson["photo_130"].let { item.photo130 = stringToUrlFormat(it.toString())!! }
-                videoJson["photo_320"].let { item.photo320 = stringToUrlFormat(it.toString())!! }
+                item.photo130 = stringToUrlFormat(videoJson["photo_130"].toString())!!
+                item.photo320 = stringToUrlFormat(videoJson["photo_320"].toString())!!
                 videoJson["photo_640"]?.let { item.photo640 = stringToUrlFormat(it.toString()) }
                 videoJson["photo_800"]?.let { item.photo800 = stringToUrlFormat(it.toString()) }
                 item.platform = videoJson["platform"]?.toString()

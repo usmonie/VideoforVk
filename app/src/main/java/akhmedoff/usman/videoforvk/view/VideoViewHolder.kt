@@ -8,8 +8,8 @@ import android.widget.TextView
 import com.squareup.picasso.Picasso
 
 class VideoViewHolder(itemView: View) : AbstractViewHolder<VideoCatalog>(itemView) {
-    private val videoFrame: ImageView by lazy { itemView.findViewById<ImageView>(R.id.video_frame) }
-    private val videoTitle: TextView by lazy { itemView.findViewById<TextView>(R.id.video_title) }
+    private val videoFrame = itemView.findViewById<ImageView>(R.id.video_frame)
+    private val videoTitle = itemView.findViewById<TextView>(R.id.video_title)
 
     override fun bind(item: VideoCatalog) {
 

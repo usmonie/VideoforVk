@@ -5,11 +5,14 @@ import akhmedoff.usman.videoforvk.data.repository.VideoRepository
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.OnLifecycleEvent
+import android.content.res.Configuration
 
 class VideoPresenter(private val videoRepository: VideoRepository) :
     BasePresenter<VideoContract.View>(), VideoContract.Presenter {
+    private var isFullscreen = false
 
-    private var isFullscreen: Boolean = false
+    private var isStarted = false
+    private var position = 0L
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun onStart() {
@@ -23,22 +26,19 @@ class VideoPresenter(private val videoRepository: VideoRepository) :
             videoRepository
                 .getVideo(id)
                 .observe(it, Observer { response ->
-                    when {
-                        response?.response != null -> {
-                            when {
-                                response.response.groups != null -> it.showGroupOwnerInfo(
-                                    response.response.groups[0]
-                                )
-                                response.response.profiles != null -> it.showUserOwnerInfo(
-                                    response.response.profiles[0]
-                                )
-                            }
-                            it.showVideo(response.response.items[0])
+                    response?.response?.let { responseVideo ->
+                        when {
+                            responseVideo.groups != null -> it.showGroupOwnerInfo(
+                                responseVideo.groups[0]
+                            )
+                            responseVideo.profiles != null -> it.showUserOwnerInfo(
+                                responseVideo.profiles[0]
+                            )
                         }
+                        it.showVideo(responseVideo.items[0])
                     }
                 })
         }
-
     }
 
     override fun clickFullscreen() {
@@ -48,17 +48,24 @@ class VideoPresenter(private val videoRepository: VideoRepository) :
                 false
             }
             false -> {
-                view?.initFullscreen()
                 view?.showFullscreen()
                 true
             }
         }
     }
 
+    override fun changedConfiguration(newConfig: Configuration) {
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE && isFullscreen)
+            view?.showFullscreen()
+    }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     fun onPause() {
-        view?.pauseVideo()
+        view?.let {
+            it.pauseVideo()
+            it.getVideoState()?.let { isStartedVideo -> isStarted = isStartedVideo }
+            it.getVideoPosition()?.let { videoPosition -> position = videoPosition }
+        }
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)

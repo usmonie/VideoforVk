@@ -23,5 +23,5 @@ object UserSettings {
 
     fun saveToken(token: String) = sharedPreferences.edit().putString(USER_TOKEN, token).apply()
 
-    fun getToken() = sharedPreferences.getString(USER_TOKEN, "")!!
+    fun getToken(): String = sharedPreferences.getString(USER_TOKEN, "")
 }

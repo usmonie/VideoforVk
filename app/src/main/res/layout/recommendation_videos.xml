@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:layout_marginBottom="8dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="8dp">
+
+    <ImageView
+        android:id="@+id/recommendation_video_poster"
+        android:layout_width="156dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/background_splash" />
+
+    <TextView
+        android:id="@+id/recommendation_video_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/recommendation_video_poster"
+        app:layout_constraintTop_toTopOf="@+id/recommendation_video_poster"
+        tools:text="Video Title" />
+
+    <TextView
+        android:id="@+id/recommendation_video_views"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        app:layout_constraintStart_toEndOf="@+id/recommendation_video_poster"
+        app:layout_constraintTop_toBottomOf="@+id/recommendation_video_title"
+        tools:text="70K views" />
+
+</android.support.constraint.ConstraintLayout>

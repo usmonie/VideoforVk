@@ -34,7 +34,7 @@ interface VkApi {
     @GET("video.getCatalog")
     fun getCatalog(
         @Query("count") count: Int = 10,
-        @Query("items_count") itemsCount: Int = 5,
+        @Query("items_count") itemsCount: Int = 3,
         @Query("from") from: String? = null,
         @Query("filters") filters: String = "other",
         @Query("access_token") token: String,
@@ -44,12 +44,12 @@ interface VkApi {
     @GET
     fun auth(
         @Url url: String,
-        @Query("grant_type") grantType: String = "password",
         @Query("client_id") clientId: String,
         @Query("client_secret") clientSecret: String,
         @Query("username") username: String,
         @Query("password") password: String,
         @Query("scope") scope: String,
+        @Query("grant_type") grantType: String = "password",
         @Query("v") v: String = API_VERSION
     ): LiveData<Response<Auth>>
 }

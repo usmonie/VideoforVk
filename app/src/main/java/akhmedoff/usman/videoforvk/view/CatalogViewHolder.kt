@@ -15,9 +15,9 @@ class CatalogViewHolder(
     itemView: View,
     videoClickListener: AbstractRecyclerAdapter.OnClickListener<VideoCatalog>
 ) : AbstractViewHolder<Catalog>(itemView) {
-    private val adapter: AbstractRecyclerAdapter<VideoCatalog> by lazy {
-        CatalogRecyclerAdapter(videoClickListener)
-    }
+    private val adapter = CatalogRecyclerAdapter(videoClickListener)
+
+    private val catalogTitle = itemView.findViewById<TextView>(R.id.catalog_title)
 
     init {
         val catalogRecycler = itemView.findViewById<RecyclerView>(R.id.catalog_recycler)
@@ -39,12 +39,9 @@ class CatalogViewHolder(
         catalogRecycler.adapter = adapter
     }
 
-    private val catalogTitle: TextView by lazy {
-        itemView.findViewById<TextView>(R.id.catalog_title)
-    }
 
     override fun bind(item: Catalog) {
         catalogTitle.text = item.name
-        adapter.replace(item.items.toMutableList())
+        adapter.replace(item.items)
     }
 }

@@ -13,18 +13,18 @@ class AuthDeserializer : JsonDeserializer<Auth> {
         typeOfT: Type,
         context: JsonDeserializationContext?
     ): Auth {
-        val jsonObject = json.asJsonObject!!
+        val jsonObject = json.asJsonObject
         val auth = Auth()
 
-        jsonObject["access_token"]?.let { auth.accessToken = jsonObject["access_token"].asString }
-        jsonObject["expires_in"]?.let { auth.expiresIn = jsonObject["expires_in"].asInt }
-        jsonObject["user_id"]?.let { auth.userId = jsonObject["user_id"].asInt }
+        jsonObject["access_token"]?.let { auth.accessToken = it.asString }
+        jsonObject["expires_in"]?.let { auth.expiresIn = it.asInt }
+        jsonObject["user_id"]?.let { auth.userId = it.asInt }
 
-        jsonObject["error"]?.let { auth.error = jsonObject["error"].asString }
+        jsonObject["error"]?.let { auth.error = it.asString }
         jsonObject["error_description"]?.let {
-            auth.errorDescription = jsonObject["error_description"].asString
+            auth.errorDescription = it.asString
         }
-        jsonObject["redirect_uri"]?.let { auth.redirectUri = jsonObject["redirect_uri"].asString }
+        jsonObject["redirect_uri"]?.let { auth.redirectUri = it.asString }
 
         return auth
     }

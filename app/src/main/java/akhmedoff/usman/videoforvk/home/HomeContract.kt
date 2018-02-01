@@ -9,7 +9,7 @@ interface HomeContract {
     interface View : BaseContract.View {
         var homePresenter: Presenter
 
-        fun showList(videos: List<Catalog>)
+        fun showList(videos: MutableList<Catalog>)
 
         fun showVideo(video: VideoCatalog)
 

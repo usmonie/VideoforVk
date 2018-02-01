@@ -9,16 +9,14 @@ import akhmedoff.usman.videoforvk.model.Item
 import akhmedoff.usman.videoforvk.model.User
 import akhmedoff.usman.videoforvk.model.Video
 import akhmedoff.usman.videoforvk.utils.vkApi
-import android.app.Dialog
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import com.google.android.exoplayer2.DefaultControlDispatcher
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.Player
@@ -39,8 +37,6 @@ import java.util.*
 class VideoFragment : BaseFragment<VideoContract.View, VideoContract.Presenter>(),
     VideoContract.View {
 
-    private lateinit var fullscreenDialog: Dialog
-
     companion object {
 
         private const val VIDEO_ID = "video_id"
@@ -53,6 +49,7 @@ class VideoFragment : BaseFragment<VideoContract.View, VideoContract.Presenter>(
             fragment.arguments = bundle
             return fragment
         }
+
     }
 
     override lateinit var videoPresenter: VideoPresenter
@@ -84,19 +81,25 @@ class VideoFragment : BaseFragment<VideoContract.View, VideoContract.Presenter>(
         initExoPlayer(item)
     }
 
-    override fun getVideoId() = arguments!!.getString(VIDEO_ID)!!
+    override fun getVideoState() = player?.playWhenReady
+
+    override fun getVideoPosition() = player?.currentPosition
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        videoPresenter.changedConfiguration(newConfig)
+    }
+
+    override fun getVideoId() = arguments?.getString(VIDEO_ID)!!
 
     private fun initVideoInfo(item: Video) {
-        video_title.text = item.title
-        video_views.text = item.views.toString()
-        video_desc.text = item.description
-        video_desc.linksClickable = true
+        video_title?.text = item.title
+        video_views?.text = item.views.toString()
 
-        val date = Date(item.date)
-        video_data.text = SimpleDateFormat(
+        video_date?.text = SimpleDateFormat(
             "HH:mm, dd MMM ",
             Locale.getDefault()
-        ).format(date)
+        ).format(Date(item.date))
     }
 
     private fun initExoPlayer(item: Video) {
@@ -154,39 +157,43 @@ class VideoFragment : BaseFragment<VideoContract.View, VideoContract.Presenter>(
         player?.prepare(videoSource)
     }
 
-
     override fun showGroupOwnerInfo(group: Group) {
-        owner_name.text = group.name
-        Picasso.with(context).load(group.photo100).into(owner_photo)
+        owner_name?.text = group.name
+        owner_photo?.let {
+            Picasso.with(context).load(group.photo100).into(it)
+        }
+
+        context?.let {
+            owner_follow?.text = when {
+                group.isMember -> it.getText(R.string.followed)
+                else -> it.getText(R.string.follow)
+            }
+        }
     }
 
     override fun showUserOwnerInfo(user: User) {
-        owner_name.text =
+        owner_name?.text =
                 String.format(
                     resources.getText(R.string.user_name).toString(),
                     user.firstName,
                     user.lastName
                 )
         Picasso.with(context).load(user.photo100).into(owner_photo)
+        context?.let {
+            owner_follow?.text = when {
+                user.isFavorite -> it.getText(R.string.followed)
+                else -> it.getText(R.string.follow)
+            }
+        }
     }
 
     override fun pauseVideo() {
         player?.playWhenReady = false
     }
 
-    override fun resumeVideo() {
-
-    }
-
-    override fun initFullscreen() {
-        fullscreenDialog =
-                object : Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen) {
-                    override fun onBackPressed() {
-                        presenter.clickFullscreen()
-                    }
-                }
-
-        fullscreenDialog.requestWindowFeature(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+    override fun resumeVideo(state: Boolean, position: Long) {
+        player?.playWhenReady = state
+        player?.seekTo(position)
     }
 
     override fun startVideo() {
@@ -202,34 +209,11 @@ class VideoFragment : BaseFragment<VideoContract.View, VideoContract.Presenter>(
     }
 
     override fun showFullscreen() {
-        (simpleExoPlayerView.parent as ViewGroup).removeView(simpleExoPlayerView)
-        fullscreenDialog.addContentView(
-            simpleExoPlayerView,
-            ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-            )
-        )
-        fullscreen_toggle.setImageDrawable(
-            ContextCompat.getDrawable(
-                context!!,
-                R.drawable.ic_fullscreen_exit_white_24dp
-            )
-        )
-        fullscreenDialog.show()
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
     }
 
     override fun showSmallScreen() {
-        (simpleExoPlayerView.parent as ViewGroup).removeView(simpleExoPlayerView)
-        (collapsing_toolbar as FrameLayout).addView(simpleExoPlayerView)
-
-        fullscreenDialog.dismiss()
-        fullscreen_toggle.setImageDrawable(
-            ContextCompat.getDrawable(
-                context!!,
-                R.drawable.ic_fullscreen_white_24dp
-            )
-        )
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
 
     override fun initPresenter(): VideoContract.Presenter = videoPresenter

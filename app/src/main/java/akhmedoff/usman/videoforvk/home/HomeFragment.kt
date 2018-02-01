@@ -25,11 +25,14 @@ class HomeFragment : BaseFragment<HomeContract.View, HomeContract.Presenter>(), 
     private lateinit var adapter: HomeRecyclerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        homePresenter = HomePresenter(
-            VideoRepository(
-                UserSettings.getUserSettings(context?.applicationContext!!), vkApi
+        context?.let {
+            homePresenter = HomePresenter(
+                VideoRepository(
+                    UserSettings.getUserSettings(it.applicationContext), vkApi
+                )
             )
-        )
+        }
+
         super.onCreate(savedInstanceState)
 
         adapter = HomeRecyclerAdapter(object : OnClickListener<VideoCatalog> {
@@ -53,13 +56,10 @@ class HomeFragment : BaseFragment<HomeContract.View, HomeContract.Presenter>(), 
         home_recycler.layoutManager = layoutManager
         home_recycler.adapter = adapter
 
-        home_recycler.setItemViewCacheSize(15)
-        home_recycler.isDrawingCacheEnabled = true
-        home_recycler.drawingCacheQuality = View.DRAWING_CACHE_QUALITY_HIGH
         update_home_layout.setOnRefreshListener { homePresenter.refresh() }
     }
 
-    override fun showList(videos: List<Catalog>) = adapter.replace(videos.toMutableList())
+    override fun showList(videos: MutableList<Catalog>) = adapter.replace(videos)
 
     override fun showVideo(video: VideoCatalog) {
         val videoFragment = VideoFragment.create(video)

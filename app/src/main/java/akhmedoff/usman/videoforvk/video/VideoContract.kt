@@ -4,13 +4,12 @@ import akhmedoff.usman.videoforvk.base.BaseContract
 import akhmedoff.usman.videoforvk.model.Group
 import akhmedoff.usman.videoforvk.model.User
 import akhmedoff.usman.videoforvk.model.Video
+import android.content.res.Configuration
 
 interface VideoContract {
 
     interface View : BaseContract.View {
         var videoPresenter: VideoPresenter
-
-        fun initFullscreen()
 
         fun showGroupOwnerInfo(group: Group)
 
@@ -26,7 +25,7 @@ interface VideoContract {
 
         fun pauseVideo()
 
-        fun resumeVideo()
+        fun resumeVideo(state: Boolean, position: Long)
 
         fun startVideo()
 
@@ -34,11 +33,17 @@ interface VideoContract {
 
         fun getVideoId(): String
 
+        fun getVideoState(): Boolean?
+
+        fun getVideoPosition(): Long?
+
     }
 
     interface Presenter : BaseContract.Presenter<View> {
         fun loadVideo(id: String)
 
         fun clickFullscreen()
+
+        fun changedConfiguration(newConfig: Configuration)
     }
 }
