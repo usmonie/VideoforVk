@@ -1,10 +1,10 @@
 package akhmedoff.usman.videoforvk.view
 
 import akhmedoff.usman.videoforvk.R
-import akhmedoff.usman.videoforvk.home.CatalogRecyclerAdapter
+import akhmedoff.usman.videoforvk.main.CatalogRecyclerAdapter
 import akhmedoff.usman.videoforvk.model.Catalog
 import akhmedoff.usman.videoforvk.model.VideoCatalog
-import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager.HORIZONTAL
 import android.support.v7.widget.RecyclerView
 import android.view.Gravity
@@ -21,24 +21,25 @@ class CatalogViewHolder(
 
     init {
         val catalogRecycler = itemView.findViewById<RecyclerView>(R.id.catalog_recycler)
-        val recyclerViewPool = RecyclerView.RecycledViewPool()
-        catalogRecycler.recycledViewPool = recyclerViewPool
-
         catalogRecycler.setHasFixedSize(true)
-        val linearLayoutManager = LinearLayoutManager(itemView.context, HORIZONTAL, false)
+        catalogRecycler.adapter = adapter
 
-        linearLayoutManager.isItemPrefetchEnabled = true
-        catalogRecycler.layoutManager = linearLayoutManager
+        val layoutManager = GridLayoutManager(itemView.context, 2, HORIZONTAL, false)
 
-        catalogRecycler.setItemViewCacheSize(20)
-        catalogRecycler.isDrawingCacheEnabled = true
-        catalogRecycler.drawingCacheQuality = View.DRAWING_CACHE_QUALITY_HIGH
+        layoutManager.spanSizeLookup = getSpanSizeLookup()
+        layoutManager.isItemPrefetchEnabled = true
+        catalogRecycler.layoutManager = layoutManager
 
         val snapHelper = GravitySnapHelper(Gravity.START)
         snapHelper.attachToRecyclerView(catalogRecycler)
-        catalogRecycler.adapter = adapter
     }
 
+    private fun getSpanSizeLookup() = object : GridLayoutManager.SpanSizeLookup() {
+        override fun getSpanSize(position: Int) = when (position) {
+            0 -> 2
+            else -> 1
+        }
+    }
 
     override fun bind(item: Catalog) {
         catalogTitle.text = item.name

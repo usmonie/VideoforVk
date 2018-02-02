@@ -1,68 +1,86 @@
 package akhmedoff.usman.videoforvk.main
 
+import akhmedoff.usman.videoforvk.App.Companion.context
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.base.BaseActivity
-import akhmedoff.usman.videoforvk.home.HomeFragment
+import akhmedoff.usman.videoforvk.data.local.UserSettings
+import akhmedoff.usman.videoforvk.data.repository.VideoRepository
+import akhmedoff.usman.videoforvk.model.Catalog
+import akhmedoff.usman.videoforvk.model.VideoCatalog
+import akhmedoff.usman.videoforvk.utils.vkApi
+import akhmedoff.usman.videoforvk.video.VideoActivity
+import akhmedoff.usman.videoforvk.view.AbstractRecyclerAdapter
+import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.BottomNavigationView.OnNavigationItemSelectedListener
-import android.support.v4.app.Fragment
-import kotlinx.android.synthetic.main.activity_main.*
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import kotlinx.android.synthetic.main.fragment_home.*
+
 
 class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), MainContract.View {
-    companion object {
-        const val CURRENT_FRAGMENT_KEY = "current_fragment"
-    }
-
     override lateinit var mainPresenter: MainContract.Presenter
 
-    private lateinit var fragment: Fragment
+    private val adapter: MainRecyclerAdapter by lazy {
+        val adapter = MainRecyclerAdapter(object :
+            AbstractRecyclerAdapter.OnClickListener<VideoCatalog> {
+            override fun onClick(item: VideoCatalog) {
+                presenter.clickVideo(item)
+            }
+        })
 
-    private val onNavigationItemSelectedListener = OnNavigationItemSelectedListener {
-        mainPresenter.navigate(it.itemId)
-        false
+        adapter.setHasStableIds(true)
+        return@lazy adapter
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        mainPresenter = MainPresenter()
+        mainPresenter =
+                MainPresenter(VideoRepository(UserSettings.getUserSettings(context), vkApi))
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (savedInstanceState == null) {
-            mainPresenter.navigate(R.id.navigation_home)
-        }
+        val layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        home_recycler.layoutManager = layoutManager
+        home_recycler.adapter = adapter
 
-        supportFragmentManager.addOnBackStackChangedListener {
-            val fragments = supportFragmentManager.fragments
-            fragments.forEach {
-                if (it.isVisible) {
-                    presenter.updateCurrentFragment(it)
-                }
-            }
-        }
-        navigation.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
-    }
-
-    override fun showHome() {
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.content, HomeFragment(), CURRENT_FRAGMENT_KEY)
-            .commitAllowingStateLoss()
+        update_home_layout.setOnRefreshListener { mainPresenter.refresh() }
     }
 
     override fun showProfile() {
-        navigation.selectedItemId = R.id.navigation_profile
     }
 
-    override fun showFavourites() {
-        navigation.selectedItemId = R.id.navigation_favourite
+    override fun showList(videos: MutableList<Catalog>) = adapter.replace(videos)
+
+    override fun showVideo(video: VideoCatalog) {
+        val intent = Intent(this, VideoActivity::class.java)
+        intent.putExtra(
+            VideoActivity.VIDEO_ID,
+            video.ownerId.toString() + "_" + video.id.toString()
+        )
+
+        startActivity(intent)
+    }
+
+    override fun showCatalog(catalog: Catalog) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun showCatalogs() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun showLoading() {
+        update_home_layout.isRefreshing = true
+    }
+
+    override fun hideLoading() {
+        update_home_layout.isRefreshing = false
+    }
+
+    override fun showErrorLoading() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun initPresenter(): MainContract.Presenter = mainPresenter
 
-    override fun onBackPressed() {
-        when {
-            supportFragmentManager.backStackEntryCount > 0 -> supportFragmentManager.popBackStack()
-            else -> super.onBackPressed()
-        }
-    }
+
 }

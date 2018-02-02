@@ -1,4 +1,4 @@
-package akhmedoff.usman.videoforvk.home
+package akhmedoff.usman.videoforvk.main
 
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.model.Catalog
@@ -8,7 +8,7 @@ import akhmedoff.usman.videoforvk.view.CatalogViewHolder
 import android.view.LayoutInflater
 import android.view.ViewGroup
 
-class HomeRecyclerAdapter(
+class MainRecyclerAdapter(
     private val videoClickListener: AbstractRecyclerAdapter.OnClickListener<VideoCatalog>
 ) : AbstractRecyclerAdapter<Catalog>() {
     override fun areItemsTheSame(oldItem: Catalog, newItem: Catalog): Boolean =

@@ -1,7 +1,8 @@
 package akhmedoff.usman.videoforvk.main
 
 import akhmedoff.usman.videoforvk.base.BaseContract
-import android.support.v4.app.Fragment
+import akhmedoff.usman.videoforvk.model.Catalog
+import akhmedoff.usman.videoforvk.model.VideoCatalog
 
 interface MainContract {
 
@@ -9,17 +10,32 @@ interface MainContract {
 
         var mainPresenter: Presenter
 
-        fun showHome()
+        fun showList(videos: MutableList<Catalog>)
+
+        fun showVideo(video: VideoCatalog)
+
+        fun showCatalog(catalog: Catalog)
+
+        fun showCatalogs()
+
+        fun showLoading()
+
+        fun hideLoading()
+
+        fun showErrorLoading()
 
         fun showProfile()
-
-        fun showFavourites()
     }
 
     interface Presenter : BaseContract.Presenter<MainContract.View> {
 
-        fun navigate(id: Int)
 
-        fun updateCurrentFragment(it: Fragment)
+        fun refresh()
+
+        fun clickCatalog(catalog: Catalog)
+
+        fun clickVideo(video: VideoCatalog)
+
+        fun loadCatalogs(next: String?, items: Int = 10, filters: String = "other")
     }
 }

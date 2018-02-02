@@ -37,6 +37,10 @@ interface VideoContract {
 
         fun getVideoPosition(): Long?
 
+        fun showRecommendatons()
+
+        fun showLoadError()
+
     }
 
     interface Presenter : BaseContract.Presenter<View> {

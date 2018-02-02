@@ -5,9 +5,7 @@ import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 
 object UserSettings {
-    private const val USER_NAME = "user_name"
     private const val USER_TOKEN = "user_token"
-    private const val USER_PHOTO = "user_photo"
 
     fun getUserSettings(context: Context): UserSettings {
         val userSettings = UserSettings

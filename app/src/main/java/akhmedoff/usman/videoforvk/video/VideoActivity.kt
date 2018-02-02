@@ -1,11 +1,11 @@
 package akhmedoff.usman.videoforvk.video
 
+import akhmedoff.usman.videoforvk.App.Companion.context
 import akhmedoff.usman.videoforvk.R
-import akhmedoff.usman.videoforvk.base.BaseFragment
+import akhmedoff.usman.videoforvk.base.BaseActivity
 import akhmedoff.usman.videoforvk.data.local.UserSettings
 import akhmedoff.usman.videoforvk.data.repository.VideoRepository
 import akhmedoff.usman.videoforvk.model.Group
-import akhmedoff.usman.videoforvk.model.Item
 import akhmedoff.usman.videoforvk.model.User
 import akhmedoff.usman.videoforvk.model.Video
 import akhmedoff.usman.videoforvk.utils.vkApi
@@ -14,9 +14,6 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import com.google.android.exoplayer2.DefaultControlDispatcher
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.Player
@@ -29,51 +26,36 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.fragment_video.*
+import kotlinx.android.synthetic.main.activity_video.*
 import kotlinx.android.synthetic.main.playback_exo_control_view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class VideoFragment : BaseFragment<VideoContract.View, VideoContract.Presenter>(),
+class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(),
     VideoContract.View {
-
     companion object {
 
-        private const val VIDEO_ID = "video_id"
-
-        fun create(item: Item): VideoFragment {
-            val fragment = VideoFragment()
-            val bundle = Bundle()
-
-            bundle.putString(VIDEO_ID, item.ownerId.toString() + "_" + item.id.toString())
-            fragment.arguments = bundle
-            return fragment
-        }
-
+        const val VIDEO_ID = "video_id"
     }
+
+    private var player: SimpleExoPlayer? = null
 
     override lateinit var videoPresenter: VideoPresenter
 
-    private var player: SimpleExoPlayer? = null
+
+    override fun initPresenter(): VideoContract.Presenter = videoPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         videoPresenter = VideoPresenter(
             VideoRepository(
-                UserSettings.getUserSettings(context?.applicationContext!!), vkApi
+                UserSettings.getUserSettings(applicationContext), vkApi
             )
         )
         super.onCreate(savedInstanceState)
-    }
+        setContentView(R.layout.activity_video)
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View = inflater.inflate(R.layout.fragment_video, container, false)
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         fullscreen_toggle.setOnClickListener { videoPresenter.clickFullscreen() }
+
     }
 
     override fun showVideo(item: Video) {
@@ -90,7 +72,15 @@ class VideoFragment : BaseFragment<VideoContract.View, VideoContract.Presenter>(
         videoPresenter.changedConfiguration(newConfig)
     }
 
-    override fun getVideoId() = arguments?.getString(VIDEO_ID)!!
+    override fun getVideoId() = intent.getStringExtra(VideoActivity.VIDEO_ID)!!
+
+    override fun showLoadError() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun showRecommendatons() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     private fun initVideoInfo(item: Video) {
         video_title?.text = item.title
@@ -139,7 +129,9 @@ class VideoFragment : BaseFragment<VideoContract.View, VideoContract.Presenter>(
                     }
                     return super.dispatchSetPlayWhenReady(player, playWhenReady)
                 }
-            })
+            }
+        )
+
         simpleExoPlayerView.player = player
 
         // Produces DataSource instances through which media data is loaded.
@@ -163,11 +155,9 @@ class VideoFragment : BaseFragment<VideoContract.View, VideoContract.Presenter>(
             Picasso.with(context).load(group.photo100).into(it)
         }
 
-        context?.let {
-            owner_follow?.text = when {
-                group.isMember -> it.getText(R.string.followed)
-                else -> it.getText(R.string.follow)
-            }
+        owner_follow?.text = when {
+            group.isMember -> getText(R.string.followed)
+            else -> getText(R.string.follow)
         }
     }
 
@@ -179,12 +169,12 @@ class VideoFragment : BaseFragment<VideoContract.View, VideoContract.Presenter>(
                     user.lastName
                 )
         Picasso.with(context).load(user.photo100).into(owner_photo)
-        context?.let {
-            owner_follow?.text = when {
-                user.isFavorite -> it.getText(R.string.followed)
-                else -> it.getText(R.string.follow)
-            }
+
+        owner_follow?.text = when {
+            user.isFavorite -> getText(R.string.followed)
+            else -> getText(R.string.follow)
         }
+
     }
 
     override fun pauseVideo() {
@@ -209,12 +199,11 @@ class VideoFragment : BaseFragment<VideoContract.View, VideoContract.Presenter>(
     }
 
     override fun showFullscreen() {
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
     }
 
     override fun showSmallScreen() {
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
 
-    override fun initPresenter(): VideoContract.Presenter = videoPresenter
 }

@@ -14,8 +14,8 @@ class VideoPresenter(private val videoRepository: VideoRepository) :
     private var isStarted = false
     private var position = 0L
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    fun onStart() {
+    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
+    fun onCreate() {
         view?.let {
             loadVideo(it.getVideoId())
         }
@@ -28,14 +28,19 @@ class VideoPresenter(private val videoRepository: VideoRepository) :
                 .observe(it, Observer { response ->
                     response?.response?.let { responseVideo ->
                         when {
-                            responseVideo.groups != null -> it.showGroupOwnerInfo(
+                            responseVideo.groups != null && responseVideo.groups.isNotEmpty() -> it.showGroupOwnerInfo(
                                 responseVideo.groups[0]
                             )
-                            responseVideo.profiles != null -> it.showUserOwnerInfo(
+                            responseVideo.profiles != null && responseVideo.profiles.isNotEmpty() -> it.showUserOwnerInfo(
                                 responseVideo.profiles[0]
                             )
                         }
-                        it.showVideo(responseVideo.items[0])
+                        when {
+                            responseVideo.items.isNotEmpty() ->
+                                it.showVideo(responseVideo.items[0])
+
+                            else -> it.showLoadError()
+                        }
                     }
                 })
         }

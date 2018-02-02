@@ -8,13 +8,13 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/catalog_recycler"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="256dp"
         android:overScrollMode="never"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/catalog_title"
-        tools:listitem="@layout/catalog_video_item" />
+        tools:listitem="@layout/catalog_video_item_min" />
 
     <TextView
         android:id="@+id/catalog_title"

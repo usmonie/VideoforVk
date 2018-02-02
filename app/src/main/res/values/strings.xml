@@ -17,4 +17,5 @@
     <string name="username_too_short">Username is short or empty</string>
     <string name="follow">Follow</string>
     <string name="followed">Followed</string>
+    <string name="title_activity_video">VideoActivity</string>
 </resources>
