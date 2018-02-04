@@ -69,9 +69,9 @@ val vkApi: VkApi by lazy {
 
     val gson = gsonBuilder.create()
 
-    Retrofit.Builder()
-        .client(okHttp)
+    return@lazy Retrofit.Builder()
         .addConverterFactory(GsonConverterFactory.create(gson))
+        .client(okHttp)
         .addCallAdapterFactory(LiveDataCallAdapterFactory())
         .baseUrl("https://api.vk.com/method/")
         .build()

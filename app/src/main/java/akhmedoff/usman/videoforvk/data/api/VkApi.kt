@@ -2,6 +2,7 @@ package akhmedoff.usman.videoforvk.data.api
 
 import akhmedoff.usman.videoforvk.model.*
 import android.arch.lifecycle.LiveData
+import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
 import retrofit2.http.Url
@@ -17,7 +18,7 @@ interface VkApi {
         @Query("fields") fields: String = "nickname,photo_100,screen_name,photo_max,photo_max_orig,photo_id,has_photo,is_friend,friend_status,online,status,is_favorite",
         @Query("access_token") token: String,
         @Query("v") v: String = API_VERSION
-    ): LiveData<Response<User>>
+    ): Call<Response<User>>
 
     @GET("video.get")
     fun getVideos(
@@ -33,13 +34,13 @@ interface VkApi {
 
     @GET("video.getCatalog")
     fun getCatalog(
-        @Query("count") count: Int = 10,
-        @Query("items_count") itemsCount: Int = 3,
+        @Query("count") count: Int,
+        @Query("items_count") itemsCount: Int,
         @Query("from") from: String? = null,
         @Query("filters") filters: String = "other",
         @Query("access_token") token: String,
         @Query("v") v: String = API_VERSION
-    ): LiveData<Response<ResponseCatalog>>
+    ): Call<ResponseCatalog>
 
     @GET
     fun auth(

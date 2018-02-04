@@ -18,4 +18,6 @@
     <string name="follow">Follow</string>
     <string name="followed">Followed</string>
     <string name="title_activity_video">VideoActivity</string>
+    <string name="error_loading">Loading error</string>
+    <string name="search">Search</string>
 </resources>

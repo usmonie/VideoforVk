@@ -10,9 +10,9 @@ abstract class Item {
     var description: String? = null
     var date: Long = 0
     var comments: Int = 0
-    var views: Int = 0
-    lateinit var photo130: String
-    lateinit var photo320: String
+    var views: Int? = 0
+    var photo130: String? = null
+    var photo320: String? = null
     var photo640: String? = null
     var photo800: String? = null
     var canAdd: Boolean = false

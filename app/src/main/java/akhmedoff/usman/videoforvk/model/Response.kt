@@ -1,5 +1,6 @@
 package akhmedoff.usman.videoforvk.model
 
+import android.util.Log
 import com.google.gson.annotations.SerializedName
 import retrofit2.Response as RetrofitResponse
 
@@ -16,6 +17,7 @@ class Response<T> {
     }
 
     constructor(throwable: Throwable) {
+        Log.d("responseError", throwable.toString())
         response = null
         errorMessage = throwable.message
         code = 500

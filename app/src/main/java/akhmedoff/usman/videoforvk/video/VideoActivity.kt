@@ -75,7 +75,6 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
     override fun getVideoId() = intent.getStringExtra(VideoActivity.VIDEO_ID)!!
 
     override fun showLoadError() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun showRecommendatons() {

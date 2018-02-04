@@ -2,6 +2,7 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
@@ -25,6 +26,7 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
+
                 android:layout_height="?attr/actionBarSize"
                 android:fitsSystemWindows="true"
                 app:title="@string/app_name" />
@@ -41,9 +43,6 @@
             android:id="@+id/home_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:clipChildren="true"
-            android:clipToPadding="true"
             android:scrollbars="vertical"
             app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior"
             tools:listitem="@layout/catalog_item" />

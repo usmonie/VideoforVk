@@ -24,13 +24,12 @@ android {
         buildConfigField('String', 'VK_APP_KEY', vk_app_key)
     }
     buildTypes {
-
+        debug {
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
-            buildConfigField('String', 'VK_APP_ID', vk_app_id)
-            buildConfigField('String', 'VK_APP_KEY', vk_app_key)
         }
     }
 }
@@ -51,10 +50,11 @@ dependencies {
 
     implementation "android.arch.lifecycle:extensions:$archLifecycleVersion"
     annotationProcessor "android.arch.lifecycle:compiler:$archLifecycleVersion"
+    implementation "android.arch.paging:runtime:1.0.0-alpha5"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
 
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
     implementation 'com.squareup.okhttp3:okhttp:3.9.1'
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'

@@ -47,12 +47,8 @@ internal class GravityDelegate(
     fun attachToRecyclerView(recyclerView: RecyclerView?) {
         if (recyclerView != null) {
             recyclerView.onFlingListener = null
-            if (gravity == Gravity.START || gravity == Gravity.END) {
-                isRtlHorizontal = isRtl
-            }
-            if (listener != null) {
-                recyclerView.addOnScrollListener(mScrollListener)
-            }
+            if (gravity == Gravity.START || gravity == Gravity.END) isRtlHorizontal = isRtl
+            if (listener != null) recyclerView.addOnScrollListener(mScrollListener)
         }
     }
 

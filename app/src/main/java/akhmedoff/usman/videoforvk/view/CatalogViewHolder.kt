@@ -10,12 +10,13 @@ import android.support.v7.widget.RecyclerView
 import android.view.Gravity
 import android.view.View
 import android.widget.TextView
+import com.squareup.picasso.Picasso
 
 class CatalogViewHolder(
     itemView: View,
-    videoClickListener: AbstractRecyclerAdapter.OnClickListener<VideoCatalog>
+    videoClickListener: OnClickListener<VideoCatalog>
 ) : AbstractViewHolder<Catalog>(itemView) {
-    private val adapter = CatalogRecyclerAdapter(videoClickListener)
+    private val adapter = CatalogRecyclerAdapter(Picasso.with(itemView.context), videoClickListener)
 
     private val catalogTitle = itemView.findViewById<TextView>(R.id.catalog_title)
 
@@ -43,6 +44,6 @@ class CatalogViewHolder(
 
     override fun bind(item: Catalog) {
         catalogTitle.text = item.name
-        adapter.replace(item.items)
+        adapter.items = item.items
     }
 }

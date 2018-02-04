@@ -3,6 +3,7 @@ package akhmedoff.usman.videoforvk.main
 import akhmedoff.usman.videoforvk.base.BaseContract
 import akhmedoff.usman.videoforvk.model.Catalog
 import akhmedoff.usman.videoforvk.model.VideoCatalog
+import android.arch.paging.PagedList
 
 interface MainContract {
 
@@ -10,7 +11,7 @@ interface MainContract {
 
         var mainPresenter: Presenter
 
-        fun showList(videos: MutableList<Catalog>)
+        fun showList(videos: PagedList<Catalog>)
 
         fun showVideo(video: VideoCatalog)
 
@@ -29,13 +30,14 @@ interface MainContract {
 
     interface Presenter : BaseContract.Presenter<MainContract.View> {
 
-
         fun refresh()
 
         fun clickCatalog(catalog: Catalog)
 
         fun clickVideo(video: VideoCatalog)
 
-        fun loadCatalogs(next: String?, items: Int = 10, filters: String = "other")
+        fun loadCatalogs()
+
+        fun pagination()
     }
 }

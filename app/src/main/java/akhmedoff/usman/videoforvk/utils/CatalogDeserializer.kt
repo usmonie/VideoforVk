@@ -3,6 +3,7 @@ package akhmedoff.usman.videoforvk.utils
 import akhmedoff.usman.videoforvk.model.Catalog
 import akhmedoff.usman.videoforvk.model.ResponseCatalog
 import akhmedoff.usman.videoforvk.model.VideoCatalog
+import android.util.Log
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
@@ -16,52 +17,66 @@ class CatalogDeserializer : JsonDeserializer<ResponseCatalog> {
         context: JsonDeserializationContext
     ): ResponseCatalog {
 
-        val jsonObject = json.asJsonObject["response"].asJsonObject
-
-        val catalogsJsonArray = jsonObject["items"].asJsonArray
-
+        Log.d("DESERIALIZER", "started")
+        val jsonObject = json.asJsonObject["response"]?.asJsonObject
         val catalogs = mutableListOf<Catalog>()
 
-        catalogsJsonArray.forEach { catalogElement ->
-            val catalogJson = catalogElement.asJsonObject
-            val videos = mutableListOf<VideoCatalog>()
+        jsonObject?.let {
+            val catalogsJsonArray = jsonObject["items"]?.asJsonArray
 
-            val videosJsonArray = catalogJson["items"].asJsonArray
+            catalogsJsonArray?.forEach { catalogElement ->
+                val catalogJson = catalogElement.asJsonObject
+                val videos = mutableListOf<VideoCatalog>()
 
-            videosJsonArray.forEach { videoElement ->
-                val videoJson = videoElement.asJsonObject
+                val videosJsonArray = catalogJson["items"].asJsonArray
 
-                val item = VideoCatalog()
+                videosJsonArray.forEach { videoElement ->
+                    val videoJson = videoElement.asJsonObject
 
-                item.id = videoJson["id"].asJsonPrimitive.asInt
-                item.ownerId = videoJson["owner_id"].asInt
-                item.title = stringToUrlFormat(videoJson["title"].toString())!!
-                videoJson["duration"]?.let { item.duration = it.asInt }
-                videoJson["description"]?.let { item.description = it.toString() }
-                videoJson["date"]?.let { item.date = it.asLong }
-                item.comments = videoJson["comments"].asInt
-                item.views = videoJson["views"].asInt
-                item.accessKey = videoJson["access_key"].toString()
-                item.photo130 = stringToUrlFormat(videoJson["photo_130"].toString())!!
-                item.photo320 = stringToUrlFormat(videoJson["photo_320"].toString())!!
-                videoJson["photo_640"]?.let { item.photo640 = stringToUrlFormat(it.toString()) }
-                videoJson["photo_800"]?.let { item.photo800 = stringToUrlFormat(it.toString()) }
-                item.platform = videoJson["platform"]?.toString()
-                item.canAdd = videoJson["can_add"].asBoolean
-                videoJson["type"]?.let { item.type = it.toString() }
+                    val item = VideoCatalog()
+                    with(item) {
+                        id = videoJson["id"].asJsonPrimitive.asInt
+                        ownerId = videoJson["owner_id"].asInt
+                        title = stringToUrlFormat(videoJson["title"].toString())!!
+                        videoJson["duration"]?.let { duration = it.asInt }
+                        videoJson["description"]?.let {
+                            description = stringToUrlFormat(it.toString())!!
+                        }
+                        videoJson["date"]?.let { date = it.asLong }
+                        videoJson["comments"]?.let { comments = it.asInt }
+                        videoJson["views"]?.let { views = it.asInt }
+                        videoJson["access_key"]?.let {
+                            accessKey = stringToUrlFormat(it.toString())
+                        }
+                        videoJson["photo_130"]?.let {
+                            photo130 = stringToUrlFormat(it.toString())!!
+                        }
+                        videoJson["photo_320"]?.let {
+                            photo320 = stringToUrlFormat(it.toString())
+                        }
+                        videoJson["photo_640"]?.let { photo640 = stringToUrlFormat(it.toString()) }
+                        videoJson["photo_800"]?.let { photo800 = stringToUrlFormat(it.toString()) }
+                        videoJson["platform"]?.let { platform = stringToUrlFormat(it.toString()) }
+                        canAdd = videoJson["can_add"]?.asBoolean ?: false
+                        videoJson["type"]?.let { type = stringToUrlFormat(it.toString())!! }
+                    }
+                    videos.add(item)
+                }
 
-                videos.add(item)
+                val name = stringToUrlFormat(catalogJson["name"]?.toString())
+
+
+                var id: String? = null
+                catalogJson["id"]?.let { id = it.toString() }
+
+                val view = catalogJson["view"]?.toString()
+                val canHide = catalogJson["can_hide"]?.asBoolean
+                val type = catalogJson["type"]?.toString()
+
+                catalogs.add(Catalog(videos, name, id, view, canHide, type))
             }
-
-            val name = catalogJson["name"].toString()
-            val id = catalogJson["id"].toString()
-            val view = catalogJson["view"].toString()
-            val canHide = catalogJson["can_hide"].asBoolean
-            val type = catalogJson["type"]?.toString()
-
-            catalogs.add(Catalog(videos, name, id, view, canHide, type))
         }
 
-        return ResponseCatalog(catalogs, jsonObject["next"].toString())
+        return ResponseCatalog(catalogs, jsonObject?.get("next")?.toString())
     }
 }

@@ -1,7 +1,7 @@
 package akhmedoff.usman.videoforvk.model
 
 class VideoCatalog : Item() {
-    lateinit var accessKey: String
+    var accessKey: String? = null
     var platform: String? = null
-    lateinit var type: String
+    var type: String? = null
 }
