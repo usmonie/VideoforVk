@@ -49,7 +49,7 @@ class PageKeyedCatalogDataSource(
                 response: Response<ResponseCatalog>?
             ) {
                 response?.body()?.let {
-                    //     callback.onResult(it.catalogs, it.next)
+                    callback.onResult(it.catalogs, it.next)
                 }
             }
 
@@ -65,10 +65,17 @@ class PageKeyedCatalogDataSource(
             itemsCount = 7,
             filters = "top,feed,ugc,series,other",
             token = token
-        ).execute()
+        )
 
-        val items = apiSource.body()?.catalogs ?: emptyList<Catalog>()
+        try {
+            val response = apiSource.execute()
 
-        callback.onResult(items, null, apiSource.body()?.next)
+            val items = response.body()?.catalogs ?: emptyList<Catalog>()
+
+            callback.onResult(items, null, response.body()?.next)
+        } catch (exception: Exception) {
+            Log.d("exception", exception.toString())
+        }
+
     }
 }

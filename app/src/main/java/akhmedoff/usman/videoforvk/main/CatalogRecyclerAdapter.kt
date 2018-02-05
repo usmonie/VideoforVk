@@ -22,16 +22,11 @@ class CatalogRecyclerAdapter(
     var items: List<VideoCatalog>? = null
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): VideoViewHolder {
-        val layoutId = when (viewType) {
-            BIG_ITEM -> R.layout.catalog_video_item_big
-            SMALL_ITEM -> R.layout.catalog_video_item_min
-            else -> R.layout.catalog_album_item
-        }
 
         val holder = VideoViewHolder(
             picasso,
             LayoutInflater.from(parent?.context).inflate(
-                layoutId,
+                viewType,
                 parent,
                 false
             )
@@ -77,9 +72,9 @@ class CatalogRecyclerAdapter(
     override fun getItemViewType(position: Int): Int {
         items?.get(position)?.type?.let {
             return when {
-                it == "video" && position == 0 -> BIG_ITEM
-                it == "video" && position > 0 -> SMALL_ITEM
-                it == "album" -> ALBUM_ITEM
+                it == "video" && position == 0 -> R.layout.catalog_video_item_big
+                it == "video" && position > 0 -> R.layout.catalog_video_item_min
+                it == "album" -> R.layout.catalog_album_item
                 else -> throw Exception("Unchecked type")
             }
         }

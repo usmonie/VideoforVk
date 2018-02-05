@@ -5,6 +5,7 @@ import akhmedoff.usman.videoforvk.main.CatalogRecyclerAdapter
 import akhmedoff.usman.videoforvk.model.Catalog
 import akhmedoff.usman.videoforvk.model.VideoCatalog
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.LinearLayoutManager.HORIZONTAL
 import android.support.v7.widget.RecyclerView
 import android.view.Gravity
@@ -20,16 +21,16 @@ class CatalogViewHolder(
 
     private val catalogTitle = itemView.findViewById<TextView>(R.id.catalog_title)
 
+    private val gridLayoutManager = GridLayoutManager(itemView.context, 2, HORIZONTAL, false)
+
+    private val linearLayoutManager = LinearLayoutManager(itemView.context, HORIZONTAL, false)
+    private val catalogRecycler = itemView.findViewById<RecyclerView>(R.id.catalog_recycler)
+
     init {
-        val catalogRecycler = itemView.findViewById<RecyclerView>(R.id.catalog_recycler)
         catalogRecycler.setHasFixedSize(true)
         catalogRecycler.adapter = adapter
 
-        val layoutManager = GridLayoutManager(itemView.context, 2, HORIZONTAL, false)
-
-        layoutManager.spanSizeLookup = getSpanSizeLookup()
-        layoutManager.isItemPrefetchEnabled = true
-        catalogRecycler.layoutManager = layoutManager
+        gridLayoutManager.spanSizeLookup = getSpanSizeLookup()
 
         val snapHelper = GravitySnapHelper(Gravity.START)
         snapHelper.attachToRecyclerView(catalogRecycler)
@@ -44,6 +45,13 @@ class CatalogViewHolder(
 
     override fun bind(item: Catalog) {
         catalogTitle.text = item.name
+        item.items[0].type?.let {
+            when (it) {
+                "album" -> catalogRecycler.layoutManager = linearLayoutManager
+                "video" -> catalogRecycler.layoutManager = gridLayoutManager
+            }
+        }
         adapter.items = item.items
+        adapter.notifyDataSetChanged()
     }
 }

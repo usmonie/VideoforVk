@@ -43,6 +43,8 @@
             android:id="@+id/home_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clipChildren="true"
+            android:clipToPadding="true"
             android:scrollbars="vertical"
             app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior"
             tools:listitem="@layout/catalog_item" />
