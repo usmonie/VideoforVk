@@ -3,7 +3,7 @@ package akhmedoff.usman.videoforvk.view
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.main.CatalogRecyclerAdapter
 import akhmedoff.usman.videoforvk.model.Catalog
-import akhmedoff.usman.videoforvk.model.VideoCatalog
+import akhmedoff.usman.videoforvk.model.CatalogItem
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.LinearLayoutManager.HORIZONTAL
@@ -15,9 +15,13 @@ import com.squareup.picasso.Picasso
 
 class CatalogViewHolder(
     itemView: View,
-    videoClickListener: OnClickListener<VideoCatalog>
+    clickListener: OnClickListener<CatalogItem>
 ) : AbstractViewHolder<Catalog>(itemView) {
-    private val adapter = CatalogRecyclerAdapter(Picasso.with(itemView.context), videoClickListener)
+
+    private val adapter = CatalogRecyclerAdapter(
+        Picasso.with(itemView.context),
+        clickListener
+    )
 
     private val catalogTitle = itemView.findViewById<TextView>(R.id.catalog_title)
 
@@ -45,13 +49,18 @@ class CatalogViewHolder(
 
     override fun bind(item: Catalog) {
         catalogTitle.text = item.name
+
+        adapter.items = item.items
+        adapter.notifyDataSetChanged()
+
         item.items[0].type?.let {
             when (it) {
-                "album" -> catalogRecycler.layoutManager = linearLayoutManager
+                "album" -> {
+                    catalogRecycler.layoutManager = linearLayoutManager
+                }
                 "video" -> catalogRecycler.layoutManager = gridLayoutManager
             }
         }
-        adapter.items = item.items
-        adapter.notifyDataSetChanged()
+
     }
 }

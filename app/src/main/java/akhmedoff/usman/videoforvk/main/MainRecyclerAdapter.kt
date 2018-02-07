@@ -2,7 +2,7 @@ package akhmedoff.usman.videoforvk.main
 
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.model.Catalog
-import akhmedoff.usman.videoforvk.model.VideoCatalog
+import akhmedoff.usman.videoforvk.model.CatalogItem
 import akhmedoff.usman.videoforvk.view.CatalogViewHolder
 import akhmedoff.usman.videoforvk.view.OnClickListener
 import android.arch.paging.PagedListAdapter
@@ -11,16 +11,16 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 
 class MainRecyclerAdapter(
-    private val videoClickListener: OnClickListener<VideoCatalog>
+    private val clickListener: OnClickListener<CatalogItem>
 ) : PagedListAdapter<Catalog, CatalogViewHolder>(CATALOG_COMPARATOR) {
 
     companion object {
         val CATALOG_COMPARATOR = object : DiffCallback<Catalog>() {
             override fun areContentsTheSame(oldItem: Catalog, newItem: Catalog): Boolean =
-                oldItem == newItem
+                oldItem.items == newItem.items
 
             override fun areItemsTheSame(oldItem: Catalog, newItem: Catalog): Boolean =
-                oldItem.id == newItem.id
+                oldItem.id == newItem.id && oldItem.name == newItem.name
         }
     }
 
@@ -31,7 +31,7 @@ class MainRecyclerAdapter(
                 parent,
                 false
             ),
-            videoClickListener
+            clickListener
         )
 
     /**
@@ -42,9 +42,7 @@ class MainRecyclerAdapter(
      * @param position Adapter position to query
      * @return the stable ID of the item at position
      */
-    override fun getItemId(position: Int): Long {
-        return position.toLong() + 1
-    }
+    override fun getItemId(position: Int) = position.toLong() + 1
 
     override fun onBindViewHolder(holder: CatalogViewHolder?, position: Int) {
         getItem(position)?.let { holder?.bind(it) }

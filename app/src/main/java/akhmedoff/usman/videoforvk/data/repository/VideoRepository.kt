@@ -3,6 +3,7 @@ package akhmedoff.usman.videoforvk.data.repository
 import akhmedoff.usman.videoforvk.data.api.VkApi
 import akhmedoff.usman.videoforvk.data.local.UserSettings
 import akhmedoff.usman.videoforvk.model.Catalog
+import akhmedoff.usman.videoforvk.model.Video
 import android.arch.lifecycle.LiveData
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
@@ -13,15 +14,25 @@ class VideoRepository(
 ) {
 
     fun getVideos(
-        ownerId: Int? = null,
+        ownerId: String? = null,
         videos: String? = null,
-        albumId: String? = null,
-        count: Int = 15,
-        offset: Long = 0
-    ) = vkApi.getVideos(ownerId, videos, albumId, count, offset, userSettings.getToken())
+        albumId: String? = null
+    ): LiveData<PagedList<Video>> {
+        val pagedListConfig = PagedList.Config.Builder()
+            .setEnablePlaceholders(false)
+            .setPageSize(10)
+            .setPrefetchDistance(15)
+            .setInitialLoadSizeHint(10)
+            .build()
+
+        val sourceFactory =
+            VideosDataSourceFactory(vkApi, ownerId, videos, albumId, userSettings.getToken())
+
+        return LivePagedListBuilder(sourceFactory, pagedListConfig).build()
+    }
 
     fun getCatalog(): LiveData<PagedList<Catalog>> {
-        val sourceFactory = CatalogDataSourceFactory(vkApi, userSettings.getToken())
+        val sourceFactory = CatalogsDataSourceFactory(vkApi, userSettings.getToken())
 
         return LivePagedListBuilder(sourceFactory, 10).build()
     }

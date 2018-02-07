@@ -18,11 +18,11 @@ interface VkApi {
         @Query("fields") fields: String = "nickname,photo_100,screen_name,photo_max,photo_max_orig,photo_id,has_photo,is_friend,friend_status,online,status,is_favorite",
         @Query("access_token") token: String,
         @Query("v") v: String = API_VERSION
-    ): Call<Response<User>>
+    ): Call<User>
 
     @GET("video.get")
     fun getVideos(
-        @Query("owner_id") ownerId: Int?,
+        @Query("owner_id") ownerId: String?,
         @Query("videos") videos: String?,
         @Query("album_id") albumId: String?,
         @Query("count") count: Int,
@@ -30,7 +30,7 @@ interface VkApi {
         @Query("access_token") token: String,
         @Query("extended") extended: Boolean = true,
         @Query("v") v: String = API_VERSION
-    ): LiveData<Response<ResponseVideo>>
+    ): Call<ResponseVideo>
 
     @GET("video.getCatalog")
     fun getCatalog(

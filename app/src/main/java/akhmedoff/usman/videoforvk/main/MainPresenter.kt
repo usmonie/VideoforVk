@@ -3,7 +3,7 @@ package akhmedoff.usman.videoforvk.main
 import akhmedoff.usman.videoforvk.base.BasePresenter
 import akhmedoff.usman.videoforvk.data.repository.VideoRepository
 import akhmedoff.usman.videoforvk.model.Catalog
-import akhmedoff.usman.videoforvk.model.VideoCatalog
+import akhmedoff.usman.videoforvk.model.CatalogItem
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.OnLifecycleEvent
@@ -38,7 +38,10 @@ class MainPresenter(private val videoRepository: VideoRepository) :
         view?.showCatalog(catalog)
     }
 
-    override fun clickVideo(video: VideoCatalog) {
-        view?.showVideo(video)
+    override fun clickItem(item: CatalogItem) {
+        when (item.type) {
+            "video" -> view?.showVideo(item)
+            "album" -> view?.showAlbum(item)
+        }
     }
 }

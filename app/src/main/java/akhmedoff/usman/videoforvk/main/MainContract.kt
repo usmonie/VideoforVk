@@ -2,7 +2,7 @@ package akhmedoff.usman.videoforvk.main
 
 import akhmedoff.usman.videoforvk.base.BaseContract
 import akhmedoff.usman.videoforvk.model.Catalog
-import akhmedoff.usman.videoforvk.model.VideoCatalog
+import akhmedoff.usman.videoforvk.model.CatalogItem
 import android.arch.paging.PagedList
 
 interface MainContract {
@@ -13,7 +13,9 @@ interface MainContract {
 
         fun showList(videos: PagedList<Catalog>)
 
-        fun showVideo(video: VideoCatalog)
+        fun showVideo(item: CatalogItem)
+
+        fun showAlbum(album: CatalogItem)
 
         fun showCatalog(catalog: Catalog)
 
@@ -28,13 +30,13 @@ interface MainContract {
         fun showProfile()
     }
 
-    interface Presenter : BaseContract.Presenter<MainContract.View> {
+    interface Presenter : BaseContract.Presenter<View> {
 
         fun refresh()
 
         fun clickCatalog(catalog: Catalog)
 
-        fun clickVideo(video: VideoCatalog)
+        fun clickItem(item: CatalogItem)
 
         fun loadCatalogs()
 

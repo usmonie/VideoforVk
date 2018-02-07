@@ -11,7 +11,7 @@
         android:layout_height="wrap_content">
 
         <android.support.design.widget.AppBarLayout
-            android:id="@+id/toolbar"
+            android:id="@+id/simpleExoPlayerView"
             android:layout_width="match_parent"
             android:layout_height="232dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -106,7 +106,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:layout_constraintTop_toBottomOf="@+id/simpleExoPlayerView"
             tools:text="Название" />
 
         <TextView

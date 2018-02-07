@@ -4,7 +4,7 @@ import akhmedoff.usman.videoforvk.data.api.VkApi
 import akhmedoff.usman.videoforvk.model.Catalog
 import android.arch.paging.DataSource
 
-class CatalogDataSourceFactory(
+class CatalogsDataSourceFactory(
     private val vkApi: VkApi,
     private val token: String
 ) : DataSource.Factory<String, Catalog> {
@@ -23,5 +23,5 @@ class CatalogDataSourceFactory(
      *
      * @return the new DataSource.
      */
-    override fun create() = PageKeyedCatalogDataSource(vkApi, token)
+    override fun create() = CatalogsPageKeyedDataSource(vkApi, token)
 }

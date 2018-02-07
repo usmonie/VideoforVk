@@ -13,4 +13,6 @@ class Video : Item() {
     lateinit var likes: Likes
     lateinit var reposts: Reposts
     var repeat: Boolean = false
+
+
 }

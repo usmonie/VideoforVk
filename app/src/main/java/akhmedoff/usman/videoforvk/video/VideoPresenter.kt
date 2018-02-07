@@ -2,10 +2,13 @@ package akhmedoff.usman.videoforvk.video
 
 import akhmedoff.usman.videoforvk.base.BasePresenter
 import akhmedoff.usman.videoforvk.data.repository.VideoRepository
+import akhmedoff.usman.videoforvk.model.ResponseVideo
 import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.Observer
 import android.arch.lifecycle.OnLifecycleEvent
 import android.content.res.Configuration
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class VideoPresenter(private val videoRepository: VideoRepository) :
     BasePresenter<VideoContract.View>(), VideoContract.Presenter {
@@ -25,23 +28,33 @@ class VideoPresenter(private val videoRepository: VideoRepository) :
         view?.let {
             videoRepository
                 .getVideo(id)
-                .observe(it, Observer { response ->
-                    response?.response?.let { responseVideo ->
-                        when {
-                            responseVideo.groups != null && responseVideo.groups.isNotEmpty() -> it.showGroupOwnerInfo(
-                                responseVideo.groups[0]
-                            )
-                            responseVideo.profiles != null && responseVideo.profiles.isNotEmpty() -> it.showUserOwnerInfo(
-                                responseVideo.profiles[0]
-                            )
-                        }
-                        when {
-                            responseVideo.items.isNotEmpty() ->
-                                it.showVideo(responseVideo.items[0])
+                .enqueue(object : Callback<ResponseVideo> {
+                    override fun onFailure(call: Call<ResponseVideo>?, t: Throwable?) {
+                        it.showLoadError()
+                    }
 
-                            else -> it.showLoadError()
+                    override fun onResponse(
+                        call: Call<ResponseVideo>?,
+                        response: Response<ResponseVideo>?
+                    ) {
+                        response?.body()?.let { responseVideo ->
+                            when {
+                                responseVideo.groups != null && responseVideo.groups.isNotEmpty() -> it.showGroupOwnerInfo(
+                                    responseVideo.groups[0]
+                                )
+                                responseVideo.profiles != null && responseVideo.profiles.isNotEmpty() -> it.showUserOwnerInfo(
+                                    responseVideo.profiles[0]
+                                )
+                            }
+                            when {
+                                responseVideo.items.isNotEmpty() ->
+                                    it.showVideo(responseVideo.items[0])
+
+                                else -> it.showLoadError()
+                            }
                         }
                     }
+
                 })
         }
     }

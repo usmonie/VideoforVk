@@ -1,8 +1,8 @@
 package akhmedoff.usman.videoforvk.utils
 
 import akhmedoff.usman.videoforvk.model.Catalog
+import akhmedoff.usman.videoforvk.model.CatalogItem
 import akhmedoff.usman.videoforvk.model.ResponseCatalog
-import akhmedoff.usman.videoforvk.model.VideoCatalog
 import android.util.Log
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
@@ -26,14 +26,14 @@ class CatalogDeserializer : JsonDeserializer<ResponseCatalog> {
 
             catalogsJsonArray?.forEach { catalogElement ->
                 val catalogJson = catalogElement.asJsonObject
-                val videos = mutableListOf<VideoCatalog>()
+                val videos = mutableListOf<CatalogItem>()
 
                 val videosJsonArray = catalogJson["items"].asJsonArray
 
                 videosJsonArray.forEach { videoElement ->
                     val videoJson = videoElement.asJsonObject
 
-                    val item = VideoCatalog()
+                    val item = CatalogItem()
                     with(item) {
                         id = videoJson["id"].asJsonPrimitive.asInt
                         ownerId = videoJson["owner_id"].asInt

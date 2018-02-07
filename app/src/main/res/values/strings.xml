@@ -20,4 +20,10 @@
     <string name="title_activity_video">VideoActivity</string>
     <string name="error_loading">Loading error</string>
     <string name="search">Search</string>
+
+    <plurals name="video.views">
+        <item quantity="one">%s view</item>
+        <item quantity="many">%s views</item>
+        <item quantity="other">%s views</item>
+    </plurals>
 </resources>

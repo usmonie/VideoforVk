@@ -28,13 +28,13 @@ import com.google.android.exoplayer2.util.Util
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_video.*
 import kotlinx.android.synthetic.main.playback_exo_control_view.*
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
 class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(),
     VideoContract.View {
     companion object {
-
         const val VIDEO_ID = "video_id"
     }
 
@@ -84,7 +84,13 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
     private fun initVideoInfo(item: Video) {
         video_title?.text = item.title
         video_views?.text = item.views.toString()
-
+        item.views?.let {
+            video_views?.text = resources.getQuantityString(
+                R.plurals.video_views,
+                it,
+                NumberFormat.getIntegerInstance().format(it)
+            )
+        }
         video_date?.text = SimpleDateFormat(
             "HH:mm, dd MMM ",
             Locale.getDefault()

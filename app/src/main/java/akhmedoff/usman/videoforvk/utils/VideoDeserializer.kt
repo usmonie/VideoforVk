@@ -68,14 +68,22 @@ class VideoDeserializer : JsonDeserializer<ResponseVideo> {
             item.views = itemJson["views"].asJsonPrimitive.asInt
             item.width = itemJson["width"]?.asJsonPrimitive?.asInt
             item.height = itemJson["height"]?.asJsonPrimitive?.asInt
-            itemJson["photo_130"]?.let { item.photo130 = it.toString() }
-            itemJson["photo_320"]?.let { item.photo320 = it.toString() }
-            itemJson["photo_800"]?.let { item.photo800 = it.toString() }
+            itemJson["photo_130"]?.let { item.photo130 = stringToUrlFormat(it.toString()) }
+            itemJson["photo_320"]?.let { item.photo320 = stringToUrlFormat(it.toString()) }
+            itemJson["photo_800"]?.let { item.photo800 = stringToUrlFormat(it.toString()) }
             itemJson["adding_date"]?.let { item.addingDate = it.asJsonPrimitive.asLong }
-            itemJson["first_frame_320"]?.let { item.firstFrame320 = it.toString() }
-            itemJson["first_frame_160"]?.let { item.firstFrame160 = it.toString() }
-            itemJson["first_frame_130"]?.let { item.firstFrame130 = it.toString() }
-            itemJson["first_frame_800"]?.let { item.firstFrame800 = it.toString() }
+            itemJson["first_frame_320"]?.let {
+                item.firstFrame320 = stringToUrlFormat(it.toString())
+            }
+            itemJson["first_frame_160"]?.let {
+                item.firstFrame160 = stringToUrlFormat(it.toString())
+            }
+            itemJson["first_frame_130"]?.let {
+                item.firstFrame130 = stringToUrlFormat(it.toString())
+            }
+            itemJson["first_frame_800"]?.let {
+                item.firstFrame800 = stringToUrlFormat(it.toString())
+            }
             item.files = files
             item.player = itemJson["player"].toString()
             item.canAdd = itemJson["can_add"].asJsonPrimitive.asBoolean
@@ -88,11 +96,11 @@ class VideoDeserializer : JsonDeserializer<ResponseVideo> {
             items.add(item)
         }
 
-        val profilesJson = jsonObject["profiles"].asJsonArray
+        val profilesJson = jsonObject["profiles"]?.asJsonArray
 
         val profiles = mutableListOf<User>()
 
-        profilesJson.forEach {
+        profilesJson?.forEach {
             val profileJson = it.asJsonObject
 
             profiles.add(
@@ -104,11 +112,11 @@ class VideoDeserializer : JsonDeserializer<ResponseVideo> {
             )
         }
 
-        val groupsJson = jsonObject["groups"].asJsonArray
+        val groupsJson = jsonObject["groups"]?.asJsonArray
 
         val groups = mutableListOf<Group>()
 
-        groupsJson.forEach {
+        groupsJson?.forEach {
             val groupJson = it.asJsonObject
 
             groups.add(

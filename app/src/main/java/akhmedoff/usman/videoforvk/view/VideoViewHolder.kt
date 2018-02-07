@@ -1,19 +1,19 @@
 package akhmedoff.usman.videoforvk.view
 
 import akhmedoff.usman.videoforvk.R
-import akhmedoff.usman.videoforvk.model.VideoCatalog
+import akhmedoff.usman.videoforvk.model.CatalogItem
 import android.graphics.Bitmap
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.squareup.picasso.Picasso
 
-class VideoViewHolder(val picasso: Picasso, itemView: View) :
-    AbstractViewHolder<VideoCatalog>(itemView) {
+class VideoViewHolder(private val picasso: Picasso, itemView: View) :
+    AbstractViewHolder<CatalogItem>(itemView) {
     private val videoFrame = itemView.findViewById<ImageView>(R.id.video_frame)
     private val videoTitle = itemView.findViewById<TextView>(R.id.video_title)
 
-    override fun bind(item: VideoCatalog) {
+    override fun bind(item: CatalogItem) {
 
         val imageUri = when {
             item.photo800 != null -> item.photo800

@@ -10,7 +10,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import akhmedoff.usman.videoforvk.model.Response as ApiResponse
 
-class PageKeyedCatalogDataSource(
+class CatalogsPageKeyedDataSource(
     private val vkApi: VkApi,
     private val token: String
 ) : PageKeyedDataSource<String, Catalog>() {
