@@ -13,6 +13,8 @@ interface AlbumContract {
 
         fun showAlbumTitle(title: String)
 
+        fun showAlbumImage(poster: String)
+
         fun showVideo(video: Video)
 
         fun setAdded(isAdded: Boolean)

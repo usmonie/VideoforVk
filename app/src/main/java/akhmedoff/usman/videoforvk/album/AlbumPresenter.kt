@@ -13,6 +13,11 @@ class AlbumPresenter(private val videoRepository: VideoRepository) :
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun onStart() {
+        loadAlbum()
+        loadAlbumVideos()
+    }
+
+    private fun loadAlbumVideos() {
         view?.let {
             videoRepository.getVideos(
                 ownerId = it.getAlbumOwnerId(),
@@ -21,6 +26,26 @@ class AlbumPresenter(private val videoRepository: VideoRepository) :
             )
                 .observe(it, Observer { pagedList: PagedList<Video>? ->
                     pagedList?.let { items -> it.showVideos(items) }
+                })
+        }
+    }
+
+    private fun loadAlbum() {
+        view?.let {
+            videoRepository.getAlbum(
+                ownerId = it.getAlbumOwnerId(),
+                albumId = it.getAlbumId()
+            )
+                .observe(it, Observer { albumResponse ->
+                    run {
+                        albumResponse?.response?.let { album ->
+                            run {
+                                it.showAlbumImage(album.photo320)
+
+                                it.showAlbumTitle(album.title)
+                            }
+                        }
+                    }
                 })
         }
     }

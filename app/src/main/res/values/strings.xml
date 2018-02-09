@@ -20,6 +20,7 @@
     <string name="title_activity_video">VideoActivity</string>
     <string name="error_loading">Loading error</string>
     <string name="search">Search</string>
+    <string name="main_screen">Main</string>
 
     <plurals name="video.views">
         <item quantity="one">%s view</item>

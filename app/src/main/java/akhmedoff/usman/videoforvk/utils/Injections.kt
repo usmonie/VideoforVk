@@ -2,10 +2,7 @@ package akhmedoff.usman.videoforvk.utils
 
 import akhmedoff.usman.videoforvk.App
 import akhmedoff.usman.videoforvk.data.api.VkApi
-import akhmedoff.usman.videoforvk.model.Auth
-import akhmedoff.usman.videoforvk.model.ResponseCatalog
-import akhmedoff.usman.videoforvk.model.ResponseVideo
-import akhmedoff.usman.videoforvk.model.User
+import akhmedoff.usman.videoforvk.model.*
 import android.os.Build
 import android.os.Build.VERSION
 import com.google.gson.GsonBuilder
@@ -65,6 +62,7 @@ val vkApi: VkApi by lazy {
         registerTypeAdapter(ResponseVideo::class.java, VideoDeserializer())
         registerTypeAdapter(ResponseCatalog::class.java, CatalogDeserializer())
         registerTypeAdapter(Auth::class.java, AuthDeserializer())
+        registerTypeAdapter(Album::class.java, AlbumDeserializer())
     }
 
     val gson = gsonBuilder.create()

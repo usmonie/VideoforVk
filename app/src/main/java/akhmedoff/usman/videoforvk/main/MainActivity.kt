@@ -49,9 +49,13 @@ class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), 
         setContentView(R.layout.activity_main)
 
         setSupportActionBar(toolbar)
+        toolbar.title = getString(R.string.main_screen)
+        supportActionBar?.title = toolbar.title
+
         val layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         home_recycler.layoutManager = layoutManager
         home_recycler.adapter = adapter
+
         update_home_layout.setOnRefreshListener { mainPresenter.refresh() }
     }
 
@@ -79,7 +83,7 @@ class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), 
     }
 
     override fun showCatalogs() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TODO("not implemented") //To change body of created functions use File |         Settings | File Templates.
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

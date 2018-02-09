@@ -32,6 +32,14 @@ interface VkApi {
         @Query("v") v: String = API_VERSION
     ): Call<ResponseVideo>
 
+    @GET("video.getAlbumById")
+    fun getAlbum(
+        @Query("owner_id") ownerId: String?,
+        @Query("album_id") albumId: String?,
+        @Query("access_token") token: String,
+        @Query("v") v: String = API_VERSION
+    ): LiveData<Response<Album>>
+
     @GET("video.getCatalog")
     fun getCatalog(
         @Query("count") count: Int,

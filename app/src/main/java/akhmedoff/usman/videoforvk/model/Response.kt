@@ -1,11 +1,9 @@
 package akhmedoff.usman.videoforvk.model
 
 import android.util.Log
-import com.google.gson.annotations.SerializedName
 import retrofit2.Response as RetrofitResponse
 
 class Response<T> {
-    @SerializedName("responseCatalog")
     val response: T?
     val errorMessage: String?
     val code: Int
@@ -17,7 +15,7 @@ class Response<T> {
     }
 
     constructor(throwable: Throwable) {
-        Log.d("responseError", throwable.toString())
+        Log.d("responseError", throwable.message)
         response = null
         errorMessage = throwable.message
         code = 500

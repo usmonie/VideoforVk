@@ -15,15 +15,15 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_album.*
 
 class AlbumActivity : BaseActivity<AlbumContract.View, AlbumContract.Presenter>(),
     AlbumContract.View {
-
     companion object {
+
         private const val ALBUM_ID = "album_id"
         private const val ALBUM_OWNER_ID = "album_owner_id"
-
         fun getActivity(item: CatalogItem, context: Context): Intent {
             val intent = Intent(context, AlbumActivity::class.java)
 
@@ -32,6 +32,7 @@ class AlbumActivity : BaseActivity<AlbumContract.View, AlbumContract.Presenter>(
 
             return intent
         }
+
     }
 
     private val adapter: AlbumRecyclerAdapter by lazy {
@@ -47,8 +48,8 @@ class AlbumActivity : BaseActivity<AlbumContract.View, AlbumContract.Presenter>(
         adapter.setHasStableIds(true)
         return@lazy adapter
     }
-    override lateinit var albumPresenter: AlbumContract.Presenter
 
+    override lateinit var albumPresenter: AlbumContract.Presenter
     override fun onCreate(savedInstanceState: Bundle?) {
         albumPresenter = AlbumPresenter(
             VideoRepository(
@@ -72,6 +73,14 @@ class AlbumActivity : BaseActivity<AlbumContract.View, AlbumContract.Presenter>(
     }
 
     override fun showAlbumTitle(title: String) {
+        toolbar.title = title
+    }
+
+    override fun showAlbumImage(poster: String) {
+        Picasso
+            .with(this)
+            .load(poster)
+            .into(app_bar_album_poster_image)
     }
 
     override fun showVideo(video: Video) {

@@ -39,4 +39,7 @@ class VideoRepository(
 
     fun getVideo(video: String) =
         vkApi.getVideos(null, video, null, 1, 0, token = userSettings.getToken())
+
+    fun getAlbum(ownerId: String?, albumId: String?) =
+        vkApi.getAlbum(ownerId, albumId, userSettings.getToken())
 }
