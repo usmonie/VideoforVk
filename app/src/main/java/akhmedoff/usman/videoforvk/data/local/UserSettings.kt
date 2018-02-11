@@ -16,7 +16,7 @@ object UserSettings {
 
     private lateinit var sharedPreferences: SharedPreferences
 
-    var isLoggined = false
+    var isLogged = false
         get() = sharedPreferences.contains(USER_TOKEN)
 
     fun saveToken(token: String) = sharedPreferences.edit().putString(USER_TOKEN, token).apply()

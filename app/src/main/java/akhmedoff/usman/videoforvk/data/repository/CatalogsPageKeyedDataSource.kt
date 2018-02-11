@@ -10,10 +10,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import akhmedoff.usman.videoforvk.model.Response as ApiResponse
 
-class CatalogsPageKeyedDataSource(
-    private val vkApi: VkApi,
-    private val token: String
-) : PageKeyedDataSource<String, Catalog>() {
+class CatalogsPageKeyedDataSource(private val vkApi: VkApi) :
+    PageKeyedDataSource<String, Catalog>() {
 
     override fun loadBefore(
         params: LoadParams<String>,
@@ -27,7 +25,7 @@ class CatalogsPageKeyedDataSource(
             count = 4,
             itemsCount = 7,
             from = params.key,
-            token = token
+            filters = "top,feed,ugc,series,other"
         ).enqueue(object : Callback<ResponseCatalog> {
             /**
              * Invoked when a network exception occurred talking to the server or when an unexpected
@@ -63,8 +61,7 @@ class CatalogsPageKeyedDataSource(
         val apiSource = vkApi.getCatalog(
             count = 4,
             itemsCount = 7,
-            filters = "top,feed,ugc,series,other",
-            token = token
+            filters = "top,feed,ugc,series,other"
         )
 
         try {

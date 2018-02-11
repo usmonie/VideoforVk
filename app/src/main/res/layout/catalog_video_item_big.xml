@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="320dp"
     android:layout_height="236dp"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="5dp"
-    app:cardUseCompatPadding="true">
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="16dp"
+    app:cardCornerRadius="5dp">
 
     <ImageView
         android:id="@+id/video_frame"

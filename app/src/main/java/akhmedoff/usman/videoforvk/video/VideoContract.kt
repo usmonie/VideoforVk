@@ -1,10 +1,10 @@
 package akhmedoff.usman.videoforvk.video
 
+import akhmedoff.usman.videoforvk.Error
 import akhmedoff.usman.videoforvk.base.BaseContract
 import akhmedoff.usman.videoforvk.model.Group
 import akhmedoff.usman.videoforvk.model.User
 import akhmedoff.usman.videoforvk.model.Video
-import android.content.res.Configuration
 
 interface VideoContract {
 
@@ -37,7 +37,7 @@ interface VideoContract {
 
         fun getVideoPosition(): Long?
 
-        fun showRecommendatons()
+        fun showRecommendations()
 
         fun showLoadError()
 
@@ -48,6 +48,6 @@ interface VideoContract {
 
         fun clickFullscreen()
 
-        fun changedConfiguration(newConfig: Configuration)
+        fun error(error: Error, message: String)
     }
 }

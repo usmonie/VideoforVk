@@ -2,18 +2,22 @@ package akhmedoff.usman.videoforvk.video
 
 import akhmedoff.usman.videoforvk.App.Companion.context
 import akhmedoff.usman.videoforvk.R
+import akhmedoff.usman.videoforvk.album.AlbumActivity
 import akhmedoff.usman.videoforvk.base.BaseActivity
 import akhmedoff.usman.videoforvk.data.local.UserSettings
+import akhmedoff.usman.videoforvk.data.repository.UserRepository
 import akhmedoff.usman.videoforvk.data.repository.VideoRepository
+import akhmedoff.usman.videoforvk.model.CatalogItem
 import akhmedoff.usman.videoforvk.model.Group
 import akhmedoff.usman.videoforvk.model.User
 import akhmedoff.usman.videoforvk.model.Video
 import akhmedoff.usman.videoforvk.utils.vkApi
+import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
-import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import com.google.android.exoplayer2.DefaultControlDispatcher
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.Player
@@ -36,26 +40,45 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
     VideoContract.View {
     companion object {
         const val VIDEO_ID = "video_id"
+
+        fun getActivity(item: Video, context: Context): Intent {
+            val intent = Intent(context, AlbumActivity::class.java)
+
+            intent.putExtra(VIDEO_ID, item.ownerId.toString() + "_" + item.id.toString())
+
+            return intent
+        }
+
+        fun getActivity(item: CatalogItem, context: Context): Intent {
+            val intent = Intent(context, VideoActivity::class.java)
+
+            intent.putExtra(VIDEO_ID, item.ownerId.toString() + "_" + item.id.toString())
+
+            return intent
+        }
+
     }
 
+    override lateinit var videoPresenter: VideoPresenter
     private var player: SimpleExoPlayer? = null
 
-    override lateinit var videoPresenter: VideoPresenter
+    private lateinit var decorView: View
 
-
-    override fun initPresenter(): VideoContract.Presenter = videoPresenter
+    override fun initPresenter() = videoPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         videoPresenter = VideoPresenter(
-            VideoRepository(
-                UserSettings.getUserSettings(applicationContext), vkApi
+            VideoRepository(vkApi),
+            UserRepository(
+                userSettings = UserSettings.getUserSettings(applicationContext),
+                api = vkApi
             )
         )
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video)
 
         fullscreen_toggle.setOnClickListener { videoPresenter.clickFullscreen() }
-
+        decorView = window.decorView
     }
 
     override fun showVideo(item: Video) {
@@ -67,23 +90,19 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
 
     override fun getVideoPosition() = player?.currentPosition
 
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        videoPresenter.changedConfiguration(newConfig)
-    }
-
     override fun getVideoId() = intent.getStringExtra(VideoActivity.VIDEO_ID)!!
 
     override fun showLoadError() {
     }
 
-    override fun showRecommendatons() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun showRecommendations() {
+
     }
 
     private fun initVideoInfo(item: Video) {
         video_title?.text = item.title
         video_views?.text = item.views.toString()
+
         item.views?.let {
             video_views?.text = resources.getQuantityString(
                 R.plurals.video_views,
@@ -91,6 +110,7 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
                 NumberFormat.getIntegerInstance().format(it)
             )
         }
+
         video_date?.text = SimpleDateFormat(
             "HH:mm, dd MMM ",
             Locale.getDefault()
@@ -151,7 +171,12 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
         }.createMediaSource(mp4VideoUri, null, null)
 
         // Prepare the player with the source.
-        player?.prepare(videoSource)
+
+        player?.let {
+            it.prepare(videoSource)
+
+            it.seekTo(it.currentPosition + 1)
+        }
     }
 
     override fun showGroupOwnerInfo(group: Group) {
@@ -173,7 +198,10 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
                     user.firstName,
                     user.lastName
                 )
-        Picasso.with(context).load(user.photo100).into(owner_photo)
+        Picasso
+            .with(context)
+            .load(user.photo100)
+            .into(owner_photo)
 
         owner_follow?.text = when {
             user.isFavorite -> getText(R.string.followed)
@@ -204,11 +232,15 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
     }
 
     override fun showFullscreen() {
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
     }
 
     override fun showSmallScreen() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
-
 }

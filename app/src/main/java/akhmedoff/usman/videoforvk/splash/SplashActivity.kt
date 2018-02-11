@@ -31,5 +31,5 @@ class SplashActivity : BaseActivity<SplashContract.View, SplashContract.Presente
         startActivity(Intent(this, LoginActivity::class.java))
     }
 
-    override fun initPresenter(): SplashContract.Presenter = splashPresenter
+    override fun initPresenter() = splashPresenter
 }

@@ -1,8 +1,9 @@
-package akhmedoff.usman.videoforvk.utils
+package akhmedoff.usman.videoforvk.utils.deserializers
 
 import akhmedoff.usman.videoforvk.model.Catalog
 import akhmedoff.usman.videoforvk.model.CatalogItem
 import akhmedoff.usman.videoforvk.model.ResponseCatalog
+import akhmedoff.usman.videoforvk.utils.stringToUrlFormat
 import android.util.Log
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
@@ -37,33 +38,27 @@ class CatalogDeserializer : JsonDeserializer<ResponseCatalog> {
                     with(item) {
                         id = videoJson["id"].asJsonPrimitive.asInt
                         ownerId = videoJson["owner_id"].asInt
-                        title = stringToUrlFormat(videoJson["title"].toString())!!
+                        title = videoJson["title"].asString
+
                         videoJson["duration"]?.let { duration = it.asInt }
-                        videoJson["description"]?.let {
-                            description = stringToUrlFormat(it.toString())!!
-                        }
+                        videoJson["description"]?.let { description = it.asString }
                         videoJson["date"]?.let { date = it.asLong }
                         videoJson["comments"]?.let { comments = it.asInt }
                         videoJson["views"]?.let { views = it.asInt }
-                        videoJson["access_key"]?.let {
-                            accessKey = stringToUrlFormat(it.toString())
-                        }
-                        videoJson["photo_130"]?.let {
-                            photo130 = stringToUrlFormat(it.toString())!!
-                        }
-                        videoJson["photo_320"]?.let {
-                            photo320 = stringToUrlFormat(it.toString())
-                        }
-                        videoJson["photo_640"]?.let { photo640 = stringToUrlFormat(it.toString()) }
-                        videoJson["photo_800"]?.let { photo800 = stringToUrlFormat(it.toString()) }
-                        videoJson["platform"]?.let { platform = stringToUrlFormat(it.toString()) }
+                        videoJson["access_key"]?.let { accessKey = it.asString }
+                        videoJson["photo_130"]?.let { photo130 = it.asString }
+                        videoJson["photo_320"]?.let { photo320 = it.asString }
+                        videoJson["photo_640"]?.let { photo640 = it.asString }
+                        videoJson["photo_800"]?.let { photo800 = it.asString }
+                        videoJson["platform"]?.let { platform = it.asString }
                         canAdd = videoJson["can_add"]?.asBoolean ?: false
-                        videoJson["type"]?.let { type = stringToUrlFormat(it.toString())!! }
+                        videoJson["type"]?.let { type = it.asString }
                     }
                     videos.add(item)
                 }
 
-                val name = stringToUrlFormat(catalogJson["name"]?.toString())
+                val name =
+                    stringToUrlFormat(catalogJson["name"]?.toString())
 
 
                 var id: String? = null

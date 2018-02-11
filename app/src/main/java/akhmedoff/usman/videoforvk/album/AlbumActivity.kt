@@ -2,7 +2,6 @@ package akhmedoff.usman.videoforvk.album
 
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.base.BaseActivity
-import akhmedoff.usman.videoforvk.data.local.UserSettings
 import akhmedoff.usman.videoforvk.data.repository.VideoRepository
 import akhmedoff.usman.videoforvk.model.CatalogItem
 import akhmedoff.usman.videoforvk.model.Video
@@ -20,10 +19,11 @@ import kotlinx.android.synthetic.main.activity_album.*
 
 class AlbumActivity : BaseActivity<AlbumContract.View, AlbumContract.Presenter>(),
     AlbumContract.View {
-    companion object {
 
+    companion object {
         private const val ALBUM_ID = "album_id"
         private const val ALBUM_OWNER_ID = "album_owner_id"
+
         fun getActivity(item: CatalogItem, context: Context): Intent {
             val intent = Intent(context, AlbumActivity::class.java)
 
@@ -32,15 +32,11 @@ class AlbumActivity : BaseActivity<AlbumContract.View, AlbumContract.Presenter>(
 
             return intent
         }
-
     }
 
     private val adapter: AlbumRecyclerAdapter by lazy {
-        val clickListener = object :
-            OnClickListener<Video> {
-            override fun onClick(item: Video) {
-                presenter.clickVideo(item)
-            }
+        val clickListener = object : OnClickListener<Video> {
+            override fun onClick(item: Video) = presenter.clickVideo(item)
         }
 
         val adapter = AlbumRecyclerAdapter(clickListener)
@@ -50,12 +46,9 @@ class AlbumActivity : BaseActivity<AlbumContract.View, AlbumContract.Presenter>(
     }
 
     override lateinit var albumPresenter: AlbumContract.Presenter
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        albumPresenter = AlbumPresenter(
-            VideoRepository(
-                UserSettings.getUserSettings(applicationContext), vkApi
-            )
-        )
+        albumPresenter = AlbumPresenter(VideoRepository(vkApi))
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_album)
 
@@ -64,13 +57,11 @@ class AlbumActivity : BaseActivity<AlbumContract.View, AlbumContract.Presenter>(
         album_videos_recycler.adapter = adapter
     }
 
-    override fun getAlbumId(): String? = intent?.getStringExtra(ALBUM_ID)
+    override fun getAlbumId() = intent?.getStringExtra(ALBUM_ID)
 
-    override fun getAlbumOwnerId(): String? = intent?.getStringExtra(ALBUM_OWNER_ID)
+    override fun getAlbumOwnerId() = intent?.getStringExtra(ALBUM_OWNER_ID)
 
-    override fun showVideos(items: PagedList<Video>) {
-        adapter.setList(items)
-    }
+    override fun showVideos(items: PagedList<Video>) = adapter.setList(items)
 
     override fun showAlbumTitle(title: String) {
         toolbar.title = title
@@ -83,19 +74,12 @@ class AlbumActivity : BaseActivity<AlbumContract.View, AlbumContract.Presenter>(
             .into(app_bar_album_poster_image)
     }
 
-    override fun showVideo(video: Video) {
-        val intent = Intent(this, VideoActivity::class.java)
-        intent.putExtra(
-            VideoActivity.VIDEO_ID,
-            video.ownerId.toString() + "_" + video.id.toString()
-        )
+    override fun showVideo(video: Video) = startActivity(VideoActivity.getActivity(video, this))
 
-        startActivity(intent)
-    }
 
     override fun setAdded(isAdded: Boolean) {
     }
 
-    override fun initPresenter(): AlbumContract.Presenter = albumPresenter
+    override fun initPresenter() = albumPresenter
 
 }

@@ -1,17 +1,12 @@
 package akhmedoff.usman.videoforvk.data.repository
 
 import akhmedoff.usman.videoforvk.data.api.VkApi
-import akhmedoff.usman.videoforvk.data.local.UserSettings
-import akhmedoff.usman.videoforvk.model.Catalog
 import akhmedoff.usman.videoforvk.model.Video
 import android.arch.lifecycle.LiveData
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 
-class VideoRepository(
-    private val userSettings: UserSettings,
-    private val vkApi: VkApi
-) {
+class VideoRepository(private val vkApi: VkApi) {
 
     fun getVideos(
         ownerId: String? = null,
@@ -25,21 +20,14 @@ class VideoRepository(
             .setInitialLoadSizeHint(10)
             .build()
 
-        val sourceFactory =
-            VideosDataSourceFactory(vkApi, ownerId, videos, albumId, userSettings.getToken())
+        val sourceFactory = VideosDataSourceFactory(vkApi, ownerId, videos, albumId)
 
         return LivePagedListBuilder(sourceFactory, pagedListConfig).build()
     }
 
-    fun getCatalog(): LiveData<PagedList<Catalog>> {
-        val sourceFactory = CatalogsDataSourceFactory(vkApi, userSettings.getToken())
+    fun getCatalog() = LivePagedListBuilder(CatalogsDataSourceFactory(vkApi), 10).build()
 
-        return LivePagedListBuilder(sourceFactory, 10).build()
-    }
+    fun getVideo(video: String) = vkApi.getVideos(null, video, null, 1, 0)
 
-    fun getVideo(video: String) =
-        vkApi.getVideos(null, video, null, 1, 0, token = userSettings.getToken())
-
-    fun getAlbum(ownerId: String?, albumId: String?) =
-        vkApi.getAlbum(ownerId, albumId, userSettings.getToken())
+    fun getAlbum(ownerId: String?, albumId: String?) = vkApi.getAlbum(ownerId, albumId)
 }

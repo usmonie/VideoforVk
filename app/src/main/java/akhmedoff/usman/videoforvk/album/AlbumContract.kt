@@ -1,5 +1,6 @@
 package akhmedoff.usman.videoforvk.album
 
+import akhmedoff.usman.videoforvk.Error
 import akhmedoff.usman.videoforvk.base.BaseContract
 import akhmedoff.usman.videoforvk.model.Video
 import android.arch.paging.PagedList
@@ -28,5 +29,8 @@ interface AlbumContract {
         fun clickVideo(video: Video)
 
         fun clickAdd()
+
+        fun error(error: Error, message: String)
+
     }
 }

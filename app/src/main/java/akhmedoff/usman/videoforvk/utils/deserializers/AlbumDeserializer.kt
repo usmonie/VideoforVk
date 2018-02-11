@@ -1,4 +1,4 @@
-package akhmedoff.usman.videoforvk.utils
+package akhmedoff.usman.videoforvk.utils.deserializers
 
 import akhmedoff.usman.videoforvk.model.Album
 import com.google.gson.JsonDeserializationContext
@@ -13,14 +13,14 @@ class AlbumDeserializer : JsonDeserializer<Album> {
         typeOfT: Type,
         context: JsonDeserializationContext?
     ): Album {
-        val jsonObject = json.asJsonObject["response"].asJsonObject!!
+        val jsonObject = json.asJsonObject["response"].asJsonObject
 
-        val id = stringToUrlFormat(jsonObject["id"]?.toString())!!
-        val ownerId = stringToUrlFormat(jsonObject["owner_id"]?.toString())!!
-        val title = stringToUrlFormat(jsonObject["title"]?.toString())!!
+        val id = jsonObject["id"]?.asJsonPrimitive?.asString!!
+        val ownerId = jsonObject["owner_id"]?.asJsonPrimitive?.asString!!
+        val title = jsonObject["title"]?.asJsonPrimitive?.asString!!
         val count = jsonObject["count"]?.asJsonPrimitive?.asInt!!
-        val photo320 = stringToUrlFormat(jsonObject["photo_320"]?.toString())!!
-        val photo160 = stringToUrlFormat(jsonObject["photo_160"]?.toString())!!
+        val photo320 = jsonObject["photo_320"]?.asJsonPrimitive?.asString!!
+        val photo160 = jsonObject["photo_160"]?.asJsonPrimitive?.asString!!
 
         return Album(id, ownerId, title, count, photo320, photo160)
     }

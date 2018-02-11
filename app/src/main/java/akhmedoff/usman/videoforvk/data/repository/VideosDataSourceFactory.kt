@@ -9,8 +9,7 @@ class VideosDataSourceFactory(
     private val vkApi: VkApi,
     private val ownerId: String?,
     private val videoId: String?,
-    private val albumId: String?,
-    private val token: String
+    private val albumId: String?
 ) : DataSource.Factory<Int, Video> {
-    override fun create() = VideosDataSource(vkApi, ownerId, videoId, albumId, token)
+    override fun create() = VideosDataSource(vkApi, ownerId, videoId, albumId)
 }

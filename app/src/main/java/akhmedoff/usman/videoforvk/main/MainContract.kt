@@ -1,5 +1,6 @@
 package akhmedoff.usman.videoforvk.main
 
+import akhmedoff.usman.videoforvk.Error
 import akhmedoff.usman.videoforvk.base.BaseContract
 import akhmedoff.usman.videoforvk.model.Catalog
 import akhmedoff.usman.videoforvk.model.CatalogItem
@@ -18,8 +19,6 @@ interface MainContract {
         fun showAlbum(album: CatalogItem)
 
         fun showCatalog(catalog: Catalog)
-
-        fun showCatalogs()
 
         fun showLoading()
 
@@ -41,5 +40,8 @@ interface MainContract {
         fun loadCatalogs()
 
         fun pagination()
+
+        fun error(error: Error, message: String)
+
     }
 }

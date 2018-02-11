@@ -1,20 +1,26 @@
 package akhmedoff.usman.videoforvk.video
 
+import akhmedoff.usman.videoforvk.Error
 import akhmedoff.usman.videoforvk.base.BasePresenter
+import akhmedoff.usman.videoforvk.data.repository.UserRepository
 import akhmedoff.usman.videoforvk.data.repository.VideoRepository
 import akhmedoff.usman.videoforvk.model.ResponseVideo
+import akhmedoff.usman.videoforvk.model.User
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.OnLifecycleEvent
-import android.content.res.Configuration
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class VideoPresenter(private val videoRepository: VideoRepository) :
+class VideoPresenter(
+    private val videoRepository: VideoRepository,
+    private val userRepository: UserRepository
+) :
     BasePresenter<VideoContract.View>(), VideoContract.Presenter {
     private var isFullscreen = false
 
     private var isStarted = false
+
     private var position = 0L
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
@@ -42,7 +48,7 @@ class VideoPresenter(private val videoRepository: VideoRepository) :
                                 responseVideo.groups != null && responseVideo.groups.isNotEmpty() -> it.showGroupOwnerInfo(
                                     responseVideo.groups[0]
                                 )
-                                responseVideo.profiles != null && responseVideo.profiles.isNotEmpty() -> it.showUserOwnerInfo(
+                                responseVideo.profiles != null && responseVideo.profiles.isNotEmpty() -> loadUser(
                                     responseVideo.profiles[0]
                                 )
                             }
@@ -59,6 +65,25 @@ class VideoPresenter(private val videoRepository: VideoRepository) :
         }
     }
 
+    private fun loadUser(user: User) {
+        view?.let {
+            userRepository.getUser(user.id.toString()).enqueue(object : Callback<User> {
+                override fun onFailure(call: Call<User>?, t: Throwable?) {
+
+                }
+
+                override fun onResponse(call: Call<User>?, response: Response<User>?) {
+
+                    response?.body()?.let { user ->
+                        it.showUserOwnerInfo(user)
+                    }
+                }
+
+            })
+        }
+
+    }
+
     override fun clickFullscreen() {
         isFullscreen = when (isFullscreen) {
             true -> {
@@ -72,11 +97,6 @@ class VideoPresenter(private val videoRepository: VideoRepository) :
         }
     }
 
-    override fun changedConfiguration(newConfig: Configuration) {
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE && isFullscreen)
-            view?.showFullscreen()
-    }
-
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     fun onPause() {
         view?.let {
@@ -86,8 +106,13 @@ class VideoPresenter(private val videoRepository: VideoRepository) :
         }
     }
 
+
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     fun onStop() {
         view?.stopVideo()
+    }
+
+    override fun error(error: Error, message: String) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

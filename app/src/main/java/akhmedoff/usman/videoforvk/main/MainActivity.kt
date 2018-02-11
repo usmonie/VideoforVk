@@ -4,7 +4,6 @@ import akhmedoff.usman.videoforvk.App.Companion.context
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.album.AlbumActivity
 import akhmedoff.usman.videoforvk.base.BaseActivity
-import akhmedoff.usman.videoforvk.data.local.UserSettings
 import akhmedoff.usman.videoforvk.data.repository.VideoRepository
 import akhmedoff.usman.videoforvk.model.Catalog
 import akhmedoff.usman.videoforvk.model.CatalogItem
@@ -12,7 +11,6 @@ import akhmedoff.usman.videoforvk.utils.vkApi
 import akhmedoff.usman.videoforvk.video.VideoActivity
 import akhmedoff.usman.videoforvk.view.OnClickListener
 import android.arch.paging.PagedList
-import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.LinearLayoutManager
@@ -26,9 +24,7 @@ class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), 
     private val adapter: MainRecyclerAdapter by lazy {
         val clickListener = object :
             OnClickListener<CatalogItem> {
-            override fun onClick(item: CatalogItem) {
-                presenter.clickItem(item)
-            }
+            override fun onClick(item: CatalogItem) = presenter.clickItem(item)
         }
 
         val adapter = MainRecyclerAdapter(clickListener)
@@ -38,13 +34,8 @@ class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), 
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        mainPresenter =
-                MainPresenter(
-                    VideoRepository(
-                        UserSettings.getUserSettings(context),
-                        vkApi
-                    )
-                )
+        mainPresenter = MainPresenter(VideoRepository(vkApi))
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -64,26 +55,12 @@ class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), 
 
     override fun showList(videos: PagedList<Catalog>) = adapter.setList(videos)
 
-    override fun showVideo(item: CatalogItem) {
-        val intent = Intent(this, VideoActivity::class.java)
-        intent.putExtra(
-            VideoActivity.VIDEO_ID,
-            item.ownerId.toString() + "_" + item.id.toString()
-        )
+    override fun showVideo(item: CatalogItem) = startActivity(VideoActivity.getActivity(item, this))
 
-        startActivity(intent)
-    }
-
-    override fun showAlbum(album: CatalogItem) {
+    override fun showAlbum(album: CatalogItem) =
         startActivity(AlbumActivity.getActivity(album, this))
-    }
 
     override fun showCatalog(catalog: Catalog) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun showCatalogs() {
-        TODO("not implemented") //To change body of created functions use File |         Settings | File Templates.
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -99,9 +76,8 @@ class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), 
         update_home_layout.isRefreshing = false
     }
 
-    override fun showErrorLoading() {
+    override fun showErrorLoading() =
         Snackbar.make(activity_main, getText(R.string.error_loading), Snackbar.LENGTH_LONG).show()
-    }
 
-    override fun initPresenter(): MainContract.Presenter = mainPresenter
+    override fun initPresenter() = mainPresenter
 }

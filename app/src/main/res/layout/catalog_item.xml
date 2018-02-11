@@ -1,29 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/catalog_recycler"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="256dp"
-        android:overScrollMode="never"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/catalog_title"
-        tools:listitem="@layout/catalog_video_item_min" />
+        android:layout_height="match_parent"
+        android:layout_marginBottom="8dp"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/catalog_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="В России выборы!" />
-</android.support.constraint.ConstraintLayout>
+        <TextView
+            android:id="@+id/catalog_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|start"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            tools:text="В России выборы!" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/catalog_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="256dp"
+            android:layout_gravity="bottom"
+            android:overScrollMode="never"
+            tools:listitem="@layout/catalog_video_item_min" />
+    </LinearLayout>
+</android.support.v7.widget.CardView>

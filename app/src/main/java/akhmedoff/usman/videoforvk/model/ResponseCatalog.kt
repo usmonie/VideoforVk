@@ -1,6 +1,6 @@
 package akhmedoff.usman.videoforvk.model
 
-import akhmedoff.usman.videoforvk.utils.CatalogDeserializer
+import akhmedoff.usman.videoforvk.utils.deserializers.CatalogDeserializer
 import com.google.gson.annotations.JsonAdapter
 
 @JsonAdapter(CatalogDeserializer::class)

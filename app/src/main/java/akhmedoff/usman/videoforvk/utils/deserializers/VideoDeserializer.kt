@@ -1,4 +1,4 @@
-package akhmedoff.usman.videoforvk.utils
+package akhmedoff.usman.videoforvk.utils.deserializers
 
 import akhmedoff.usman.videoforvk.model.*
 import com.google.gson.JsonDeserializationContext
@@ -23,20 +23,22 @@ class VideoDeserializer : JsonDeserializer<ResponseVideo> {
             val itemJson = it.asJsonObject
 
             val fileJson = itemJson["files"].asJsonObject
-            var external = stringToUrlFormat(fileJson["external"]?.toString())
+            var external = fileJson["external"]?.asString
 
-            var mp4240 = stringToUrlFormat(fileJson["mp4_240"]?.toString())
-            val mp4360 = stringToUrlFormat(fileJson["mp4_360"]?.toString())
-            val mp4480 = stringToUrlFormat(fileJson["mp4_480"]?.toString())
-            val mp4720 = stringToUrlFormat(fileJson["mp4_720"]?.toString())
-            val mp41080 = stringToUrlFormat(fileJson["mp4_1080"]?.toString())
-            val hls = stringToUrlFormat(fileJson["hls"]?.toString())
+            var mp4240 = fileJson["mp4_240"]?.asString
+            val mp4360 = fileJson["mp4_360"]?.asString
+            val mp4480 = fileJson["mp4_480"]?.asString
+            val mp4720 = fileJson["mp4_720"]?.asString
+            val mp41080 = fileJson["mp4_1080"]?.asString
+            val hls = fileJson["hls"]?.asString
 
             if (external != null && (external.endsWith(".mp4") || external.contains("vk.com"))) {
                 mp4240 = external
                 external = null
             }
+
             val files = Files()
+
             files.mp4240 = mp4240
             files.mp4360 = mp4360
             files.mp4480 = mp4480
@@ -60,32 +62,39 @@ class VideoDeserializer : JsonDeserializer<ResponseVideo> {
 
             item.id = itemJson["id"].asJsonPrimitive.asInt
             item.ownerId = itemJson["owner_id"].asJsonPrimitive.asInt
-            item.title = stringToUrlFormat(itemJson["title"].toString())!!
+            item.title = itemJson["title"].asString
             item.duration = itemJson["duration"].asJsonPrimitive.asInt
-            item.description = stringToUrlFormat(itemJson["description"].toString())
+            item.description = itemJson["description"].asString
             item.date = itemJson["date"].asJsonPrimitive.asLong
             item.comments = itemJson["comments"].asJsonPrimitive.asInt
             item.views = itemJson["views"].asJsonPrimitive.asInt
             item.width = itemJson["width"]?.asJsonPrimitive?.asInt
             item.height = itemJson["height"]?.asJsonPrimitive?.asInt
-            itemJson["photo_130"]?.let { item.photo130 = stringToUrlFormat(it.toString()) }
-            itemJson["photo_320"]?.let { item.photo320 = stringToUrlFormat(it.toString()) }
-            itemJson["photo_800"]?.let { item.photo800 = stringToUrlFormat(it.toString()) }
+
+            itemJson["photo_130"]?.let {
+                item.photo130 = it.asString
+            }
+            itemJson["photo_320"]?.let {
+                item.photo320 = it.asString
+            }
+            itemJson["photo_800"]?.let {
+                item.photo800 = it.asString
+            }
             itemJson["adding_date"]?.let { item.addingDate = it.asJsonPrimitive.asLong }
             itemJson["first_frame_320"]?.let {
-                item.firstFrame320 = stringToUrlFormat(it.toString())
+                item.firstFrame320 = it.asString
             }
             itemJson["first_frame_160"]?.let {
-                item.firstFrame160 = stringToUrlFormat(it.toString())
+                item.firstFrame160 = it.asString
             }
             itemJson["first_frame_130"]?.let {
-                item.firstFrame130 = stringToUrlFormat(it.toString())
+                item.firstFrame130 = it.asString
             }
             itemJson["first_frame_800"]?.let {
-                item.firstFrame800 = stringToUrlFormat(it.toString())
+                item.firstFrame800 = it.asString
             }
             item.files = files
-            item.player = itemJson["player"].toString()
+            item.player = itemJson["player"].asString
             item.canAdd = itemJson["can_add"].asJsonPrimitive.asBoolean
             item.canComment = itemJson["can_comment"].asJsonPrimitive.asBoolean
             item.canRepost = itemJson["can_repost"].asJsonPrimitive.asBoolean
@@ -106,8 +115,8 @@ class VideoDeserializer : JsonDeserializer<ResponseVideo> {
             profiles.add(
                 User(
                     profileJson["id"].asJsonPrimitive.asLong,
-                    profileJson["first_name"].toString(),
-                    profileJson["last_name"].toString()
+                    profileJson["first_name"].asString,
+                    profileJson["last_name"].asString
                 )
             )
         }
@@ -122,15 +131,15 @@ class VideoDeserializer : JsonDeserializer<ResponseVideo> {
             groups.add(
                 Group(
                     groupJson["id"].asJsonPrimitive.asLong,
-                    stringToUrlFormat(groupJson["name"].toString())!!,
-                    groupJson["screen_name"].toString(),
+                    groupJson["name"].asString,
+                    groupJson["screen_name"].asString,
                     groupJson["is_closed"].asJsonPrimitive.asBoolean,
-                    groupJson["type"].toString(),
+                    groupJson["type"].asString,
                     groupJson["is_admin"].asJsonPrimitive.asBoolean,
                     groupJson["is_member"].asJsonPrimitive.asBoolean,
-                    stringToUrlFormat(groupJson["photo_50"].toString())!!,
-                    stringToUrlFormat(groupJson["photo_100"].toString())!!,
-                    stringToUrlFormat(groupJson["photo_200"].toString())!!
+                    groupJson["photo_50"].asString,
+                    groupJson["photo_100"].asString,
+                    groupJson["photo_200"].asString
                 )
             )
         }

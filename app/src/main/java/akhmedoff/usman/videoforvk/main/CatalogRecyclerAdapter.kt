@@ -26,11 +26,10 @@ class CatalogRecyclerAdapter(
             )
         )
 
-        items?.let { items ->
-            holder.itemView.setOnClickListener {
-                clickListener.onClick(items[holder.layoutPosition])
-            }
+        holder.itemView.setOnClickListener {
+            clickListener.onClick(items!![holder.layoutPosition])
         }
+
         return holder
     }
 
@@ -46,8 +45,11 @@ class CatalogRecyclerAdapter(
         items?.get(position)?.type?.let {
             return when {
                 it == "video" && position == 0 -> R.layout.catalog_video_item_big
+
                 it == "video" && position > 0 -> R.layout.catalog_video_item_min
+
                 it == "album" -> R.layout.catalog_album_item
+
                 else -> throw Exception("Unchecked type")
             }
         }

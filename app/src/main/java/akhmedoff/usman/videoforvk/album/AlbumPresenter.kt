@@ -1,5 +1,6 @@
 package akhmedoff.usman.videoforvk.album
 
+import akhmedoff.usman.videoforvk.Error
 import akhmedoff.usman.videoforvk.base.BasePresenter
 import akhmedoff.usman.videoforvk.data.repository.VideoRepository
 import akhmedoff.usman.videoforvk.model.Video
@@ -10,6 +11,10 @@ import android.arch.paging.PagedList
 
 class AlbumPresenter(private val videoRepository: VideoRepository) :
     BasePresenter<AlbumContract.View>(), AlbumContract.Presenter {
+
+    override fun error(error: Error, message: String) {
+
+    }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun onStart() {
@@ -23,10 +28,9 @@ class AlbumPresenter(private val videoRepository: VideoRepository) :
                 ownerId = it.getAlbumOwnerId(),
                 videos = null,
                 albumId = it.getAlbumId()
-            )
-                .observe(it, Observer { pagedList: PagedList<Video>? ->
-                    pagedList?.let { items -> it.showVideos(items) }
-                })
+            ).observe(it, Observer { pagedList: PagedList<Video>? ->
+                pagedList?.let { items -> it.showVideos(items) }
+            })
         }
     }
 
@@ -35,18 +39,17 @@ class AlbumPresenter(private val videoRepository: VideoRepository) :
             videoRepository.getAlbum(
                 ownerId = it.getAlbumOwnerId(),
                 albumId = it.getAlbumId()
-            )
-                .observe(it, Observer { albumResponse ->
-                    run {
-                        albumResponse?.response?.let { album ->
-                            run {
-                                it.showAlbumImage(album.photo320)
+            ).observe(it, Observer { albumResponse ->
+                run {
+                    albumResponse?.response?.let { album ->
+                        run {
+                            it.showAlbumImage(album.photo320)
 
-                                it.showAlbumTitle(album.title)
-                            }
+                            it.showAlbumTitle(album.title)
                         }
                     }
-                })
+                }
+            })
         }
     }
 

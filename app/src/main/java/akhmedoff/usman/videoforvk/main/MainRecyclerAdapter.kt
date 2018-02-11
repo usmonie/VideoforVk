@@ -16,10 +16,10 @@ class MainRecyclerAdapter(
 
     companion object {
         val CATALOG_COMPARATOR = object : DiffCallback<Catalog>() {
-            override fun areContentsTheSame(oldItem: Catalog, newItem: Catalog): Boolean =
+            override fun areContentsTheSame(oldItem: Catalog, newItem: Catalog) =
                 oldItem.items == newItem.items
 
-            override fun areItemsTheSame(oldItem: Catalog, newItem: Catalog): Boolean =
+            override fun areItemsTheSame(oldItem: Catalog, newItem: Catalog) =
                 oldItem.id == newItem.id && oldItem.name == newItem.name
         }
     }

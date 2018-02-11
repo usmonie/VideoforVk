@@ -1,6 +1,6 @@
 package akhmedoff.usman.videoforvk.login
 
-import akhmedoff.usman.videoforvk.ErrorLogin
+import akhmedoff.usman.videoforvk.Error
 import akhmedoff.usman.videoforvk.base.BaseContract
 
 interface LoginContract {
@@ -16,12 +16,31 @@ interface LoginContract {
 
         fun getPassword(): String
 
-        fun errorUsername(error: ErrorLogin)
+        fun errorUsername()
 
-        fun errorPassword(error: ErrorLogin)
+        fun errorPassword()
+
+        fun userNameIsShort()
+
+        fun passwordIsShort()
+
+        fun validate()
+
+        fun validateTwoFactoryAuthorization(phoneMask: String?)
+
+        fun captcha(captchaUrl: String)
+
+        fun getCaptchaKey(): String
+
     }
 
     interface Presenter : BaseContract.Presenter<View> {
         fun login()
+
+        fun enterCaptcha(captchaKey: String)
+
+        fun error(error: Error, message: String)
+
+        fun enterCode(code: String)
     }
 }

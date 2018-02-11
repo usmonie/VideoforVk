@@ -14,8 +14,7 @@ class VideosDataSource(
     private val vkApi: VkApi,
     private val ownerId: String?,
     private val videoId: String?,
-    private val albumId: String?,
-    private val token: String
+    private val albumId: String?
 ) : PositionalDataSource<Video>() {
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Video>) {
         vkApi.getVideos(
@@ -23,8 +22,7 @@ class VideosDataSource(
             videos = videoId,
             albumId = albumId,
             count = params.loadSize,
-            offset = params.startPosition.toLong(),
-            token = token
+            offset = params.startPosition.toLong()
         ).enqueue(object : Callback<ResponseVideo> {
             /**
              * Invoked when a network exception occurred talking to the server or when an unexpected
@@ -59,8 +57,7 @@ class VideosDataSource(
             videos = videoId,
             albumId = albumId,
             count = params.requestedLoadSize,
-            offset = 0,
-            token = token
+            offset = 0
         )
 
         try {

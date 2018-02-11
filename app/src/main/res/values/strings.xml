@@ -6,12 +6,12 @@
 
     <string name="login.button.text">Login with VK</string>
     <string name="login.welcome.text">To use the application you need to log in through VK</string>
-    <string name="error.login">Something went wrong, check your login or password</string>
+    <string name="error.login">Error login, check your login or password</string>
     <string name="login.password.hint">Password</string>
     <string name="login.username.hint">Phone number or e-mail</string>
     <string name="see_all_category_button"><u>see all</u></string>
 
-    <string name="user.name" formatted="false">%firstName %lastName</string>
+    <string name="user.name" formatted="false">%s %s</string>
     <string name="data.format" formatted="false">%t %d %m, %y</string>
     <string name="password_too_short">Password is short or empty</string>
     <string name="username_too_short">Username is short or empty</string>
@@ -21,6 +21,12 @@
     <string name="error_loading">Loading error</string>
     <string name="search">Search</string>
     <string name="main_screen">Main</string>
+    <string name="password_error">Check your password</string>
+    <string name="username_error">Check your username</string>
+    <string name="enter_captcha">Enter captcha</string>
+    <string name="enter">Enter</string>
+    <string name="two_factor_number">We sent a message with the code to the number %s</string>
+    <string name="enter_code">Enter code</string>
 
     <plurals name="video.views">
         <item quantity="one">%s view</item>

@@ -15,9 +15,7 @@ interface VkApi {
     @GET("users.get")
     fun getUser(
         @Query("user_ids") users_id: String? = null,
-        @Query("fields") fields: String = "nickname,photo_100,screen_name,photo_max,photo_max_orig,photo_id,has_photo,is_friend,friend_status,online,status,is_favorite",
-        @Query("access_token") token: String,
-        @Query("v") v: String = API_VERSION
+        @Query("fields") fields: String = "nickname,photo_100,screen_name,photo_max,photo_max_orig,photo_id,has_photo,is_friend,friend_status,online,status,is_favorite"
     ): Call<User>
 
     @GET("video.get")
@@ -27,17 +25,13 @@ interface VkApi {
         @Query("album_id") albumId: String?,
         @Query("count") count: Int,
         @Query("offset") offset: Long,
-        @Query("access_token") token: String,
-        @Query("extended") extended: Boolean = true,
-        @Query("v") v: String = API_VERSION
+        @Query("extended") extended: Boolean = true
     ): Call<ResponseVideo>
 
     @GET("video.getAlbumById")
     fun getAlbum(
         @Query("owner_id") ownerId: String?,
-        @Query("album_id") albumId: String?,
-        @Query("access_token") token: String,
-        @Query("v") v: String = API_VERSION
+        @Query("album_id") albumId: String?
     ): LiveData<Response<Album>>
 
     @GET("video.getCatalog")
@@ -45,9 +39,7 @@ interface VkApi {
         @Query("count") count: Int,
         @Query("items_count") itemsCount: Int,
         @Query("from") from: String? = null,
-        @Query("filters") filters: String = "other",
-        @Query("access_token") token: String,
-        @Query("v") v: String = API_VERSION
+        @Query("filters") filters: String = "other"
     ): Call<ResponseCatalog>
 
     @GET
@@ -59,6 +51,9 @@ interface VkApi {
         @Query("password") password: String,
         @Query("scope") scope: String,
         @Query("grant_type") grantType: String = "password",
-        @Query("v") v: String = API_VERSION
-    ): LiveData<Response<Auth>>
+        @Query("code") code: String? = null,
+        @Query("captcha_sid") captchaSid: String? = null,
+        @Query("captcha_key") captchaKey: String? = null,
+        @Query("2fa_supported") supported: Int = 1
+    ): Call<Auth>
 }

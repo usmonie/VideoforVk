@@ -9,7 +9,7 @@ class SplashPresenter(private val repository: UserRepository) :
     override fun onPresenterCreated() {
         super.onPresenterCreated()
         when {
-            repository.isLoggined -> view?.showMain()
+            repository.isLogged -> view?.showMain()
             else -> view?.showLogin()
         }
     }

@@ -1,4 +1,4 @@
-package akhmedoff.usman.videoforvk.utils
+package akhmedoff.usman.videoforvk.utils.deserializers
 
 import akhmedoff.usman.videoforvk.model.User
 import com.google.gson.JsonDeserializationContext
