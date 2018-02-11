@@ -22,10 +22,10 @@ class CatalogsPageKeyedDataSource(private val vkApi: VkApi) :
 
     override fun loadAfter(params: LoadParams<String>, callback: LoadCallback<String, Catalog>) {
         vkApi.getCatalog(
-            count = 4,
+            count = 16,
             itemsCount = 7,
             from = params.key,
-            filters = "top,feed,ugc,series,other"
+            filters = "other"
         ).enqueue(object : Callback<ResponseCatalog> {
             /**
              * Invoked when a network exception occurred talking to the server or when an unexpected
@@ -43,10 +43,10 @@ class CatalogsPageKeyedDataSource(private val vkApi: VkApi) :
              * Call [Response.isSuccessful] to determine if the response indicates success.
              */
             override fun onResponse(
-                call: Call<ResponseCatalog>?,
-                response: Response<ResponseCatalog>?
+                call: Call<ResponseCatalog>,
+                response: Response<ResponseCatalog>
             ) {
-                response?.body()?.let {
+                response.body()?.let {
                     callback.onResult(it.catalogs, it.next)
                 }
             }
@@ -59,7 +59,7 @@ class CatalogsPageKeyedDataSource(private val vkApi: VkApi) :
         callback: LoadInitialCallback<String, Catalog>
     ) {
         val apiSource = vkApi.getCatalog(
-            count = 4,
+            count = 16,
             itemsCount = 7,
             filters = "top,feed,ugc,series,other"
         )
@@ -68,8 +68,9 @@ class CatalogsPageKeyedDataSource(private val vkApi: VkApi) :
             val response = apiSource.execute()
 
             val items = response.body()?.catalogs ?: emptyList<Catalog>()
-
-            callback.onResult(items, null, response.body()?.next)
+            response.body()?.let {
+                callback.onResult(items, null, it.next)
+            }
         } catch (exception: Exception) {
             Log.d("exception", exception.toString())
         }
