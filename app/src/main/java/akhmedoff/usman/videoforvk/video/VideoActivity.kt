@@ -16,13 +16,12 @@ import android.app.PictureInPictureParams
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.FragmentTransaction
-import android.util.Rational
 import android.view.View
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import com.google.android.exoplayer2.DefaultControlDispatcher
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.Player
@@ -104,10 +103,18 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
     }
 
     override fun enterPipMode() {
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             enterPictureInPictureMode(
                 PictureInPictureParams.Builder()
-                    .setAspectRatio(Rational(video_exo_player.width, video_exo_player.height))
+                    .setSourceRectHint(
+                        Rect(
+                            video_exo_player.left,
+                            video_exo_player.top,
+                            video_exo_player.right,
+                            video_exo_player.bottom
+                        )
+                    )
                     .build()
             )
         }
@@ -117,7 +124,6 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             exitPipMode()
             video_exo_player?.showController()
-            video_exo_player?.layoutParams?.width = MATCH_PARENT
         }
     }
 
