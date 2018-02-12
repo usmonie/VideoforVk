@@ -27,6 +27,7 @@ interface MainContract {
         fun showErrorLoading()
 
         fun showProfile()
+
     }
 
     interface Presenter : BaseContract.Presenter<View> {

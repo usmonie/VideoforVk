@@ -27,6 +27,7 @@
     <string name="enter">Enter</string>
     <string name="two_factor_number">We sent a message with the code to the number %s</string>
     <string name="enter_code">Enter code</string>
+    <string name="error_code">Error code</string>
 
     <plurals name="video.views">
         <item quantity="one">%s view</item>

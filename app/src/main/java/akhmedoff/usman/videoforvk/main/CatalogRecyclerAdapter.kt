@@ -2,6 +2,7 @@ package akhmedoff.usman.videoforvk.main
 
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.model.CatalogItem
+import akhmedoff.usman.videoforvk.model.CatalogItemType
 import akhmedoff.usman.videoforvk.view.OnClickListener
 import akhmedoff.usman.videoforvk.view.VideoViewHolder
 import android.support.v7.widget.RecyclerView
@@ -25,10 +26,12 @@ class CatalogRecyclerAdapter(
                 false
             )
         )
-
-        holder.itemView.setOnClickListener {
-            clickListener.onClick(items!![holder.layoutPosition])
+        items?.let { items ->
+            holder.itemView.setOnClickListener {
+                clickListener.onClick(items[holder.layoutPosition])
+            }
         }
+
 
         return holder
     }
@@ -44,11 +47,11 @@ class CatalogRecyclerAdapter(
     override fun getItemViewType(position: Int): Int {
         items?.get(position)?.type?.let {
             return when {
-                it == "video" && position == 0 -> R.layout.catalog_video_item_big
+                it == CatalogItemType.VIDEO && position == 0 -> R.layout.catalog_video_item_big
 
-                it == "video" && position > 0 -> R.layout.catalog_video_item_min
+                it == CatalogItemType.VIDEO && position > 0 -> R.layout.catalog_video_item_min
 
-                it == "album" -> R.layout.catalog_album_item
+                it == CatalogItemType.ALBUM -> R.layout.catalog_album_item
 
                 else -> throw Exception("Unchecked type")
             }

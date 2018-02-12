@@ -6,6 +6,7 @@ import akhmedoff.usman.videoforvk.data.repository.UserRepository
 import akhmedoff.usman.videoforvk.data.repository.VideoRepository
 import akhmedoff.usman.videoforvk.model.ResponseVideo
 import akhmedoff.usman.videoforvk.model.User
+import akhmedoff.usman.videoforvk.model.Video
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.OnLifecycleEvent
 import retrofit2.Call
@@ -17,11 +18,14 @@ class VideoPresenter(
     private val userRepository: UserRepository
 ) :
     BasePresenter<VideoContract.View>(), VideoContract.Presenter {
+
+
     private var isFullscreen = false
 
     private var isStarted = false
 
     private var position = 0L
+    private lateinit var video: Video
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun onCreate() {
@@ -45,16 +49,17 @@ class VideoPresenter(
                     ) {
                         response?.body()?.let { responseVideo ->
                             when {
-                                responseVideo.groups != null && responseVideo.groups.isNotEmpty() -> it.showGroupOwnerInfo(
-                                    responseVideo.groups[0]
-                                )
-                                responseVideo.profiles != null && responseVideo.profiles.isNotEmpty() -> loadUser(
-                                    responseVideo.profiles[0]
-                                )
+                                responseVideo.groups != null && responseVideo.groups.isNotEmpty() ->
+                                    it.showGroupOwnerInfo(responseVideo.groups[0])
+                                responseVideo.profiles != null && responseVideo.profiles.isNotEmpty() ->
+                                    loadUser(responseVideo.profiles[0])
                             }
                             when {
-                                responseVideo.items.isNotEmpty() ->
-                                    it.showVideo(responseVideo.items[0])
+                                responseVideo.items.isNotEmpty() -> {
+                                    video = responseVideo.items[0]
+                                    it.showVideo(video)
+
+                                }
 
                                 else -> it.showLoadError()
                             }
@@ -91,14 +96,23 @@ class VideoPresenter(
                 false
             }
             false -> {
-                view?.showFullscreen()
+                view?.showFullscreen(video)
                 true
             }
         }
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
-    fun onPause() {
+    override fun changedPipMode() {
+        view?.let { view ->
+            when (view.isPipMode()) {
+                true -> view.hideUi()
+                false -> view.showUi()
+            }
+        }
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    fun onStop() {
         view?.let {
             it.pauseVideo()
             it.getVideoState()?.let { isStartedVideo -> isStarted = isStartedVideo }
@@ -106,13 +120,17 @@ class VideoPresenter(
         }
     }
 
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    fun onStop() {
+    override fun onPresenterDestroy() {
         view?.stopVideo()
+        super.onPresenterDestroy()
     }
 
     override fun error(error: Error, message: String) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun pipToggleButton() {
+        view?.hideUi()
+        view?.enterPipMode()
     }
 }

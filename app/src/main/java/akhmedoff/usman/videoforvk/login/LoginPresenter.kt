@@ -16,6 +16,7 @@ class LoginPresenter(
 ) : BasePresenter<LoginContract.View>(),
     LoginContract.Presenter {
 
+
     private lateinit var captchaSid: String
 
     override fun login() {
@@ -45,7 +46,6 @@ class LoginPresenter(
         view?.let {
             if (captchaKey.trim().isEmpty()) return
             auth(it.getUsername(), it.getPassword(), captchaSid, captchaKey, null)
-
         }
     }
 
@@ -56,27 +56,41 @@ class LoginPresenter(
         captchaKey: String? = null,
         code: String? = null
     ) {
-        view?.let {
+
+        view?.let { view ->
+            if (view.isDialogShows()) view.showDialogLoading()
+            else view.showProgress()
+
+            view.setButtonEnabled(enabled = false)
+            view.editTextEditable(editable = false)
+
             repository
                 .auth(username, password, captchaSid, captchaKey, code)
                 .enqueue(object : Callback<Auth> {
                     override fun onFailure(call: Call<Auth>?, t: Throwable?) {
-                        Log.e("failed", t.toString())
+                        Log.e("failed", t?.toString())
+                        view.hideProgress()
+                        view.setButtonEnabled(enabled = true)
+                        view.editTextEditable(editable = true)
+                        view.onErrorLogin()
+
+                        if (view.isDialogShows()) view.hideDialogLoading()
                     }
 
                     override fun onResponse(call: Call<Auth>, response: Response<Auth>) {
+                        view.hideProgress()
+                        view.setButtonEnabled(enabled = true)
+                        view.editTextEditable(editable = true)
 
                         response.body()?.accessToken?.let { token ->
-                            repository.saveToken(
-                                token
-                            )
-                            it.startMain()
+                            repository.saveToken(token)
+                            view.startMain()
                         }
 
+                        if (view.isDialogShows()) view.hideDialogLoading()
+
                         response.errorBody()?.let { errorConvert(it) }
-
                     }
-
                 })
         }
 
@@ -85,39 +99,27 @@ class LoginPresenter(
     private fun errorConvert(response: ResponseBody) {
         val auth = gson.fromJson<Auth>(response.string(), Auth::class.java)
 
-        view?.let {
+        view?.let { view ->
             when (auth.error) {
-                Error.ERROR_LOGIN -> it.onErrorLogin()
+                Error.ERROR_LOGIN -> view.onErrorLogin()
+
                 Error.NEED_CAPTCHA -> {
                     captchaSid = auth.captchaSid!!
-                    it.captcha(auth.captchaImg!!)
+                    view.captcha(auth.captchaImg!!)
                 }
+
                 Error.NEED_VALIDATION ->
                     when (auth.validationType) {
-                        null -> it.onErrorLogin()
-                        else -> it.validateTwoFactoryAuthorization(auth.phoneMask)
+                        null -> view.onErrorLogin()
+                        else -> view.validateTwoFactoryAuthorization(auth.phoneMask)
                     }
-                else -> it.onErrorLogin()
+
+                Error.INVALID_CODE -> view.showCodeError()
+
+                else -> view.onErrorLogin()
             }
         }
     }
 
-    override fun error(error: Error, message: String) {
-        view?.let {
-            when (error) {
-                Error.ERROR_LOGIN -> {
-                    it.errorUsername()
-                    it.errorPassword()
-                }
 
-                Error.NEED_CAPTCHA -> {
-                }
-
-                Error.NEED_VALIDATION -> {
-                }
-                else -> {
-                }
-            }
-        }
-    }
 }

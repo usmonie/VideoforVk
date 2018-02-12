@@ -8,7 +8,7 @@
     tools:context="akhmedoff.usman.videoforvk.login.LoginActivity">
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/login_logo"
         android:layout_width="112dp"
         android:layout_height="112dp"
         android:layout_marginEnd="16dp"
@@ -43,13 +43,14 @@
         android:textColorHint="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2">
+        app:layout_constraintTop_toBottomOf="@+id/login_logo">
 
         <android.support.design.widget.TextInputEditText
             android:id="@+id/username_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/login.username.hint"
+            android:imeOptions="actionNext"
             android:inputType="textWebEmailAddress"
             android:singleLine="true"
             android:textColor="@android:color/white"
@@ -73,10 +74,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/login.password.hint"
+            android:imeOptions="actionSend"
             android:inputType="textWebPassword"
             android:singleLine="true"
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/white" />
     </android.support.design.widget.TextInputLayout>
+
+    <ProgressBar
+        android:id="@+id/login_progress"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_button"
+        tools:visibility="visible" />
 
 </android.support.constraint.ConstraintLayout>

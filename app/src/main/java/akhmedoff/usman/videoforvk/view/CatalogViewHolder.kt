@@ -4,6 +4,7 @@ import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.main.CatalogRecyclerAdapter
 import akhmedoff.usman.videoforvk.model.Catalog
 import akhmedoff.usman.videoforvk.model.CatalogItem
+import akhmedoff.usman.videoforvk.model.CatalogItemType
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.LinearLayoutManager.HORIZONTAL
@@ -55,10 +56,10 @@ class CatalogViewHolder(
 
         item.items[0].type?.let {
             when (it) {
-                "album" -> {
+                CatalogItemType.ALBUM ->
                     catalogRecycler.layoutManager = linearLayoutManager
-                }
-                "video" -> catalogRecycler.layoutManager = gridLayoutManager
+
+                CatalogItemType.VIDEO -> catalogRecycler.layoutManager = gridLayoutManager
             }
         }
 

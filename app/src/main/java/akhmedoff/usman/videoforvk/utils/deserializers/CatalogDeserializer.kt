@@ -2,6 +2,7 @@ package akhmedoff.usman.videoforvk.utils.deserializers
 
 import akhmedoff.usman.videoforvk.model.Catalog
 import akhmedoff.usman.videoforvk.model.CatalogItem
+import akhmedoff.usman.videoforvk.model.CatalogItemType
 import akhmedoff.usman.videoforvk.model.ResponseCatalog
 import akhmedoff.usman.videoforvk.utils.stringToUrlFormat
 import android.util.Log
@@ -52,7 +53,12 @@ class CatalogDeserializer : JsonDeserializer<ResponseCatalog> {
                         videoJson["photo_800"]?.let { photo800 = it.asString }
                         videoJson["platform"]?.let { platform = it.asString }
                         canAdd = videoJson["can_add"]?.asBoolean ?: false
-                        videoJson["type"]?.let { type = it.asString }
+                        videoJson["type"]?.let {
+                            when (it.asString) {
+                                "video" -> type = CatalogItemType.VIDEO
+                                "album" -> type = CatalogItemType.ALBUM
+                            }
+                        }
                     }
                     videos.add(item)
                 }

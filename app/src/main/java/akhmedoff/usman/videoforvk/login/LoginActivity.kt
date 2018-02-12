@@ -7,18 +7,31 @@ import akhmedoff.usman.videoforvk.data.local.UserSettings
 import akhmedoff.usman.videoforvk.data.repository.UserRepository
 import akhmedoff.usman.videoforvk.main.MainActivity
 import akhmedoff.usman.videoforvk.utils.vkApi
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import kotlinx.android.synthetic.main.activity_login.*
+
 
 class LoginActivity : BaseActivity<LoginContract.View, LoginContract.Presenter>(),
     LoginContract.View {
-    override fun getCaptchaKey(): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override lateinit var loginPresenter: LoginContract.Presenter
+
+    private val twoFactorDialog: TwoFactorAutentificationDialog by lazy {
+        TwoFactorAutentificationDialog(
+            this,
+            object : TwoFactorAutentificationDialog.AuthentificatorListener {
+                override fun enterCode(code: String) {
+                    loginPresenter.enterCode(code)
+                }
+
+            }
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         loginPresenter = LoginPresenter(
@@ -32,6 +45,15 @@ class LoginActivity : BaseActivity<LoginContract.View, LoginContract.Presenter>(
         setContentView(R.layout.activity_login)
 
         login_button.setOnClickListener { loginPresenter.login() }
+
+        password_et.setOnEditorActionListener { _, actionId, _ ->
+            var handled = false
+            if (actionId == EditorInfo.IME_ACTION_SEND) {
+                loginPresenter.login()
+                handled = true
+            }
+            handled
+        }
     }
 
     override fun startMain() {
@@ -59,26 +81,50 @@ class LoginActivity : BaseActivity<LoginContract.View, LoginContract.Presenter>(
         password_input_layout.isErrorEnabled = true
     }
 
-    override fun onErrorLogin() {
-        Snackbar.make(login_constraint, R.string.error_login, Snackbar.LENGTH_LONG).show()
-    }
+    override fun showCodeError() =
+        twoFactorDialog.showErrorCode(getString(R.string.error_code))
 
-    override fun validate() {
-    }
+
+    override fun onErrorLogin() =
+        Snackbar.make(login_constraint, R.string.error_login, Snackbar.LENGTH_LONG).show()
+
 
     override fun validateTwoFactoryAuthorization(phoneMask: String?) {
-        val twoFactorDialog = TwoFactorAutentificationDialog(this,
-            object : TwoFactorAutentificationDialog.AuthentificatorListener {
-                override fun enterCode(code: String) {
-                    loginPresenter.enterCode(code)
-                }
-
-            })
         twoFactorDialog.show()
-
         phoneMask?.let { twoFactorDialog.setNumber(it) }
-
     }
+
+    override fun hideKeyboard() {
+        val view = currentFocus
+        if (view != null) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+    }
+
+    override fun showProgress() {
+        login_progress.visibility = View.VISIBLE
+        login_progress.animate()
+    }
+
+    override fun hideProgress() {
+        login_progress.visibility = View.GONE
+    }
+
+    override fun setButtonEnabled(enabled: Boolean) {
+        login_button.isEnabled = enabled
+    }
+
+    override fun editTextEditable(editable: Boolean) {
+        password_et.isEnabled = editable
+        username_et.isEnabled = editable
+    }
+
+    override fun isDialogShows(): Boolean = twoFactorDialog.isShowing
+
+    override fun showDialogLoading() = twoFactorDialog.showLoading()
+
+    override fun hideDialogLoading() = twoFactorDialog.hideLoading()
 
     override fun captcha(captchaUrl: String) {
         val captchaDialog = CaptchaDialog(this, object : CaptchaDialog.CaptchaListener {

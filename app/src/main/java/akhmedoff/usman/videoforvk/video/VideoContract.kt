@@ -19,7 +19,7 @@ interface VideoContract {
 
         fun setSaved(saved: Boolean)
 
-        fun showFullscreen()
+        fun showFullscreen(video: Video)
 
         fun showSmallScreen()
 
@@ -41,6 +41,15 @@ interface VideoContract {
 
         fun showLoadError()
 
+        fun enterPipMode()
+
+        fun exitPipMode()
+
+        fun isPipMode(): Boolean
+
+        fun hideUi()
+
+        fun showUi()
     }
 
     interface Presenter : BaseContract.Presenter<View> {
@@ -49,5 +58,9 @@ interface VideoContract {
         fun clickFullscreen()
 
         fun error(error: Error, message: String)
+
+        fun pipToggleButton()
+
+        fun changedPipMode()
     }
 }

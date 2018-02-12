@@ -6,40 +6,62 @@
     android:layout_height="match_parent"
     app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior">
 
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
 
         <com.google.android.exoplayer2.ui.SimpleExoPlayerView
-            android:id="@+id/simpleExoPlayerView"
+            android:id="@+id/video_exo_player"
             android:layout_width="match_parent"
             android:layout_height="232dp"
             app:controller_layout_id="@layout/playback_exo_control_view"
+            app:layout_constraintBottom_toTopOf="@+id/guideline"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_default="wrap"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_default="wrap" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recommendation_recycler_video_page"
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/video_title"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clipChildren="true"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            tools:text="Название" />
+
+        <TextView
+            android:id="@+id/video_views"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toEndOf="@+id/video_date"
+            app:layout_constraintTop_toBottomOf="@+id/video_title"
+            tools:text="70К просмотров" />
+
+        <TextView
+            android:id="@+id/video_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cardView"
-            tools:listitem="@layout/recommendation_videos" />
+            app:layout_constraintTop_toBottomOf="@+id/video_title"
+            tools:text="15:30, сегодня" />
 
         <android.support.v7.widget.CardView
             android:id="@+id/cardView"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="64dp"
             android:layout_marginTop="16dp"
             android:background="@drawable/owner_card_border"
             app:cardCornerRadius="0dp"
-            app:cardElevation="0dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/video_date">
+            app:cardElevation="0dp">
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
@@ -87,39 +109,15 @@
             </android.support.constraint.ConstraintLayout>
         </android.support.v7.widget.CardView>
 
-        <TextView
-            android:id="@+id/video_title"
-            android:layout_width="0dp"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recommendation_recycler_video_page"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:clipChildren="true"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/simpleExoPlayerView"
-            tools:text="Название" />
+            app:layout_constraintTop_toBottomOf="@+id/cardView"
+            tools:listitem="@layout/recommendation_videos" />
 
-        <TextView
-            android:id="@+id/video_views"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintStart_toEndOf="@+id/video_date"
-            app:layout_constraintTop_toBottomOf="@+id/video_title"
-            tools:text="70К просмотров" />
-
-        <TextView
-            android:id="@+id/video_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/video_title"
-            tools:text="15:30, сегодня" />
-
-    </android.support.constraint.ConstraintLayout>
+    </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

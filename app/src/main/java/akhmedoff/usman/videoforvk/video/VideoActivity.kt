@@ -2,22 +2,27 @@ package akhmedoff.usman.videoforvk.video
 
 import akhmedoff.usman.videoforvk.App.Companion.context
 import akhmedoff.usman.videoforvk.R
-import akhmedoff.usman.videoforvk.album.AlbumActivity
 import akhmedoff.usman.videoforvk.base.BaseActivity
 import akhmedoff.usman.videoforvk.data.local.UserSettings
 import akhmedoff.usman.videoforvk.data.repository.UserRepository
 import akhmedoff.usman.videoforvk.data.repository.VideoRepository
+import akhmedoff.usman.videoforvk.fullscreen.FullscreenVideoFragment
 import akhmedoff.usman.videoforvk.model.CatalogItem
 import akhmedoff.usman.videoforvk.model.Group
 import akhmedoff.usman.videoforvk.model.User
 import akhmedoff.usman.videoforvk.model.Video
 import akhmedoff.usman.videoforvk.utils.vkApi
+import android.app.PictureInPictureParams
 import android.content.Context
 import android.content.Intent
-import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.support.v4.app.FragmentTransaction
+import android.util.Rational
 import android.view.View
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import com.google.android.exoplayer2.DefaultControlDispatcher
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.Player
@@ -38,11 +43,12 @@ import java.util.*
 
 class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(),
     VideoContract.View {
+
     companion object {
         const val VIDEO_ID = "video_id"
 
         fun getActivity(item: Video, context: Context): Intent {
-            val intent = Intent(context, AlbumActivity::class.java)
+            val intent = Intent(context, VideoActivity::class.java)
 
             intent.putExtra(VIDEO_ID, item.ownerId.toString() + "_" + item.id.toString())
 
@@ -62,8 +68,6 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
     override lateinit var videoPresenter: VideoPresenter
     private var player: SimpleExoPlayer? = null
 
-    private lateinit var decorView: View
-
     override fun initPresenter() = videoPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,7 +82,7 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
         setContentView(R.layout.activity_video)
 
         fullscreen_toggle.setOnClickListener { videoPresenter.clickFullscreen() }
-        decorView = window.decorView
+        pip_toggle.setOnClickListener { videoPresenter.pipToggleButton() }
     }
 
     override fun showVideo(item: Video) {
@@ -99,6 +103,27 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
 
     }
 
+    override fun enterPipMode() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            enterPictureInPictureMode(
+                PictureInPictureParams.Builder()
+                    .setAspectRatio(Rational(video_exo_player.width, video_exo_player.height))
+                    .build()
+            )
+        }
+    }
+
+    override fun exitPipMode() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            exitPipMode()
+            video_exo_player?.showController()
+            video_exo_player?.layoutParams?.width = MATCH_PARENT
+        }
+    }
+
+    override fun isPipMode(): Boolean =
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && isInPictureInPictureMode
+
     private fun initVideoInfo(item: Video) {
         video_title?.text = item.title
         video_views?.text = item.views.toString()
@@ -115,6 +140,14 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
             "HH:mm, dd MMM ",
             Locale.getDefault()
         ).format(Date(item.date))
+    }
+
+    override fun onPictureInPictureModeChanged(
+        isInPictureInPictureMode: Boolean,
+        newConfig: Configuration?
+    ) {
+        videoPresenter.changedPipMode()
+
     }
 
     private fun initExoPlayer(item: Video) {
@@ -137,7 +170,7 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
         // 2. Create the player
         player = ExoPlayerFactory.newSimpleInstance(context, trackSelector)
 
-        simpleExoPlayerView.setControlDispatcher(
+        video_exo_player.setControlDispatcher(
             object : DefaultControlDispatcher() {
                 override fun dispatchSetPlayWhenReady(
                     player: Player?,
@@ -157,7 +190,7 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
             }
         )
 
-        simpleExoPlayerView.player = player
+        video_exo_player.player = player
 
         // Produces DataSource instances through which media data is loaded.
         val dataSourceFactory = DefaultDataSourceFactory(
@@ -175,7 +208,7 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
         player?.let {
             it.prepare(videoSource)
 
-            it.seekTo(it.currentPosition + 1)
+            it.seekTo(1)
         }
     }
 
@@ -215,8 +248,8 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
     }
 
     override fun resumeVideo(state: Boolean, position: Long) {
-        player?.playWhenReady = state
         player?.seekTo(position)
+        player?.playWhenReady = state
     }
 
     override fun startVideo() {
@@ -231,16 +264,40 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
     override fun setSaved(saved: Boolean) {
     }
 
-    override fun showFullscreen() {
-        decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_FULLSCREEN
-                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+    override fun showFullscreen(video: Video) {
+        val fragmentManager = supportFragmentManager
+        val newFragment = FullscreenVideoFragment.createFragment(video)
+
+        // The device is smaller, so show the fragment fullscreen
+        val transaction = fragmentManager.beginTransaction()
+        // For a little polish, specify a transition animation
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+        // To make it fullscreen, use the 'content' root view as the container
+        // for the fragment, which is always the root view for the activity
+        transaction.add(android.R.id.content, newFragment)
+            .addToBackStack(null).commit()
     }
 
     override fun showSmallScreen() {
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+    }
+
+    override fun hideUi() {
+        recommendation_recycler_video_page?.visibility = View.GONE
+        cardView?.visibility = View.GONE
+        video_title?.visibility = View.GONE
+        video_views?.visibility = View.GONE
+        video_date?.visibility = View.GONE
+        video_exo_player?.hideController()
+
+    }
+
+    override fun showUi() {
+        recommendation_recycler_video_page?.visibility = View.VISIBLE
+        cardView?.visibility = View.VISIBLE
+        video_title?.visibility = View.VISIBLE
+        video_views?.visibility = View.VISIBLE
+        video_date?.visibility = View.VISIBLE
+        video_exo_player?.showController()
+
     }
 }

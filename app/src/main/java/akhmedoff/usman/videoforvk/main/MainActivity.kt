@@ -19,6 +19,7 @@ import android.view.Menu
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), MainContract.View {
+
     override lateinit var mainPresenter: MainContract.Presenter
 
     private val adapter: MainRecyclerAdapter by lazy {

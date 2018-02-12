@@ -5,6 +5,7 @@ import akhmedoff.usman.videoforvk.base.BasePresenter
 import akhmedoff.usman.videoforvk.data.repository.VideoRepository
 import akhmedoff.usman.videoforvk.model.Catalog
 import akhmedoff.usman.videoforvk.model.CatalogItem
+import akhmedoff.usman.videoforvk.model.CatalogItemType
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.OnLifecycleEvent
@@ -42,9 +43,9 @@ class MainPresenter(private val videoRepository: VideoRepository) :
 
     override fun clickItem(item: CatalogItem) {
         when (item.type) {
-            "video" -> view?.showVideo(item)
+            CatalogItemType.VIDEO -> view?.showVideo(item)
 
-            "album" -> view?.showAlbum(item)
+            CatalogItemType.ALBUM -> view?.showAlbum(item)
         }
     }
 
