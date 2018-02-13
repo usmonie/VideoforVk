@@ -44,12 +44,11 @@
             tools:ignore="UnusedAttribute">
 
             <layout
-                android:defaultHeight="512dp"
-                android:defaultWidth="768dp"
-                android:gravity="top|end"
-                android:minHeight="256dp"
-                android:minWidth="512dp"
-                tools:ignore="UnusedAttribute" />
+                android:defaultHeight="640dp"
+                android:defaultWidth="360dp"
+                android:gravity="center"
+                android:minHeight="450dp"
+                android:minWidth="232dp" />
         </activity>
 
         <activity android:name=".album.AlbumActivity" />

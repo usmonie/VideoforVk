@@ -3,7 +3,6 @@ package akhmedoff.usman.videoforvk.main
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.model.CatalogItem
 import akhmedoff.usman.videoforvk.model.CatalogItemType
-import akhmedoff.usman.videoforvk.view.OnClickListener
 import akhmedoff.usman.videoforvk.view.VideoViewHolder
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -12,7 +11,7 @@ import com.squareup.picasso.Picasso
 
 class CatalogRecyclerAdapter(
     private val picasso: Picasso,
-    private val clickListener: OnClickListener<CatalogItem>
+    private val clickListener: (CatalogItem) -> Unit
 ) : RecyclerView.Adapter<VideoViewHolder>() {
 
     var items: List<CatalogItem>? = null
@@ -28,7 +27,7 @@ class CatalogRecyclerAdapter(
         )
         items?.let { items ->
             holder.itemView.setOnClickListener {
-                clickListener.onClick(items[holder.layoutPosition])
+                clickListener(items[holder.adapterPosition])
             }
         }
 

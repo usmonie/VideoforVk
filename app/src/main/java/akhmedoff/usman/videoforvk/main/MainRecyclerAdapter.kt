@@ -4,15 +4,13 @@ import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.model.Catalog
 import akhmedoff.usman.videoforvk.model.CatalogItem
 import akhmedoff.usman.videoforvk.view.CatalogViewHolder
-import akhmedoff.usman.videoforvk.view.OnClickListener
 import android.arch.paging.PagedListAdapter
 import android.support.v7.recyclerview.extensions.DiffCallback
 import android.view.LayoutInflater
 import android.view.ViewGroup
 
-class MainRecyclerAdapter(
-    private val clickListener: OnClickListener<CatalogItem>
-) : PagedListAdapter<Catalog, CatalogViewHolder>(CATALOG_COMPARATOR) {
+class MainRecyclerAdapter(private val clickListener: (CatalogItem) -> Unit) :
+    PagedListAdapter<Catalog, CatalogViewHolder>(CATALOG_COMPARATOR) {
 
     companion object {
         val CATALOG_COMPARATOR = object : DiffCallback<Catalog>() {

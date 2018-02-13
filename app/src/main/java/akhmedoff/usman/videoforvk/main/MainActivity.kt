@@ -9,7 +9,6 @@ import akhmedoff.usman.videoforvk.model.Catalog
 import akhmedoff.usman.videoforvk.model.CatalogItem
 import akhmedoff.usman.videoforvk.utils.vkApi
 import akhmedoff.usman.videoforvk.video.VideoActivity
-import akhmedoff.usman.videoforvk.view.OnClickListener
 import android.arch.paging.PagedList
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -23,12 +22,8 @@ class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), 
     override lateinit var mainPresenter: MainContract.Presenter
 
     private val adapter: MainRecyclerAdapter by lazy {
-        val clickListener = object :
-            OnClickListener<CatalogItem> {
-            override fun onClick(item: CatalogItem) = presenter.clickItem(item)
-        }
 
-        val adapter = MainRecyclerAdapter(clickListener)
+        val adapter = MainRecyclerAdapter { presenter.clickItem(it) }
 
         adapter.setHasStableIds(true)
         return@lazy adapter

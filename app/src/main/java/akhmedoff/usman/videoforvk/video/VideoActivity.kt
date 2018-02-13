@@ -20,6 +20,7 @@ import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.FragmentTransaction
 import android.view.View
 import com.google.android.exoplayer2.DefaultControlDispatcher
@@ -64,7 +65,14 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
 
     }
 
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        videoPresenter.onCreate()
+    }
+
     override lateinit var videoPresenter: VideoPresenter
+
     private var player: SimpleExoPlayer? = null
 
     override fun initPresenter() = videoPresenter
@@ -89,21 +97,14 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
         initExoPlayer(item)
     }
 
-    override fun getVideoState() = player?.playWhenReady
-
-    override fun getVideoPosition() = player?.currentPosition
-
-    override fun getVideoId() = intent.getStringExtra(VideoActivity.VIDEO_ID)!!
-
-    override fun showLoadError() {
-    }
+    override fun showLoadError() =
+        Snackbar.make(video_layout, getString(R.string.error_loading), Snackbar.LENGTH_LONG).show()
 
     override fun showRecommendations() {
 
     }
 
     override fun enterPipMode() {
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             enterPictureInPictureMode(
                 PictureInPictureParams.Builder()
@@ -130,31 +131,10 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
     override fun isPipMode(): Boolean =
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && isInPictureInPictureMode
 
-    private fun initVideoInfo(item: Video) {
-        video_title?.text = item.title
-        video_views?.text = item.views.toString()
-
-        item.views?.let {
-            video_views?.text = resources.getQuantityString(
-                R.plurals.video_views,
-                it,
-                NumberFormat.getIntegerInstance().format(it)
-            )
-        }
-
-        video_date?.text = SimpleDateFormat(
-            "HH:mm, dd MMM ",
-            Locale.getDefault()
-        ).format(Date(item.date))
-    }
-
     override fun onPictureInPictureModeChanged(
         isInPictureInPictureMode: Boolean,
         newConfig: Configuration?
-    ) {
-        videoPresenter.changedPipMode()
-
-    }
+    ) = videoPresenter.changedPipMode()
 
     private fun initExoPlayer(item: Video) {
         val mp4VideoUri = Uri.parse(
@@ -218,20 +198,34 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
         }
     }
 
-    override fun showGroupOwnerInfo(group: Group) {
-        owner_name?.text = group.name
-        owner_photo?.let {
-            Picasso.with(context).load(group.photo100).into(it)
+    private fun initVideoInfo(item: Video) {
+        video_title.text = item.title
+        video_views.text = item.views.toString()
+
+        item.views?.let {
+            video_views.text = resources.getQuantityString(
+                R.plurals.video_views,
+                it,
+                NumberFormat.getIntegerInstance().format(it)
+            )
         }
 
-        owner_follow?.text = when {
-            group.isMember -> getText(R.string.followed)
-            else -> getText(R.string.follow)
-        }
+        video_date.text = SimpleDateFormat(
+            "HH:mm, dd MMM ",
+            Locale.getDefault()
+        ).format(Date(item.date))
+    }
+
+    override fun showGroupOwnerInfo(group: Group) {
+        owner_name.text = group.name
+        Picasso.with(context).load(group.photo100).into(owner_photo)
+
+        owner_follow.text =
+                if (group.isMember) getText(R.string.followed) else getText(R.string.follow)
     }
 
     override fun showUserOwnerInfo(user: User) {
-        owner_name?.text =
+        owner_name.text =
                 String.format(
                     resources.getText(R.string.user_name).toString(),
                     user.firstName,
@@ -242,11 +236,8 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
             .load(user.photo100)
             .into(owner_photo)
 
-        owner_follow?.text = when {
-            user.isFavorite -> getText(R.string.followed)
-            else -> getText(R.string.follow)
-        }
-
+        owner_follow.text =
+                if (user.isFriend) getText(R.string.followed) else getText(R.string.follow)
     }
 
     override fun pauseVideo() {
@@ -287,23 +278,40 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
     override fun showSmallScreen() {
     }
 
-    override fun hideUi() {
-        recommendation_recycler_video_page?.visibility = View.GONE
-        cardView?.visibility = View.GONE
-        video_title?.visibility = View.GONE
-        video_views?.visibility = View.GONE
-        video_date?.visibility = View.GONE
-        video_exo_player?.hideController()
+    override fun showProgress() {
+        video_loading.visibility = View.VISIBLE
+    }
 
+    override fun hideProgress() {
+        video_loading.visibility = View.GONE
+    }
+
+    override fun hideUi() {
+        recommendation_recycler_video_page.visibility = View.GONE
+        cardView.visibility = View.GONE
+        video_title.visibility = View.GONE
+        video_views.visibility = View.GONE
+        video_date.visibility = View.GONE
+
+        video_exo_player.hideController()
     }
 
     override fun showUi() {
-        recommendation_recycler_video_page?.visibility = View.VISIBLE
-        cardView?.visibility = View.VISIBLE
-        video_title?.visibility = View.VISIBLE
-        video_views?.visibility = View.VISIBLE
-        video_date?.visibility = View.VISIBLE
-        video_exo_player?.showController()
+        recommendation_recycler_video_page.visibility = View.VISIBLE
+        cardView.visibility = View.VISIBLE
+        video_title.visibility = View.VISIBLE
+        video_views.visibility = View.VISIBLE
+        video_date.visibility = View.VISIBLE
 
+        video_exo_player.visibility = View.VISIBLE
+        video_exo_player.showController()
     }
+
+    override fun getVideoState() = player?.playWhenReady
+
+    override fun getVideoPosition() = player?.currentPosition
+
+    override fun getVideoId() = intent.getStringExtra(VideoActivity.VIDEO_ID)!!
+
+
 }

@@ -29,6 +29,7 @@ class VideoPresenter(
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun onCreate() {
+        view?.hideUi()
         view?.let {
             loadVideo(it.getVideoId())
         }
@@ -36,6 +37,7 @@ class VideoPresenter(
 
     override fun loadVideo(id: String) {
         view?.let {
+            it.showProgress()
             videoRepository
                 .getVideo(id)
                 .enqueue(object : Callback<ResponseVideo> {
@@ -49,8 +51,11 @@ class VideoPresenter(
                     ) {
                         response?.body()?.let { responseVideo ->
                             when {
-                                responseVideo.groups != null && responseVideo.groups.isNotEmpty() ->
+                                responseVideo.groups != null && responseVideo.groups.isNotEmpty() -> {
                                     it.showGroupOwnerInfo(responseVideo.groups[0])
+                                    it.hideProgress()
+                                    it.showUi()
+                                }
                                 responseVideo.profiles != null && responseVideo.profiles.isNotEmpty() ->
                                     loadUser(responseVideo.profiles[0])
                             }
@@ -58,7 +63,6 @@ class VideoPresenter(
                                 responseVideo.items.isNotEmpty() -> {
                                     video = responseVideo.items[0]
                                     it.showVideo(video)
-
                                 }
 
                                 else -> it.showLoadError()
@@ -74,13 +78,14 @@ class VideoPresenter(
         view?.let {
             userRepository.getUser(user.id.toString()).enqueue(object : Callback<User> {
                 override fun onFailure(call: Call<User>?, t: Throwable?) {
-
+                    it.hideProgress()
                 }
 
                 override fun onResponse(call: Call<User>?, response: Response<User>?) {
-
                     response?.body()?.let { user ->
                         it.showUserOwnerInfo(user)
+                        it.hideProgress()
+                        it.showUi()
                     }
                 }
 

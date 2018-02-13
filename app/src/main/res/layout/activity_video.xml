@@ -2,25 +2,33 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/video_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    android:keepScreenOn="true"
     android:orientation="vertical">
 
     <com.google.android.exoplayer2.ui.SimpleExoPlayerView
         android:id="@+id/video_exo_player"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:controller_layout_id="@layout/playback_exo_control_view" />
+        android:layout_height="232dp"
+        android:layout_gravity="top|center"
+        android:adjustViewBounds="true"
+        android:visibility="gone"
+        app:controller_layout_id="@layout/playback_exo_control_view"
+        tools:visibility="visible" />
 
     <TextView
         android:id="@+id/video_title"
         android:layout_width="match_parent"
-        android:layout_height="232dp"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        tools:text="Название" />
+        android:visibility="gone"
+        tools:text="Название"
+        tools:visibility="visible" />
 
     <TextView
         android:id="@+id/video_views"
@@ -28,7 +36,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        tools:text="70К просмотров" />
+        android:visibility="gone"
+        tools:text="70К просмотров"
+        tools:visibility="visible" />
 
     <TextView
         android:id="@+id/video_date"
@@ -36,7 +46,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        tools:text="15:30, сегодня" />
+        android:visibility="gone"
+        tools:text="15:30, сегодня"
+        tools:visibility="visible" />
 
     <android.support.v7.widget.CardView
         android:id="@+id/cardView"
@@ -44,8 +56,10 @@
         android:layout_height="64dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/owner_card_border"
+        android:visibility="gone"
         app:cardCornerRadius="0dp"
-        app:cardElevation="0dp">
+        app:cardElevation="0dp"
+        tools:visibility="visible">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -98,6 +112,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipChildren="true"
-        tools:listitem="@layout/recommendation_videos" />
+        android:visibility="gone"
+        tools:listitem="@layout/recommendation_videos"
+        tools:visibility="visible" />
+
+    <ProgressBar
+        android:id="@+id/video_loading"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:visibility="gone" />
 
 </LinearLayout>

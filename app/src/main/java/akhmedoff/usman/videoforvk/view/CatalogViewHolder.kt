@@ -16,7 +16,7 @@ import com.squareup.picasso.Picasso
 
 class CatalogViewHolder(
     itemView: View,
-    clickListener: OnClickListener<CatalogItem>
+    clickListener: (CatalogItem) -> Unit
 ) : AbstractViewHolder<Catalog>(itemView) {
 
     private val adapter = CatalogRecyclerAdapter(
@@ -56,8 +56,7 @@ class CatalogViewHolder(
 
         item.items[0].type?.let {
             when (it) {
-                CatalogItemType.ALBUM ->
-                    catalogRecycler.layoutManager = linearLayoutManager
+                CatalogItemType.ALBUM -> catalogRecycler.layoutManager = linearLayoutManager
 
                 CatalogItemType.VIDEO -> catalogRecycler.layoutManager = gridLayoutManager
             }
