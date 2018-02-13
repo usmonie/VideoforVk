@@ -9,6 +9,7 @@ import akhmedoff.usman.videoforvk.model.User
 import akhmedoff.usman.videoforvk.model.Video
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.OnLifecycleEvent
+import android.util.Log
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -51,6 +52,17 @@ class VideoPresenter(
                     ) {
                         response?.body()?.let { responseVideo ->
                             when {
+                                responseVideo.items.isNotEmpty() -> {
+                                    video = responseVideo.items[0]
+                                    it.showVideo(video)
+                                    it.hideProgress()
+                                    it.showPlayer()
+                                }
+
+                                else -> it.showLoadError()
+                            }
+
+                            when {
                                 responseVideo.groups != null && responseVideo.groups.isNotEmpty() -> {
                                     it.showGroupOwnerInfo(responseVideo.groups[0])
                                     it.hideProgress()
@@ -59,14 +71,7 @@ class VideoPresenter(
                                 responseVideo.profiles != null && responseVideo.profiles.isNotEmpty() ->
                                     loadUser(responseVideo.profiles[0])
                             }
-                            when {
-                                responseVideo.items.isNotEmpty() -> {
-                                    video = responseVideo.items[0]
-                                    it.showVideo(video)
-                                }
 
-                                else -> it.showLoadError()
-                            }
                         }
                     }
 
@@ -79,6 +84,7 @@ class VideoPresenter(
             userRepository.getUser(user.id.toString()).enqueue(object : Callback<User> {
                 override fun onFailure(call: Call<User>?, t: Throwable?) {
                     it.hideProgress()
+                    Log.d("failure", t.toString())
                 }
 
                 override fun onResponse(call: Call<User>?, response: Response<User>?) {

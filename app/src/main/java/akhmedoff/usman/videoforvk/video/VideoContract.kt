@@ -54,6 +54,10 @@ interface VideoContract {
         fun showProgress()
 
         fun hideProgress()
+
+        fun showPlayer()
+
+        fun hidePlayer()
     }
 
     interface Presenter : BaseContract.Presenter<View> {

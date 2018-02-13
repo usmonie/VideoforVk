@@ -198,6 +198,15 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
         }
     }
 
+    override fun showPlayer() {
+        video_exo_player.visibility = View.VISIBLE
+        video_exo_player.showController()
+    }
+
+    override fun hidePlayer() {
+        video_exo_player.visibility = View.GONE
+    }
+
     private fun initVideoInfo(item: Video) {
         video_title.text = item.title
         video_views.text = item.views.toString()
@@ -303,8 +312,6 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
         video_views.visibility = View.VISIBLE
         video_date.visibility = View.VISIBLE
 
-        video_exo_player.visibility = View.VISIBLE
-        video_exo_player.showController()
     }
 
     override fun getVideoState() = player?.playWhenReady
@@ -312,6 +319,4 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
     override fun getVideoPosition() = player?.currentPosition
 
     override fun getVideoId() = intent.getStringExtra(VideoActivity.VIDEO_ID)!!
-
-
 }
