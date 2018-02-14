@@ -6,7 +6,6 @@ import akhmedoff.usman.videoforvk.base.BaseActivity
 import akhmedoff.usman.videoforvk.data.local.UserSettings
 import akhmedoff.usman.videoforvk.data.repository.UserRepository
 import akhmedoff.usman.videoforvk.data.repository.VideoRepository
-import akhmedoff.usman.videoforvk.fullscreen.FullscreenVideoFragment
 import akhmedoff.usman.videoforvk.model.CatalogItem
 import akhmedoff.usman.videoforvk.model.Group
 import akhmedoff.usman.videoforvk.model.User
@@ -21,7 +20,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v4.app.FragmentTransaction
 import android.view.View
 import com.google.android.exoplayer2.DefaultControlDispatcher
 import com.google.android.exoplayer2.ExoPlayerFactory
@@ -87,6 +85,8 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
         )
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) pip_toggle.visibility = View.VISIBLE
 
         fullscreen_toggle.setOnClickListener { videoPresenter.clickFullscreen() }
         pip_toggle.setOnClickListener { videoPresenter.pipToggleButton() }
@@ -208,44 +208,46 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
     }
 
     private fun initVideoInfo(item: Video) {
-        video_title.text = item.title
-        video_views.text = item.views.toString()
+        video_title?.text = item.title
+        video_views?.text = item.views.toString()
 
         item.views?.let {
-            video_views.text = resources.getQuantityString(
+            video_views?.text = resources.getQuantityString(
                 R.plurals.video_views,
                 it,
                 NumberFormat.getIntegerInstance().format(it)
             )
         }
 
-        video_date.text = SimpleDateFormat(
+        video_date?.text = SimpleDateFormat(
             "HH:mm, dd MMM ",
             Locale.getDefault()
         ).format(Date(item.date))
     }
 
     override fun showGroupOwnerInfo(group: Group) {
-        owner_name.text = group.name
-        Picasso.with(context).load(group.photo100).into(owner_photo)
+        owner_name?.text = group.name
+        owner_photo?.let {
+            Picasso.with(context).load(group.photo100).into(it)
+        }
 
-        owner_follow.text =
+        owner_follow?.text =
                 if (group.isMember) getText(R.string.followed) else getText(R.string.follow)
     }
 
     override fun showUserOwnerInfo(user: User) {
-        owner_name.text =
+        owner_name?.text =
                 String.format(
                     resources.getText(R.string.user_name).toString(),
                     user.firstName,
                     user.lastName
                 )
-        Picasso
-            .with(context)
-            .load(user.photo100)
-            .into(owner_photo)
 
-        owner_follow.text =
+        owner_photo?.let {
+            Picasso.with(context).load(user.photo100).into(it)
+        }
+
+        owner_follow?.text =
                 if (user.isFriend) getText(R.string.followed) else getText(R.string.follow)
     }
 
@@ -271,17 +273,12 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
     }
 
     override fun showFullscreen(video: Video) {
-        val fragmentManager = supportFragmentManager
-        val newFragment = FullscreenVideoFragment.createFragment(video)
-
-        // The device is smaller, so show the fragment fullscreen
-        val transaction = fragmentManager.beginTransaction()
-        // For a little polish, specify a transition animation
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-        // To make it fullscreen, use the 'content' root view as the container
-        // for the fragment, which is always the root view for the activity
-        transaction.add(android.R.id.content, newFragment)
-            .addToBackStack(null).commit()
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
     }
 
     override fun showSmallScreen() {
@@ -296,22 +293,21 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
     }
 
     override fun hideUi() {
-        recommendation_recycler_video_page.visibility = View.GONE
-        cardView.visibility = View.GONE
-        video_title.visibility = View.GONE
-        video_views.visibility = View.GONE
-        video_date.visibility = View.GONE
+        recommendation_recycler_video_page?.visibility = View.GONE
+        cardView?.visibility = View.GONE
+        video_title?.visibility = View.GONE
+        video_views?.visibility = View.GONE
+        video_date?.visibility = View.GONE
 
         video_exo_player.hideController()
     }
 
     override fun showUi() {
-        recommendation_recycler_video_page.visibility = View.VISIBLE
-        cardView.visibility = View.VISIBLE
-        video_title.visibility = View.VISIBLE
-        video_views.visibility = View.VISIBLE
-        video_date.visibility = View.VISIBLE
-
+        recommendation_recycler_video_page?.visibility = View.VISIBLE
+        cardView?.visibility = View.VISIBLE
+        video_title?.visibility = View.VISIBLE
+        video_views?.visibility = View.VISIBLE
+        video_date?.visibility = View.VISIBLE
     }
 
     override fun getVideoState() = player?.playWhenReady

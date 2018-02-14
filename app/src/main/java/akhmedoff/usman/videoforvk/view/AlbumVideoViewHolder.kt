@@ -17,7 +17,6 @@ class AlbumVideoViewHolder(private val picasso: Picasso, itemView: View) :
     private val views = itemView.findViewById<TextView>(R.id.recommendation_video_views)
 
     override fun bind(item: Video) {
-
         val posterUrl = when {
             item.photo800 != null -> item.photo800
             item.photo640 != null -> item.photo640

@@ -49,18 +49,18 @@ class CatalogViewHolder(
     }
 
     override fun bind(item: Catalog) {
-        catalogTitle.text = item.name
+        if (item.items.size > 0) {
+            catalogTitle.text = item.name
 
-        adapter.items = item.items
-        adapter.notifyDataSetChanged()
+            adapter.items = item.items
+            adapter.notifyDataSetChanged()
+            item.items[0].type?.let {
+                when (it) {
+                    CatalogItemType.ALBUM -> catalogRecycler.layoutManager = linearLayoutManager
 
-        item.items[0].type?.let {
-            when (it) {
-                CatalogItemType.ALBUM -> catalogRecycler.layoutManager = linearLayoutManager
-
-                CatalogItemType.VIDEO -> catalogRecycler.layoutManager = gridLayoutManager
+                    CatalogItemType.VIDEO -> catalogRecycler.layoutManager = gridLayoutManager
+                }
             }
-        }
-
+        } else itemView.visibility = View.GONE
     }
 }

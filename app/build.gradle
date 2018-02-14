@@ -16,7 +16,7 @@ android {
         applicationId "akhmedoff.usman.videoforvk"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 3
+        versionCode 6
         versionName "1.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 

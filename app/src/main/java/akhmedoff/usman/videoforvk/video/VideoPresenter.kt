@@ -20,7 +20,6 @@ class VideoPresenter(
 ) :
     BasePresenter<VideoContract.View>(), VideoContract.Presenter {
 
-
     private var isFullscreen = false
 
     private var isStarted = false

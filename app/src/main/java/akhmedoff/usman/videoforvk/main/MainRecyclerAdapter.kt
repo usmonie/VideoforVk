@@ -40,7 +40,7 @@ class MainRecyclerAdapter(private val clickListener: (CatalogItem) -> Unit) :
      * @param position Adapter position to query
      * @return the stable ID of the item at position
      */
-    override fun getItemId(position: Int) = position.toLong() + 1
+    override fun getItemId(position: Int) = position.toLong()
 
     override fun onBindViewHolder(holder: CatalogViewHolder?, position: Int) {
         getItem(position)?.let { holder?.bind(it) }
