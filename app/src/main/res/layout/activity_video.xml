@@ -14,7 +14,7 @@
         android:layout_height="232dp"
         android:visibility="gone"
         app:controller_layout_id="@layout/playback_exo_control_view"
-        app:resize_mode="fill"
+        app:resize_mode="fit"
         tools:visibility="visible" />
 
     <TextView
