@@ -2,8 +2,7 @@ package akhmedoff.usman.videoforvk.album
 
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.model.Video
-import akhmedoff.usman.videoforvk.view.AlbumVideoViewHolder
-import akhmedoff.usman.videoforvk.view.OnClickListener
+import akhmedoff.usman.videoforvk.view.holders.AlbumVideoViewHolder
 import android.arch.paging.PagedListAdapter
 import android.support.v7.recyclerview.extensions.DiffCallback
 import android.view.LayoutInflater
@@ -11,7 +10,7 @@ import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 
 class AlbumRecyclerAdapter(
-    private val clickListener: OnClickListener<Video>
+    private val clickListener: (Video) -> Unit
 ) : PagedListAdapter<Video, AlbumVideoViewHolder>(VIDEO_COMPARATOR) {
     companion object {
         val VIDEO_COMPARATOR = object : DiffCallback<Video>() {
@@ -34,7 +33,7 @@ class AlbumRecyclerAdapter(
         )
 
         holder.itemView.setOnClickListener {
-            clickListener.onClick(getItem(holder.layoutPosition)!!)
+            clickListener(getItem(holder.layoutPosition)!!)
         }
 
         return holder

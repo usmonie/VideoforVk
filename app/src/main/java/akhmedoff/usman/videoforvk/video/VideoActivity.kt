@@ -15,11 +15,12 @@ import android.app.PictureInPictureParams
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.support.annotation.RequiresApi
 import android.support.design.widget.Snackbar
+import android.util.Rational
 import android.view.View
 import com.google.android.exoplayer2.DefaultControlDispatcher
 import com.google.android.exoplayer2.ExoPlayerFactory
@@ -31,10 +32,14 @@ import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory
+import com.google.android.exoplayer2.upstream.cache.NoOpCacheEvictor
+import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import com.google.android.exoplayer2.util.Util
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_video.*
 import kotlinx.android.synthetic.main.playback_exo_control_view.*
+import java.io.File
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -104,21 +109,15 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun enterPipMode() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            enterPictureInPictureMode(
-                PictureInPictureParams.Builder()
-                    .setSourceRectHint(
-                        Rect(
-                            video_exo_player.left,
-                            video_exo_player.top,
-                            video_exo_player.right,
-                            video_exo_player.bottom
-                        )
-                    )
-                    .build()
-            )
-        }
+        val aspectRation = Rational(video_exo_player.width, video_exo_player.height)
+
+        enterPictureInPictureMode(
+            PictureInPictureParams.Builder()
+                .setAspectRatio(aspectRation)
+                .build()
+        )
     }
 
     override fun exitPipMode() {
@@ -137,17 +136,6 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
     ) = videoPresenter.changedPipMode()
 
     private fun initExoPlayer(item: Video) {
-        val mp4VideoUri = Uri.parse(
-            when {
-                item.files.hls != null -> item.files.hls
-                item.files.external != null -> item.files.external
-                item.files.mp41080 != null -> item.files.mp41080
-                item.files.mp4720 != null -> item.files.mp4720
-                item.files.mp4480 != null -> item.files.mp4480
-                item.files.mp4360 != null -> item.files.mp4360
-                else -> item.files.mp4240
-            }
-        )
         // 1. Create a default TrackSelector
         val bandwidthMeter = DefaultBandwidthMeter()
         val videoTrackSelectionFactory = AdaptiveTrackSelection.Factory(bandwidthMeter)
@@ -155,6 +143,7 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
 
         // 2. Create the player
         player = ExoPlayerFactory.newSimpleInstance(context, trackSelector)
+        video_exo_player.player = player
 
         video_exo_player.setControlDispatcher(
             object : DefaultControlDispatcher() {
@@ -176,24 +165,36 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
             }
         )
 
-        video_exo_player.player = player
-
         // Produces DataSource instances through which media data is loaded.
         val dataSourceFactory = DefaultDataSourceFactory(
             context,
             Util.getUserAgent(context, "yourApplicationName"), bandwidthMeter
         )
+
+        val mp4VideoUri = Uri.parse(
+            when {
+                item.files.hls != null -> item.files.hls
+                item.files.external != null -> item.files.external
+                item.files.mp41080 != null -> item.files.mp41080
+                item.files.mp4720 != null -> item.files.mp4720
+                item.files.mp4480 != null -> item.files.mp4480
+                item.files.mp4360 != null -> item.files.mp4360
+                else -> item.files.mp4240
+            }
+        )
+
+        val file = File("${filesDir.parent}/cache")
+        val cacheDataSourceFactory =
+            CacheDataSourceFactory(SimpleCache(file, NoOpCacheEvictor()), dataSourceFactory)
+
         // This is the MediaSource representing the media to be played.
         val videoSource = when {
-            item.files.hls != null -> HlsMediaSource.Factory(dataSourceFactory)
-            else -> ExtractorMediaSource.Factory(dataSourceFactory)
+            item.files.hls != null -> HlsMediaSource.Factory(cacheDataSourceFactory)
+            else -> ExtractorMediaSource.Factory(cacheDataSourceFactory)
         }.createMediaSource(mp4VideoUri, null, null)
-
-        // Prepare the player with the source.
 
         player?.let {
             it.prepare(videoSource)
-
             it.seekTo(1)
         }
     }
@@ -209,7 +210,7 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
 
     private fun initVideoInfo(item: Video) {
         video_title?.text = item.title
-        video_views?.text = item.views.toString()
+        video_views?.text = item.views?.toString()
 
         item.views?.let {
             video_views?.text = resources.getQuantityString(
@@ -220,7 +221,7 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
         }
 
         video_date?.text = SimpleDateFormat(
-            "HH:mm, dd MMM ",
+            "HH:mm, dd MMMMM yyyy",
             Locale.getDefault()
         ).format(Date(item.date))
     }

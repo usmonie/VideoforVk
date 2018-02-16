@@ -11,6 +11,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+
 val okHttp: OkHttpClient by lazy {
     val okHttpBuilder = OkHttpClient.Builder()
     val logging = HttpLoggingInterceptor()
@@ -18,7 +19,6 @@ val okHttp: OkHttpClient by lazy {
 
     okHttpBuilder.addInterceptor(logging)
     okHttpBuilder.addInterceptor(AutentificationInterceptor())
-
 
     return@lazy okHttpBuilder.build()
 }

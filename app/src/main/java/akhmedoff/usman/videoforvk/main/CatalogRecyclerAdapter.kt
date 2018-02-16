@@ -3,7 +3,7 @@ package akhmedoff.usman.videoforvk.main
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.model.CatalogItem
 import akhmedoff.usman.videoforvk.model.CatalogItemType
-import akhmedoff.usman.videoforvk.view.VideoViewHolder
+import akhmedoff.usman.videoforvk.view.holders.VideoViewHolder
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -30,7 +30,6 @@ class CatalogRecyclerAdapter(
                 clickListener(items[holder.adapterPosition])
             }
         }
-
 
         return holder
     }

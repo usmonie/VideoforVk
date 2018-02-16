@@ -28,10 +28,13 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".main.MainActivity" />
+        <activity
+            android:name=".main.MainActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation" />
 
         <activity
             android:name=".login.LoginActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:theme="@style/LoginTheme" />
 
         <activity
@@ -51,7 +54,9 @@
                 android:minWidth="232dp" />
         </activity>
 
-        <activity android:name=".album.AlbumActivity" />
+        <activity
+            android:name=".album.AlbumActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation" />
     </application>
 
 </manifest>

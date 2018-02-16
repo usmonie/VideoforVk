@@ -11,12 +11,9 @@
     <com.google.android.exoplayer2.ui.SimpleExoPlayerView
         android:id="@+id/video_exo_player"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|center"
-        android:adjustViewBounds="true"
+        android:layout_height="232dp"
         android:visibility="gone"
         app:controller_layout_id="@layout/playback_exo_control_view"
-        app:resize_mode="fit"
         tools:visibility="visible" />
 
     <TextView

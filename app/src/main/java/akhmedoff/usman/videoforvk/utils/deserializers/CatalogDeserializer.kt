@@ -28,7 +28,7 @@ class CatalogDeserializer : JsonDeserializer<ResponseCatalog> {
 
             catalogsJsonArray?.forEach { catalogElement ->
                 val catalogJson = catalogElement.asJsonObject
-                val videos = mutableListOf<CatalogItem>()
+                val videoList = mutableListOf<CatalogItem>()
 
                 val videosJsonArray = catalogJson["items"].asJsonArray
 
@@ -60,11 +60,12 @@ class CatalogDeserializer : JsonDeserializer<ResponseCatalog> {
                             }
                         }
                     }
-                    videos.add(item)
+
+
+                    videoList.add(item)
                 }
 
-                val name =
-                    stringToUrlFormat(catalogJson["name"]?.toString())
+                val name = stringToUrlFormat(catalogJson["name"]?.toString())
 
 
                 var id: String? = null
@@ -74,7 +75,9 @@ class CatalogDeserializer : JsonDeserializer<ResponseCatalog> {
                 val canHide = catalogJson["can_hide"]?.asBoolean
                 val type = catalogJson["type"]?.toString()
 
-                catalogs.add(Catalog(videos, name, id, view, canHide, type))
+                if (videoList.isNotEmpty()) {
+                    catalogs.add(Catalog(videoList, name, id, view, canHide, type))
+                }
             }
         }
 

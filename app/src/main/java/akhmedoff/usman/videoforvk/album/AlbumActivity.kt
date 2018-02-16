@@ -7,7 +7,6 @@ import akhmedoff.usman.videoforvk.model.CatalogItem
 import akhmedoff.usman.videoforvk.model.Video
 import akhmedoff.usman.videoforvk.utils.vkApi
 import akhmedoff.usman.videoforvk.video.VideoActivity
-import akhmedoff.usman.videoforvk.view.OnClickListener
 import android.arch.paging.PagedList
 import android.content.Context
 import android.content.Intent
@@ -27,6 +26,7 @@ class AlbumActivity : BaseActivity<AlbumContract.View, AlbumContract.Presenter>(
         fun getActivity(item: CatalogItem, context: Context): Intent {
             val intent = Intent(context, AlbumActivity::class.java)
 
+
             intent.putExtra(ALBUM_ID, item.id.toString())
             intent.putExtra(ALBUM_OWNER_ID, item.ownerId.toString())
 
@@ -35,11 +35,7 @@ class AlbumActivity : BaseActivity<AlbumContract.View, AlbumContract.Presenter>(
     }
 
     private val adapter: AlbumRecyclerAdapter by lazy {
-        val clickListener = object : OnClickListener<Video> {
-            override fun onClick(item: Video) = presenter.clickVideo(item)
-        }
-
-        val adapter = AlbumRecyclerAdapter(clickListener)
+        val adapter = AlbumRecyclerAdapter { presenter.clickVideo(it) }
 
         adapter.setHasStableIds(true)
         return@lazy adapter

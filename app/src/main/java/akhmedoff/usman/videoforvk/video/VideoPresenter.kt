@@ -43,6 +43,7 @@ class VideoPresenter(
                 .enqueue(object : Callback<ResponseVideo> {
                     override fun onFailure(call: Call<ResponseVideo>?, t: Throwable?) {
                         it.showLoadError()
+                        it.hideProgress()
                     }
 
                     override fun onResponse(

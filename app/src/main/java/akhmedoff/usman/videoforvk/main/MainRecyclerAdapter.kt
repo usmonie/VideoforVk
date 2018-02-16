@@ -3,7 +3,7 @@ package akhmedoff.usman.videoforvk.main
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.model.Catalog
 import akhmedoff.usman.videoforvk.model.CatalogItem
-import akhmedoff.usman.videoforvk.view.CatalogViewHolder
+import akhmedoff.usman.videoforvk.view.holders.CatalogViewHolder
 import android.arch.paging.PagedListAdapter
 import android.support.v7.recyclerview.extensions.DiffCallback
 import android.view.LayoutInflater
@@ -32,17 +32,13 @@ class MainRecyclerAdapter(private val clickListener: (CatalogItem) -> Unit) :
             clickListener
         )
 
-    /**
-     * Return the stable ID for the item at `position`. If [.hasStableIds]
-     * would return false this method should return [.NO_ID]. The default implementation
-     * of this method returns [.NO_ID].
-     *
-     * @param position Adapter position to query
-     * @return the stable ID of the item at position
-     */
-    override fun getItemId(position: Int) = position.toLong()
+    override fun onBindViewHolder(holder: CatalogViewHolder, position: Int) {
+        val catalog = getItem(position)!!
 
-    override fun onBindViewHolder(holder: CatalogViewHolder?, position: Int) {
-        getItem(position)?.let { holder?.bind(it) }
+        catalog.items?.let {
+            if (it.isNotEmpty()) holder.bind(catalog)
+        }
     }
+
+    override fun getItemId(position: Int) = position.toLong()
 }

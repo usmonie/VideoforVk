@@ -1,10 +1,11 @@
-package akhmedoff.usman.videoforvk.view
+package akhmedoff.usman.videoforvk.view.holders
 
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.main.CatalogRecyclerAdapter
 import akhmedoff.usman.videoforvk.model.Catalog
 import akhmedoff.usman.videoforvk.model.CatalogItem
 import akhmedoff.usman.videoforvk.model.CatalogItemType
+import akhmedoff.usman.videoforvk.view.GravitySnapHelper
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.LinearLayoutManager.HORIZONTAL
@@ -49,18 +50,16 @@ class CatalogViewHolder(
     }
 
     override fun bind(item: Catalog) {
-        if (item.items.size > 0) {
-            catalogTitle.text = item.name
+        catalogTitle.text = item.name
 
-            adapter.items = item.items
-            adapter.notifyDataSetChanged()
-            item.items[0].type?.let {
-                when (it) {
-                    CatalogItemType.ALBUM -> catalogRecycler.layoutManager = linearLayoutManager
+        adapter.items = item.items
 
-                    CatalogItemType.VIDEO -> catalogRecycler.layoutManager = gridLayoutManager
-                }
+        item.items?.get(0)?.type?.let {
+            when (it) {
+                CatalogItemType.ALBUM -> catalogRecycler.layoutManager = linearLayoutManager
+
+                CatalogItemType.VIDEO -> catalogRecycler.layoutManager = gridLayoutManager
             }
-        } else itemView.visibility = View.GONE
+        }
     }
 }

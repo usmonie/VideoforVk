@@ -1,4 +1,4 @@
-package akhmedoff.usman.videoforvk.view
+package akhmedoff.usman.videoforvk.view.holders
 
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.model.CatalogItem
@@ -22,6 +22,7 @@ class VideoViewHolder(private val picasso: Picasso, itemView: View) :
         }
         picasso
             .load(imageUri)
+            .fit()
             .config(Bitmap.Config.RGB_565)
             .into(videoFrame)
 
