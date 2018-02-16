@@ -221,7 +221,7 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
         }
 
         video_date?.text = SimpleDateFormat(
-            "HH:mm, dd MMMMM yyyy",
+            "HH:mm, dd MMM yyyy",
             Locale.getDefault()
         ).format(Date(item.date))
     }
