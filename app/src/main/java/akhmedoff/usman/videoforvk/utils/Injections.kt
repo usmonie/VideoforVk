@@ -4,6 +4,7 @@ import akhmedoff.usman.videoforvk.data.api.VkApi
 import akhmedoff.usman.videoforvk.model.*
 import akhmedoff.usman.videoforvk.utils.deserializers.*
 import akhmedoff.usman.videoforvk.utils.interceptors.AutentificationInterceptor
+import android.content.res.Resources
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
@@ -61,3 +62,8 @@ val gson: Gson by lazy {
 
     return@lazy gsonBuilder.create()
 }
+
+fun toDp(int: Int): Int = (int / Resources.getSystem().displayMetrics.density).toInt()
+
+fun toPx(int: Int): Int = (int * Resources.getSystem().displayMetrics.density).toInt()
+

@@ -20,8 +20,8 @@ import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
 import android.support.design.widget.Snackbar
-import android.util.Rational
 import android.view.View
+import android.view.ViewGroup
 import com.google.android.exoplayer2.DefaultControlDispatcher
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.Player
@@ -65,14 +65,9 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
 
             return intent
         }
-
     }
 
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        setIntent(intent)
-        videoPresenter.onCreate()
-    }
+    private lateinit var dataSourceFactory: DefaultDataSourceFactory
 
     override lateinit var videoPresenter: VideoPresenter
 
@@ -95,6 +90,21 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
 
         fullscreen_toggle.setOnClickListener { videoPresenter.clickFullscreen() }
         pip_toggle.setOnClickListener { videoPresenter.pipToggleButton() }
+
+        // 1. Create a default TrackSelector
+        val bandwidthMeter = DefaultBandwidthMeter()
+        val videoTrackSelectionFactory = AdaptiveTrackSelection.Factory(bandwidthMeter)
+        val trackSelector = DefaultTrackSelector(videoTrackSelectionFactory)
+
+        // 2. Create the player
+        player = ExoPlayerFactory.newSimpleInstance(context, trackSelector)
+        video_exo_player.player = player
+
+        // Produces DataSource instances through which media data is loaded.
+        dataSourceFactory = DefaultDataSourceFactory(
+            context,
+            Util.getUserAgent(context, "yourApplicationName"), bandwidthMeter
+        )
     }
 
     override fun showVideo(item: Video) {
@@ -111,13 +121,22 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun enterPipMode() {
-        val aspectRation = Rational(video_exo_player.width, video_exo_player.height)
-
         enterPictureInPictureMode(
             PictureInPictureParams.Builder()
-                .setAspectRatio(aspectRation)
                 .build()
         )
+    }
+
+    override fun setPlayerFullscreen() {
+        video_exo_player.layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
+        video_exo_player.requestLayout()
+    }
+
+    override fun setPlayerNormal() {
+        video_exo_player.layoutParams.height =
+                resources.getDimension(R.dimen.exo_player_height).toInt()
+
+        video_exo_player.requestLayout()
     }
 
     override fun exitPipMode() {
@@ -136,14 +155,6 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
     ) = videoPresenter.changedPipMode()
 
     private fun initExoPlayer(item: Video) {
-        // 1. Create a default TrackSelector
-        val bandwidthMeter = DefaultBandwidthMeter()
-        val videoTrackSelectionFactory = AdaptiveTrackSelection.Factory(bandwidthMeter)
-        val trackSelector = DefaultTrackSelector(videoTrackSelectionFactory)
-
-        // 2. Create the player
-        player = ExoPlayerFactory.newSimpleInstance(context, trackSelector)
-        video_exo_player.player = player
 
         video_exo_player.setControlDispatcher(
             object : DefaultControlDispatcher() {
@@ -163,12 +174,6 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
                     return super.dispatchSetPlayWhenReady(player, playWhenReady)
                 }
             }
-        )
-
-        // Produces DataSource instances through which media data is loaded.
-        val dataSourceFactory = DefaultDataSourceFactory(
-            context,
-            Util.getUserAgent(context, "yourApplicationName"), bandwidthMeter
         )
 
         val mp4VideoUri = Uri.parse(
@@ -206,6 +211,12 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
 
     override fun hidePlayer() {
         video_exo_player.visibility = View.GONE
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        videoPresenter.onCreate()
     }
 
     private fun initVideoInfo(item: Video) {
@@ -280,6 +291,8 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
                 or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_FULLSCREEN
                 or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+
+
     }
 
     override fun showSmallScreen() {

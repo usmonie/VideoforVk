@@ -58,6 +58,10 @@ interface VideoContract {
         fun showPlayer()
 
         fun hidePlayer()
+
+        fun setPlayerFullscreen()
+
+        fun setPlayerNormal()
     }
 
     interface Presenter : BaseContract.Presenter<View> {

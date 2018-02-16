@@ -48,10 +48,10 @@
 
             <layout
                 android:defaultHeight="640dp"
-                android:defaultWidth="360dp"
+                android:defaultWidth="330dp"
                 android:gravity="center"
-                android:minHeight="450dp"
-                android:minWidth="232dp" />
+                android:minHeight="120dp"
+                android:minWidth="130dp" />
         </activity>
 
         <activity

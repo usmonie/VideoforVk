@@ -104,10 +104,12 @@ class VideoPresenter(
         isFullscreen = when (isFullscreen) {
             true -> {
                 view?.showSmallScreen()
+                view?.setPlayerNormal()
                 false
             }
             false -> {
                 view?.showFullscreen(video)
+                view?.setPlayerFullscreen()
                 true
             }
         }
@@ -116,18 +118,24 @@ class VideoPresenter(
     override fun changedPipMode() {
         view?.let { view ->
             when (view.isPipMode()) {
-                true -> view.hideUi()
-                false -> view.showUi()
+                true -> {
+                    view.setPlayerFullscreen()
+                    view.hideUi()
+                }
+                false -> {
+                    view.setPlayerNormal()
+                    view.showUi()
+                }
             }
         }
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     fun onStop() {
-        view?.let {
-            it.pauseVideo()
-            it.getVideoState()?.let { isStartedVideo -> isStarted = isStartedVideo }
-            it.getVideoPosition()?.let { videoPosition -> position = videoPosition }
+        view?.let { view ->
+            view.pauseVideo()
+            view.getVideoState()?.let { isStartedVideo -> isStarted = isStartedVideo }
+            view.getVideoPosition()?.let { videoPosition -> position = videoPosition }
         }
     }
 
