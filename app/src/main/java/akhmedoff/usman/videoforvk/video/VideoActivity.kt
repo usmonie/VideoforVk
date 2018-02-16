@@ -119,14 +119,6 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun enterPipMode() {
-        enterPictureInPictureMode(
-            PictureInPictureParams.Builder()
-                .build()
-        )
-    }
-
     override fun setPlayerFullscreen() {
         video_exo_player.layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
         video_exo_player.requestLayout()
@@ -139,11 +131,19 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
         video_exo_player.requestLayout()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun enterPipMode() {
+        enterPictureInPictureMode(
+            PictureInPictureParams.Builder()
+                .build()
+        )
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun exitPipMode() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            exitPipMode()
-            video_exo_player?.showController()
-        }
+        exitPipMode()
+        video_exo_player?.showController()
+
     }
 
     override fun isPipMode(): Boolean =
@@ -258,7 +258,6 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
         owner_photo?.let {
             Picasso.with(context).load(user.photo100).into(it)
         }
-
         owner_follow?.text =
                 if (user.isFriend) getText(R.string.followed) else getText(R.string.follow)
     }

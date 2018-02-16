@@ -22,6 +22,7 @@ class AlbumActivity : BaseActivity<AlbumContract.View, AlbumContract.Presenter>(
     companion object {
         private const val ALBUM_ID = "album_id"
         private const val ALBUM_OWNER_ID = "album_owner_id"
+        private const val ALBUM_NAME = "album_name"
 
         fun getActivity(item: CatalogItem, context: Context): Intent {
             val intent = Intent(context, AlbumActivity::class.java)
@@ -29,6 +30,7 @@ class AlbumActivity : BaseActivity<AlbumContract.View, AlbumContract.Presenter>(
 
             intent.putExtra(ALBUM_ID, item.id.toString())
             intent.putExtra(ALBUM_OWNER_ID, item.ownerId.toString())
+            intent.putExtra(ALBUM_NAME, item.title.toString())
 
             return intent
         }
@@ -72,6 +74,9 @@ class AlbumActivity : BaseActivity<AlbumContract.View, AlbumContract.Presenter>(
 
     override fun showVideo(video: Video) = startActivity(VideoActivity.getActivity(video, this))
 
+    override fun getAlbumTitle(): String? {
+        return intent?.getStringExtra(ALBUM_NAME)
+    }
 
     override fun setAdded(isAdded: Boolean) {
     }

@@ -11,7 +11,7 @@
     <com.google.android.exoplayer2.ui.SimpleExoPlayerView
         android:id="@+id/video_exo_player"
         android:layout_width="match_parent"
-        android:layout_height="232dp"
+        android:layout_height="@dimen/exo_player_height"
         android:visibility="gone"
         app:controller_layout_id="@layout/playback_exo_control_view"
         app:resize_mode="fit"

@@ -23,6 +23,8 @@ interface AlbumContract {
         fun getAlbumId(): String?
 
         fun getAlbumOwnerId(): String?
+
+        fun getAlbumTitle(): String?
     }
 
     interface Presenter : BaseContract.Presenter<View> {

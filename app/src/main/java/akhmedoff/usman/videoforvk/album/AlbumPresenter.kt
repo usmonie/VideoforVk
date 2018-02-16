@@ -23,29 +23,31 @@ class AlbumPresenter(private val videoRepository: VideoRepository) :
     }
 
     private fun loadAlbumVideos() {
-        view?.let {
+        view?.let { view ->
             videoRepository.getVideos(
-                ownerId = it.getAlbumOwnerId(),
+                ownerId = view.getAlbumOwnerId(),
                 videos = null,
-                albumId = it.getAlbumId()
-            ).observe(it, Observer { pagedList: PagedList<Video>? ->
-                pagedList?.let { items -> it.showVideos(items) }
+                albumId = view.getAlbumId()
+            ).observe(view, Observer { pagedList: PagedList<Video>? ->
+                pagedList?.let { items -> view.showVideos(items) }
             })
         }
     }
 
     private fun loadAlbum() {
-        view?.let {
+        view?.let { view ->
             videoRepository.getAlbum(
-                ownerId = it.getAlbumOwnerId(),
-                albumId = it.getAlbumId()
-            ).observe(it, Observer { albumResponse ->
+                ownerId = view.getAlbumOwnerId(),
+                albumId = view.getAlbumId()
+            ).observe(view, Observer { albumResponse ->
                 run {
                     albumResponse?.response?.let { album ->
                         run {
-                            it.showAlbumImage(album.photo320)
-
-                            it.showAlbumTitle(album.title)
+                            view.showAlbumImage(album.photo320)
+                            when (view.getAlbumTitle()) {
+                                null -> view.showAlbumTitle(album.title)
+                                else -> view.showAlbumTitle(view.getAlbumTitle()!!)
+                            }
                         }
                     }
                 }

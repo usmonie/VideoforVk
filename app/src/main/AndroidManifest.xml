@@ -51,7 +51,7 @@
                 android:defaultWidth="330dp"
                 android:gravity="center"
                 android:minHeight="120dp"
-                android:minWidth="130dp" />
+                android:minWidth="132dp" />
         </activity>
 
         <activity
