@@ -8,15 +8,11 @@ import android.view.View
 import android.view.WindowManager
 import kotlinx.android.synthetic.main.two_factor_dialog.*
 
-class TwoFactorAutentificationDialog(
+class TwoFactorAuthenticationDialog(
     context: Context,
-    private val listener: AuthentificatorListener
+    private val listener: (String) -> Unit
 ) :
     Dialog(context) {
-
-    interface AuthentificatorListener {
-        fun enterCode(code: String)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +21,7 @@ class TwoFactorAutentificationDialog(
             WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.WRAP_CONTENT
         )
-        enter_code_button?.setOnClickListener { listener.enterCode(code_input.text.toString()) }
+        enter_code_button?.setOnClickListener { listener(code_input.text.toString()) }
     }
 
     fun setNumber(number: String) {

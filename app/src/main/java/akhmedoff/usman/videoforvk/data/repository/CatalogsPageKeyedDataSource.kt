@@ -22,7 +22,7 @@ class CatalogsPageKeyedDataSource(private val vkApi: VkApi) :
 
     override fun loadAfter(params: LoadParams<String>, callback: LoadCallback<String, Catalog>) {
         vkApi.getCatalog(
-            count = 16,
+            count = 10,
             itemsCount = 7,
             from = params.key,
             filters = "other"
@@ -59,7 +59,7 @@ class CatalogsPageKeyedDataSource(private val vkApi: VkApi) :
         callback: LoadInitialCallback<String, Catalog>
     ) {
         val apiSource = vkApi.getCatalog(
-            count = 16,
+            count = 10,
             itemsCount = 7,
             filters = "top,feed,ugc,series,other"
         )

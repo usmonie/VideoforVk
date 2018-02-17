@@ -16,7 +16,6 @@ class LoginPresenter(
 ) : BasePresenter<LoginContract.View>(),
     LoginContract.Presenter {
 
-
     private lateinit var captchaSid: String
 
     override fun login() {

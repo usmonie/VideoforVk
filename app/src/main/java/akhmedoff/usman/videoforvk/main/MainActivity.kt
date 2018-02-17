@@ -36,8 +36,7 @@ class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), 
         setContentView(R.layout.activity_main)
 
         setSupportActionBar(toolbar)
-        toolbar.title = getString(R.string.main_screen)
-        supportActionBar?.title = toolbar.title
+        supportActionBar?.title = getText(R.string.main_screen)
 
         val layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         home_recycler.layoutManager = layoutManager

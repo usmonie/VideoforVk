@@ -16,21 +16,23 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import kotlinx.android.synthetic.main.activity_login.*
 
-
 class LoginActivity : BaseActivity<LoginContract.View, LoginContract.Presenter>(),
     LoginContract.View {
     override lateinit var loginPresenter: LoginContract.Presenter
 
-    private val twoFactorDialog: TwoFactorAutentificationDialog by lazy {
-        TwoFactorAutentificationDialog(
-            this,
-            object : TwoFactorAutentificationDialog.AuthentificatorListener {
-                override fun enterCode(code: String) {
-                    loginPresenter.enterCode(code)
-                }
-
+    private val twoFactorDialog: TwoFactorAuthenticationDialog by lazy {
+        TwoFactorAuthenticationDialog(
+            this, {
+                loginPresenter.enterCode(it)
             }
         )
+    }
+
+    private val captchaDialog: CaptchaDialog by lazy {
+        CaptchaDialog(this, {
+            loginPresenter.enterCaptcha(it)
+
+        })
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -120,20 +122,19 @@ class LoginActivity : BaseActivity<LoginContract.View, LoginContract.Presenter>(
         username_et.isEnabled = editable
     }
 
-    override fun isDialogShows(): Boolean = twoFactorDialog.isShowing
+    override fun isDialogShows(): Boolean = twoFactorDialog.isShowing || captchaDialog.isShowing
 
-    override fun showDialogLoading() = twoFactorDialog.showLoading()
+    override fun showDialogLoading() {
+
+        when {
+            twoFactorDialog.isShowing -> twoFactorDialog.showLoading()
+        }
+    }
 
     override fun hideDialogLoading() = twoFactorDialog.hideLoading()
 
     override fun captcha(captchaUrl: String) {
-        val captchaDialog = CaptchaDialog(this, object : CaptchaDialog.CaptchaListener {
-            override fun enterCaptcha(captchaKey: String) {
-                loginPresenter.enterCaptcha(captchaKey)
-            }
-        })
         captchaDialog.show()
-
         captchaDialog.loadCaptcha(captchaUrl)
     }
 

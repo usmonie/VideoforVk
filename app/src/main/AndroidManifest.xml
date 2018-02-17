@@ -30,7 +30,8 @@
 
         <activity
             android:name=".main.MainActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation" />
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:label="@string/main_screen" />
 
         <activity
             android:name=".login.LoginActivity"

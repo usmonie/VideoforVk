@@ -15,6 +15,7 @@ import android.app.PictureInPictureParams
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.media.AudioManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -73,6 +74,10 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
 
     private var player: SimpleExoPlayer? = null
 
+    private val audioManager: AudioManager by lazy {
+        getSystemService(Context.AUDIO_SERVICE) as AudioManager
+    }
+
     override fun initPresenter() = videoPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -98,13 +103,15 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
 
         // 2. Create the player
         player = ExoPlayerFactory.newSimpleInstance(context, trackSelector)
-        video_exo_player.player = player
 
         // Produces DataSource instances through which media data is loaded.
         dataSourceFactory = DefaultDataSourceFactory(
             context,
             Util.getUserAgent(context, "yourApplicationName"), bandwidthMeter
         )
+
+        video_exo_player.player = player
+
     }
 
     override fun showVideo(item: Video) {
@@ -143,7 +150,6 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
     override fun exitPipMode() {
         exitPipMode()
         video_exo_player?.showController()
-
     }
 
     override fun isPipMode(): Boolean =
@@ -162,20 +168,30 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
                     player: Player?,
                     playWhenReady: Boolean
                 ): Boolean {
-                    item.files.external?.let {
-                        startActivity(
-                            Intent(
-                                Intent.ACTION_VIEW,
-                                Uri.parse(it)
+
+                    return when (item.files.external) {
+                        null -> {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                //audioManager.requestAudioFocus()
+                            } else {
+
+                            }
+                            playWhenReady
+                        }
+
+                        else -> {
+                            startActivity(
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse(item.files.external)
+                                )
                             )
-                        )
-                        return false
+                            false
+                        }
                     }
-                    return super.dispatchSetPlayWhenReady(player, playWhenReady)
                 }
             }
         )
-
         val mp4VideoUri = Uri.parse(
             when {
                 item.files.hls != null -> item.files.hls

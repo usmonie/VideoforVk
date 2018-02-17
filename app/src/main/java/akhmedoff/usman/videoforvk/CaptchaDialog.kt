@@ -7,7 +7,7 @@ import android.view.WindowManager
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.captcha_dialog.*
 
-class CaptchaDialog(context: Context, private val listener: CaptchaListener) : Dialog(context) {
+class CaptchaDialog(context: Context, private val listener: (String) -> Unit) : Dialog(context) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,14 +16,11 @@ class CaptchaDialog(context: Context, private val listener: CaptchaListener) : D
             WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.WRAP_CONTENT
         )
-        enter_captcha_button.setOnClickListener { listener.enterCaptcha(captcha_input.text.toString()) }
+        enter_captcha_button.setOnClickListener { listener(captcha_input.text.toString()) }
     }
 
     fun loadCaptcha(captchaUrl: String) =
         Picasso.with(context).load(captchaUrl).into(captcha_image_view)
 
-    interface CaptchaListener {
-        fun enterCaptcha(captchaKey: String)
-    }
 }
 
