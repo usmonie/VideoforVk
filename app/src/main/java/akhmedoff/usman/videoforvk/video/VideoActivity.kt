@@ -286,7 +286,7 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
         video_date?.text = SimpleDateFormat(
             "HH:mm, dd MMM yyyy",
             Locale.getDefault()
-        ).format(Date(item.date))
+        ).format(Date(item.date * 1000L))
     }
 
     override fun showGroupOwnerInfo(group: Group) {
