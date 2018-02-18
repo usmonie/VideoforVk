@@ -8,7 +8,9 @@ class AudioFocusListener(private val player: ExoPlayer?) : AudioManager.OnAudioF
         when (focusChange) {
             AudioManager.AUDIOFOCUS_LOSS -> player?.playWhenReady = false
 
-        //AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> player?.set
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> player?.playWhenReady = false
+
+            AudioManager.AUDIOFOCUS_GAIN -> player?.playWhenReady = true
         }
     }
 }

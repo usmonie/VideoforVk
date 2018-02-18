@@ -39,7 +39,7 @@ val vkApi: VkApi by lazy { retrofit.create(VkApi::class.java) }
 val gson: Gson by lazy {
     val gsonBuilder = GsonBuilder().apply {
         registerTypeAdapter(
-            User::class.java,
+            getUser<List<User>>(),
             UserDeserializer()
         )
         registerTypeAdapter(
@@ -67,3 +67,4 @@ fun toDp(int: Int): Int = (int / Resources.getSystem().displayMetrics.density).t
 
 fun toPx(int: Int): Int = (int * Resources.getSystem().displayMetrics.density).toInt()
 
+private inline fun <reified T> getUser() = T::class.java

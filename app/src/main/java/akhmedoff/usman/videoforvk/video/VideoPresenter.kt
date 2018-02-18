@@ -30,20 +30,20 @@ class VideoPresenter(
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun onCreate() {
         view?.hideUi()
-        view?.let {
-            loadVideo(it.getVideoId())
+        view?.let { view ->
+            loadVideo(view.getVideoId())
         }
     }
 
     override fun loadVideo(id: String) {
-        view?.let {
-            it.showProgress()
+        view?.let { view ->
+            view.showProgress()
             videoRepository
                 .getVideo(id)
                 .enqueue(object : Callback<ResponseVideo> {
                     override fun onFailure(call: Call<ResponseVideo>?, t: Throwable?) {
-                        it.showLoadError()
-                        it.hideProgress()
+                        view.showLoadError()
+                        view.hideProgress()
                     }
 
                     override fun onResponse(
@@ -54,19 +54,18 @@ class VideoPresenter(
                             when {
                                 responseVideo.items.isNotEmpty() -> {
                                     video = responseVideo.items[0]
-                                    it.showVideo(video)
-                                    it.hideProgress()
-                                    it.showPlayer()
+                                    view.showVideo(video)
                                 }
 
-                                else -> it.showLoadError()
+                                else -> view.showLoadError()
                             }
 
                             when {
                                 responseVideo.groups != null && responseVideo.groups.isNotEmpty() -> {
-                                    it.showGroupOwnerInfo(responseVideo.groups[0])
-                                    it.hideProgress()
-                                    it.showUi()
+                                    view.showGroupOwnerInfo(responseVideo.groups[0])
+                                    view.hideProgress()
+                                    view.showUi()
+                                    view.showPlayer()
                                 }
                                 responseVideo.profiles != null && responseVideo.profiles.isNotEmpty() ->
                                     loadUser(responseVideo.profiles[0])
@@ -80,18 +79,19 @@ class VideoPresenter(
     }
 
     private fun loadUser(user: User) {
-        view?.let {
-            userRepository.getUser(user.id.toString()).enqueue(object : Callback<User> {
-                override fun onFailure(call: Call<User>?, t: Throwable?) {
-                    it.hideProgress()
+        view?.let { view ->
+            userRepository.getUser(user.id.toString()).enqueue(object : Callback<List<User>> {
+                override fun onFailure(call: Call<List<User>>?, t: Throwable?) {
+                    view.hideProgress()
                     Log.d("failure", t.toString())
                 }
 
-                override fun onResponse(call: Call<User>?, response: Response<User>?) {
-                    response?.body()?.let { user ->
-                        it.showUserOwnerInfo(user)
-                        it.hideProgress()
-                        it.showUi()
+                override fun onResponse(call: Call<List<User>>?, response: Response<List<User>>?) {
+                    response?.body()?.let { users ->
+                        view.showUserOwnerInfo(users[0])
+                        view.hideProgress()
+                        view.showUi()
+                        view.showPlayer()
                     }
                 }
 
@@ -117,15 +117,12 @@ class VideoPresenter(
 
     override fun changedPipMode() {
         view?.let { view ->
-            when (view.isPipMode()) {
-                true -> {
-                    view.setPlayerFullscreen()
-                    view.hideUi()
-                }
-                false -> {
-                    view.setPlayerNormal()
-                    view.showUi()
-                }
+            if (view.isPipMode()) {
+                view.setPlayerFullscreen()
+                view.hideUi()
+            } else {
+                view.setPlayerNormal()
+                view.showUi()
             }
         }
     }

@@ -112,13 +112,12 @@ class VideoDeserializer : JsonDeserializer<ResponseVideo> {
         profilesJson?.forEach {
             val profileJson = it.asJsonObject
 
-            profiles.add(
-                User(
-                    profileJson["id"].asJsonPrimitive.asLong,
-                    profileJson["first_name"].asString,
-                    profileJson["last_name"].asString
-                )
-            )
+            val user = User()
+            user.id = profileJson["id"].asJsonPrimitive.asLong
+            user.firstName = profileJson["first_name"].asString
+            user.lastName = profileJson["last_name"].asString
+
+            profiles.add(user)
         }
 
         val groupsJson = jsonObject["groups"]?.asJsonArray

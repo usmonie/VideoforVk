@@ -10,17 +10,22 @@ import akhmedoff.usman.videoforvk.model.CatalogItem
 import akhmedoff.usman.videoforvk.model.Group
 import akhmedoff.usman.videoforvk.model.User
 import akhmedoff.usman.videoforvk.model.Video
+import akhmedoff.usman.videoforvk.player.AudioFocusListener
 import akhmedoff.usman.videoforvk.utils.vkApi
+import android.annotation.TargetApi
 import android.app.PictureInPictureParams
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.media.AudioAttributes
+import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
 import android.support.design.widget.Snackbar
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.exoplayer2.DefaultControlDispatcher
@@ -45,6 +50,7 @@ import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
+@TargetApi(Build.VERSION_CODES.O)
 class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(),
     VideoContract.View {
 
@@ -76,6 +82,22 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
 
     private val audioManager: AudioManager by lazy {
         getSystemService(Context.AUDIO_SERVICE) as AudioManager
+    }
+
+    private val audioFocusListener: AudioFocusListener by lazy {
+        AudioFocusListener(player)
+    }
+
+    private val audioFocusRequest: AudioFocusRequest by lazy {
+        val audioAttributes = AudioAttributes.Builder()
+            .setUsage(AudioAttributes.USAGE_MEDIA)
+            .setContentType(AudioAttributes.CONTENT_TYPE_MOVIE)
+            .build()
+        AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+            .setAudioAttributes(audioAttributes)
+            .setAcceptsDelayedFocusGain(true)
+            .setOnAudioFocusChangeListener(audioFocusListener)
+            .build()
     }
 
     override fun initPresenter() = videoPresenter
@@ -161,34 +183,48 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
     ) = videoPresenter.changedPipMode()
 
     private fun initExoPlayer(item: Video) {
-
         video_exo_player.setControlDispatcher(
             object : DefaultControlDispatcher() {
                 override fun dispatchSetPlayWhenReady(
                     player: Player?,
                     playWhenReady: Boolean
                 ): Boolean {
+                    return super.dispatchSetPlayWhenReady(
+                        player,
+                        when (item.files.external) {
+                            null -> {
+                                val res = when {
+                                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> audioManager.requestAudioFocus(
+                                        audioFocusRequest
+                                    )
+                                    else -> audioManager.requestAudioFocus(
+                                        audioFocusListener,
+                                        AudioManager.STREAM_MUSIC,
+                                        AudioManager.AUDIOFOCUS_GAIN
+                                    )
+                                }
 
-                    return when (item.files.external) {
-                        null -> {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                //audioManager.requestAudioFocus()
-                            } else {
+                                Log.d("audio response", res.toString())
+
+
+                                when (res) {
+                                    AudioManager.AUDIOFOCUS_REQUEST_GRANTED -> playWhenReady
+                                    else -> false
+                                }
 
                             }
-                            playWhenReady
-                        }
 
-                        else -> {
-                            startActivity(
-                                Intent(
-                                    Intent.ACTION_VIEW,
-                                    Uri.parse(item.files.external)
+                            else -> {
+                                startActivity(
+                                    Intent(
+                                        Intent.ACTION_VIEW,
+                                        Uri.parse(item.files.external)
+                                    )
                                 )
-                            )
-                            false
+                                false
+                            }
                         }
-                    }
+                    )
                 }
             }
         )

@@ -69,10 +69,11 @@ internal class GravityDelegate(
         }
 
         if (layoutManager.canScrollVertically()) {
-            if (gravity == Gravity.TOP) {
-                out[1] = distanceToStart(targetView, getVerticalHelper(layoutManager), false)
-            } else { // BOTTOM
-                out[1] = distanceToEnd(targetView, getVerticalHelper(layoutManager), false)
+            when (gravity) {
+                Gravity.TOP -> out[1] =
+                        distanceToStart(targetView, getVerticalHelper(layoutManager), false)
+                else -> // BOTTOM
+                    out[1] = distanceToEnd(targetView, getVerticalHelper(layoutManager), false)
             }
         } else {
             out[1] = 0

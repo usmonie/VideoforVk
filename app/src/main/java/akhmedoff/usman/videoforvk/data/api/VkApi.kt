@@ -16,7 +16,7 @@ interface VkApi {
     fun getUser(
         @Query("user_ids") users_id: String? = null,
         @Query("fields") fields: String = "nickname,photo_100,screen_name,photo_max,photo_max_orig,photo_id,has_photo,is_friend,friend_status,online,status,is_favorite"
-    ): Call<User>
+    ): Call<List<User>>
 
     @GET("video.get")
     fun getVideos(
