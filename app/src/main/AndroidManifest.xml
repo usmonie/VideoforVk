@@ -26,6 +26,18 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="vk.com"
+                    android:pathPattern="/video"
+                    android:scheme="https" />
+            </intent-filter>
         </activity>
 
         <activity
@@ -51,8 +63,9 @@
                 android:defaultHeight="640dp"
                 android:defaultWidth="330dp"
                 android:gravity="center"
-                android:minHeight="120dp"
+                android:minHeight="114dp"
                 android:minWidth="132dp" />
+
         </activity>
 
         <activity

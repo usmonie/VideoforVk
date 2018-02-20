@@ -51,6 +51,10 @@ interface VideoContract {
 
         fun showUi()
 
+        fun stopAudioFocusListener()
+
+        fun startAudioFocusListener()
+
         fun showProgress()
 
         fun hideProgress()
@@ -62,6 +66,23 @@ interface VideoContract {
         fun setPlayerFullscreen()
 
         fun setPlayerNormal()
+
+        fun setLiked()
+
+        fun setUnliked()
+
+        fun showShareDialog()
+
+        fun hideShareDialog()
+
+        fun showSendDialog()
+
+        fun hideSendDialog()
+
+        fun setAdded()
+
+        fun setDeleted()
+
     }
 
     interface Presenter : BaseContract.Presenter<View> {
@@ -74,5 +95,11 @@ interface VideoContract {
         fun pipToggleButton()
 
         fun changedPipMode()
+
+        fun liked()
+
+        fun share()
+
+        fun send()
     }
 }

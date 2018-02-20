@@ -11,6 +11,8 @@ import android.os.Bundle
 
 class SplashActivity : BaseActivity<SplashContract.View, SplashContract.Presenter>(),
     SplashContract.View {
+
+
     override lateinit var splashPresenter: SplashContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,6 +23,7 @@ class SplashActivity : BaseActivity<SplashContract.View, SplashContract.Presente
             )
         )
         super.onCreate(savedInstanceState)
+
     }
 
     override fun showMain() {

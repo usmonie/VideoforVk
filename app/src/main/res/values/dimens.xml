@@ -2,7 +2,6 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="fab_margin">16dp</dimen>
 
     <dimen name="exo_player_height">232dp</dimen>
 
@@ -14,7 +13,7 @@
     <dimen name="normal_text_size_small_video_item">14sp</dimen>
     <dimen name="max_text_size_small_video_item">216sp</dimen>
     <dimen name="height_main_list_item">236dp</dimen>
-    <dimen name="width_main_list_first_video">320dp</dimen>
+    <dimen name="width_main_list_first_video">328dp</dimen>
     <dimen name="height_main_list_small_item">108dp</dimen>
     <dimen name="width_main_list_small_item">192dp</dimen>
 </resources>

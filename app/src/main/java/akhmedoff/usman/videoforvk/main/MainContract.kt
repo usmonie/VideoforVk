@@ -40,8 +40,6 @@ interface MainContract {
 
         fun loadCatalogs()
 
-        fun pagination()
-
         fun error(error: Error, message: String)
 
     }

@@ -25,7 +25,6 @@ import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
 import android.support.design.widget.Snackbar
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.exoplayer2.DefaultControlDispatcher
@@ -93,6 +92,7 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
             .setUsage(AudioAttributes.USAGE_MEDIA)
             .setContentType(AudioAttributes.CONTENT_TYPE_MOVIE)
             .build()
+
         AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
             .setAudioAttributes(audioAttributes)
             .setAcceptsDelayedFocusGain(true)
@@ -188,46 +188,33 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
                 override fun dispatchSetPlayWhenReady(
                     player: Player?,
                     playWhenReady: Boolean
-                ): Boolean {
-                    return super.dispatchSetPlayWhenReady(
-                        player,
-                        when (item.files.external) {
-                            null -> {
-                                val res = when {
-                                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> audioManager.requestAudioFocus(
-                                        audioFocusRequest
-                                    )
-                                    else -> audioManager.requestAudioFocus(
-                                        audioFocusListener,
-                                        AudioManager.STREAM_MUSIC,
-                                        AudioManager.AUDIOFOCUS_GAIN
-                                    )
-                                }
+                ) = super.dispatchSetPlayWhenReady(
+                    player,
+                    when (item.files.external) {
+                        null -> {
+                            val res = getAudioFocusResponse()
 
-                                Log.d("audio response", res.toString())
-
-
-                                when (res) {
-                                    AudioManager.AUDIOFOCUS_REQUEST_GRANTED -> playWhenReady
-                                    else -> false
-                                }
-
-                            }
-
-                            else -> {
-                                startActivity(
-                                    Intent(
-                                        Intent.ACTION_VIEW,
-                                        Uri.parse(item.files.external)
-                                    )
-                                )
-                                false
+                            when (res) {
+                                AudioManager.AUDIOFOCUS_REQUEST_GRANTED -> playWhenReady
+                                else -> false
                             }
                         }
-                    )
-                }
+
+                        else -> {
+                            startActivity(
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse(item.files.external)
+                                )
+                            )
+                            false
+                        }
+                    }
+                )
+
             }
         )
+
         val mp4VideoUri = Uri.parse(
             when {
                 item.files.hls != null -> item.files.hls
@@ -256,6 +243,15 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
         }
     }
 
+    private fun getAudioFocusResponse() =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            audioManager.requestAudioFocus(audioFocusRequest)
+        else audioManager.requestAudioFocus(
+            audioFocusListener,
+            AudioManager.STREAM_MUSIC,
+            AudioManager.AUDIOFOCUS_GAIN
+        )
+
     override fun showPlayer() {
         video_exo_player.visibility = View.VISIBLE
         video_exo_player.showController()
@@ -263,6 +259,14 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
 
     override fun hidePlayer() {
         video_exo_player.visibility = View.GONE
+    }
+
+    override fun stopAudioFocusListener() {
+        audioFocusListener.player = null
+    }
+
+    override fun startAudioFocusListener() {
+        audioFocusListener.player = player
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -275,11 +279,11 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
         video_title?.text = item.title
         video_views?.text = item.views?.toString()
 
-        item.views?.let {
+        item.views?.let { views ->
             video_views?.text = resources.getQuantityString(
                 R.plurals.video_views,
-                it,
-                NumberFormat.getIntegerInstance().format(it)
+                views,
+                NumberFormat.getIntegerInstance().format(views)
             )
         }
 
@@ -357,7 +361,7 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
 
     override fun hideUi() {
         recommendation_recycler_video_page?.visibility = View.GONE
-        cardView?.visibility = View.GONE
+        owner_card?.visibility = View.GONE
         video_title?.visibility = View.GONE
         video_views?.visibility = View.GONE
         video_date?.visibility = View.GONE
@@ -367,7 +371,7 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
 
     override fun showUi() {
         recommendation_recycler_video_page?.visibility = View.VISIBLE
-        cardView?.visibility = View.VISIBLE
+        owner_card?.visibility = View.VISIBLE
         video_title?.visibility = View.VISIBLE
         video_views?.visibility = View.VISIBLE
         video_date?.visibility = View.VISIBLE
@@ -378,4 +382,37 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
     override fun getVideoPosition() = player?.currentPosition
 
     override fun getVideoId() = intent.getStringExtra(VideoActivity.VIDEO_ID)!!
+
+    override fun setLiked() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun setUnliked() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun showShareDialog() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun hideShareDialog() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun showSendDialog() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun hideSendDialog() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun setAdded() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun setDeleted() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
 }

@@ -5,9 +5,18 @@ import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.app.AppCompatDelegate
 
 abstract class BaseActivity<V : BaseContract.View, P : BaseContract.Presenter<V>> :
     AppCompatActivity(), BaseContract.View {
+
+    companion object {
+        init {
+            AppCompatDelegate.setDefaultNightMode(
+                AppCompatDelegate.MODE_NIGHT_AUTO
+            )
+        }
+    }
 
     protected lateinit var presenter: P
 

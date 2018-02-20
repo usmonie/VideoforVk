@@ -35,6 +35,11 @@ class VideoPresenter(
         }
     }
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+    fun onResume() {
+        view?.startAudioFocusListener()
+    }
+
     override fun loadVideo(id: String) {
         view?.let { view ->
             view.showProgress()
@@ -94,25 +99,27 @@ class VideoPresenter(
                         view.showPlayer()
                     }
                 }
-
             })
         }
 
     }
 
     override fun clickFullscreen() {
-        isFullscreen = when (isFullscreen) {
-            true -> {
-                view?.showSmallScreen()
-                view?.setPlayerNormal()
-                false
-            }
-            false -> {
-                view?.showFullscreen(video)
-                view?.setPlayerFullscreen()
-                true
+        view?.let { view ->
+            isFullscreen = when (isFullscreen) {
+                true -> {
+                    view.showSmallScreen()
+                    view.setPlayerNormal()
+                    false
+                }
+                false -> {
+                    view.showFullscreen(video)
+                    view.setPlayerFullscreen()
+                    true
+                }
             }
         }
+
     }
 
     override fun changedPipMode() {
@@ -133,6 +140,7 @@ class VideoPresenter(
             view.pauseVideo()
             view.getVideoState()?.let { isStartedVideo -> isStarted = isStartedVideo }
             view.getVideoPosition()?.let { videoPosition -> position = videoPosition }
+            view.stopAudioFocusListener()
         }
     }
 
@@ -149,4 +157,17 @@ class VideoPresenter(
         view?.hideUi()
         view?.enterPipMode()
     }
+
+    override fun liked() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun share() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun send() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
 }

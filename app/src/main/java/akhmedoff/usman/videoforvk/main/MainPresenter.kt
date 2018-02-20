@@ -13,7 +13,6 @@ import android.arch.lifecycle.OnLifecycleEvent
 class MainPresenter(private val videoRepository: VideoRepository) :
     BasePresenter<MainContract.View>(), MainContract.Presenter {
 
-
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun onCreate() = refresh()
 
@@ -21,17 +20,13 @@ class MainPresenter(private val videoRepository: VideoRepository) :
         loadCatalogs()
     }
 
-    override fun pagination() {
-        loadCatalogs()
-    }
-
     override fun loadCatalogs() {
         view?.showLoading()
-        view?.let {
-            videoRepository.getCatalog().observe(it, Observer { pagedList ->
+        view?.let { view ->
+            videoRepository.getCatalog().observe(view, Observer { pagedList ->
                 pagedList?.let { catalogs ->
-                    view?.hideLoading()
-                    view?.showList(catalogs)
+                    view.hideLoading()
+                    view.showList(catalogs)
                 }
             })
         }

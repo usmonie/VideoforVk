@@ -134,8 +134,8 @@ class VideoDeserializer : JsonDeserializer<ResponseVideo> {
                     groupJson["screen_name"].asString,
                     groupJson["is_closed"].asJsonPrimitive.asBoolean,
                     groupJson["type"].asString,
-                    groupJson["is_admin"].asJsonPrimitive.asBoolean,
-                    groupJson["is_member"].asJsonPrimitive.asBoolean,
+                    groupJson["is_admin"].asBoolean,
+                    groupJson["is_member"].asBoolean,
                     groupJson["photo_50"].asString,
                     groupJson["photo_100"].asString,
                     groupJson["photo_200"].asString

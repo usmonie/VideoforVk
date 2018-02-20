@@ -1,14 +1,14 @@
 package akhmedoff.usman.videoforvk.model
 
 class Group(
-    val id: Long,
-    val name: String,
-    val screenName: String,
-    val isClosed: Boolean,
-    val type: String,
-    val isAdmin: Boolean,
-    val isMember: Boolean,
-    val photo50: String,
-    val photo100: String,
-    val photo200: String
+    var id: Long,
+    var name: String,
+    var screenName: String,
+    var isClosed: Boolean,
+    var type: String,
+    var isAdmin: Boolean,
+    var isMember: Boolean,
+    var photo50: String,
+    var photo100: String,
+    var photo200: String
 )

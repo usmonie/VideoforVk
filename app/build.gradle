@@ -16,7 +16,7 @@ android {
         applicationId "akhmedoff.usman.videoforvk"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 10
+        versionCode 11
         versionName "1.2.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -52,6 +52,9 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:$archLifecycleVersion"
     annotationProcessor "android.arch.lifecycle:compiler:$archLifecycleVersion"
     implementation "android.arch.paging:runtime:1.0.0-alpha5"
+
+    implementation "android.arch.persistence.room:runtime:1.0.0"
+    annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 

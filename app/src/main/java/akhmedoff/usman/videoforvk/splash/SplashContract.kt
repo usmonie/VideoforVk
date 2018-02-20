@@ -10,6 +10,7 @@ interface SplashContract {
         fun showMain()
 
         fun showLogin()
+
     }
 
     interface Presenter : BaseContract.Presenter<View>
