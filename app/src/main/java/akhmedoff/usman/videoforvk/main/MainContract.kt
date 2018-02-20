@@ -28,6 +28,10 @@ interface MainContract {
 
         fun showProfile()
 
+        fun showUserAvatar(avatarUrl: String)
+
+        fun showUserName(name: String)
+
     }
 
     interface Presenter : BaseContract.Presenter<View> {

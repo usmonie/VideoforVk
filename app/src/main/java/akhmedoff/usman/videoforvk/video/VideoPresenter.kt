@@ -8,8 +8,8 @@ import akhmedoff.usman.videoforvk.model.ResponseVideo
 import akhmedoff.usman.videoforvk.model.User
 import akhmedoff.usman.videoforvk.model.Video
 import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.OnLifecycleEvent
-import android.util.Log
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -85,21 +85,19 @@ class VideoPresenter(
 
     private fun loadUser(user: User) {
         view?.let { view ->
-            userRepository.getUser(user.id.toString()).enqueue(object : Callback<List<User>> {
-                override fun onFailure(call: Call<List<User>>?, t: Throwable?) {
+            userRepository
+                .getUsers(user.id.toString())
+                .observe(view, Observer { users ->
                     view.hideProgress()
-                    Log.d("failure", t.toString())
-                }
-
-                override fun onResponse(call: Call<List<User>>?, response: Response<List<User>>?) {
-                    response?.body()?.let { users ->
-                        view.showUserOwnerInfo(users[0])
+                    users?.let {
+                        view.showUserOwnerInfo(it[0])
                         view.hideProgress()
                         view.showUi()
                         view.showPlayer()
+
                     }
-                }
-            })
+
+                })
         }
 
     }

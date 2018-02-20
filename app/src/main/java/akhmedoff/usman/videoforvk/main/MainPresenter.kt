@@ -2,6 +2,7 @@ package akhmedoff.usman.videoforvk.main
 
 import akhmedoff.usman.videoforvk.Error
 import akhmedoff.usman.videoforvk.base.BasePresenter
+import akhmedoff.usman.videoforvk.data.repository.UserRepository
 import akhmedoff.usman.videoforvk.data.repository.VideoRepository
 import akhmedoff.usman.videoforvk.model.Catalog
 import akhmedoff.usman.videoforvk.model.CatalogItem
@@ -10,25 +11,48 @@ import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.OnLifecycleEvent
 
-class MainPresenter(private val videoRepository: VideoRepository) :
+class MainPresenter(
+    private val userRepository: UserRepository,
+    private val videoRepository: VideoRepository
+) :
     BasePresenter<MainContract.View>(), MainContract.Presenter {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun onCreate() = refresh()
 
     override fun refresh() {
+        view?.showLoading()
+        loadUserInfo()
         loadCatalogs()
     }
 
-    override fun loadCatalogs() {
-        view?.showLoading()
+    private fun loadUserInfo() {
         view?.let { view ->
-            videoRepository.getCatalog().observe(view, Observer { pagedList ->
-                pagedList?.let { catalogs ->
-                    view.hideLoading()
-                    view.showList(catalogs)
-                }
-            })
+            userRepository
+                .getUsers()
+                .observe(view, Observer { users ->
+                    users?.let {
+                        val user = it[0]
+
+                        view.showUserName(user.firstName + " " + user.lastName)
+
+                        if (user.hasPhoto) view.showUserAvatar(user.photo100)
+                    }
+
+                })
+        }
+    }
+
+    override fun loadCatalogs() {
+        view?.let { view ->
+            videoRepository
+                .getCatalog()
+                .observe(view, Observer { pagedList ->
+                    pagedList?.let { catalogs ->
+                        view.hideLoading()
+                        view.showList(catalogs)
+                    }
+                })
         }
     }
 

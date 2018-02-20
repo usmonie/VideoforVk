@@ -3,6 +3,10 @@ package akhmedoff.usman.videoforvk.data.repository
 import akhmedoff.usman.videoforvk.BuildConfig
 import akhmedoff.usman.videoforvk.data.api.VkApi
 import akhmedoff.usman.videoforvk.data.local.UserSettings
+import akhmedoff.usman.videoforvk.model.User
+import android.arch.core.util.Function
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.Transformations
 
 class UserRepository(
     private val userSettings: UserSettings,
@@ -11,9 +15,7 @@ class UserRepository(
 
     var isLogged = userSettings.isLogged
 
-    fun saveToken(token: String) {
-        userSettings.saveToken(token)
-    }
+    fun saveToken(token: String) = userSettings.saveToken(token)
 
     fun auth(
         username: String,
@@ -34,6 +36,14 @@ class UserRepository(
 
     )
 
-    fun getUser(users_id: String? = null) = api.getUser(users_id)
+    fun getUsers(users_id: String? = null): LiveData<List<User>> {
+        val usersLiveData = api.getUsers(users_id)
 
+        return Transformations.map(usersLiveData, Function {
+            return@Function when {
+                it.isSuccessfull -> it.response
+                else -> listOf()
+            }
+        })
+    }
 }

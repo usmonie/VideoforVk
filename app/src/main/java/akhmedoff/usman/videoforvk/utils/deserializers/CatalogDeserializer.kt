@@ -52,7 +52,13 @@ class CatalogDeserializer : JsonDeserializer<ResponseCatalog> {
                         videoJson["photo_640"]?.let { photo640 = it.asString }
                         videoJson["photo_800"]?.let { photo800 = it.asString }
                         videoJson["platform"]?.let { platform = it.asString }
-                        canAdd = videoJson["can_add"]?.asBoolean ?: false
+
+                        canAdd = when (videoJson["can_add"]?.asInt) {
+                            null -> false
+                            0 -> false
+                            else -> true
+                        }
+
                         videoJson["type"]?.let {
                             when (it.asString) {
                                 "video" -> type = CatalogItemType.VIDEO

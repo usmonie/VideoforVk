@@ -1,33 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
+    android:id="@+id/main_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="false"
-        app:expanded="true"
-        app:title="@string/app_name">
+        android:layout_height="@dimen/main_app_bar_layout_height">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:fitsSystemWindows="true"
-            app:title="@string/app_name" />
+            android:layout_height="match_parent"
+            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
+            app:layout_scrollInterpolator="@android:anim/decelerate_interpolator"
+            app:toolbarId="@+id/toolbar">
+
+            <akhmedoff.usman.videoforvk.view.CircleImageView
+                android:id="@+id/avatar_image_view"
+                android:layout_width="@dimen/image_width"
+                android:layout_height="@dimen/image_width"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                app:layout_behavior=".view.UserAvatarBehaviour"
+                tools:src="@drawable/ic_picture_in_picture_white_24dp" />
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:theme="@style/ThemeOverlay.AppCompat.Dark"
+                app:title="" />
+        </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
+
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/update_home_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/home_recycler"
@@ -35,7 +51,9 @@
             android:layout_height="match_parent"
             android:clipChildren="true"
             android:clipToPadding="true"
+            app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior"
             tools:listitem="@layout/catalog_item" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
-</LinearLayout>
+
+</android.support.design.widget.CoordinatorLayout>

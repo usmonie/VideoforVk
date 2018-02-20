@@ -95,12 +95,32 @@ class VideoDeserializer : JsonDeserializer<ResponseVideo> {
             }
             item.files = files
             item.player = itemJson["player"].asString
-            item.canAdd = itemJson["can_add"].asJsonPrimitive.asBoolean
-            item.canComment = itemJson["can_comment"].asJsonPrimitive.asBoolean
-            item.canRepost = itemJson["can_repost"].asJsonPrimitive.asBoolean
+
+            item.canAdd = when (itemJson["can_add"]?.asInt) {
+                null -> false
+                0 -> false
+                else -> true
+            }
+
+            item.canRepost = when (itemJson["can_repost"]?.asInt) {
+                null -> false
+                0 -> false
+                else -> true
+            }
+
+            item.canComment = when (itemJson["can_comment"]?.asInt) {
+                null -> false
+                0 -> false
+                else -> true
+            }
+
+            item.repeat = when (itemJson["repeat"]?.asInt) {
+                null -> false
+                0 -> false
+                else -> true
+            }
             item.likes = likes
             item.reposts = reposts
-            item.repeat = itemJson["repeat"].asJsonPrimitive.asBoolean
 
             items.add(item)
         }

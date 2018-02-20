@@ -16,4 +16,10 @@
     <dimen name="width_main_list_first_video">328dp</dimen>
     <dimen name="height_main_list_small_item">108dp</dimen>
     <dimen name="width_main_list_small_item">192dp</dimen>
+    <dimen name="main_app_bar_layout_height">298dp</dimen>
+
+
+    <dimen name="spacing_normal">16dp</dimen>
+    <dimen name="image_width">120dp</dimen>
+    <dimen name="image_final_width">32dp</dimen>
 </resources>

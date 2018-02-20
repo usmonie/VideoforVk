@@ -26,12 +26,33 @@ class UserDeserializer : JsonDeserializer<List<User>> {
             it.asJsonObject["photo_max"]?.let { user.photoMax = it.asString }
             it.asJsonObject["photo_max_orig"]?.let { user.photoMaxOrig = it.asString }
             it.asJsonObject["photo_id"]?.let { user.photoId = it.asString }
-            it.asJsonObject["has_photo"]?.let { user.hasPhoto = it.asJsonPrimitive.asBoolean }
-            it.asJsonObject["is_friend"]?.let { user.isFriend = it.asJsonPrimitive.asBoolean }
+
+            user.hasPhoto = when (it.asJsonObject["has_photo"]?.asInt) {
+                null -> false
+                0 -> false
+                else -> true
+            }
+
+            user.isFriend = when (it.asJsonObject["is_friend"]?.asInt) {
+                null -> false
+                0 -> false
+                else -> true
+            }
+
+            user.isFavorite = when (it.asJsonObject["is_favorite"]?.asInt) {
+                null -> false
+                0 -> false
+                else -> true
+            }
+
+            user.online = when (it.asJsonObject["online"]?.asInt) {
+                null -> false
+                0 -> false
+                else -> true
+            }
+
             it.asJsonObject["friend_status"]?.let { user.friendStatus = it.asInt }
-            it.asJsonObject["online"]?.let { user.online = it.asJsonPrimitive.asBoolean }
             it.asJsonObject["status"]?.let { user.status = it.asString }
-            it.asJsonObject["is_favorite"]?.let { user.isFavorite = it.asJsonPrimitive.asBoolean }
             users.add(user)
         }
 

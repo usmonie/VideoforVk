@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:foreground="@drawable/video_gradient"
-        android:scaleType="fitXY" />
+        android:scaleType="centerCrop" />
 
     <TextView
         android:id="@+id/video_title"
