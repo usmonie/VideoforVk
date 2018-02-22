@@ -5,6 +5,7 @@ import akhmedoff.usman.videoforvk.base.BaseContract
 import akhmedoff.usman.videoforvk.model.Catalog
 import akhmedoff.usman.videoforvk.model.CatalogItem
 import android.arch.paging.PagedList
+import android.view.MotionEvent
 
 interface MainContract {
 
@@ -46,5 +47,6 @@ interface MainContract {
 
         fun error(error: Error, message: String)
 
+        fun pressEvent(item: CatalogItem, event: MotionEvent)
     }
 }

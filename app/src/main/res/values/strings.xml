@@ -13,7 +13,7 @@
     <string name="followed">Followed</string>
     <string name="error_loading">Loading error</string>
     <string name="search">Search</string>
-    <string name="main_screen">Main</string>
+    <string name="main_screen">Feed</string>
     <string name="password_error">Check your password</string>
     <string name="username_error">Check your username</string>
     <string name="enter_captcha">Enter captcha</string>

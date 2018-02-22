@@ -10,6 +10,7 @@ import akhmedoff.usman.videoforvk.model.CatalogItemType
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.OnLifecycleEvent
+import android.view.MotionEvent
 
 class MainPresenter(
     private val userRepository: UserRepository,
@@ -17,12 +18,13 @@ class MainPresenter(
 ) :
     BasePresenter<MainContract.View>(), MainContract.Presenter {
 
+
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun onCreate() = refresh()
 
     override fun refresh() {
         view?.showLoading()
-        loadUserInfo()
+        //loadUserInfo()
         loadCatalogs()
     }
 
@@ -32,11 +34,13 @@ class MainPresenter(
                 .getUsers()
                 .observe(view, Observer { users ->
                     users?.let {
-                        val user = it[0]
+                        if (it.isNotEmpty()) {
+                            val user = it[0]
 
-                        view.showUserName(user.firstName + " " + user.lastName)
+                            view.showUserName(user.firstName + " " + user.lastName)
 
-                        if (user.hasPhoto) view.showUserAvatar(user.photo100)
+                            if (user.hasPhoto) view.showUserAvatar(user.photo100)
+                        }
                     }
 
                 })
@@ -70,5 +74,9 @@ class MainPresenter(
 
     override fun error(error: Error, message: String) {
 
+    }
+
+    override fun pressEvent(item: CatalogItem, event: MotionEvent) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

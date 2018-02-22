@@ -47,8 +47,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/enter_code"
             android:inputType="number"
-            android:singleLine="true"
-            android:textColor="@android:color/white" />
+            android:singleLine="true" />
     </android.support.design.widget.TextInputLayout>
 
     <Button

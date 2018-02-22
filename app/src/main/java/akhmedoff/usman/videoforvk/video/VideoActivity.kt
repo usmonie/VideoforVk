@@ -11,6 +11,7 @@ import akhmedoff.usman.videoforvk.model.Group
 import akhmedoff.usman.videoforvk.model.User
 import akhmedoff.usman.videoforvk.model.Video
 import akhmedoff.usman.videoforvk.player.AudioFocusListener
+import akhmedoff.usman.videoforvk.player.SimpleControlDispatcher
 import akhmedoff.usman.videoforvk.utils.vkApi
 import android.annotation.TargetApi
 import android.app.PictureInPictureParams
@@ -27,9 +28,7 @@ import android.support.annotation.RequiresApi
 import android.support.design.widget.Snackbar
 import android.view.View
 import android.view.ViewGroup
-import com.google.android.exoplayer2.DefaultControlDispatcher
 import com.google.android.exoplayer2.ExoPlayerFactory
-import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
@@ -77,6 +76,16 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
 
     override lateinit var videoPresenter: VideoPresenter
 
+
+    private val file: File by lazy {
+        File("${filesDir.parent}/cache")
+    }
+
+    private val cacheDataSourceFactory:
+            CacheDataSourceFactory by lazy {
+        CacheDataSourceFactory(SimpleCache(file, NoOpCacheEvictor()), dataSourceFactory)
+    }
+
     private var player: SimpleExoPlayer? = null
 
     private val audioManager: AudioManager by lazy {
@@ -85,6 +94,17 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
 
     private val audioFocusListener: AudioFocusListener by lazy {
         AudioFocusListener(player)
+    }
+
+    private val simpleControlDispatcher: SimpleControlDispatcher by lazy {
+        SimpleControlDispatcher(audioFocusListener, audioManager, {
+            startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(it)
+                )
+            )
+        }, audioFocusRequest)
     }
 
     private val audioFocusRequest: AudioFocusRequest by lazy {
@@ -110,6 +130,7 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
                 api = vkApi
             )
         )
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video)
 
@@ -183,37 +204,8 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
     ) = videoPresenter.changedPipMode()
 
     private fun initExoPlayer(item: Video) {
-        video_exo_player.setControlDispatcher(
-            object : DefaultControlDispatcher() {
-                override fun dispatchSetPlayWhenReady(
-                    player: Player?,
-                    playWhenReady: Boolean
-                ) = super.dispatchSetPlayWhenReady(
-                    player,
-                    when (item.files.external) {
-                        null -> {
-                            val res = getAudioFocusResponse()
-
-                            when (res) {
-                                AudioManager.AUDIOFOCUS_REQUEST_GRANTED -> playWhenReady
-                                else -> false
-                            }
-                        }
-
-                        else -> {
-                            startActivity(
-                                Intent(
-                                    Intent.ACTION_VIEW,
-                                    Uri.parse(item.files.external)
-                                )
-                            )
-                            false
-                        }
-                    }
-                )
-
-            }
-        )
+        simpleControlDispatcher.item = item
+        video_exo_player.setControlDispatcher(simpleControlDispatcher)
 
         val mp4VideoUri = Uri.parse(
             when {
@@ -227,10 +219,6 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
             }
         )
 
-        val file = File("${filesDir.parent}/cache")
-        val cacheDataSourceFactory =
-            CacheDataSourceFactory(SimpleCache(file, NoOpCacheEvictor()), dataSourceFactory)
-
         // This is the MediaSource representing the media to be played.
         val videoSource = when {
             item.files.hls != null -> HlsMediaSource.Factory(cacheDataSourceFactory)
@@ -242,15 +230,6 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
             it.seekTo(1)
         }
     }
-
-    private fun getAudioFocusResponse() =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            audioManager.requestAudioFocus(audioFocusRequest)
-        else audioManager.requestAudioFocus(
-            audioFocusListener,
-            AudioManager.STREAM_MUSIC,
-            AudioManager.AUDIOFOCUS_GAIN
-        )
 
     override fun showPlayer() {
         video_exo_player.visibility = View.VISIBLE

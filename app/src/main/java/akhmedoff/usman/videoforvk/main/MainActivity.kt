@@ -17,7 +17,7 @@ import android.support.design.widget.Snackbar
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
-import com.squareup.picasso.Picasso
+import android.view.MotionEvent
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), MainContract.View {
@@ -27,7 +27,15 @@ class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), 
 
     private val adapter: MainRecyclerAdapter by lazy {
 
-        val adapter = MainRecyclerAdapter { presenter.clickItem(it) }
+        val adapter = MainRecyclerAdapter({ presenter.clickItem(it) },
+            { item: CatalogItem, event: MotionEvent? ->
+                event?.let {
+                    presenter.pressEvent(
+                        item,
+                        it
+                    )
+                }
+            })
 
         adapter.setHasStableIds(true)
         return@lazy adapter
@@ -44,9 +52,7 @@ class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        setSupportActionBar(toolbar)
-        //supportActionBar?.title = getText(R.string.main_screen)
-
+        toolbar.title = getText(R.string.main_screen)
         val layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         home_recycler.layoutManager = layoutManager
         home_recycler.adapter = adapter
@@ -55,12 +61,10 @@ class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), 
     }
 
     override fun showUserAvatar(avatarUrl: String) {
-        Picasso.with(this).load(avatarUrl).into(avatar_image_view)
     }
 
     override fun showUserName(name: String) {
-        toolbar_layout.title = name
-        supportActionBar?.title = name
+
     }
 
     override fun showList(videos: PagedList<Catalog>) = adapter.setList(videos)

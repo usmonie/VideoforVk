@@ -146,21 +146,33 @@ class VideoDeserializer : JsonDeserializer<ResponseVideo> {
 
         groupsJson?.forEach {
             val groupJson = it.asJsonObject
+            val group = Group()
+            group.id = groupJson["id"].asJsonPrimitive.asLong
+            group.name = groupJson["name"].asString
+            group.screenName = groupJson["screen_name"].asString
 
-            groups.add(
-                Group(
-                    groupJson["id"].asJsonPrimitive.asLong,
-                    groupJson["name"].asString,
-                    groupJson["screen_name"].asString,
-                    groupJson["is_closed"].asJsonPrimitive.asBoolean,
-                    groupJson["type"].asString,
-                    groupJson["is_admin"].asBoolean,
-                    groupJson["is_member"].asBoolean,
-                    groupJson["photo_50"].asString,
-                    groupJson["photo_100"].asString,
-                    groupJson["photo_200"].asString
-                )
-            )
+            group.isClosed = when (groupJson["is_closed"]?.asInt) {
+                null -> false
+                0 -> false
+                else -> true
+            }
+            group.type = groupJson["type"].asString
+
+            group.isAdmin = when (groupJson["is_admin"]?.asInt) {
+                null -> false
+                0 -> false
+                else -> true
+            }
+
+            group.isMember = when (groupJson["is_member"]?.asInt) {
+                null -> false
+                0 -> false
+                else -> true
+            }
+            group.photo50 = groupJson["photo_50"].asString
+            group.photo100 = groupJson["photo_100"].asString
+            group.photo200 = groupJson["photo_200"].asString
+            groups.add(group)
         }
 
         return ResponseVideo(jsonObject["count"].asJsonPrimitive.asInt, items, profiles, groups)

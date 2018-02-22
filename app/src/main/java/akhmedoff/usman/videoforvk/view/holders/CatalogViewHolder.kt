@@ -11,18 +11,21 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.LinearLayoutManager.HORIZONTAL
 import android.support.v7.widget.RecyclerView
 import android.view.Gravity
+import android.view.MotionEvent
 import android.view.View
 import android.widget.TextView
 import com.squareup.picasso.Picasso
 
 class CatalogViewHolder(
     itemView: View,
-    clickListener: (CatalogItem) -> Unit
+    clickListener: (CatalogItem) -> Unit,
+    longClickListener: (CatalogItem, MotionEvent?) -> Unit
 ) : AbstractViewHolder<Catalog>(itemView) {
 
     private val adapter = CatalogRecyclerAdapter(
         Picasso.with(itemView.context),
-        clickListener
+        clickListener,
+        longClickListener
     )
 
     private val catalogTitle = itemView.findViewById<TextView>(R.id.catalog_title)
@@ -40,6 +43,8 @@ class CatalogViewHolder(
 
         val snapHelper = GravitySnapHelper(Gravity.START)
         snapHelper.attachToRecyclerView(catalogRecycler)
+
+
     }
 
     private fun getSpanSizeLookup() = object : GridLayoutManager.SpanSizeLookup() {

@@ -21,6 +21,5 @@ class CaptchaDialog(context: Context, private val listener: (String) -> Unit) : 
 
     fun loadCaptcha(captchaUrl: String) =
         Picasso.with(context).load(captchaUrl).into(captcha_image_view)
-
 }
 

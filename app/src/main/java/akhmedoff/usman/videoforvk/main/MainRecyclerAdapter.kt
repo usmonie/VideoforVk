@@ -7,9 +7,13 @@ import akhmedoff.usman.videoforvk.view.holders.CatalogViewHolder
 import android.arch.paging.PagedListAdapter
 import android.support.v7.recyclerview.extensions.DiffCallback
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.ViewGroup
 
-class MainRecyclerAdapter(private val clickListener: (CatalogItem) -> Unit) :
+class MainRecyclerAdapter(
+    private val clickListener: (CatalogItem) -> Unit,
+    private val longClickListener: (CatalogItem, MotionEvent?) -> Unit
+) :
     PagedListAdapter<Catalog, CatalogViewHolder>(CATALOG_COMPARATOR) {
 
     companion object {
@@ -29,7 +33,7 @@ class MainRecyclerAdapter(private val clickListener: (CatalogItem) -> Unit) :
                 parent,
                 false
             ),
-            clickListener
+            clickListener, longClickListener
         )
 
     override fun onBindViewHolder(holder: CatalogViewHolder, position: Int) {
