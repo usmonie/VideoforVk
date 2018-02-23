@@ -1,7 +1,7 @@
 package akhmedoff.usman.videoforvk.view.holders
 
 import akhmedoff.usman.videoforvk.R
-import akhmedoff.usman.videoforvk.model.CatalogItem
+import akhmedoff.usman.videoforvk.model.Item
 import android.graphics.Bitmap
 import android.support.v7.widget.CardView
 import android.view.View
@@ -10,14 +10,14 @@ import android.widget.TextView
 import com.squareup.picasso.Picasso
 
 class VideoViewHolder(private val picasso: Picasso, itemView: View) :
-    AbstractViewHolder<CatalogItem>(itemView) {
+    AbstractViewHolder<Item>(itemView) {
 
-    val cardView = itemView.findViewById<CardView>(R.id.catalog_item_cardView)
+    val cardView = itemView.findViewById<CardView>(R.id.video_item_cardView)
 
-    private val videoFrame = itemView.findViewById<ImageView>(R.id.video_frame)
+    private val videoFrame = itemView.findViewById<ImageView>(R.id.video_poster)
     private val videoTitle = itemView.findViewById<TextView>(R.id.video_title)
 
-    override fun bind(item: CatalogItem) {
+    override fun bind(item: Item) {
 
         val imageUri = when {
             item.photo800 != null -> item.photo800

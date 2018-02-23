@@ -10,7 +10,6 @@ import akhmedoff.usman.videoforvk.model.CatalogItemType
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.OnLifecycleEvent
-import android.view.MotionEvent
 
 class MainPresenter(
     private val userRepository: UserRepository,
@@ -72,11 +71,11 @@ class MainPresenter(
         }
     }
 
-    override fun error(error: Error, message: String) {
-
+    override fun searchClicked() {
+        view?.startSearch()
     }
 
-    override fun pressEvent(item: CatalogItem, event: MotionEvent) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun error(error: Error, message: String) {
+
     }
 }

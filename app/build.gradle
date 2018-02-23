@@ -16,8 +16,8 @@ android {
         applicationId "akhmedoff.usman.videoforvk"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 11
-        versionName "1.2.4"
+        versionCode 12
+        versionName "1.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         buildConfigField('String', 'VK_APP_ID', vk_app_id)
@@ -66,6 +66,7 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer:2.6.1'
     implementation 'com.google.firebase:firebase-core:11.8.0'
     implementation 'com.google.firebase:firebase-perf:11.8.0'
+
     implementation('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
         transitive = true
     }

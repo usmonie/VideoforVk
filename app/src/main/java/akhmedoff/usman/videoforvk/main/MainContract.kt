@@ -5,7 +5,6 @@ import akhmedoff.usman.videoforvk.base.BaseContract
 import akhmedoff.usman.videoforvk.model.Catalog
 import akhmedoff.usman.videoforvk.model.CatalogItem
 import android.arch.paging.PagedList
-import android.view.MotionEvent
 
 interface MainContract {
 
@@ -33,6 +32,8 @@ interface MainContract {
 
         fun showUserName(name: String)
 
+        fun startSearch()
+
     }
 
     interface Presenter : BaseContract.Presenter<View> {
@@ -47,6 +48,6 @@ interface MainContract {
 
         fun error(error: Error, message: String)
 
-        fun pressEvent(item: CatalogItem, event: MotionEvent)
+        fun searchClicked()
     }
 }

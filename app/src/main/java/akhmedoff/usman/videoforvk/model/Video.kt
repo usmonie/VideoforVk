@@ -10,9 +10,7 @@ class Video : Item() {
     lateinit var player: String
     var canComment: Boolean = false
     var canRepost: Boolean = false
-    lateinit var likes: Likes
-    lateinit var reposts: Reposts
+    var likes: Likes? = null
+    var reposts: Reposts? = null
     var repeat: Boolean = false
-
-
 }

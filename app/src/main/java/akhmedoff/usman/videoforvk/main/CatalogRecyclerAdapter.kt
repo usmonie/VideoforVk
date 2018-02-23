@@ -4,15 +4,15 @@ import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.model.CatalogItem
 import akhmedoff.usman.videoforvk.model.CatalogItemType
 import akhmedoff.usman.videoforvk.view.holders.VideoViewHolder
-import android.support.v4.view.GestureDetectorCompat
 import android.support.v7.widget.RecyclerView
-import android.view.*
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import com.squareup.picasso.Picasso
+
 
 class CatalogRecyclerAdapter(
     private val picasso: Picasso,
-    private val clickListener: (CatalogItem) -> Unit,
-    private val gestureListener: (CatalogItem, MotionEvent?) -> Unit
+    private val clickListener: (CatalogItem) -> Unit
 ) : RecyclerView.Adapter<VideoViewHolder>() {
 
     var items: List<CatalogItem>? = null
@@ -27,26 +27,9 @@ class CatalogRecyclerAdapter(
             )
         )
 
-
         items?.let { items ->
             holder.itemView.setOnClickListener {
                 clickListener(items[holder.adapterPosition])
-            }
-
-            val gestureDetectorCompat = GestureDetectorCompat(parent?.context, object :
-                GestureDetector.SimpleOnGestureListener() {
-                override fun onLongPress(e: MotionEvent?) {
-
-
-                    gestureListener(items[holder.adapterPosition], e)
-                    super.onLongPress(e)
-                }
-            })
-
-            gestureDetectorCompat.setIsLongpressEnabled(true)
-
-            holder.itemView.setOnTouchListener { _: View, motionEvent: MotionEvent ->
-                return@setOnTouchListener gestureDetectorCompat.onTouchEvent(motionEvent)
             }
         }
 

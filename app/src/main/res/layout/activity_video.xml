@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
-            app:srcCompat="@drawable/ic_favorite_border_white_24dp" />
+            app:srcCompat="@drawable/ic_favorite_border" />
 
         <ImageView
             android:id="@+id/share_button"
@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
-            app:srcCompat="@drawable/ic_share_white_24dp" />
+            app:srcCompat="@drawable/ic_share" />
 
         <ImageView
             android:id="@+id/send_button"
@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
-            app:srcCompat="@drawable/ic_send_white_24dp" />
+            app:srcCompat="@drawable/ic_send" />
 
         <ImageView
             android:id="@+id/add_button"
@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
-            app:srcCompat="@drawable/ic_add_white_24dp" />
+            app:srcCompat="@drawable/ic_add" />
     </LinearLayout>
 
     <TextView

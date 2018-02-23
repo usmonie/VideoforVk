@@ -56,4 +56,17 @@ interface VkApi {
         @Query("captcha_key") captchaKey: String? = null,
         @Query("2fa_supported") supported: Int = 1
     ): Call<Auth>
+
+    @GET("video.search")
+    fun searchVideos(
+        @Query("q") query: String,
+        @Query("sort") sort: Int?,
+        @Query("hd") hd: Int?,
+        @Query("adult") adult: Int?,
+        @Query("filters") filters: String?,
+        @Query("search_own") searchOwn: Boolean?,
+        @Query("offset") offset: Long?,
+        @Query("longer") longer: Long?,
+        @Query("shorter") shorter: Long?
+    ): Call<ResponseVideo>
 }

@@ -1,4 +1,4 @@
-package akhmedoff.usman.videoforvk.album
+package akhmedoff.usman.videoforvk.search
 
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.model.Video
@@ -9,39 +9,35 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 
-class AlbumRecyclerAdapter(
+
+class SearchAdapter(
     private val clickListener: (Video) -> Unit
-) : PagedListAdapter<Video, VideoViewHolder>(VIDEO_COMPARATOR) {
+) :
+    PagedListAdapter<Video, VideoViewHolder>(VIDEO_COMPARATOR) {
+
     companion object {
         val VIDEO_COMPARATOR = object : DiffCallback<Video>() {
             override fun areContentsTheSame(oldItem: Video, newItem: Video) =
-                oldItem.title == newItem.title && oldItem.date == newItem.addingDate
+                oldItem.description == newItem.description
 
             override fun areItemsTheSame(oldItem: Video, newItem: Video) =
-                oldItem.id == newItem.id
+                oldItem.id == newItem.id && oldItem.title == newItem.title
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): VideoViewHolder {
         val holder = VideoViewHolder(
-            Picasso.with(parent.context),
-            LayoutInflater.from(parent.context).inflate(
-                R.layout.recommendation_videos,
-                parent,
-                false
+            Picasso.with(parent?.context), LayoutInflater.from(parent?.context).inflate(
+                R.layout.recommendation_videos, parent, false
             )
         )
 
-        holder.itemView.setOnClickListener {
-            clickListener(getItem(holder.layoutPosition)!!)
-        }
+        holder.itemView.setOnClickListener { clickListener(getItem(holder.adapterPosition)!!) }
 
         return holder
     }
 
-    override fun getItemId(position: Int) = position.toLong() + 1
-
     override fun onBindViewHolder(holder: VideoViewHolder?, position: Int) {
-        getItem(position)?.let { holder?.bind(it) }
+        holder?.bind(getItem(position)!!)
     }
 }

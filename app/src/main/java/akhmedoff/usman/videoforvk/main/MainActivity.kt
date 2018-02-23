@@ -1,6 +1,5 @@
 package akhmedoff.usman.videoforvk.main
 
-import akhmedoff.usman.videoforvk.App.Companion.context
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.album.AlbumActivity
 import akhmedoff.usman.videoforvk.base.BaseActivity
@@ -9,33 +8,23 @@ import akhmedoff.usman.videoforvk.data.repository.UserRepository
 import akhmedoff.usman.videoforvk.data.repository.VideoRepository
 import akhmedoff.usman.videoforvk.model.Catalog
 import akhmedoff.usman.videoforvk.model.CatalogItem
+import akhmedoff.usman.videoforvk.search.SearchActivity
 import akhmedoff.usman.videoforvk.utils.vkApi
 import akhmedoff.usman.videoforvk.video.VideoActivity
 import android.arch.paging.PagedList
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.Menu
-import android.view.MotionEvent
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), MainContract.View {
-
 
     override lateinit var mainPresenter: MainContract.Presenter
 
     private val adapter: MainRecyclerAdapter by lazy {
 
-        val adapter = MainRecyclerAdapter({ presenter.clickItem(it) },
-            { item: CatalogItem, event: MotionEvent? ->
-                event?.let {
-                    presenter.pressEvent(
-                        item,
-                        it
-                    )
-                }
-            })
+        val adapter = MainRecyclerAdapter { presenter.clickItem(it) }
 
         adapter.setHasStableIds(true)
         return@lazy adapter
@@ -52,12 +41,11 @@ class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        toolbar.title = getText(R.string.main_screen)
-        val layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        home_recycler.layoutManager = layoutManager
         home_recycler.adapter = adapter
 
         update_home_layout.setOnRefreshListener { mainPresenter.refresh() }
+
+        search_box_collapsed.setOnClickListener { mainPresenter.searchClicked() }
     }
 
     override fun showUserAvatar(avatarUrl: String) {
@@ -77,6 +65,7 @@ class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), 
     override fun showProfile() {
     }
 
+    override fun startSearch() = startActivity(Intent(this, SearchActivity::class.java))
 
     override fun showCatalog(catalog: Catalog) {
     }

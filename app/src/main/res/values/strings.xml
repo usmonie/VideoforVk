@@ -27,4 +27,22 @@
         <item quantity="many">%s views</item>
         <item quantity="other">%s views</item>
     </plurals>
+    <string name="title_activity_main2">Main2Activity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="hd_filter">High quality</string>
+    <string name="adult_filter">Safe search</string>
+    <string name="duration">By duration</string>
+    <string name="sort">Sort by</string>
+
+    <string name="duration.any">Any duration</string>
+    <string name="duration.long">Long</string>
+    <string name="duration.short">Short</string>
+
+    <string name="sort_by.recent">Recent</string>
+    <string name="sort_by.duration">Duration</string>
+    <string name="sort_by.relevance">Relevance</string>
 </resources>

@@ -40,4 +40,37 @@ class VideoRepository(private val vkApi: VkApi) {
     fun getVideo(video: String) = vkApi.getVideos(null, video, null, 1, 0)
 
     fun getAlbum(ownerId: String?, albumId: String?) = vkApi.getAlbum(ownerId, albumId)
+
+    fun search(
+        query: String,
+        sort: Int?,
+        hd: Int?,
+        adult: Int?,
+        filters: String?,
+        searchOwn: Boolean?,
+        longer: Long?,
+        shorter: Long?
+    ): LiveData<PagedList<Video>> {
+
+        val pagedListConfig = PagedList.Config.Builder()
+            .setEnablePlaceholders(false)
+            .setPageSize(10)
+            .setPrefetchDistance(15)
+            .setInitialLoadSizeHint(10)
+            .build()
+
+        val sourceFactory = SearchDataSourceFactory(
+            vkApi,
+            query,
+            sort,
+            hd,
+            adult,
+            filters,
+            searchOwn,
+            longer,
+            shorter
+        )
+
+        return LivePagedListBuilder(sourceFactory, pagedListConfig).build()
+    }
 }

@@ -27,8 +27,7 @@ class AutentificationInterceptor : Interceptor {
 
 
         // Request customization: add request headers
-        val requestBuilder = original.newBuilder()
-            .url(url)
+        val requestBuilder = original.newBuilder().url(url)
 
         var str = ""
         var appbuild = 0

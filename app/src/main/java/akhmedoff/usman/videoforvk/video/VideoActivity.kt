@@ -6,8 +6,8 @@ import akhmedoff.usman.videoforvk.base.BaseActivity
 import akhmedoff.usman.videoforvk.data.local.UserSettings
 import akhmedoff.usman.videoforvk.data.repository.UserRepository
 import akhmedoff.usman.videoforvk.data.repository.VideoRepository
-import akhmedoff.usman.videoforvk.model.CatalogItem
 import akhmedoff.usman.videoforvk.model.Group
+import akhmedoff.usman.videoforvk.model.Item
 import akhmedoff.usman.videoforvk.model.User
 import akhmedoff.usman.videoforvk.model.Video
 import akhmedoff.usman.videoforvk.player.AudioFocusListener
@@ -55,15 +55,7 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
     companion object {
         const val VIDEO_ID = "video_id"
 
-        fun getActivity(item: Video, context: Context): Intent {
-            val intent = Intent(context, VideoActivity::class.java)
-
-            intent.putExtra(VIDEO_ID, item.ownerId.toString() + "_" + item.id.toString())
-
-            return intent
-        }
-
-        fun getActivity(item: CatalogItem, context: Context): Intent {
+        fun getActivity(item: Item, context: Context): Intent {
             val intent = Intent(context, VideoActivity::class.java)
 
             intent.putExtra(VIDEO_ID, item.ownerId.toString() + "_" + item.id.toString())

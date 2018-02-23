@@ -20,6 +20,8 @@ class VideoDeserializer : JsonDeserializer<ResponseVideo> {
         val items = mutableListOf<Video>()
 
         itemsJson.forEach {
+            val item = Video()
+
             val itemJson = it.asJsonObject
 
             val fileJson = itemJson["files"].asJsonObject
@@ -47,18 +49,24 @@ class VideoDeserializer : JsonDeserializer<ResponseVideo> {
             files.hls = hls
             files.external = external
 
-            val likesJson = itemJson["likes"].asJsonObject
-            val likes = Likes(
-                likesJson["user_likes"].asJsonPrimitive.asBoolean,
-                likesJson["count"].asJsonPrimitive.asInt
-            )
+            val likesJson = itemJson["likes"]?.asJsonObject
 
-            val repostsJson = itemJson["reposts"].asJsonObject
-            val reposts = Reposts(
-                repostsJson["count"].asJsonPrimitive.asInt,
-                repostsJson["user_reposted"].asJsonPrimitive.asBoolean
-            )
-            val item = Video()
+            likesJson?.let {
+                val likes = Likes(
+                    it["user_likes"].asJsonPrimitive.asBoolean,
+                    it["count"].asJsonPrimitive.asInt
+                )
+                item.likes = likes
+            }
+
+            val repostsJson = itemJson["reposts"]?.asJsonObject
+            repostsJson?.let {
+                val reposts = Reposts(
+                    repostsJson["count"].asJsonPrimitive.asInt,
+                    repostsJson["user_reposted"].asJsonPrimitive.asBoolean
+                )
+                item.reposts = reposts
+            }
 
             item.id = itemJson["id"].asJsonPrimitive.asInt
             item.ownerId = itemJson["owner_id"].asJsonPrimitive.asInt
@@ -119,8 +127,6 @@ class VideoDeserializer : JsonDeserializer<ResponseVideo> {
                 0 -> false
                 else -> true
             }
-            item.likes = likes
-            item.reposts = reposts
 
             items.add(item)
         }
