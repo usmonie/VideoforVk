@@ -1,12 +1,12 @@
 package akhmedoff.usman.videoforvk.video
 
-import akhmedoff.usman.videoforvk.Error
+import akhmedoff.usman.data.Error
+import akhmedoff.usman.data.model.ResponseVideo
+import akhmedoff.usman.data.model.User
+import akhmedoff.usman.data.model.Video
+import akhmedoff.usman.data.repository.UserRepository
+import akhmedoff.usman.data.repository.VideoRepository
 import akhmedoff.usman.videoforvk.base.BasePresenter
-import akhmedoff.usman.videoforvk.data.repository.UserRepository
-import akhmedoff.usman.videoforvk.data.repository.VideoRepository
-import akhmedoff.usman.videoforvk.model.ResponseVideo
-import akhmedoff.usman.videoforvk.model.User
-import akhmedoff.usman.videoforvk.model.Video
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.OnLifecycleEvent
@@ -66,14 +66,14 @@ class VideoPresenter(
                             }
 
                             when {
-                                responseVideo.groups != null && responseVideo.groups.isNotEmpty() -> {
-                                    view.showGroupOwnerInfo(responseVideo.groups[0])
+                                responseVideo.groups != null && responseVideo.groups!!.isNotEmpty() -> {
+                                    view.showGroupOwnerInfo(responseVideo.groups!![0])
                                     view.hideProgress()
                                     view.showUi()
                                     view.showPlayer()
                                 }
-                                responseVideo.profiles != null && responseVideo.profiles.isNotEmpty() ->
-                                    loadUser(responseVideo.profiles[0])
+                                responseVideo.profiles != null && responseVideo.profiles!!.isNotEmpty() ->
+                                    loadUser(responseVideo.profiles!![0])
                             }
 
                         }

@@ -1,13 +1,13 @@
 package akhmedoff.usman.videoforvk.main
 
+import akhmedoff.usman.data.local.UserSettings
+import akhmedoff.usman.data.model.Catalog
+import akhmedoff.usman.data.model.CatalogItem
+import akhmedoff.usman.data.repository.UserRepository
+import akhmedoff.usman.data.repository.VideoRepository
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.album.AlbumActivity
 import akhmedoff.usman.videoforvk.base.BaseActivity
-import akhmedoff.usman.videoforvk.data.local.UserSettings
-import akhmedoff.usman.videoforvk.data.repository.UserRepository
-import akhmedoff.usman.videoforvk.data.repository.VideoRepository
-import akhmedoff.usman.videoforvk.model.Catalog
-import akhmedoff.usman.videoforvk.model.CatalogItem
 import akhmedoff.usman.videoforvk.search.SearchActivity
 import akhmedoff.usman.videoforvk.utils.vkApi
 import akhmedoff.usman.videoforvk.video.VideoActivity

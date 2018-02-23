@@ -16,16 +16,7 @@
         android:foreground="@drawable/video_gradient"
         android:scaleType="centerCrop" />
 
-    <com.google.android.exoplayer2.ui.SimpleExoPlayerView
-        android:id="@+id/video_exo_player"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        app:resize_mode="fit"
-        app:use_controller="false"
-        tools:visibility="visible" />
-
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/video_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

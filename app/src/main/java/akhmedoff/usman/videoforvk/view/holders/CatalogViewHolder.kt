@@ -1,10 +1,10 @@
 package akhmedoff.usman.videoforvk.view.holders
 
+import akhmedoff.usman.data.model.Catalog
+import akhmedoff.usman.data.model.CatalogItem
+import akhmedoff.usman.data.model.CatalogItemType
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.main.CatalogRecyclerAdapter
-import akhmedoff.usman.videoforvk.model.Catalog
-import akhmedoff.usman.videoforvk.model.CatalogItem
-import akhmedoff.usman.videoforvk.model.CatalogItemType
 import akhmedoff.usman.videoforvk.view.GravitySnapHelper
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager

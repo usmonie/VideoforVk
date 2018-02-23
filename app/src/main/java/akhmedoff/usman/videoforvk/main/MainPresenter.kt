@@ -1,12 +1,12 @@
 package akhmedoff.usman.videoforvk.main
 
-import akhmedoff.usman.videoforvk.Error
+import akhmedoff.usman.data.Error
+import akhmedoff.usman.data.model.Catalog
+import akhmedoff.usman.data.model.CatalogItem
+import akhmedoff.usman.data.model.CatalogItemType
+import akhmedoff.usman.data.repository.UserRepository
+import akhmedoff.usman.data.repository.VideoRepository
 import akhmedoff.usman.videoforvk.base.BasePresenter
-import akhmedoff.usman.videoforvk.data.repository.UserRepository
-import akhmedoff.usman.videoforvk.data.repository.VideoRepository
-import akhmedoff.usman.videoforvk.model.Catalog
-import akhmedoff.usman.videoforvk.model.CatalogItem
-import akhmedoff.usman.videoforvk.model.CatalogItemType
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.OnLifecycleEvent

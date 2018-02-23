@@ -1,9 +1,9 @@
 package akhmedoff.usman.videoforvk.utils.deserializers
 
-import akhmedoff.usman.videoforvk.model.Catalog
-import akhmedoff.usman.videoforvk.model.CatalogItem
-import akhmedoff.usman.videoforvk.model.CatalogItemType
-import akhmedoff.usman.videoforvk.model.ResponseCatalog
+import akhmedoff.usman.data.model.Catalog
+import akhmedoff.usman.data.model.CatalogItem
+import akhmedoff.usman.data.model.CatalogItemType
+import akhmedoff.usman.data.model.ResponseCatalog
 import akhmedoff.usman.videoforvk.utils.stringToUrlFormat
 import android.util.Log
 import com.google.gson.JsonDeserializationContext

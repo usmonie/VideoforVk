@@ -1,8 +1,8 @@
 package akhmedoff.usman.videoforvk.main
 
+import akhmedoff.usman.data.model.CatalogItem
+import akhmedoff.usman.data.model.CatalogItemType
 import akhmedoff.usman.videoforvk.R
-import akhmedoff.usman.videoforvk.model.CatalogItem
-import akhmedoff.usman.videoforvk.model.CatalogItemType
 import akhmedoff.usman.videoforvk.view.holders.VideoViewHolder
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater

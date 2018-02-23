@@ -1,15 +1,15 @@
 package akhmedoff.usman.videoforvk.video
 
+import akhmedoff.usman.data.local.UserSettings
+import akhmedoff.usman.data.model.Group
+import akhmedoff.usman.data.model.Item
+import akhmedoff.usman.data.model.User
+import akhmedoff.usman.data.model.Video
+import akhmedoff.usman.data.repository.UserRepository
+import akhmedoff.usman.data.repository.VideoRepository
 import akhmedoff.usman.videoforvk.App.Companion.context
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.base.BaseActivity
-import akhmedoff.usman.videoforvk.data.local.UserSettings
-import akhmedoff.usman.videoforvk.data.repository.UserRepository
-import akhmedoff.usman.videoforvk.data.repository.VideoRepository
-import akhmedoff.usman.videoforvk.model.Group
-import akhmedoff.usman.videoforvk.model.Item
-import akhmedoff.usman.videoforvk.model.User
-import akhmedoff.usman.videoforvk.model.Video
 import akhmedoff.usman.videoforvk.player.AudioFocusListener
 import akhmedoff.usman.videoforvk.player.SimpleControlDispatcher
 import akhmedoff.usman.videoforvk.utils.vkApi
@@ -311,6 +311,7 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
     }
 
     override fun showFullscreen(video: Video) {
+        video_layout.fitsSystemWindows = false
         window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -320,6 +321,7 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
     }
 
     override fun showSmallScreen() {
+        video_layout.fitsSystemWindows = true
     }
 
     override fun showProgress() {

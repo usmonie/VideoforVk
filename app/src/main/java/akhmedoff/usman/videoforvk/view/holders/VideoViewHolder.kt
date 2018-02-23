@@ -1,7 +1,7 @@
 package akhmedoff.usman.videoforvk.view.holders
 
+import akhmedoff.usman.data.model.Item
 import akhmedoff.usman.videoforvk.R
-import akhmedoff.usman.videoforvk.model.Item
 import android.graphics.Bitmap
 import android.support.v7.widget.CardView
 import android.view.View

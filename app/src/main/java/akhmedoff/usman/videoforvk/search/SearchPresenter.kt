@@ -1,8 +1,8 @@
 package akhmedoff.usman.videoforvk.search
 
+import akhmedoff.usman.data.model.Video
+import akhmedoff.usman.data.repository.VideoRepository
 import akhmedoff.usman.videoforvk.base.BasePresenter
-import akhmedoff.usman.videoforvk.data.repository.VideoRepository
-import akhmedoff.usman.videoforvk.model.Video
 import android.arch.lifecycle.Observer
 
 class SearchPresenter(

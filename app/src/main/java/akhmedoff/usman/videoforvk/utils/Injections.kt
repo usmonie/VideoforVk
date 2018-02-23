@@ -1,7 +1,7 @@
 package akhmedoff.usman.videoforvk.utils
 
-import akhmedoff.usman.videoforvk.data.api.VkApi
-import akhmedoff.usman.videoforvk.model.*
+import akhmedoff.usman.data.api.VkApi
+import akhmedoff.usman.data.model.*
 import akhmedoff.usman.videoforvk.utils.deserializers.*
 import akhmedoff.usman.videoforvk.utils.interceptors.AutentificationInterceptor
 import android.content.res.Resources

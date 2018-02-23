@@ -13,6 +13,7 @@
     <dimen name="normal_text_size_small_video_item">14sp</dimen>
     <dimen name="max_text_size_small_video_item">216sp</dimen>
     <dimen name="height_main_list_item">236dp</dimen>
+    <dimen name="width_video_item_poster">98dp</dimen>
 
     <dimen name="width_main_list_first_video">328dp</dimen>
     <dimen name="height_main_list_small_item">108dp</dimen>
@@ -63,4 +64,5 @@
     <dimen name="nav_header_vertical_spacing">8dp</dimen>
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="normal_text_size_video_item">16sp</dimen>
 </resources>

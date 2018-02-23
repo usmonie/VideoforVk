@@ -1,6 +1,6 @@
 package akhmedoff.usman.videoforvk.player
 
-import akhmedoff.usman.videoforvk.model.Video
+import akhmedoff.usman.data.model.Video
 import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.os.Build

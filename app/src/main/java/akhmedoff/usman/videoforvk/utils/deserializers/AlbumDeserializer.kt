@@ -1,6 +1,6 @@
 package akhmedoff.usman.videoforvk.utils.deserializers
 
-import akhmedoff.usman.videoforvk.model.Album
+import akhmedoff.usman.data.model.Album
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement

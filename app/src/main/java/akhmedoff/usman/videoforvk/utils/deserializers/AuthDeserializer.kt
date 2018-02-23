@@ -1,8 +1,8 @@
 package akhmedoff.usman.videoforvk.utils.deserializers
 
-import akhmedoff.usman.videoforvk.Error
-import akhmedoff.usman.videoforvk.model.Auth
-import akhmedoff.usman.videoforvk.model.ValidationType
+import akhmedoff.usman.data.Error
+import akhmedoff.usman.data.model.Auth
+import akhmedoff.usman.data.model.ValidationType
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement

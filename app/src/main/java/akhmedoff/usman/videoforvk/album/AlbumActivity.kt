@@ -1,10 +1,10 @@
 package akhmedoff.usman.videoforvk.album
 
+import akhmedoff.usman.data.model.CatalogItem
+import akhmedoff.usman.data.model.Video
+import akhmedoff.usman.data.repository.VideoRepository
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.base.BaseActivity
-import akhmedoff.usman.videoforvk.data.repository.VideoRepository
-import akhmedoff.usman.videoforvk.model.CatalogItem
-import akhmedoff.usman.videoforvk.model.Video
 import akhmedoff.usman.videoforvk.utils.vkApi
 import akhmedoff.usman.videoforvk.video.VideoActivity
 import android.arch.paging.PagedList
@@ -30,7 +30,7 @@ class AlbumActivity : BaseActivity<AlbumContract.View, AlbumContract.Presenter>(
 
             intent.putExtra(ALBUM_ID, item.id.toString())
             intent.putExtra(ALBUM_OWNER_ID, item.ownerId.toString())
-            intent.putExtra(ALBUM_NAME, item.title.toString())
+            intent.putExtra(ALBUM_NAME, item.title)
 
             return intent
         }

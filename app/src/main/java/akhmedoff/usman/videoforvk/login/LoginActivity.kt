@@ -1,10 +1,10 @@
 package akhmedoff.usman.videoforvk.login
 
+import akhmedoff.usman.data.local.UserSettings
+import akhmedoff.usman.data.repository.UserRepository
 import akhmedoff.usman.videoforvk.CaptchaDialog
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.base.BaseActivity
-import akhmedoff.usman.videoforvk.data.local.UserSettings
-import akhmedoff.usman.videoforvk.data.repository.UserRepository
 import akhmedoff.usman.videoforvk.main.MainActivity
 import akhmedoff.usman.videoforvk.utils.vkApi
 import android.content.Context

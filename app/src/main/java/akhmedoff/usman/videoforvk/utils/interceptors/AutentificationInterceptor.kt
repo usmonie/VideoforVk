@@ -1,9 +1,9 @@
 package akhmedoff.usman.videoforvk.utils.interceptors
 
+import akhmedoff.usman.data.api.VkApi
+import akhmedoff.usman.data.local.UserSettings
 import akhmedoff.usman.videoforvk.App
 import akhmedoff.usman.videoforvk.App.Companion.context
-import akhmedoff.usman.videoforvk.data.api.VkApi
-import akhmedoff.usman.videoforvk.data.local.UserSettings
 import android.os.Build
 import okhttp3.Interceptor
 import okhttp3.Response

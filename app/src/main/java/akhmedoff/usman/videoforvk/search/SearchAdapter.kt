@@ -1,7 +1,7 @@
 package akhmedoff.usman.videoforvk.search
 
+import akhmedoff.usman.data.model.Video
 import akhmedoff.usman.videoforvk.R
-import akhmedoff.usman.videoforvk.model.Video
 import akhmedoff.usman.videoforvk.view.holders.VideoViewHolder
 import android.arch.paging.PagedListAdapter
 import android.support.v7.recyclerview.extensions.DiffCallback

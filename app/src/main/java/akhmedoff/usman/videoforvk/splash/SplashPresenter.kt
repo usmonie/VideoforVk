@@ -1,7 +1,7 @@
 package akhmedoff.usman.videoforvk.splash
 
+import akhmedoff.usman.data.repository.UserRepository
 import akhmedoff.usman.videoforvk.base.BasePresenter
-import akhmedoff.usman.videoforvk.data.repository.UserRepository
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.OnLifecycleEvent
 

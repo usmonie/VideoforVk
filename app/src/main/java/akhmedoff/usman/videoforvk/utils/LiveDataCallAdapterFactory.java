@@ -6,7 +6,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-import akhmedoff.usman.videoforvk.model.Response;
+import akhmedoff.usman.data.model.Response;
 import retrofit2.CallAdapter;
 import retrofit2.Retrofit;
 

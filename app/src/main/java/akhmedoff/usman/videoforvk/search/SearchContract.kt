@@ -1,7 +1,7 @@
 package akhmedoff.usman.videoforvk.search
 
+import akhmedoff.usman.data.model.Video
 import akhmedoff.usman.videoforvk.base.BaseContract
-import akhmedoff.usman.videoforvk.model.Video
 import android.arch.paging.PagedList
 
 interface SearchContract {

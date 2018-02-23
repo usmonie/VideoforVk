@@ -1,9 +1,9 @@
 package akhmedoff.usman.videoforvk.search
 
+import akhmedoff.usman.data.model.Video
+import akhmedoff.usman.data.repository.VideoRepository
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.base.BaseActivity
-import akhmedoff.usman.videoforvk.data.repository.VideoRepository
-import akhmedoff.usman.videoforvk.model.Video
 import akhmedoff.usman.videoforvk.utils.vkApi
 import akhmedoff.usman.videoforvk.video.VideoActivity
 import android.arch.paging.PagedList

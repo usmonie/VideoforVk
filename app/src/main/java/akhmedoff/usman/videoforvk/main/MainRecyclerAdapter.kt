@@ -1,8 +1,8 @@
 package akhmedoff.usman.videoforvk.main
 
+import akhmedoff.usman.data.model.Catalog
+import akhmedoff.usman.data.model.CatalogItem
 import akhmedoff.usman.videoforvk.R
-import akhmedoff.usman.videoforvk.model.Catalog
-import akhmedoff.usman.videoforvk.model.CatalogItem
 import akhmedoff.usman.videoforvk.view.holders.CatalogViewHolder
 import android.arch.paging.PagedListAdapter
 import android.support.v7.recyclerview.extensions.DiffCallback

@@ -1,8 +1,8 @@
 package akhmedoff.usman.videoforvk.splash
 
+import akhmedoff.usman.data.local.UserSettings
+import akhmedoff.usman.data.repository.UserRepository
 import akhmedoff.usman.videoforvk.base.BaseActivity
-import akhmedoff.usman.videoforvk.data.local.UserSettings
-import akhmedoff.usman.videoforvk.data.repository.UserRepository
 import akhmedoff.usman.videoforvk.login.LoginActivity
 import akhmedoff.usman.videoforvk.main.MainActivity
 import akhmedoff.usman.videoforvk.utils.vkApi
