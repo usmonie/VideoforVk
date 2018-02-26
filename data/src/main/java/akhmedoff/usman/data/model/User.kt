@@ -1,5 +1,8 @@
 package akhmedoff.usman.data.model
 
+import android.arch.persistence.room.Entity
+
+@Entity(tableName = "users")
 class User {
     var id: Long = 0
     var firstName: String = ""
@@ -10,10 +13,6 @@ class User {
     var photoMax: String = ""
     var photoMaxOrig: String = ""
     var photoId: String = ""
-    var hasPhoto: Boolean = false
     var isFriend: Boolean = false
     var friendStatus: Int = 1
-    var online: Boolean = false
-    var status: String = ""
-    var isFavorite: Boolean = false
 }

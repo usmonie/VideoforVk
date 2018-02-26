@@ -9,6 +9,7 @@ enum class Error {
     NEED_CAPTCHA,
 
     INVALID_CODE,
+    INVALID_TOKEN,
 
     PASSWORD_SHORT,
     USERNAME_SHORT,

@@ -68,9 +68,8 @@
             android:name=".search.SearchActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation" />
         <activity
-            android:name=".Main2Activity"
-            android:label="@string/title_activity_main2"
-            android:theme="@style/AppTheme"></activity>
+            android:name=".owner.OwnerActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation" />
     </application>
 
 </manifest>

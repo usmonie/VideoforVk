@@ -3,9 +3,9 @@ package akhmedoff.usman.videoforvk.album
 import akhmedoff.usman.data.model.CatalogItem
 import akhmedoff.usman.data.model.Video
 import akhmedoff.usman.data.repository.VideoRepository
+import akhmedoff.usman.data.utils.vkApi
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.base.BaseActivity
-import akhmedoff.usman.videoforvk.utils.vkApi
 import akhmedoff.usman.videoforvk.video.VideoActivity
 import android.arch.paging.PagedList
 import android.content.Context

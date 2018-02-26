@@ -28,6 +28,6 @@
             android:layout_width="match_parent"
             android:layout_height="256dp"
             android:overScrollMode="never"
-            tools:listitem="@layout/catalog_video_item_min" />
+            tools:listitem="@layout/catalog_album_item" />
     </LinearLayout>
 </android.support.v7.widget.CardView>

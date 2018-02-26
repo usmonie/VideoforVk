@@ -2,9 +2,9 @@ package akhmedoff.usman.videoforvk.search
 
 import akhmedoff.usman.data.model.Video
 import akhmedoff.usman.data.repository.VideoRepository
+import akhmedoff.usman.data.utils.vkApi
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.base.BaseActivity
-import akhmedoff.usman.videoforvk.utils.vkApi
 import akhmedoff.usman.videoforvk.video.VideoActivity
 import android.arch.paging.PagedList
 import android.os.Bundle
@@ -58,7 +58,6 @@ class SearchActivity : BaseActivity<SearchContract.View, SearchContract.Presente
 
         sort.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
             override fun onItemSelected(
@@ -73,7 +72,6 @@ class SearchActivity : BaseActivity<SearchContract.View, SearchContract.Presente
         }
         duration_filter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
             override fun onItemSelected(
@@ -123,15 +121,12 @@ class SearchActivity : BaseActivity<SearchContract.View, SearchContract.Presente
     override fun showFoundVideos(videos: PagedList<Video>) = adapter.setList(videos)
 
     override fun expandFilters() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun collapseFilters() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun showError(errorMessage: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun showVideo(item: Video) {

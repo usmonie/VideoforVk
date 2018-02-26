@@ -7,12 +7,13 @@ import akhmedoff.usman.data.model.User
 import akhmedoff.usman.data.model.Video
 import akhmedoff.usman.data.repository.UserRepository
 import akhmedoff.usman.data.repository.VideoRepository
+import akhmedoff.usman.data.utils.vkApi
 import akhmedoff.usman.videoforvk.App.Companion.context
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.base.BaseActivity
+import akhmedoff.usman.videoforvk.owner.OwnerActivity
 import akhmedoff.usman.videoforvk.player.AudioFocusListener
 import akhmedoff.usman.videoforvk.player.SimpleControlDispatcher
-import akhmedoff.usman.videoforvk.utils.vkApi
 import android.annotation.TargetApi
 import android.app.PictureInPictureParams
 import android.content.Context
@@ -357,35 +358,30 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
     override fun getVideoId() = intent.getStringExtra(VideoActivity.VIDEO_ID)!!
 
     override fun setLiked() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun setUnliked() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun showShareDialog() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun hideShareDialog() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun showSendDialog() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun hideSendDialog() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun setAdded() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun setDeleted() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override fun showOwner(owner: User) = startActivity(OwnerActivity.getActivity(owner, this))
+
+    override fun showOwner(owner: Group) = startActivity(OwnerActivity.getActivity(owner, this))
 }

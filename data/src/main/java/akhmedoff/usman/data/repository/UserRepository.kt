@@ -12,10 +12,14 @@ class UserRepository(
     private val userSettings: UserSettings,
     private val api: VkApi
 ) {
-
     var isLogged = userSettings.isLogged
 
     fun saveToken(token: String) = userSettings.saveToken(token)
+
+    fun checkToken() =
+        api.checkToken("https://api.vk.com/method/secure.checkToken?token=" + userSettings.getToken())
+
+    fun clear() = userSettings.clear()
 
     fun auth(
         username: String,
@@ -33,17 +37,15 @@ class UserRepository(
         code = code,
         captchaSid = captchaSid,
         captchaKey = captchaKey
-
     )
 
-    fun getUsers(users_id: String? = null): LiveData<List<User>> {
-        val usersLiveData = api.getUsers(users_id)
-
-        return Transformations.map(usersLiveData, Function {
+    fun getUsers(users_id: String? = null): LiveData<List<User>> =
+        Transformations.map(api.getUsers(listOf(users_id)), Function {
             return@Function when {
-                it.isSuccessfull -> it.response
+                it.response != null -> it.response
                 else -> listOf()
             }
         })
-    }
+
+    fun getUsers(ids: List<String>) = api.getUsers(ids)
 }

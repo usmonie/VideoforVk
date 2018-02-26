@@ -1,21 +1,18 @@
 package akhmedoff.usman.videoforvk.main
 
-import akhmedoff.usman.data.local.UserSettings
 import akhmedoff.usman.data.model.Catalog
 import akhmedoff.usman.data.model.CatalogItem
-import akhmedoff.usman.data.repository.UserRepository
 import akhmedoff.usman.data.repository.VideoRepository
+import akhmedoff.usman.data.utils.vkApi
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.album.AlbumActivity
 import akhmedoff.usman.videoforvk.base.BaseActivity
 import akhmedoff.usman.videoforvk.search.SearchActivity
-import akhmedoff.usman.videoforvk.utils.vkApi
 import akhmedoff.usman.videoforvk.video.VideoActivity
 import android.arch.paging.PagedList
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.view.Menu
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), MainContract.View {
@@ -31,13 +28,7 @@ class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), 
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        mainPresenter = MainPresenter(
-            UserRepository(
-                UserSettings.getUserSettings(applicationContext),
-                vkApi
-            ), VideoRepository(vkApi)
-        )
-
+        mainPresenter = MainPresenter(VideoRepository(vkApi))
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -68,11 +59,6 @@ class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), 
     override fun startSearch() = startActivity(Intent(this, SearchActivity::class.java))
 
     override fun showCatalog(catalog: Catalog) {
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.activity_main_menu, menu)
-        return true
     }
 
     override fun showLoading() {

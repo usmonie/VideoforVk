@@ -7,9 +7,6 @@ import android.support.annotation.CallSuper
 import android.support.v4.app.DialogFragment
 import android.view.View
 
-/**
- * Created by akhme on 11.02.2018.
- */
 abstract class BaseDialogFragment<V : BaseContract.View, P : BaseContract.Presenter<V>> :
     DialogFragment(),
     BaseContract.View {

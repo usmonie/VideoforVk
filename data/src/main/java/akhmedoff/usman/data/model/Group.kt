@@ -1,5 +1,8 @@
 package akhmedoff.usman.data.model
 
+import android.arch.persistence.room.Entity
+
+@Entity(tableName = "groups")
 class Group {
     var id: Long = 0
     var name: String = ""

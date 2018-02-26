@@ -1,5 +1,7 @@
 package akhmedoff.usman.videoforvk
 
+import akhmedoff.usman.data.utils.interceptor
+import akhmedoff.usman.data.utils.interceptors.AuthenticationInterceptor
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
@@ -21,5 +23,6 @@ class App : Application() {
         super.onCreate()
         context = applicationContext
 
+        interceptor = AuthenticationInterceptor(context)
     }
 }

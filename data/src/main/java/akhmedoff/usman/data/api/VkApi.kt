@@ -9,13 +9,13 @@ import retrofit2.http.Url
 
 interface VkApi {
     companion object {
-        const val API_VERSION = "5.71"
+        const val API_VERSION = "5.73"
     }
 
     @GET("users.get")
     fun getUsers(
-        @Query("user_ids") users_id: String? = null,
-        @Query("fields") fields: String = "nickname,photo_100,screen_name,photo_max,photo_max_orig,photo_id,has_photo,is_friend,friend_status,online,status,is_favorite"
+        @Query("user_ids") users_id: List<String?>? = null,
+        @Query("fields") fields: String = "photo_100,screen_name,photo_max,photo_max_orig,photo_id,has_photo,is_friend,friend_status"
     ): LiveData<Response<List<User>>>
 
     @GET("video.get")
@@ -33,6 +33,14 @@ interface VkApi {
         @Query("owner_id") ownerId: String?,
         @Query("album_id") albumId: String?
     ): LiveData<Response<Album>>
+
+    @GET("video.getAlbums")
+    fun getAlbums(
+        @Query("owner_id") ownerId: String?,
+        @Query("offset") offset: Long,
+        @Query("count") count: Long,
+        @Query("extended") extended: Int = 1
+    ): Call<List<Album>>
 
     @GET("video.getCatalog")
     fun getCatalog(
@@ -71,6 +79,17 @@ interface VkApi {
     ): Call<ResponseVideo>
 
     @GET("video.add")
-    fun addVideo(@Query("video_id") videoId: String, @Query("owner_id") ownerId: String)
+    fun addVideo(
+        @Query("video_id") videoId: String,
+        @Query("owner_id") ownerId: String
+    )
 
+    @GET("groups.getById")
+    fun getGroups(
+        @Query("group_ids") groupIds: List<String>? = null,
+        @Query("group_id") groupId: String? = null
+    ): Call<List<Group>>
+
+    @GET
+    fun checkToken(@Url url: String): Call<CheckTokenResponse>
 }

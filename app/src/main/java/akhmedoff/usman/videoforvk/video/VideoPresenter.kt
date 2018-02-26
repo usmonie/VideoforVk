@@ -87,17 +87,41 @@ class VideoPresenter(
         view?.let { view ->
             userRepository
                 .getUsers(user.id.toString())
-                .observe(view, Observer { users ->
-                    view.hideProgress()
-                    users?.let {
-                        view.showUserOwnerInfo(it[0])
-                        view.hideProgress()
-                        view.showUi()
-                        view.showPlayer()
-
+                .observe(view, Observer {
+                    it?.let { users ->
+                        if (users.isNotEmpty()) {
+                            view.showUserOwnerInfo(users[0])
+                            view.hideProgress()
+                            view.showUi()
+                            view.showPlayer()
+                        }
                     }
-
                 })
+            /*.enqueue(object : Callback<List<User>> {
+                override fun onFailure(call: Call<List<User>>?, t: Throwable?) {
+                    Log.e("error", t.toString())
+
+                    view.hideProgress()
+                    view.showLoadError()
+                }
+
+                override fun onResponse(
+                    call: Call<List<User>>?,
+                    response: Response<List<User>>?
+                ) {
+                    view.hideProgress()
+                    response?.body().let {
+
+                        it?.get(0)?.let { user ->
+                            view.showUserOwnerInfo(user)
+                            view.hideProgress()
+                            view.showUi()
+                            view.showPlayer()
+                        }
+                    }
+                }
+
+            })*/
         }
 
     }
@@ -148,7 +172,6 @@ class VideoPresenter(
     }
 
     override fun error(error: Error, message: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun pipToggleButton() {
@@ -157,15 +180,11 @@ class VideoPresenter(
     }
 
     override fun liked() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun share() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun send() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-
 }

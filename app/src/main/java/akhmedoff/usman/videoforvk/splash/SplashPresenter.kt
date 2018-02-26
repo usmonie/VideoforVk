@@ -9,12 +9,9 @@ class SplashPresenter(private val repository: UserRepository) :
     BasePresenter<SplashContract.View>(), SplashContract.Presenter {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
-    fun onCreate() {
-        view?.let { view ->
-            when {
-                repository.isLogged -> view.showMain()
-                else -> view.showLogin()
-            }
-        }
+    fun onCreate() = when {
+        repository.isLogged -> view?.showMain()
+
+        else -> view?.showLogin()
     }
 }

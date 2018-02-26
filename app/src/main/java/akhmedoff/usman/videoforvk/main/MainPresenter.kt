@@ -4,7 +4,6 @@ import akhmedoff.usman.data.Error
 import akhmedoff.usman.data.model.Catalog
 import akhmedoff.usman.data.model.CatalogItem
 import akhmedoff.usman.data.model.CatalogItemType
-import akhmedoff.usman.data.repository.UserRepository
 import akhmedoff.usman.data.repository.VideoRepository
 import akhmedoff.usman.videoforvk.base.BasePresenter
 import android.arch.lifecycle.Lifecycle
@@ -12,7 +11,6 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.OnLifecycleEvent
 
 class MainPresenter(
-    private val userRepository: UserRepository,
     private val videoRepository: VideoRepository
 ) :
     BasePresenter<MainContract.View>(), MainContract.Presenter {
@@ -25,25 +23,6 @@ class MainPresenter(
         view?.showLoading()
         //loadUserInfo()
         loadCatalogs()
-    }
-
-    private fun loadUserInfo() {
-        view?.let { view ->
-            userRepository
-                .getUsers()
-                .observe(view, Observer { users ->
-                    users?.let {
-                        if (it.isNotEmpty()) {
-                            val user = it[0]
-
-                            view.showUserName(user.firstName + " " + user.lastName)
-
-                            if (user.hasPhoto) view.showUserAvatar(user.photo100)
-                        }
-                    }
-
-                })
-        }
     }
 
     override fun loadCatalogs() {

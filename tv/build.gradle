@@ -32,7 +32,6 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:$archLifecycleVersion"
     implementation 'android.arch.paging:runtime:1.0.0-alpha5'
     implementation 'com.android.support:appcompat-v7:27.0.2'
-    implementation 'com.github.bumptech.glide:glide:3.8.0'
     annotationProcessor "android.arch.lifecycle:compiler:$archLifecycleVersion"
 
     implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'

@@ -60,6 +60,5 @@ class AlbumPresenter(private val videoRepository: VideoRepository) :
     }
 
     override fun clickAdd() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

@@ -65,4 +65,7 @@
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="normal_text_size_video_item">16sp</dimen>
+    <dimen name="height_owner_albums_recycler">192dp</dimen>
+    <dimen name="height_owner_album">132dp</dimen>
+    <dimen name="width_owner_album">240dp</dimen>
 </resources>

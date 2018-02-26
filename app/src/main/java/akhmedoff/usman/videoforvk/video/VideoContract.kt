@@ -83,6 +83,10 @@ interface VideoContract {
 
         fun setDeleted()
 
+        fun showOwner(owner: User)
+
+        fun showOwner(owner: Group)
+
     }
 
     interface Presenter : BaseContract.Presenter<View> {
