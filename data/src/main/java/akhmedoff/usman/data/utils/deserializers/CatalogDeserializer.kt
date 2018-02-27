@@ -18,7 +18,7 @@ class CatalogDeserializer : JsonDeserializer<ResponseCatalog> {
         context: JsonDeserializationContext
     ): ResponseCatalog {
 
-        Log.d("DESERIALIZER", "started")
+        Log.d("DESERIALIZER catalog", "started")
         val jsonObject = json.asJsonObject["response"]?.asJsonObject
         val catalogs = mutableListOf<Catalog>()
 

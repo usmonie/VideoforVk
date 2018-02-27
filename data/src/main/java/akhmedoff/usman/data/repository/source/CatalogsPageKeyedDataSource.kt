@@ -9,7 +9,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.Collections.emptyList
-import akhmedoff.usman.data.model.Response as ApiResponse
 
 class CatalogsPageKeyedDataSource(private val vkApi: VkApi) :
     PageKeyedDataSource<String, Catalog>() {

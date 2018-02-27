@@ -3,10 +3,8 @@ package akhmedoff.usman.data.utils
 import akhmedoff.usman.data.api.VkApi
 import akhmedoff.usman.data.model.*
 import akhmedoff.usman.data.utils.deserializers.*
-import akhmedoff.usman.data.utils.typeadapters.UserTypeAdapter
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -39,27 +37,19 @@ val vkApi: VkApi by lazy { retrofit.create(VkApi::class.java) }
 
 val gson: Gson by lazy {
     GsonBuilder().apply {
-        val typeUsers = object : TypeToken<List<User>>() {}.type
-        //TODO (type adapter https://stackoverflow.com/questions/43455825/retrofit-2-gson-and-custom-deserializer)
+
         registerTypeAdapter(
-            typeUsers,
-            UserTypeAdapter()
+            User::class.java,
+            UserDeserializer()
         )
         registerTypeAdapter(
             CheckTokenResponse::class.java,
             CheckTokenDeserializer()
         )
-
         registerTypeAdapter(
-            getClassFromGeneric<List<Group>>(),
+            Group::class.java,
             GroupDeserializer()
         )
-
-        registerTypeAdapter(
-            getClassFromGeneric<List<Album>>(),
-            AlbumsDeserializer()
-        )
-
         registerTypeAdapter(
             ResponseVideo::class.java,
             VideoDeserializer()
@@ -77,7 +67,6 @@ val gson: Gson by lazy {
             Album::class.java,
             AlbumDeserializer()
         )
-
     }.create()
 }
 
@@ -85,4 +74,3 @@ val gson: Gson by lazy {
 
 }*/
 
-private inline fun <reified T> getClassFromGeneric() = T::class.java

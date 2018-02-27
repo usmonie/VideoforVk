@@ -14,9 +14,9 @@ interface VkApi {
 
     @GET("users.get")
     fun getUsers(
-        @Query("user_ids") users_id: List<String?>? = null,
+        @Query("user_ids") users_id: List<String>? = null,
         @Query("fields") fields: String = "photo_100,screen_name,photo_max,photo_max_orig,photo_id,has_photo,is_friend,friend_status"
-    ): LiveData<Response<List<User>>>
+    ): Call<ApiResponse<List<User>>>
 
     @GET("video.get")
     fun getVideos(
@@ -32,7 +32,7 @@ interface VkApi {
     fun getAlbum(
         @Query("owner_id") ownerId: String?,
         @Query("album_id") albumId: String?
-    ): LiveData<Response<Album>>
+    ): LiveData<ApiResponse<Album>>
 
     @GET("video.getAlbums")
     fun getAlbums(
@@ -40,7 +40,7 @@ interface VkApi {
         @Query("offset") offset: Long,
         @Query("count") count: Long,
         @Query("extended") extended: Int = 1
-    ): Call<List<Album>>
+    ): Call<ApiResponse<List<Album>>>
 
     @GET("video.getCatalog")
     fun getCatalog(
@@ -88,7 +88,7 @@ interface VkApi {
     fun getGroups(
         @Query("group_ids") groupIds: List<String>? = null,
         @Query("group_id") groupId: String? = null
-    ): Call<List<Group>>
+    ): Call<ApiResponse<List<Group>>>
 
     @GET
     fun checkToken(@Url url: String): Call<CheckTokenResponse>

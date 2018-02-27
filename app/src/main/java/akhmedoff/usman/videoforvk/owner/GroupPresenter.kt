@@ -1,5 +1,6 @@
 package akhmedoff.usman.videoforvk.owner
 
+import akhmedoff.usman.data.model.ApiResponse
 import akhmedoff.usman.data.model.Group
 import akhmedoff.usman.data.repository.GroupRepository
 import akhmedoff.usman.data.repository.VideoRepository
@@ -18,17 +19,18 @@ class GroupPresenter(
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     override fun onCreate() {
         view?.let { view ->
-            groupRepository.getGroup(view.getOwnerId()).enqueue(object : Callback<List<Group>> {
-                override fun onFailure(call: Call<List<Group>>?, t: Throwable?) {
+            groupRepository.getGroup(view.getOwnerId())
+                .enqueue(object : Callback<ApiResponse<List<Group>>> {
+                    override fun onFailure(call: Call<ApiResponse<List<Group>>>?, t: Throwable?) {
                     Log.d("failure", t.toString())
                 }
 
                 override fun onResponse(
-                    call: Call<List<Group>>?,
-                    response: Response<List<Group>>?
+                    call: Call<ApiResponse<List<Group>>>?,
+                    response: Response<ApiResponse<List<Group>>>?
                 ) {
 
-                    response?.body()?.let {
+                    response?.body()?.response?.let {
                         if (it.isNotEmpty()) {
                             Log.d("response", it[0].name)
                             view.showOwnerInfo(it[0])

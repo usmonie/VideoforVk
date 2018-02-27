@@ -1,5 +1,6 @@
 package akhmedoff.usman.data.utils
 
+import akhmedoff.usman.data.model.ApiResponse
 import android.arch.lifecycle.LiveData
 import android.util.Log
 import retrofit2.Call
@@ -8,7 +9,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.lang.reflect.Type
 import java.util.concurrent.atomic.AtomicBoolean
-import akhmedoff.usman.data.model.Response as ApiResponse
 
 /**
  * A Retrofit adapter that converts the Call into a LiveData of ApiResponse.

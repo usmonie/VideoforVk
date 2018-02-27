@@ -3,10 +3,6 @@ package akhmedoff.usman.data.repository
 import akhmedoff.usman.data.BuildConfig
 import akhmedoff.usman.data.api.VkApi
 import akhmedoff.usman.data.local.UserSettings
-import akhmedoff.usman.data.model.User
-import android.arch.core.util.Function
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.Transformations
 
 class UserRepository(
     private val userSettings: UserSettings,
@@ -39,13 +35,8 @@ class UserRepository(
         captchaKey = captchaKey
     )
 
-    fun getUsers(users_id: String? = null): LiveData<List<User>> =
-        Transformations.map(api.getUsers(listOf(users_id)), Function {
-            return@Function when {
-                it.response != null -> it.response
-                else -> listOf()
-            }
-        })
+    fun getUsers(users_id: String? = null) = api.getUsers(listOfNotNull(users_id))
+
 
     fun getUsers(ids: List<String>) = api.getUsers(ids)
 }

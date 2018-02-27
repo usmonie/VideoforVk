@@ -7,39 +7,36 @@ import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import java.lang.reflect.Type
 
-class UserDeserializer : JsonDeserializer<List<User>> {
+class UserDeserializer : JsonDeserializer<User> {
 
     override fun deserialize(
         json: JsonElement,
         typeOfT: Type?,
         context: JsonDeserializationContext?
-    ): List<User> {
+    ): User {
         Log.d("deserialize user", "start")
-        val responseJson = json.asJsonObject["response"].asJsonArray
-        val users = mutableListOf<User>()
-        responseJson.forEach {
-            val user = User()
-            it.asJsonObject["id"]?.let { user.id = it.asJsonPrimitive.asLong }
-            it.asJsonObject["first_name"]?.let { user.firstName = it.asString }
-            it.asJsonObject["last_name"]?.let { user.lastName = it.asString }
-            it.asJsonObject["nickname"]?.let { user.nickname = it.asString }
-            it.asJsonObject["screen_name"]?.let { user.screenName = it.asString }
-            it.asJsonObject["photo_100"]?.let { user.photo100 = it.asString }
-            it.asJsonObject["photo_max"]?.let { user.photoMax = it.asString }
-            it.asJsonObject["photo_max_orig"]?.let { user.photoMaxOrig = it.asString }
-            it.asJsonObject["photo_id"]?.let { user.photoId = it.asString }
+        val responseJson = json.asJsonObject
+        val user = User()
+        responseJson["id"]?.let { user.id = it.asJsonPrimitive.asLong }
+        responseJson["first_name"]?.let { user.firstName = it.asString }
+        responseJson["last_name"]?.let { user.lastName = it.asString }
+        responseJson["nickname"]?.let { user.nickname = it.asString }
+        responseJson["screen_name"]?.let { user.screenName = it.asString }
+        responseJson["photo_100"]?.let { user.photo100 = it.asString }
+        responseJson["photo_max"]?.let { user.photoMax = it.asString }
+        responseJson["photo_max_orig"]?.let { user.photoMaxOrig = it.asString }
+        responseJson["photo_id"]?.let { user.photoId = it.asString }
 
-            user.isFriend = when (it.asJsonObject["is_friend"]?.asInt) {
-                null -> false
-                0 -> false
-                else -> true
-            }
-
-            it.asJsonObject["friend_status"]?.let { user.friendStatus = it.asInt }
-            users.add(user)
+        user.isFriend = when (responseJson.asJsonObject["is_friend"]?.asInt) {
+            null -> false
+            0 -> false
+            else -> true
         }
+
+        responseJson["friend_status"]?.let { user.friendStatus = it.asInt }
+
         Log.d("deserialize user", "end")
 
-        return users
+        return user
     }
 }

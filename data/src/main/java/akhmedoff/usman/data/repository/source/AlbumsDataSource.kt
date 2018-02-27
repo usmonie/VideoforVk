@@ -2,6 +2,7 @@ package akhmedoff.usman.data.repository.source
 
 import akhmedoff.usman.data.api.VkApi
 import akhmedoff.usman.data.model.Album
+import akhmedoff.usman.data.model.ApiResponse
 import android.arch.paging.PositionalDataSource
 import android.util.Log
 import retrofit2.Call
@@ -22,7 +23,7 @@ class AlbumsDataSource(
         try {
             val response = apiSource.execute()
 
-            val items = response.body() ?: emptyList()
+            val items = response.body()?.response ?: emptyList()
 
             callback.onResult(items, 0)
         } catch (exception: Exception) {
@@ -35,12 +36,12 @@ class AlbumsDataSource(
             ownerId = ownerId,
             count = 15,
             offset = 0
-        ).enqueue(object : Callback<List<Album>> {
+        ).enqueue(object : Callback<ApiResponse<List<Album>>> {
             /**
              * Invoked when a network exception occurred talking to the server or when an unexpected
              * exception occurred creating the request or processing the response.
              */
-            override fun onFailure(call: Call<List<Album>>?, t: Throwable?) {
+            override fun onFailure(call: Call<ApiResponse<List<Album>>>?, t: Throwable?) {
                 Log.e("callback", "ERROR: " + t.toString())
             }
 
@@ -52,10 +53,10 @@ class AlbumsDataSource(
              * Call [Response.isSuccessful] to determine if the response indicates success.
              */
             override fun onResponse(
-                call: Call<List<Album>>?,
-                response: Response<List<Album>>?
+                call: Call<ApiResponse<List<Album>>>?,
+                response: Response<ApiResponse<List<Album>>>?
             ) {
-                response?.body()?.let {
+                response?.body()?.response?.let {
                     callback.onResult(it)
                 }
             }

@@ -1,6 +1,7 @@
 package akhmedoff.usman.videoforvk.video
 
 import akhmedoff.usman.data.Error
+import akhmedoff.usman.data.model.ApiResponse
 import akhmedoff.usman.data.model.ResponseVideo
 import akhmedoff.usman.data.model.User
 import akhmedoff.usman.data.model.Video
@@ -8,8 +9,8 @@ import akhmedoff.usman.data.repository.UserRepository
 import akhmedoff.usman.data.repository.VideoRepository
 import akhmedoff.usman.videoforvk.base.BasePresenter
 import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.Observer
 import android.arch.lifecycle.OnLifecycleEvent
+import android.util.Log
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -87,7 +88,7 @@ class VideoPresenter(
         view?.let { view ->
             userRepository
                 .getUsers(user.id.toString())
-                .observe(view, Observer {
+                /*.observe(view, Observer {
                     it?.let { users ->
                         if (users.isNotEmpty()) {
                             view.showUserOwnerInfo(users[0])
@@ -96,32 +97,31 @@ class VideoPresenter(
                             view.showPlayer()
                         }
                     }
-                })
-            /*.enqueue(object : Callback<List<User>> {
-                override fun onFailure(call: Call<List<User>>?, t: Throwable?) {
-                    Log.e("error", t.toString())
+                })*/
+                .enqueue(object : Callback<ApiResponse<List<User>>> {
+                    override fun onFailure(
+                        call: Call<ApiResponse<List<User>>>?,
+                        t: Throwable?
+                    ) {
+                        Log.e("error", t?.message)
 
-                    view.hideProgress()
-                    view.showLoadError()
-                }
+                        view.hideProgress()
+                        view.showLoadError()
+                    }
 
-                override fun onResponse(
-                    call: Call<List<User>>?,
-                    response: Response<List<User>>?
-                ) {
-                    view.hideProgress()
-                    response?.body().let {
-
-                        it?.get(0)?.let { user ->
+                    override fun onResponse(
+                        call: Call<ApiResponse<List<User>>>?,
+                        response: Response<ApiResponse<List<User>>>?
+                    ) {
+                        view.hideProgress()
+                        response?.body()?.response?.get(0)?.let { user ->
                             view.showUserOwnerInfo(user)
                             view.hideProgress()
                             view.showUi()
                             view.showPlayer()
                         }
                     }
-                }
-
-            })*/
+                })
         }
 
     }

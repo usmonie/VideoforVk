@@ -3,7 +3,7 @@ package akhmedoff.usman.data.model
 import android.util.Log
 import retrofit2.Response as RetrofitResponse
 
-class Response<T> {
+class ApiResponse<T> {
     val response: T?
     val errorMessage: String?
 
@@ -18,8 +18,8 @@ class Response<T> {
         errorMessage = throwable.message
     }
 
-    constructor(auth: T) {
-        response = auth
+    constructor(item: T) {
+        response = item
         errorMessage = null
     }
 }
