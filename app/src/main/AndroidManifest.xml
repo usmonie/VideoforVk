@@ -26,7 +26,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -39,17 +38,14 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".main.MainActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:label="@string/main_screen" />
-
         <activity
             android:name=".login.LoginActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:theme="@style/LoginTheme" />
-
         <activity
             android:name=".video.VideoActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
@@ -58,18 +54,21 @@
             android:supportsPictureInPicture="true"
             android:theme="@style/AppTheme"
             tools:ignore="UnusedAttribute">
-
             <layout
                 android:defaultHeight="640dp"
                 android:defaultWidth="330dp"
                 android:gravity="center"
                 android:minHeight="114dp"
                 android:minWidth="132dp" />
-
         </activity>
-
         <activity
             android:name=".album.AlbumActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation" />
+        <activity
+            android:name=".search.SearchActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation" />
+        <activity
+            android:name=".owner.OwnerActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation" />
     </application>
 

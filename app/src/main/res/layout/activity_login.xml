@@ -40,7 +40,6 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
-        android:textColorHint="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login_logo">
@@ -52,9 +51,7 @@
             android:hint="@string/login.username.hint"
             android:imeOptions="actionNext"
             android:inputType="textWebEmailAddress"
-            android:singleLine="true"
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/white" />
+            android:singleLine="true" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -64,7 +61,6 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:textColorHint="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/username_input_layout">
@@ -76,9 +72,7 @@
             android:hint="@string/login.password.hint"
             android:imeOptions="actionSend"
             android:inputType="textWebPassword"
-            android:singleLine="true"
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/white" />
+            android:singleLine="true" />
     </android.support.design.widget.TextInputLayout>
 
     <ProgressBar

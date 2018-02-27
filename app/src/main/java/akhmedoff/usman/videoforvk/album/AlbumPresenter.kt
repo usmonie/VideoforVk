@@ -1,9 +1,9 @@
 package akhmedoff.usman.videoforvk.album
 
-import akhmedoff.usman.videoforvk.Error
+import akhmedoff.usman.data.Error
+import akhmedoff.usman.data.model.Video
+import akhmedoff.usman.data.repository.VideoRepository
 import akhmedoff.usman.videoforvk.base.BasePresenter
-import akhmedoff.usman.videoforvk.data.repository.VideoRepository
-import akhmedoff.usman.videoforvk.model.Video
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.OnLifecycleEvent
@@ -60,6 +60,5 @@ class AlbumPresenter(private val videoRepository: VideoRepository) :
     }
 
     override fun clickAdd() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

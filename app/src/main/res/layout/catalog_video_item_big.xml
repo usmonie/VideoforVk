@@ -2,6 +2,7 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/video_item_cardView"
     android:layout_width="@dimen/width_main_list_first_video"
     android:layout_height="@dimen/height_main_list_item"
     android:layout_marginStart="16dp"
@@ -9,7 +10,7 @@
     app:cardCornerRadius="5dp">
 
     <ImageView
-        android:id="@+id/video_frame"
+        android:id="@+id/video_poster"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:foreground="@drawable/video_gradient"
@@ -37,6 +38,6 @@
         app:autoSizeMaxTextSize="@dimen/max_text_size_big_video_item"
         app:autoSizeMinTextSize="@dimen/min_text_size_big_video_item"
         app:autoSizeStepGranularity="2sp"
-        tools:text="dasda" />
+        tools:text="@tools:sample/cities" />
 
 </android.support.v7.widget.CardView>

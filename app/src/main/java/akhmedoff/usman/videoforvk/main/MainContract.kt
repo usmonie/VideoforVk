@@ -1,9 +1,9 @@
 package akhmedoff.usman.videoforvk.main
 
-import akhmedoff.usman.videoforvk.Error
+import akhmedoff.usman.data.Error
+import akhmedoff.usman.data.model.Catalog
+import akhmedoff.usman.data.model.CatalogItem
 import akhmedoff.usman.videoforvk.base.BaseContract
-import akhmedoff.usman.videoforvk.model.Catalog
-import akhmedoff.usman.videoforvk.model.CatalogItem
 import android.arch.paging.PagedList
 
 interface MainContract {
@@ -28,6 +28,12 @@ interface MainContract {
 
         fun showProfile()
 
+        fun showUserAvatar(avatarUrl: String)
+
+        fun showUserName(name: String)
+
+        fun startSearch()
+
     }
 
     interface Presenter : BaseContract.Presenter<View> {
@@ -42,5 +48,6 @@ interface MainContract {
 
         fun error(error: Error, message: String)
 
+        fun searchClicked()
     }
 }

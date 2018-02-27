@@ -1,8 +1,8 @@
 package akhmedoff.usman.videoforvk.album
 
-import akhmedoff.usman.videoforvk.Error
+import akhmedoff.usman.data.Error
+import akhmedoff.usman.data.model.Video
 import akhmedoff.usman.videoforvk.base.BaseContract
-import akhmedoff.usman.videoforvk.model.Video
 import android.arch.paging.PagedList
 
 interface AlbumContract {

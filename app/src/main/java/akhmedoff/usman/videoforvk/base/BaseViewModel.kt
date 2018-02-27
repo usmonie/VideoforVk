@@ -6,7 +6,7 @@ class BaseViewModel<V : BaseContract.View, P : BaseContract.Presenter<V>> : View
 
     private var presenter: P? = null
 
-    fun getPresenter() = this.presenter
+    fun getPresenter() = presenter
 
     fun setPresenter(presenter: P) {
         if (this.presenter == null) this.presenter = presenter

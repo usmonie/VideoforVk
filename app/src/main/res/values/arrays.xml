@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="durations">
+        <item>@string/duration.any</item>
+        <item>@string/duration.long</item>
+        <item>@string/duration.short</item>
+    </string-array>
+
+    <string-array name="sorts">
+        <item>@string/sort_by.recent</item>
+        <item>@string/sort_by.duration</item>
+        <item>@string/sort_by.relevance</item>
+    </string-array>
+
+</resources>

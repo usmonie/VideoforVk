@@ -1,13 +1,14 @@
 package akhmedoff.usman.videoforvk.main
 
+import akhmedoff.usman.data.model.CatalogItem
+import akhmedoff.usman.data.model.CatalogItemType
 import akhmedoff.usman.videoforvk.R
-import akhmedoff.usman.videoforvk.model.CatalogItem
-import akhmedoff.usman.videoforvk.model.CatalogItemType
 import akhmedoff.usman.videoforvk.view.holders.VideoViewHolder
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.squareup.picasso.Picasso
+
 
 class CatalogRecyclerAdapter(
     private val picasso: Picasso,
@@ -25,6 +26,7 @@ class CatalogRecyclerAdapter(
                 false
             )
         )
+
         items?.let { items ->
             holder.itemView.setOnClickListener {
                 clickListener(items[holder.adapterPosition])

@@ -5,6 +5,7 @@
     android:id="@+id/video_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:keepScreenOn="true"
     android:orientation="vertical">
 
@@ -23,7 +24,8 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:orientation="horizontal"
-        android:visibility="gone">
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <ImageView
             android:id="@+id/like_button"
@@ -31,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
-            app:srcCompat="@drawable/ic_favorite_border_white_24dp" />
+            app:srcCompat="@drawable/ic_favorite_border" />
 
         <ImageView
             android:id="@+id/share_button"
@@ -39,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
-            app:srcCompat="@drawable/ic_share_white_24dp" />
+            app:srcCompat="@drawable/ic_share" />
 
         <ImageView
             android:id="@+id/send_button"
@@ -47,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
-            app:srcCompat="@drawable/ic_send_white_24dp" />
+            app:srcCompat="@drawable/ic_send" />
 
         <ImageView
             android:id="@+id/add_button"
@@ -55,26 +57,29 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
-            app:srcCompat="@drawable/ic_add_white_24dp" />
+            app:srcCompat="@drawable/ic_add" />
     </LinearLayout>
 
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/video_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:visibility="gone"
-        tools:text="Название"
+        app:autoSizeMaxTextSize="@dimen/max_text_size_big_video_item"
+        app:autoSizeMinTextSize="@dimen/min_text_size_big_video_item"
+        app:autoSizeStepGranularity="2sp"
+        tools:text="@tools:sample/full_names"
         tools:visibility="visible" />
 
     <TextView
         android:id="@+id/video_views"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:layout_marginTop="8dp"
         android:visibility="gone"
         tools:text="70К просмотров"
@@ -84,17 +89,17 @@
         android:id="@+id/video_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:layout_marginTop="8dp"
         android:visibility="gone"
-        tools:text="15:30, сегодня"
+        tools:text="@tools:sample/date/mmddyy"
         tools:visibility="visible" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/owner_card"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
         android:background="@drawable/owner_card_border"
         android:visibility="gone"
         tools:visibility="visible">
@@ -103,38 +108,41 @@
             android:id="@+id/owner_photo"
             android:layout_width="36dp"
             android:layout_height="0dp"
-            android:layout_marginBottom="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
             android:adjustViewBounds="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/background_splash" />
+            tools:src="@tools:sample/avatars" />
 
-        <TextView
+        <android.support.v7.widget.AppCompatTextView
             android:id="@+id/owner_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
             android:maxLines="2"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             android:textSize="14sp"
+            app:autoSizeMaxTextSize="@dimen/max_text_size_big_video_item"
+            app:autoSizeMinTextSize="@dimen/min_text_size_big_video_item"
+            app:autoSizeStepGranularity="2sp"
             app:layout_constraintEnd_toStartOf="@+id/owner_follow"
             app:layout_constraintStart_toEndOf="@+id/owner_photo"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Owner name" />
+            tools:text="@tools:sample/full_names" />
 
         <Button
             android:id="@+id/owner_follow"
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

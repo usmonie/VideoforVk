@@ -1,20 +1,18 @@
 package akhmedoff.usman.videoforvk.main
 
-import akhmedoff.usman.videoforvk.App.Companion.context
+import akhmedoff.usman.data.model.Catalog
+import akhmedoff.usman.data.model.CatalogItem
+import akhmedoff.usman.data.repository.VideoRepository
+import akhmedoff.usman.data.utils.vkApi
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.album.AlbumActivity
 import akhmedoff.usman.videoforvk.base.BaseActivity
-import akhmedoff.usman.videoforvk.data.repository.VideoRepository
-import akhmedoff.usman.videoforvk.model.Catalog
-import akhmedoff.usman.videoforvk.model.CatalogItem
-import akhmedoff.usman.videoforvk.utils.vkApi
+import akhmedoff.usman.videoforvk.search.SearchActivity
 import akhmedoff.usman.videoforvk.video.VideoActivity
 import android.arch.paging.PagedList
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.view.Menu
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), MainContract.View {
@@ -31,21 +29,21 @@ class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         mainPresenter = MainPresenter(VideoRepository(vkApi))
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        setSupportActionBar(toolbar)
-        supportActionBar?.title = getText(R.string.main_screen)
-
-        val layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        home_recycler.layoutManager = layoutManager
         home_recycler.adapter = adapter
 
         update_home_layout.setOnRefreshListener { mainPresenter.refresh() }
+
+        search_box_collapsed.setOnClickListener { mainPresenter.searchClicked() }
     }
 
-    override fun showProfile() {
+    override fun showUserAvatar(avatarUrl: String) {
+    }
+
+    override fun showUserName(name: String) {
+
     }
 
     override fun showList(videos: PagedList<Catalog>) = adapter.setList(videos)
@@ -55,12 +53,12 @@ class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), 
     override fun showAlbum(album: CatalogItem) =
         startActivity(AlbumActivity.getActivity(album, this))
 
-    override fun showCatalog(catalog: Catalog) {
+    override fun showProfile() {
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.activity_main_menu, menu)
-        return true
+    override fun startSearch() = startActivity(Intent(this, SearchActivity::class.java))
+
+    override fun showCatalog(catalog: Catalog) {
     }
 
     override fun showLoading() {
@@ -72,7 +70,7 @@ class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), 
     }
 
     override fun showErrorLoading() =
-        Snackbar.make(activity_main, getText(R.string.error_loading), Snackbar.LENGTH_LONG).show()
+        Snackbar.make(main_layout, getText(R.string.error_loading), Snackbar.LENGTH_LONG).show()
 
     override fun initPresenter() = mainPresenter
 }

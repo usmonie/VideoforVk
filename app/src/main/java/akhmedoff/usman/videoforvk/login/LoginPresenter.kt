@@ -1,10 +1,10 @@
 package akhmedoff.usman.videoforvk.login
 
-import akhmedoff.usman.videoforvk.Error
+import akhmedoff.usman.data.Error
+import akhmedoff.usman.data.model.Auth
+import akhmedoff.usman.data.repository.UserRepository
+import akhmedoff.usman.data.utils.gson
 import akhmedoff.usman.videoforvk.base.BasePresenter
-import akhmedoff.usman.videoforvk.data.repository.UserRepository
-import akhmedoff.usman.videoforvk.model.Auth
-import akhmedoff.usman.videoforvk.utils.gson
 import android.util.Log
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -119,6 +119,4 @@ class LoginPresenter(
             }
         }
     }
-
-
 }

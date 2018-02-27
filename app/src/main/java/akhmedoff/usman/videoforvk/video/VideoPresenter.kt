@@ -1,12 +1,13 @@
 package akhmedoff.usman.videoforvk.video
 
-import akhmedoff.usman.videoforvk.Error
+import akhmedoff.usman.data.Error
+import akhmedoff.usman.data.model.ApiResponse
+import akhmedoff.usman.data.model.ResponseVideo
+import akhmedoff.usman.data.model.User
+import akhmedoff.usman.data.model.Video
+import akhmedoff.usman.data.repository.UserRepository
+import akhmedoff.usman.data.repository.VideoRepository
 import akhmedoff.usman.videoforvk.base.BasePresenter
-import akhmedoff.usman.videoforvk.data.repository.UserRepository
-import akhmedoff.usman.videoforvk.data.repository.VideoRepository
-import akhmedoff.usman.videoforvk.model.ResponseVideo
-import akhmedoff.usman.videoforvk.model.User
-import akhmedoff.usman.videoforvk.model.Video
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.OnLifecycleEvent
 import android.util.Log
@@ -66,14 +67,14 @@ class VideoPresenter(
                             }
 
                             when {
-                                responseVideo.groups != null && responseVideo.groups.isNotEmpty() -> {
-                                    view.showGroupOwnerInfo(responseVideo.groups[0])
+                                responseVideo.groups != null && responseVideo.groups!!.isNotEmpty() -> {
+                                    view.showGroupOwnerInfo(responseVideo.groups!![0])
                                     view.hideProgress()
                                     view.showUi()
                                     view.showPlayer()
                                 }
-                                responseVideo.profiles != null && responseVideo.profiles.isNotEmpty() ->
-                                    loadUser(responseVideo.profiles[0])
+                                responseVideo.profiles != null && responseVideo.profiles!!.isNotEmpty() ->
+                                    loadUser(responseVideo.profiles!![0])
                             }
 
                         }
@@ -85,21 +86,42 @@ class VideoPresenter(
 
     private fun loadUser(user: User) {
         view?.let { view ->
-            userRepository.getUser(user.id.toString()).enqueue(object : Callback<List<User>> {
-                override fun onFailure(call: Call<List<User>>?, t: Throwable?) {
-                    view.hideProgress()
-                    Log.d("failure", t.toString())
-                }
-
-                override fun onResponse(call: Call<List<User>>?, response: Response<List<User>>?) {
-                    response?.body()?.let { users ->
-                        view.showUserOwnerInfo(users[0])
-                        view.hideProgress()
-                        view.showUi()
-                        view.showPlayer()
+            userRepository
+                .getUsers(user.id.toString())
+                /*.observe(view, Observer {
+                    it?.let { users ->
+                        if (users.isNotEmpty()) {
+                            view.showUserOwnerInfo(users[0])
+                            view.hideProgress()
+                            view.showUi()
+                            view.showPlayer()
+                        }
                     }
-                }
-            })
+                })*/
+                .enqueue(object : Callback<ApiResponse<List<User>>> {
+                    override fun onFailure(
+                        call: Call<ApiResponse<List<User>>>?,
+                        t: Throwable?
+                    ) {
+                        Log.e("error", t?.message)
+
+                        view.hideProgress()
+                        view.showLoadError()
+                    }
+
+                    override fun onResponse(
+                        call: Call<ApiResponse<List<User>>>?,
+                        response: Response<ApiResponse<List<User>>>?
+                    ) {
+                        view.hideProgress()
+                        response?.body()?.response?.get(0)?.let { user ->
+                            view.showUserOwnerInfo(user)
+                            view.hideProgress()
+                            view.showUi()
+                            view.showPlayer()
+                        }
+                    }
+                })
         }
 
     }
@@ -150,7 +172,6 @@ class VideoPresenter(
     }
 
     override fun error(error: Error, message: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun pipToggleButton() {
@@ -159,15 +180,11 @@ class VideoPresenter(
     }
 
     override fun liked() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun share() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun send() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-
 }

@@ -1,10 +1,10 @@
 package akhmedoff.usman.videoforvk.video
 
-import akhmedoff.usman.videoforvk.Error
+import akhmedoff.usman.data.Error
+import akhmedoff.usman.data.model.Group
+import akhmedoff.usman.data.model.User
+import akhmedoff.usman.data.model.Video
 import akhmedoff.usman.videoforvk.base.BaseContract
-import akhmedoff.usman.videoforvk.model.Group
-import akhmedoff.usman.videoforvk.model.User
-import akhmedoff.usman.videoforvk.model.Video
 
 interface VideoContract {
 
@@ -82,6 +82,10 @@ interface VideoContract {
         fun setAdded()
 
         fun setDeleted()
+
+        fun showOwner(owner: User)
+
+        fun showOwner(owner: Group)
 
     }
 
