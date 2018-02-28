@@ -53,7 +53,7 @@ dependencies {
 
     implementation "android.arch.lifecycle:extensions:$archLifecycleVersion"
     implementation 'android.arch.paging:runtime:1.0.0-alpha5'
-    annotationProcessor "android.arch.lifecycle:compiler:$archLifecycleVersion"
+    kapt "android.arch.lifecycle:compiler:$archLifecycleVersion"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 

@@ -40,8 +40,6 @@ class CatalogViewHolder(
 
         val snapHelper = GravitySnapHelper(Gravity.START)
         snapHelper.attachToRecyclerView(catalogRecycler)
-
-
     }
 
     private fun getSpanSizeLookup() = object : GridLayoutManager.SpanSizeLookup() {

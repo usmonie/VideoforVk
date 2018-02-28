@@ -9,6 +9,7 @@ import akhmedoff.usman.data.repository.UserRepository
 import akhmedoff.usman.data.repository.VideoRepository
 import akhmedoff.usman.videoforvk.base.BasePresenter
 import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.OnLifecycleEvent
 import android.util.Log
 import retrofit2.Call
@@ -72,9 +73,18 @@ class VideoPresenter(
                                     view.hideProgress()
                                     view.showUi()
                                     view.showPlayer()
+                                    responseVideo.groups?.forEach {
+                                        videoRepository.saveOwner(it)
+                                    }
+                                    videoRepository.saveOwnerId(responseVideo.groups!![0].id)
+
                                 }
-                                responseVideo.profiles != null && responseVideo.profiles!!.isNotEmpty() ->
+                                responseVideo.profiles != null && responseVideo.profiles!!.isNotEmpty() -> {
+                                    responseVideo.profiles?.forEach {
+                                        videoRepository.saveOwner(it)
+                                    }
                                     loadUser(responseVideo.profiles!![0])
+                                }
                             }
 
                         }
@@ -119,6 +129,7 @@ class VideoPresenter(
                             view.hideProgress()
                             view.showUi()
                             view.showPlayer()
+                            videoRepository.saveOwnerId(user.id)
                         }
                     }
                 })
@@ -186,5 +197,13 @@ class VideoPresenter(
     }
 
     override fun send() {
+    }
+
+    override fun ownerClicked() {
+        view?.let { view ->
+            videoRepository.getOwner()
+                .observe(view, Observer { owner -> owner?.let { view.showOwnerGroup(it) } })
+        }
+
     }
 }

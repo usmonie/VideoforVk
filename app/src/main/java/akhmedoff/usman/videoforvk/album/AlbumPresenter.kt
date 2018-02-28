@@ -43,7 +43,7 @@ class AlbumPresenter(private val videoRepository: VideoRepository) :
                 run {
                     albumResponse?.response?.let { album ->
                         run {
-                            view.showAlbumImage(album.photo320)
+                            view.showAlbumImage(album.photo320!!)
                             when (view.getAlbumTitle()) {
                                 null -> view.showAlbumTitle(album.title)
                                 else -> view.showAlbumTitle(view.getAlbumTitle()!!)

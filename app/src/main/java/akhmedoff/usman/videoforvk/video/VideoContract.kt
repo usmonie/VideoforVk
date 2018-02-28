@@ -2,6 +2,7 @@ package akhmedoff.usman.videoforvk.video
 
 import akhmedoff.usman.data.Error
 import akhmedoff.usman.data.model.Group
+import akhmedoff.usman.data.model.Owner
 import akhmedoff.usman.data.model.User
 import akhmedoff.usman.data.model.Video
 import akhmedoff.usman.videoforvk.base.BaseContract
@@ -83,9 +84,9 @@ interface VideoContract {
 
         fun setDeleted()
 
-        fun showOwner(owner: User)
+        fun showOwnerUser(owner: Owner)
+        fun showOwnerGroup(owner: Owner)
 
-        fun showOwner(owner: Group)
 
     }
 
@@ -105,5 +106,7 @@ interface VideoContract {
         fun share()
 
         fun send()
+
+        fun ownerClicked()
     }
 }

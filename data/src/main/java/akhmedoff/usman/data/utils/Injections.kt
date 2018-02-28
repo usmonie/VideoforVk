@@ -1,8 +1,14 @@
 package akhmedoff.usman.data.utils
 
 import akhmedoff.usman.data.api.VkApi
+import akhmedoff.usman.data.db.OwnerDao
+import akhmedoff.usman.data.local.UserSettings
 import akhmedoff.usman.data.model.*
+import akhmedoff.usman.data.repository.GroupRepository
+import akhmedoff.usman.data.repository.UserRepository
+import akhmedoff.usman.data.repository.VideoRepository
 import akhmedoff.usman.data.utils.deserializers.*
+import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import okhttp3.Interceptor
@@ -70,7 +76,12 @@ val gson: Gson by lazy {
     }.create()
 }
 
-/*val database: AppDatabase by lazy {
+fun getVideoRepository(context: Context, ownerDao: OwnerDao) =
+    VideoRepository(vkApi, UserSettings.getUserSettings(context), ownerDao)
 
-}*/
+fun getUserRepository(context: Context) =
+    UserRepository(UserSettings.getUserSettings(context), vkApi)
+
+fun getGroupRepository(context: Context) =
+    GroupRepository(vkApi, UserSettings.getUserSettings(context))
 

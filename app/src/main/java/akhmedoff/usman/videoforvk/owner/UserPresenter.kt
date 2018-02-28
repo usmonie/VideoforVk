@@ -6,6 +6,7 @@ import akhmedoff.usman.data.repository.UserRepository
 import akhmedoff.usman.data.repository.VideoRepository
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.OnLifecycleEvent
+import android.util.Log
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -31,7 +32,7 @@ class UserPresenter(
 
                 .enqueue(object : Callback<ApiResponse<List<User>>> {
                     override fun onFailure(call: Call<ApiResponse<List<User>>>?, t: Throwable?) {
-
+                        Log.d("owner failure", t.toString())
                     }
 
                     override fun onResponse(
