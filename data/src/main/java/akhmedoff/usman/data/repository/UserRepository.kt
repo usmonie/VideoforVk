@@ -37,6 +37,5 @@ class UserRepository(
 
     fun getUsers(users_id: String? = null) = api.getUsers(listOfNotNull(users_id))
 
-
     fun getUsers(ids: List<String>) = api.getUsers(ids)
 }

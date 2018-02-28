@@ -1,9 +1,9 @@
 package akhmedoff.usman.videoforvk.main
 
+import akhmedoff.usman.data.db.AppDatabase
 import akhmedoff.usman.data.model.Catalog
 import akhmedoff.usman.data.model.CatalogItem
-import akhmedoff.usman.data.repository.VideoRepository
-import akhmedoff.usman.data.utils.vkApi
+import akhmedoff.usman.data.utils.getVideoRepository
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.album.AlbumActivity
 import akhmedoff.usman.videoforvk.base.BaseActivity
@@ -28,7 +28,8 @@ class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), 
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        mainPresenter = MainPresenter(VideoRepository(vkApi))
+        mainPresenter =
+                MainPresenter(getVideoRepository(this, AppDatabase.getInstance(this).ownerDao()))
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 

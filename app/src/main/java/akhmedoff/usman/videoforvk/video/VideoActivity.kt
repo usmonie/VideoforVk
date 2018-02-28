@@ -1,17 +1,14 @@
 package akhmedoff.usman.videoforvk.video
 
+import akhmedoff.usman.data.db.AppDatabase
 import akhmedoff.usman.data.local.UserSettings
-import akhmedoff.usman.data.model.Group
-import akhmedoff.usman.data.model.Item
-import akhmedoff.usman.data.model.User
-import akhmedoff.usman.data.model.Video
+import akhmedoff.usman.data.model.*
 import akhmedoff.usman.data.repository.UserRepository
-import akhmedoff.usman.data.repository.VideoRepository
+import akhmedoff.usman.data.utils.getVideoRepository
 import akhmedoff.usman.data.utils.vkApi
 import akhmedoff.usman.videoforvk.App.Companion.context
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.base.BaseActivity
-import akhmedoff.usman.videoforvk.owner.OwnerActivity
 import akhmedoff.usman.videoforvk.player.AudioFocusListener
 import akhmedoff.usman.videoforvk.player.SimpleControlDispatcher
 import android.annotation.TargetApi
@@ -52,7 +49,6 @@ import java.util.*
 @TargetApi(Build.VERSION_CODES.O)
 class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(),
     VideoContract.View {
-
     companion object {
         const val VIDEO_ID = "video_id"
 
@@ -117,7 +113,7 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         videoPresenter = VideoPresenter(
-            VideoRepository(vkApi),
+            getVideoRepository(this, AppDatabase.getInstance(this).ownerDao()),
             UserRepository(
                 userSettings = UserSettings.getUserSettings(applicationContext),
                 api = vkApi
@@ -148,6 +144,7 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
 
         video_exo_player.player = player
 
+        owner_card.setOnClickListener { videoPresenter.ownerClicked() }
     }
 
     override fun showVideo(item: Video) {
@@ -381,7 +378,13 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
     override fun setDeleted() {
     }
 
-    override fun showOwner(owner: User) = startActivity(OwnerActivity.getActivity(owner, this))
+    override fun showOwnerGroup(owner: Owner) {
+        //startActivity(OwnerActivity.getGroupActivity(owner, this))
+    }
 
-    override fun showOwner(owner: Group) = startActivity(OwnerActivity.getActivity(owner, this))
+    override fun showOwnerUser(owner: Owner) {
+        //startActivity(OwnerActivity.getUserActivity(owner, this))
+    }
+
+
 }

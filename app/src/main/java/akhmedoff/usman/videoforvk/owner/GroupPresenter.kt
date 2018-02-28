@@ -22,7 +22,7 @@ class GroupPresenter(
             groupRepository.getGroup(view.getOwnerId())
                 .enqueue(object : Callback<ApiResponse<List<Group>>> {
                     override fun onFailure(call: Call<ApiResponse<List<Group>>>?, t: Throwable?) {
-                    Log.d("failure", t.toString())
+                        Log.d("owner failure", t.toString())
                 }
 
                 override fun onResponse(
