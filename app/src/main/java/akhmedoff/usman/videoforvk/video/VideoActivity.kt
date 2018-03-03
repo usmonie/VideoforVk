@@ -61,27 +61,25 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
 
     override lateinit var videoPresenter: VideoPresenter
 
-
-    private val file: File by lazy {
+    private val file by lazy {
         File("${filesDir.parent}/cache")
     }
 
-    private val cacheDataSourceFactory:
-            CacheDataSourceFactory by lazy {
+    private val cacheDataSourceFactory by lazy {
         CacheDataSourceFactory(SimpleCache(file, NoOpCacheEvictor()), dataSourceFactory)
     }
 
     private var player: SimpleExoPlayer? = null
 
-    private val audioManager: AudioManager by lazy {
+    private val audioManager by lazy {
         getSystemService(Context.AUDIO_SERVICE) as AudioManager
     }
 
-    private val audioFocusListener: AudioFocusListener by lazy {
+    private val audioFocusListener by lazy {
         AudioFocusListener(player)
     }
 
-    private val simpleControlDispatcher: SimpleControlDispatcher by lazy {
+    private val simpleControlDispatcher by lazy {
         SimpleControlDispatcher(audioFocusListener, audioManager, {
             startActivity(
                 Intent(
@@ -191,6 +189,8 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
                 else -> item.files.mp4240
             }
         )
+
+        if (item.files.external != null) pip_toggle.visibility = View.GONE
 
         // This is the MediaSource representing the media to be played.
         val videoSource = when {

@@ -14,13 +14,12 @@ class SimpleControlDispatcher(
     private val externalLinkListener: (String) -> Unit
 ) : DefaultControlDispatcher() {
 
-    private val audioFocusRequest: AudioFocusRequest? by lazy {
-        val audioAttributes = AudioAttributes.Builder()
-            .setUsage(AudioAttributes.USAGE_MEDIA)
-            .setContentType(AudioAttributes.CONTENT_TYPE_MOVIE)
-            .build()
-
+    private val audioFocusRequest by lazy {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val audioAttributes = AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_MEDIA)
+                .setContentType(AudioAttributes.CONTENT_TYPE_MOVIE)
+                .build()
             AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
                 .setAudioAttributes(audioAttributes)
                 .setAcceptsDelayedFocusGain(true)
@@ -30,6 +29,7 @@ class SimpleControlDispatcher(
             null
         }
     }
+
     lateinit var item: Video
 
     override fun dispatchSetPlayWhenReady(
@@ -38,17 +38,14 @@ class SimpleControlDispatcher(
     ) = super.dispatchSetPlayWhenReady(
         player,
         when (item.files.external) {
-            null -> {
-                val res = getAudioFocusResponse()
-
-                when (res) {
+            null ->
+                when (getAudioFocusResponse()) {
                     AudioManager.AUDIOFOCUS_REQUEST_GRANTED -> playWhenReady
                     else -> false
                 }
-            }
 
             else -> {
-                item.files.external?.let(externalLinkListener)
+                externalLinkListener(item.files.external!!)
                 false
             }
         }

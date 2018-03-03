@@ -8,7 +8,7 @@ import android.arch.persistence.room.Index
     primaryKeys = ["id"],
     indices = [(Index(value = ["id"], unique = true))]
 )
-class Catalog(
+data class Catalog(
     var items: MutableList<CatalogItem>?,
     var name: String?,
     var id: String?,

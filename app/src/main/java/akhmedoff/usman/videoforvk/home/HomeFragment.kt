@@ -23,7 +23,6 @@ class HomeFragment : BaseFragment<HomeContract.View, HomeContract.Presenter>(), 
     override lateinit var homePresenter: HomeContract.Presenter
 
     private val adapter: MainRecyclerAdapter by lazy {
-
         val adapter = MainRecyclerAdapter { presenter.clickItem(it) }
 
         adapter.setHasStableIds(true)
