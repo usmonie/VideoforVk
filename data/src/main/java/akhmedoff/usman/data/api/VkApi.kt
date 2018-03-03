@@ -90,6 +90,16 @@ interface VkApi {
         @Query("group_id") groupId: String? = null
     ): Call<ApiResponse<List<Group>>>
 
+    @GET("groups.leave")
+    fun leaveGroup(
+        @Query("group_id") groupId: Long
+    ): Call<ApiResponse<Boolean>>
+
+    @GET("groups.join")
+    fun joinGroup(
+        @Query("group_id") groupId: Long
+    ): Call<ApiResponse<Boolean>>
+
     @GET
     fun checkToken(@Url url: String): Call<CheckTokenResponse>
 }

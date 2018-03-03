@@ -11,13 +11,10 @@ import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.base.BaseActivity
 import akhmedoff.usman.videoforvk.player.AudioFocusListener
 import akhmedoff.usman.videoforvk.player.SimpleControlDispatcher
-import android.annotation.TargetApi
 import android.app.PictureInPictureParams
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.media.AudioAttributes
-import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.net.Uri
 import android.os.Build
@@ -46,7 +43,6 @@ import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-@TargetApi(Build.VERSION_CODES.O)
 class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(),
     VideoContract.View {
     companion object {
@@ -93,20 +89,7 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
                     Uri.parse(it)
                 )
             )
-        }, audioFocusRequest)
-    }
-
-    private val audioFocusRequest: AudioFocusRequest by lazy {
-        val audioAttributes = AudioAttributes.Builder()
-            .setUsage(AudioAttributes.USAGE_MEDIA)
-            .setContentType(AudioAttributes.CONTENT_TYPE_MOVIE)
-            .build()
-
-        AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
-            .setAudioAttributes(audioAttributes)
-            .setAcceptsDelayedFocusGain(true)
-            .setOnAudioFocusChangeListener(audioFocusListener)
-            .build()
+        })
     }
 
     override fun initPresenter() = videoPresenter

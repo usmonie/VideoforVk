@@ -115,4 +115,11 @@ class VideoRepository(
 
         return LivePagedListBuilder(sourceFactory, pagedListConfig).build()
     }
+
+    /*fun followOwner(id: Long): Call<ApiResponse<Boolean>> =
+        return when {
+            id < 0 -> vkApi.joinGroup(id)
+            else ->
+        }*/
+
 }

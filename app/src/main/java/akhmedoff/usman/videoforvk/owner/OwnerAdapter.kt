@@ -34,8 +34,8 @@ class OwnerAdapter(
 
     override fun getItemCount(): Int = super.getItemCount() + 1
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AbstractViewHolder<Item> {
-        return AlbumsViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+        AlbumsViewHolder(
             Picasso.with(parent.context),
             LayoutInflater.from(parent.context).inflate(
                 R.layout.recommendation_videos,
@@ -43,6 +43,5 @@ class OwnerAdapter(
                 false
             )
         )
-    }
 
 }

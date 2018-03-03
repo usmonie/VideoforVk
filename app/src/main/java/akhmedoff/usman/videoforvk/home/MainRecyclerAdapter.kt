@@ -1,4 +1,4 @@
-package akhmedoff.usman.videoforvk.main
+package akhmedoff.usman.videoforvk.home
 
 import akhmedoff.usman.data.model.Catalog
 import akhmedoff.usman.data.model.CatalogItem

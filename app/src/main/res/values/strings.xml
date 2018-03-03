@@ -3,6 +3,8 @@
 
     <string name="login.button.text">Login with VK</string>
     <string name="error.login">Error login, check your login or password</string>
+    <string name="enter_code">Enter code</string>
+    <string name="error_code">Error code</string>
     <string name="login.password.hint">Password</string>
     <string name="login.username.hint">Phone number or e-mail</string>
 
@@ -19,15 +21,12 @@
     <string name="enter_captcha">Enter captcha</string>
     <string name="enter">Enter</string>
     <string name="two_factor_number">We sent a message with the code to the number %s</string>
-    <string name="enter_code">Enter code</string>
-    <string name="error_code">Error code</string>
 
     <plurals name="video.views">
         <item quantity="one">%s view</item>
         <item quantity="many">%s views</item>
         <item quantity="other">%s views</item>
     </plurals>
-    <string name="title_activity_main2">Main2Activity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -45,4 +44,8 @@
     <string name="sort_by.recent">Recent</string>
     <string name="sort_by.duration">Duration</string>
     <string name="sort_by.relevance">Relevance</string>
+
+    <string name="navigation.home.title">Home</string>
+    <string name="navigation.looking.title">Looking</string>
+    <string name="navigation.person.title">Profile</string>
 </resources>

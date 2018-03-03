@@ -1,6 +1,0 @@
-<objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"
-    android:duration="@integer/animation_duration"
-    android:interpolator="@android:interpolator/accelerate_quad"
-    android:propertyName="alpha"
-    android:valueFrom="1"
-    android:valueTo="0" />

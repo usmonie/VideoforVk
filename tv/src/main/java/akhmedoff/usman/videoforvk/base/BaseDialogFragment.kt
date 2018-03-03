@@ -4,16 +4,18 @@ import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.annotation.CallSuper
-import android.support.v4.app.Fragment
+import android.support.v4.app.DialogFragment
+import android.view.View
 
-abstract class BaseFragment<V : BaseContract.View, P : BaseContract.Presenter<V>> : Fragment(),
+abstract class BaseDialogFragment<V : BaseContract.View, P : BaseContract.Presenter<V>> :
+    DialogFragment(),
     BaseContract.View {
 
     protected lateinit var presenter: P
 
     @CallSuper
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val viewModel: BaseViewModel<V, P> = getViewModel()
 
         var isPresenterCreated = false

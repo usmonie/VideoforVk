@@ -4,10 +4,10 @@ import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.annotation.CallSuper
-import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
 
-abstract class BaseFragment<V : BaseContract.View, P : BaseContract.Presenter<V>> : Fragment(),
-    BaseContract.View {
+abstract class BaseActivity<V : BaseContract.View, P : BaseContract.Presenter<V>> :
+    AppCompatActivity(), BaseContract.View {
 
     protected lateinit var presenter: P
 
@@ -22,9 +22,7 @@ abstract class BaseFragment<V : BaseContract.View, P : BaseContract.Presenter<V>
             viewModel.setPresenter(initPresenter())
             isPresenterCreated = true
         }
-
         viewModel.getPresenter()?.let { presenter = it }
-
         presenter.attachLifecycle(lifecycle)
         presenter.attachView(this as V)
 
@@ -32,8 +30,8 @@ abstract class BaseFragment<V : BaseContract.View, P : BaseContract.Presenter<V>
     }
 
     @CallSuper
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onDestroy() {
+        super.onDestroy()
         presenter.detachLifecycle(lifecycle)
         presenter.detachView()
     }

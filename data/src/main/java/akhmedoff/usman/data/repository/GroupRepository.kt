@@ -11,4 +11,8 @@ class GroupRepository(
     fun getGroup(id: String) = api.getGroups(groupId = id)
 
     fun getGroups(ids: List<String>) = api.getGroups(ids)
+
+    fun joinGroup(id: Long) = api.joinGroup(id)
+
+    fun leaveGroup(id: Long) = api.leaveGroup(id)
 }
