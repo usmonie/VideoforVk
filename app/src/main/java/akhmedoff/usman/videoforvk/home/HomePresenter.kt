@@ -1,60 +1,15 @@
 package akhmedoff.usman.videoforvk.home
 
-import akhmedoff.usman.data.Error
-import akhmedoff.usman.data.model.Catalog
-import akhmedoff.usman.data.model.CatalogItem
-import akhmedoff.usman.data.model.CatalogItemType
-import akhmedoff.usman.data.repository.VideoRepository
-import akhmedoff.usman.videoforvk.base.BasePresenter
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.OnLifecycleEvent
+import akhmedoff.usman.videoforvk.R
 
-class HomePresenter(
-    private val videoRepository: VideoRepository
-) :
-    BasePresenter<HomeContract.View>(), HomeContract.Presenter {
+class HomePresenter(override var view: HomeContract.View? = null) : HomeContract.Presenter {
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_ANY)
-    fun stateUpdated() {
+    override fun onCreated() {
         view?.let { view ->
-            if (view.lifecycle.currentState == Lifecycle.State.STARTED)
-                refresh()
-
-        }
-    }
-
-    override fun refresh() {
-        view?.let { view ->
-            if (view.lifecycle.currentState == Lifecycle.State.STARTED)
-                view.showLoading()
-        }
-        //loadUserInfo()
-        loadCatalogs()
-    }
-
-    override fun loadCatalogs() {
-        view?.let { view ->
-            videoRepository
-                .getCatalog()
-                .observe(view, Observer { pagedList ->
-                    pagedList?.let { catalogs ->
-                        view.hideLoading()
-                        view.showList(catalogs)
-                    }
-                })
-        }
-    }
-
-    override fun clickCatalog(catalog: Catalog) {
-        view?.showCatalog(catalog)
-    }
-
-    override fun clickItem(item: CatalogItem) {
-        when (item.type) {
-            CatalogItemType.VIDEO -> view?.showVideo(item)
-
-            CatalogItemType.ALBUM -> view?.showAlbum(item)
+            view.initPage("feed", view.getResourcesString(R.string.tab_title_feed))
+            view.initPage("top", view.getResourcesString(R.string.tab_title_top))
+            view.initPage("ugc", view.getResourcesString(R.string.tab_title_ugc))
+            view.initPage("series", view.getResourcesString(R.string.tab_title_series_and_tv))
         }
     }
 
@@ -62,7 +17,7 @@ class HomePresenter(
         view?.startSearch()
     }
 
-    override fun error(error: Error, message: String) {
-
+    override fun onDestroyed() {
+        view = null
     }
 }

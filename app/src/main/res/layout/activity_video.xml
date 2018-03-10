@@ -155,7 +155,7 @@
         android:layout_height="wrap_content"
         android:clipChildren="true"
         android:visibility="gone"
-        tools:listitem="@layout/recommendation_videos"
+        tools:listitem="@layout/search_videos"
         tools:visibility="visible" />
 
     <ProgressBar

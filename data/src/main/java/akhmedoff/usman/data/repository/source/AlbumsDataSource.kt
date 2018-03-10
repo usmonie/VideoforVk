@@ -37,21 +37,10 @@ class AlbumsDataSource(
             count = 15,
             offset = 0
         ).enqueue(object : Callback<ApiResponse<List<Album>>> {
-            /**
-             * Invoked when a network exception occurred talking to the server or when an unexpected
-             * exception occurred creating the request or processing the response.
-             */
             override fun onFailure(call: Call<ApiResponse<List<Album>>>?, t: Throwable?) {
-                Log.e("callback", "ERROR: " + t.toString())
+                Log.e(javaClass.simpleName, "ERROR: " + t.toString())
             }
 
-            /**
-             * Invoked for a received HTTP response.
-             *
-             *
-             * Note: An HTTP response may still indicate an application-level failure such as a 404 or 500.
-             * Call [Response.isSuccessful] to determine if the response indicates success.
-             */
             override fun onResponse(
                 call: Call<ApiResponse<List<Album>>>?,
                 response: Response<ApiResponse<List<Album>>>?

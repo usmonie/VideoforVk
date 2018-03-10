@@ -81,9 +81,14 @@ class LoginPresenter(
                         view.setButtonEnabled(enabled = true)
                         view.editTextEditable(editable = true)
 
-                        response.body()?.accessToken?.let { token ->
-                            repository.saveToken(token)
-                            view.startMain()
+                        response.body()?.let { auth ->
+                            if (auth.isSuccessful) {
+                                repository.saveToken(auth.accessToken!!)
+                                repository.saveCurrentUser(auth.userId!!)
+                                view.startMain()
+                            } else {
+                                view.onErrorLogin()
+                            }
                         }
 
                         if (view.isDialogShows()) view.hideDialogLoading()

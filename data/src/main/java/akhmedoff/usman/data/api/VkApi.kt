@@ -102,4 +102,13 @@ interface VkApi {
 
     @GET
     fun checkToken(@Url url: String): Call<CheckTokenResponse>
+
+    @GET("video.getCatalogSection")
+    fun getCatalogSection(
+        @Query("section_id") section_id: String,
+        @Query("from") from: String,
+        @Query("count") count: Int,
+        @Query("extended") extended: Boolean = true
+    ): Call<ResponseCatalog>
+
 }

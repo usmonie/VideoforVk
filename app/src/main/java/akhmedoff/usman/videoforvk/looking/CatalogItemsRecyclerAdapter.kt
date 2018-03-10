@@ -1,4 +1,4 @@
-package akhmedoff.usman.videoforvk.home
+package akhmedoff.usman.videoforvk.looking
 
 import akhmedoff.usman.data.model.CatalogItem
 import akhmedoff.usman.data.model.CatalogItemType
@@ -10,17 +10,17 @@ import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 
 
-class CatalogRecyclerAdapter(
+class CatalogItemsRecyclerAdapter(
     private val picasso: Picasso,
     private val clickListener: (CatalogItem) -> Unit
 ) : RecyclerView.Adapter<VideoViewHolder>() {
 
     var items: List<CatalogItem>? = null
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): VideoViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoViewHolder {
         val holder = VideoViewHolder(
             picasso,
-            LayoutInflater.from(parent?.context).inflate(
+            LayoutInflater.from(parent.context).inflate(
                 viewType,
                 parent,
                 false
@@ -40,8 +40,8 @@ class CatalogRecyclerAdapter(
 
     override fun getItemCount() = items?.size ?: 0
 
-    override fun onBindViewHolder(holder: VideoViewHolder?, position: Int) {
-        items?.get(position)?.let { holder?.bind(it) }
+    override fun onBindViewHolder(holder: VideoViewHolder, position: Int) {
+        items?.get(position)?.let { holder.bind(it) }
     }
 
     override fun getItemViewType(position: Int): Int {

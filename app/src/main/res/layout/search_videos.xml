@@ -7,9 +7,7 @@
     android:layout_height="wrap_content"
     app:cardCornerRadius="0dp">
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
@@ -27,7 +25,7 @@
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/video_title"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
@@ -40,7 +38,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/video_poster"
             app:layout_constraintTop_toTopOf="@+id/video_poster"
-            tools:text="@tools:sample/cities" />
+            tools:text="@tools:sample/full_names" />
 
-    </android.support.constraint.ConstraintLayout>
+    </LinearLayout>
 </android.support.v7.widget.CardView>

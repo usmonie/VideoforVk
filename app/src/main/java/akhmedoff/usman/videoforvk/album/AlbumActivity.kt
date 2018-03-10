@@ -60,7 +60,7 @@ class AlbumActivity : BaseActivity<AlbumContract.View, AlbumContract.Presenter>(
 
     override fun getAlbumOwnerId() = intent?.getStringExtra(ALBUM_OWNER_ID)
 
-    override fun showVideos(items: PagedList<Video>) = adapter.setList(items)
+    override fun showVideos(items: PagedList<Video>) = adapter.submitList(items)
 
     override fun showAlbumTitle(title: String) {
         toolbar.title = title

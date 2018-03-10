@@ -5,7 +5,7 @@ import akhmedoff.usman.data.Error
 class Auth {
     var accessToken: String? = null
     var expiresIn: Int? = null
-    var userId: Int? = null
+    var userId: Long? = null
 
     var error: Error = Error.OK
     var errorDescription: String? = null

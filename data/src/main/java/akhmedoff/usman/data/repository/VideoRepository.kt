@@ -4,10 +4,7 @@ import akhmedoff.usman.data.api.VkApi
 import akhmedoff.usman.data.db.OwnerDao
 import akhmedoff.usman.data.local.UserSettings
 import akhmedoff.usman.data.model.*
-import akhmedoff.usman.data.repository.source.AlbumsDataSourceFactory
-import akhmedoff.usman.data.repository.source.CatalogsDataSourceFactory
-import akhmedoff.usman.data.repository.source.SearchDataSourceFactory
-import akhmedoff.usman.data.repository.source.VideosDataSourceFactory
+import akhmedoff.usman.data.repository.source.*
 import android.arch.lifecycle.LiveData
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
@@ -46,7 +43,7 @@ class VideoRepository(
         return LivePagedListBuilder(sourceFactory, pagedListConfig).build()
     }
 
-    fun getCatalog(): LiveData<PagedList<Catalog>> {
+    fun getCatalog(filters: String): LiveData<PagedList<Catalog>> {
         val pagedListConfig = PagedList.Config.Builder()
             .setEnablePlaceholders(false)
             .setPageSize(15)
@@ -55,9 +52,7 @@ class VideoRepository(
             .build()
 
         return LivePagedListBuilder(
-            CatalogsDataSourceFactory(
-                vkApi
-            ), pagedListConfig
+            CatalogsDataSourceFactory(vkApi, filters), pagedListConfig
         ).build()
     }
 
@@ -114,6 +109,19 @@ class VideoRepository(
         )
 
         return LivePagedListBuilder(sourceFactory, pagedListConfig).build()
+    }
+
+    fun getCatalogSection(catalogId: String): LiveData<PagedList<CatalogItem>> {
+        val pagedListConfig = PagedList.Config.Builder()
+            .setEnablePlaceholders(false)
+            .setPageSize(15)
+            .setPrefetchDistance(15)
+            .setInitialLoadSizeHint(20)
+            .build()
+
+        return LivePagedListBuilder(
+            CatalogSectionDataSourceFactory(vkApi, catalogId, ownerDao), pagedListConfig
+        ).build()
     }
 
     /*fun followOwner(id: Long): Call<ApiResponse<Boolean>> =

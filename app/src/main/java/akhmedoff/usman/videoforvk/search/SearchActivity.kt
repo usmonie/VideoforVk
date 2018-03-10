@@ -6,6 +6,7 @@ import akhmedoff.usman.data.utils.getVideoRepository
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.base.BaseActivity
 import akhmedoff.usman.videoforvk.video.VideoActivity
+import akhmedoff.usman.videoforvk.view.VideosAdapter
 import android.arch.paging.PagedList
 import android.os.Bundle
 import android.text.Editable
@@ -20,8 +21,8 @@ class SearchActivity : BaseActivity<SearchContract.View, SearchContract.Presente
 
     override lateinit var searchPresenter: SearchContract.Presenter
 
-    private val adapter: SearchAdapter by lazy {
-        SearchAdapter({ searchPresenter.onClick(item = it) })
+    private val adapter: VideosAdapter by lazy {
+        VideosAdapter({ searchPresenter.onClick(item = it) }, R.layout.search_videos)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -119,7 +120,7 @@ class SearchActivity : BaseActivity<SearchContract.View, SearchContract.Presente
         return 0
     }
 
-    override fun showFoundVideos(videos: PagedList<Video>) = adapter.setList(videos)
+    override fun showFoundVideos(videos: PagedList<Video>) = adapter.submitList(videos)
 
     override fun expandFilters() {
     }
@@ -130,9 +131,7 @@ class SearchActivity : BaseActivity<SearchContract.View, SearchContract.Presente
     override fun showError(errorMessage: String) {
     }
 
-    override fun showVideo(item: Video) {
-        startActivity(VideoActivity.getActivity(item, this))
-    }
+    override fun showVideo(item: Video) = startActivity(VideoActivity.getActivity(item, this))
 
     override fun initPresenter() = searchPresenter
 }

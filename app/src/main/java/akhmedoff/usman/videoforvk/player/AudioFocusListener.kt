@@ -5,12 +5,11 @@ import com.google.android.exoplayer2.ExoPlayer
 
 class AudioFocusListener(var player: ExoPlayer?) : AudioManager.OnAudioFocusChangeListener {
     override fun onAudioFocusChange(focusChange: Int) {
-        when (focusChange) {
-            AudioManager.AUDIOFOCUS_LOSS -> player?.playWhenReady = false
-
-            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> player?.playWhenReady = false
-
-            AudioManager.AUDIOFOCUS_GAIN -> player?.playWhenReady = true
+        player?.playWhenReady = when (focusChange) {
+            AudioManager.AUDIOFOCUS_LOSS -> false
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> false
+            AudioManager.AUDIOFOCUS_GAIN -> true
+            else -> false
         }
     }
 }

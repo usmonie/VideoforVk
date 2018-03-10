@@ -15,6 +15,8 @@ interface MainContract {
 
         fun showSettings()
 
+        fun hidePrevious()
+
     }
 
     interface Presenter : BaseContract.Presenter<View> {

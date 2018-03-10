@@ -11,7 +11,6 @@ import com.squareup.picasso.Picasso
 class VideoViewHolder(private val picasso: Picasso, itemView: View) :
     AbstractViewHolder<Item>(itemView) {
 
-
     private val videoFrame = itemView.findViewById<ImageView>(R.id.video_poster)
     private val videoTitle = itemView.findViewById<TextView>(R.id.video_title)
 

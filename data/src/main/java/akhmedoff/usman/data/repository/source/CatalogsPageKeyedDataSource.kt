@@ -10,7 +10,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.Collections.emptyList
 
-class CatalogsPageKeyedDataSource(private val vkApi: VkApi) :
+class CatalogsPageKeyedDataSource(private val vkApi: VkApi, private val filters: String) :
+
     PageKeyedDataSource<String, Catalog>() {
 
     override fun loadBefore(
@@ -25,23 +26,13 @@ class CatalogsPageKeyedDataSource(private val vkApi: VkApi) :
             count = 10,
             itemsCount = 7,
             from = params.key,
-            filters = "other"
+            filters = filters
         ).enqueue(object : Callback<ResponseCatalog> {
-            /**
-             * Invoked when a network exception occurred talking to the server or when an unexpected
-             * exception occurred creating the request or processing the response.
-             */
+
             override fun onFailure(call: Call<ResponseCatalog>?, t: Throwable?) {
-                Log.d("callback", "ERROR: " + t.toString())
+                Log.d(javaClass.simpleName, "ERROR: " + t.toString())
             }
 
-            /**
-             * Invoked for a received HTTP response.
-             *
-             *
-             * Note: An HTTP response may still indicate an application-level failure such as a 404 or 500.
-             * Call [Response.isSuccessful] to determine if the response indicates success.
-             */
             override fun onResponse(
                 call: Call<ResponseCatalog>,
                 response: Response<ResponseCatalog>
@@ -50,7 +41,6 @@ class CatalogsPageKeyedDataSource(private val vkApi: VkApi) :
                     callback.onResult(it.catalogs, it.next)
                 }
             }
-
         })
     }
 
@@ -61,7 +51,7 @@ class CatalogsPageKeyedDataSource(private val vkApi: VkApi) :
         val apiSource = vkApi.getCatalog(
             count = 10,
             itemsCount = 7,
-            filters = "top,feed,ugc,series,other"
+            filters = filters
         )
 
         try {
@@ -72,7 +62,7 @@ class CatalogsPageKeyedDataSource(private val vkApi: VkApi) :
                 callback.onResult(items, null, it.next)
             }
         } catch (exception: Exception) {
-            Log.d("exception", exception.toString())
+            Log.d(javaClass.simpleName, exception.toString())
         }
 
     }

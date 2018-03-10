@@ -24,6 +24,7 @@ import android.support.design.widget.Snackbar
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.exoplayer2.ExoPlayerFactory
+import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
@@ -201,6 +202,7 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
         player?.let {
             it.prepare(videoSource)
             it.seekTo(1)
+            it.repeatMode = if (item.repeat) Player.REPEAT_MODE_ONE else Player.REPEAT_MODE_OFF
         }
     }
 
@@ -286,6 +288,7 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
     override fun stopVideo() {
         player?.playWhenReady = false
         player?.release()
+
     }
 
     override fun setSaved(saved: Boolean) {

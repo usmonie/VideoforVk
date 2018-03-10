@@ -4,7 +4,8 @@ import akhmedoff.usman.data.api.VkApi
 import akhmedoff.usman.data.model.Catalog
 import android.arch.paging.DataSource
 
-class CatalogsDataSourceFactory(private val vkApi: VkApi) : DataSource.Factory<String, Catalog> {
+class CatalogsDataSourceFactory(private val vkApi: VkApi, private val filters: String) :
+    DataSource.Factory<String, Catalog> {
 
-    override fun create() = CatalogsPageKeyedDataSource(vkApi)
+    override fun create() = CatalogsPageKeyedDataSource(vkApi, filters)
 }

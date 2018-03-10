@@ -21,7 +21,7 @@ class AuthDeserializer : JsonDeserializer<Auth> {
 
         jsonObject["access_token"]?.let { auth.accessToken = it.asString }
         jsonObject["expires_in"]?.let { auth.expiresIn = it.asInt }
-        jsonObject["user_id"]?.let { auth.userId = it.asInt }
+        jsonObject["user_id"]?.let { auth.userId = it.asLong }
         jsonObject["error_description"]?.let { auth.errorDescription = it.asString }
 
         jsonObject["error"]?.let {

@@ -1,5 +1,6 @@
 package akhmedoff.usman.data.utils
 
+import akhmedoff.usman.data.BuildConfig
 import akhmedoff.usman.data.api.VkApi
 import akhmedoff.usman.data.db.OwnerDao
 import akhmedoff.usman.data.local.UserSettings
@@ -22,7 +23,9 @@ lateinit var interceptor: Interceptor
 private val okHttp: OkHttpClient by lazy {
     OkHttpClient.Builder().apply {
         val logging = HttpLoggingInterceptor()
-        logging.level = HttpLoggingInterceptor.Level.BODY
+        if (BuildConfig.DEBUG) {
+            logging.level = HttpLoggingInterceptor.Level.BODY
+        }
 
         addInterceptor(logging)
         addInterceptor(interceptor)

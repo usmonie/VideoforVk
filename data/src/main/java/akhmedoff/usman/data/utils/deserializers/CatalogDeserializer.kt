@@ -26,12 +26,12 @@ class CatalogDeserializer : JsonDeserializer<ResponseCatalog> {
             val catalogsJsonArray = jsonObject["items"]?.asJsonArray
 
             catalogsJsonArray?.forEach { catalogElement ->
-                val catalogJson = catalogElement.asJsonObject
+                val catalogJson = catalogElement?.asJsonObject
                 val videoList = mutableListOf<CatalogItem>()
 
-                val videosJsonArray = catalogJson["items"].asJsonArray
+                val videosJsonArray = catalogJson?.get("items")?.asJsonArray
 
-                videosJsonArray.forEach { videoElement ->
+                videosJsonArray?.forEach { videoElement ->
                     val videoJson = videoElement.asJsonObject
 
                     val item = CatalogItem()
@@ -70,19 +70,26 @@ class CatalogDeserializer : JsonDeserializer<ResponseCatalog> {
                     videoList.add(item)
                 }
 
-                val name = catalogJson["name"]?.asString
+                val name = catalogJson?.get("name")?.asString
 
 
                 var id: String? = null
-                catalogJson["id"]?.let { id = it.asString }
+                catalogJson?.get("id")?.let { id = it.asString }
 
-                val view = catalogJson["view"]?.asString
-                val canHide = catalogJson["can_hide"]?.asBoolean
-                val type = catalogJson["type"]?.asString
+                val view = catalogJson?.get("view")?.asString
+                val canHide = catalogJson?.get("can_hide")?.asBoolean
+                val type = catalogJson?.get("type")?.asString
 
-                if (videoList.isNotEmpty()) {
-                    catalogs.add(Catalog(videoList, name, id, view, canHide, type))
-                }
+                if (videoList.isNotEmpty()) catalogs.add(
+                    Catalog(
+                        videoList,
+                        name,
+                        id,
+                        view,
+                        canHide,
+                        type
+                    )
+                )
             }
         }
 

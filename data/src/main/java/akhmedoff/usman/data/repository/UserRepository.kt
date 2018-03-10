@@ -12,6 +12,11 @@ class UserRepository(
 
     fun saveToken(token: String) = userSettings.saveToken(token)
 
+    fun getCurrentUser() = userSettings.getUserId()
+
+    fun saveCurrentUser(userId: Long) = userSettings.saveUserId(userId)
+
+    fun hasCurrentUser() = userSettings.hasUserId()
     fun checkToken() =
         api.checkToken("https://api.vk.com/method/secure.checkToken?token=" + userSettings.getToken())
 

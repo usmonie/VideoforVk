@@ -13,7 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:foreground="@drawable/video_gradient"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        tools:src="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/video_title"
@@ -30,6 +31,6 @@
         app:autoSizeMaxTextSize="@dimen/max_text_size_big_video_item"
         app:autoSizeMinTextSize="@dimen/min_text_size_big_video_item"
         app:autoSizeStepGranularity="2sp"
-        tools:text="dasda" />
+        tools:text="@tools:sample/full_names" />
 
 </android.support.v7.widget.CardView>

@@ -4,8 +4,9 @@ import akhmedoff.usman.data.model.Catalog
 import akhmedoff.usman.data.model.CatalogItem
 import akhmedoff.usman.data.model.CatalogItemType
 import akhmedoff.usman.videoforvk.R
-import akhmedoff.usman.videoforvk.home.CatalogRecyclerAdapter
+import akhmedoff.usman.videoforvk.looking.CatalogItemsRecyclerAdapter
 import akhmedoff.usman.videoforvk.view.GravitySnapHelper
+import akhmedoff.usman.videoforvk.view.MarginItemDecorator
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.LinearLayoutManager.HORIZONTAL
@@ -20,7 +21,7 @@ class CatalogViewHolder(
     clickListener: (CatalogItem) -> Unit
 ) : AbstractViewHolder<Catalog>(itemView) {
 
-    private val adapter = CatalogRecyclerAdapter(
+    private val adapter = CatalogItemsRecyclerAdapter(
         Picasso.with(itemView.context),
         clickListener
     )
@@ -35,6 +36,13 @@ class CatalogViewHolder(
     init {
         catalogRecycler.setHasFixedSize(true)
         catalogRecycler.adapter = adapter
+        catalogRecycler.addItemDecoration(
+            MarginItemDecorator(
+                2,
+                itemView.context.resources.getDimensionPixelSize(R.dimen.catalog_videos_margin)
+
+            )
+        )
 
         gridLayoutManager.spanSizeLookup = getSpanSizeLookup()
 

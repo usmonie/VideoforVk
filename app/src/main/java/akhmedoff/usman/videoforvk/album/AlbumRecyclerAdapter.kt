@@ -4,7 +4,7 @@ import akhmedoff.usman.data.model.Video
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.view.holders.VideoViewHolder
 import android.arch.paging.PagedListAdapter
-import android.support.v7.recyclerview.extensions.DiffCallback
+import android.support.v7.util.DiffUtil
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.squareup.picasso.Picasso
@@ -12,8 +12,9 @@ import com.squareup.picasso.Picasso
 class AlbumRecyclerAdapter(
     private val clickListener: (Video) -> Unit
 ) : PagedListAdapter<Video, VideoViewHolder>(VIDEO_COMPARATOR) {
+
     companion object {
-        val VIDEO_COMPARATOR = object : DiffCallback<Video>() {
+        val VIDEO_COMPARATOR = object : DiffUtil.ItemCallback<Video>() {
             override fun areContentsTheSame(oldItem: Video, newItem: Video) =
                 oldItem.title == newItem.title && oldItem.date == newItem.addingDate
 
@@ -26,7 +27,7 @@ class AlbumRecyclerAdapter(
         val holder = VideoViewHolder(
             Picasso.with(parent.context),
             LayoutInflater.from(parent.context).inflate(
-                R.layout.recommendation_videos,
+                R.layout.search_videos,
                 parent,
                 false
             )
@@ -41,7 +42,7 @@ class AlbumRecyclerAdapter(
 
     override fun getItemId(position: Int) = position.toLong() + 1
 
-    override fun onBindViewHolder(holder: VideoViewHolder?, position: Int) {
-        getItem(position)?.let { holder?.bind(it) }
+    override fun onBindViewHolder(holder: VideoViewHolder, position: Int) {
+        getItem(position)?.let { holder.bind(it) }
     }
 }

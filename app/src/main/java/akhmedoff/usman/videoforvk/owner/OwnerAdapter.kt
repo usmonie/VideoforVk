@@ -7,7 +7,7 @@ import akhmedoff.usman.videoforvk.view.holders.AbstractViewHolder
 import akhmedoff.usman.videoforvk.view.holders.AlbumsViewHolder
 import android.arch.paging.PagedList
 import android.arch.paging.PagedListAdapter
-import android.support.v7.recyclerview.extensions.DiffCallback
+import android.support.v7.util.DiffUtil
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.squareup.picasso.Picasso
@@ -15,13 +15,12 @@ import com.squareup.picasso.Picasso
 class OwnerAdapter(
     private val clickListener: (Item) -> Unit
 ) : PagedListAdapter<Item, AbstractViewHolder<Item>>(CATALOG_COMPARATOR) {
-    override fun onBindViewHolder(holder: AbstractViewHolder<Item>?, position: Int) {
+    override fun onBindViewHolder(holder: AbstractViewHolder<Item>, position: Int) {
     }
 
     companion object {
 
-
-        val CATALOG_COMPARATOR = object : DiffCallback<Item>() {
+        val CATALOG_COMPARATOR = object : DiffUtil.ItemCallback<Item>() {
             override fun areContentsTheSame(oldItem: Item, newItem: Item) =
                 oldItem.photo320 == newItem.photo320
 
@@ -38,7 +37,7 @@ class OwnerAdapter(
         AlbumsViewHolder(
             Picasso.with(parent.context),
             LayoutInflater.from(parent.context).inflate(
-                R.layout.recommendation_videos,
+                R.layout.search_videos,
                 parent,
                 false
             )

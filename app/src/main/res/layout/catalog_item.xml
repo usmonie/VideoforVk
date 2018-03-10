@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="8dp"
+    android:foreground="?attr/selectableItemBackground"
     app:cardCornerRadius="0dp">
 
     <LinearLayout
@@ -21,7 +22,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-            tools:text="@tools:sample/cities" />
+            tools:text="@tools:sample/full_names" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/catalog_recycler"
