@@ -27,7 +27,11 @@ class LookingRecyclerAdapter(
     override fun onBindViewHolder(holder: CatalogViewHolder, position: Int) {
         val catalog = getItem(position)
 
-        catalog?.items?.let { if (it.isNotEmpty()) holder.bind(catalog) }
+        catalog?.items?.let {
+            if (it.isNotEmpty()) {
+                holder.bind(catalog)
+            }
+        }
     }
 
 

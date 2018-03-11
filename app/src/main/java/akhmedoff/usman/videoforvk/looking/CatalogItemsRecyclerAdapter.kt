@@ -41,7 +41,15 @@ class CatalogItemsRecyclerAdapter(
     override fun getItemCount() = items?.size ?: 0
 
     override fun onBindViewHolder(holder: VideoViewHolder, position: Int) {
-        items?.get(position)?.let { holder.bind(it) }
+        items?.get(position)?.let {
+            holder.bind(it)
+
+            if (it.type == CatalogItemType.VIDEO && position == 0) {
+                holder.itemView.layoutParams.width =
+                        holder.itemView.resources.getDimensionPixelSize(R.dimen.width_main_list_first_video)
+            }
+        }
+
     }
 
     override fun getItemViewType(position: Int): Int {

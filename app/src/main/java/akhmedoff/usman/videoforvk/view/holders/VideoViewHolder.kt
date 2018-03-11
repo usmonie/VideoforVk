@@ -21,10 +21,11 @@ class VideoViewHolder(private val picasso: Picasso, itemView: View) :
             item.photo640 != null -> item.photo640
             else -> item.photo320
         }
+
         picasso
             .load(imageUri)
-            .fit()
             .config(Bitmap.Config.RGB_565)
+            .fit()
             .into(videoFrame)
 
         videoTitle.text = item.title

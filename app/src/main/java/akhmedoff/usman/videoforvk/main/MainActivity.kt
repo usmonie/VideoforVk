@@ -18,9 +18,9 @@ class MainActivity : BaseActivity<View, Presenter>(), View {
 
     override lateinit var mainPresenter: Presenter
 
-    private val homeFragment by lazy { HomeFragment() }
-    private val lookingFragment by lazy { LookingFragment() }
-    private val profileFragment by lazy { ProfileFragment.createFragment(null) }
+    private lateinit var homeFragment: HomeFragment
+    private lateinit var lookingFragment: LookingFragment
+    private lateinit var profileFragment: ProfileFragment
 
     private val onNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -36,15 +36,23 @@ class MainActivity : BaseActivity<View, Presenter>(), View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .add(R.id.container, homeFragment, HomeFragment.FRAGMENT_TAG)
-                .hide(homeFragment)
-                .add(R.id.container, lookingFragment, LookingFragment.FRAGMENT_TAG)
-                .hide(lookingFragment)
-                .add(R.id.container, profileFragment, ProfileFragment.FRAGMENT_TAG)
-                .hide(profileFragment)
-                .commit()
+        homeFragment = when {
+            supportFragmentManager.findFragmentByTag(HomeFragment.FRAGMENT_TAG) != null -> supportFragmentManager.findFragmentByTag(
+                HomeFragment.FRAGMENT_TAG
+            ) as HomeFragment
+            else -> HomeFragment()
+        }
+        profileFragment = when {
+            supportFragmentManager.findFragmentByTag(HomeFragment.FRAGMENT_TAG) != null -> supportFragmentManager.findFragmentByTag(
+                ProfileFragment.FRAGMENT_TAG
+            ) as ProfileFragment
+            else -> ProfileFragment()
+        }
+        lookingFragment = when {
+            supportFragmentManager.findFragmentByTag(HomeFragment.FRAGMENT_TAG) != null -> supportFragmentManager.findFragmentByTag(
+                LookingFragment.FRAGMENT_TAG
+            ) as LookingFragment
+            else -> LookingFragment()
         }
 
         navigation.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
@@ -52,43 +60,72 @@ class MainActivity : BaseActivity<View, Presenter>(), View {
     }
 
     override fun showHome() {
-        supportFragmentManager.beginTransaction()
-            .show(homeFragment)
-            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-            .commit()
+        if (supportFragmentManager.findFragmentByTag(HomeFragment.FRAGMENT_TAG) != null) {
+            showFragment(homeFragment)
+        } else {
+            addFragment(homeFragment, HomeFragment.FRAGMENT_TAG)
+        }
     }
 
     override fun showProfile() {
-        supportFragmentManager.beginTransaction()
-            .show(profileFragment)
-            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-            .commit()
+        if (supportFragmentManager.findFragmentByTag(ProfileFragment.FRAGMENT_TAG) != null) {
+            showFragment(profileFragment)
+        } else {
+            addFragment(profileFragment, ProfileFragment.FRAGMENT_TAG)
+        }
     }
 
     override fun showLooking() {
+        when {
+            supportFragmentManager.findFragmentByTag(LookingFragment.FRAGMENT_TAG) != null -> showFragment(
+                lookingFragment
+            )
+            else -> addFragment(lookingFragment, LookingFragment.FRAGMENT_TAG)
+        }
+    }
+
+    override fun hidePrevious() {
+        hideFragment(
+            when {
+                homeFragment.isVisible -> homeFragment
+                profileFragment.isVisible -> profileFragment
+                lookingFragment.isVisible -> lookingFragment
+                else -> homeFragment
+            }
+        )
+    }
+
+    private fun showFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
-            .show(lookingFragment)
+            .show(fragment)
             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
             .commit()
     }
 
-    override fun hidePrevious() {
-        val fragment: Fragment =
-            when {
-                !homeFragment.isHidden -> homeFragment
-                !profileFragment.isHidden -> profileFragment
-                else -> lookingFragment
-            }
-
-        supportFragmentManager
-            .beginTransaction()
+    private fun hideFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
             .hide(fragment)
             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-            .commitNow()
+            .commit()
+    }
+
+    private fun addFragment(fragment: Fragment, tag: String) {
+        supportFragmentManager.beginTransaction()
+            .add(R.id.container, fragment, tag)
+            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+            .commit()
+    }
+
+    private fun removeFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .remove(fragment)
+            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+            .commit()
     }
 
     override fun showSettings() {
     }
+
 
     override fun initPresenter() = mainPresenter
 }

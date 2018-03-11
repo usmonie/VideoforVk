@@ -24,11 +24,17 @@ class MainPresenter(private val userRepository: UserRepository) :
     override fun forwardTo(id: Int) {
         view?.hidePrevious()
         when (id) {
-            R.id.navigation_home -> view?.showHome()
+            R.id.navigation_home -> {
+                view?.showHome()
+            }
 
-            R.id.navigation_looking -> view?.showLooking()
+            R.id.navigation_looking -> {
+                view?.showLooking()
+            }
 
-            R.id.navigation_person -> view?.showProfile()
+            R.id.navigation_person -> {
+                view?.showProfile()
+            }
         }
     }
 
