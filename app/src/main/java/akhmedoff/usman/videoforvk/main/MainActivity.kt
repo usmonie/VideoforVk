@@ -2,19 +2,21 @@ package akhmedoff.usman.videoforvk.main
 
 import akhmedoff.usman.data.utils.getUserRepository
 import akhmedoff.usman.videoforvk.R
+import akhmedoff.usman.videoforvk.Router.hideFragment
+import akhmedoff.usman.videoforvk.Router.showFragment
 import akhmedoff.usman.videoforvk.base.BaseActivity
 import akhmedoff.usman.videoforvk.home.HomeFragment
 import akhmedoff.usman.videoforvk.looking.LookingFragment
 import akhmedoff.usman.videoforvk.main.MainContract.Presenter
-import akhmedoff.usman.videoforvk.main.MainContract.View
 import akhmedoff.usman.videoforvk.profile.ProfileFragment
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentTransaction
+import android.support.v4.app.FragmentManager
+import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : BaseActivity<View, Presenter>(), View {
+class MainActivity : BaseActivity<MainContract.View, Presenter>(), MainContract.View,
+    FragmentManager.OnBackStackChangedListener {
 
     override lateinit var mainPresenter: Presenter
 
@@ -35,6 +37,8 @@ class MainActivity : BaseActivity<View, Presenter>(), View {
         mainPresenter = MainPresenter(getUserRepository(this))
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        supportFragmentManager.addOnBackStackChangedListener(this)
 
         homeFragment = when {
             supportFragmentManager.findFragmentByTag(HomeFragment.FRAGMENT_TAG) != null -> supportFragmentManager.findFragmentByTag(
@@ -59,73 +63,53 @@ class MainActivity : BaseActivity<View, Presenter>(), View {
         navigation.setOnNavigationItemReselectedListener(onNavigationItemReselectedListener)
     }
 
-    override fun showHome() {
-        if (supportFragmentManager.findFragmentByTag(HomeFragment.FRAGMENT_TAG) != null) {
-            showFragment(homeFragment)
-        } else {
-            addFragment(homeFragment, HomeFragment.FRAGMENT_TAG)
-        }
-    }
+    override fun showHome() = showFragment(
+        supportFragmentManager,
+        homeFragment,
+        fragmentTag = LookingFragment.FRAGMENT_TAG
+    )
 
-    override fun showProfile() {
-        if (supportFragmentManager.findFragmentByTag(ProfileFragment.FRAGMENT_TAG) != null) {
-            showFragment(profileFragment)
-        } else {
-            addFragment(profileFragment, ProfileFragment.FRAGMENT_TAG)
-        }
-    }
+    override fun showProfile() =
+        showFragment(
+            supportFragmentManager,
+            profileFragment,
+            fragmentTag = LookingFragment.FRAGMENT_TAG
+        )
 
-    override fun showLooking() {
-        when {
-            supportFragmentManager.findFragmentByTag(LookingFragment.FRAGMENT_TAG) != null -> showFragment(
-                lookingFragment
-            )
-            else -> addFragment(lookingFragment, LookingFragment.FRAGMENT_TAG)
-        }
-    }
+    override fun showLooking() = showFragment(
+        supportFragmentManager,
+        lookingFragment,
+        fragmentTag = LookingFragment.FRAGMENT_TAG
+    )
 
     override fun hidePrevious() {
-        hideFragment(
-            when {
-                homeFragment.isVisible -> homeFragment
-                profileFragment.isVisible -> profileFragment
-                lookingFragment.isVisible -> lookingFragment
-                else -> homeFragment
-            }
-        )
+        if (supportFragmentManager.backStackEntryCount > 0) {
+            supportFragmentManager.popBackStack()
+        } else {
+            hideFragment(
+                supportFragmentManager,
+                when {
+                    homeFragment.isVisible -> homeFragment
+                    profileFragment.isVisible -> profileFragment
+                    lookingFragment.isVisible -> lookingFragment
+                    else -> homeFragment
+                }
+            )
+        }
     }
 
-    private fun showFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .show(fragment)
-            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-            .commit()
-    }
-
-    private fun hideFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .hide(fragment)
-            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-            .commit()
-    }
-
-    private fun addFragment(fragment: Fragment, tag: String) {
-        supportFragmentManager.beginTransaction()
-            .add(R.id.container, fragment, tag)
-            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-            .commit()
-    }
-
-    private fun removeFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .remove(fragment)
-            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-            .commit()
-    }
 
     override fun showSettings() {
     }
 
+    override fun onBackStackChanged() {
+        if (supportFragmentManager.backStackEntryCount > 0) {
+            navigation.visibility = View.GONE
+        } else {
+            navigation.visibility = View.VISIBLE
+
+        }
+    }
 
     override fun initPresenter() = mainPresenter
 }

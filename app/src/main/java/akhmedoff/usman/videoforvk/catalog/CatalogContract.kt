@@ -1,14 +1,14 @@
 package akhmedoff.usman.videoforvk.catalog
 
 import akhmedoff.usman.data.model.CatalogItem
-import akhmedoff.usman.videoforvk.base.BaseContract
+import android.arch.lifecycle.LifecycleOwner
 import android.arch.paging.PagedList
 
 interface CatalogContract {
 
-    interface View : BaseContract.View {
+    interface View : LifecycleOwner {
 
-        var catalogPresenter: Presenter
+        var presenter: Presenter
 
         fun showList(videos: PagedList<CatalogItem>)
 
@@ -28,7 +28,7 @@ interface CatalogContract {
 
     }
 
-    interface Presenter : BaseContract.Presenter<View> {
+    interface Presenter {
 
         fun onCreated()
 

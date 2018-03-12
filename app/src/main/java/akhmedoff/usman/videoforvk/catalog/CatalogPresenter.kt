@@ -3,11 +3,12 @@ package akhmedoff.usman.videoforvk.catalog
 import akhmedoff.usman.data.model.CatalogItem
 import akhmedoff.usman.data.model.CatalogItemType
 import akhmedoff.usman.data.repository.VideoRepository
-import akhmedoff.usman.videoforvk.base.BasePresenter
 import android.arch.lifecycle.Observer
 
-class CatalogPresenter(private val videoRepository: VideoRepository) :
-    BasePresenter<CatalogContract.View>(), CatalogContract.Presenter {
+class CatalogPresenter(
+    private var view: CatalogContract.View?,
+    private val videoRepository: VideoRepository
+) : CatalogContract.Presenter {
 
     override fun onCreated() = refresh()
 

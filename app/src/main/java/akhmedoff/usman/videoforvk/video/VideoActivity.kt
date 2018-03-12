@@ -57,10 +57,10 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
             return intent
         }
     }
+    override lateinit var videoPresenter: VideoPresenter
 
     private lateinit var dataSourceFactory: DefaultDataSourceFactory
 
-    override lateinit var videoPresenter: VideoPresenter
 
     private val file by lazy {
         File("${filesDir.parent}/cache")
@@ -148,7 +148,7 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
 
     override fun setPlayerNormal() {
         video_exo_player.layoutParams.height =
-                resources.getDimension(R.dimen.exo_player_height).toInt()
+                resources.getDimensionPixelSize(R.dimen.exo_player_height)
 
         video_exo_player.requestLayout()
     }
@@ -306,6 +306,9 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
 
     override fun showSmallScreen() {
         video_layout.fitsSystemWindows = true
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
     }
 
     override fun showProgress() {

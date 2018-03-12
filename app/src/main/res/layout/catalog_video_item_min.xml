@@ -6,6 +6,7 @@
     android:layout_width="@dimen/width_main_list_small_item"
     android:layout_height="@dimen/height_main_list_small_item"
     android:foreground="?attr/selectableItemBackground"
+    android:transitionName="video_player"
     app:cardCornerRadius="5dp">
 
     <ImageView

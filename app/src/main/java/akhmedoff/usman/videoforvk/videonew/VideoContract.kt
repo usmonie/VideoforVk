@@ -1,20 +1,17 @@
-package akhmedoff.usman.videoforvk.video
+package akhmedoff.usman.videoforvk.videonew
 
 import akhmedoff.usman.data.Error
-import akhmedoff.usman.data.model.Group
 import akhmedoff.usman.data.model.Owner
-import akhmedoff.usman.data.model.User
 import akhmedoff.usman.data.model.Video
-import akhmedoff.usman.videoforvk.base.BaseContract
+import android.arch.lifecycle.LifecycleOwner
 
 interface VideoContract {
 
-    interface View : BaseContract.View {
-        var videoPresenter: VideoPresenter
+    interface View : LifecycleOwner {
+        var presenter: Presenter
 
-        fun showGroupOwnerInfo(group: Group)
+        fun showOwnerInfo(owner: Owner)
 
-        fun showUserOwnerInfo(user: User)
 
         fun showVideo(item: Video)
 
@@ -26,13 +23,13 @@ interface VideoContract {
 
         fun pauseVideo()
 
-        fun resumeVideo(state: Boolean, position: Long)
-
         fun startVideo()
 
         fun stopVideo()
 
         fun getVideoId(): String
+
+        fun getOwnerId(): String
 
         fun getVideoState(): Boolean?
 
@@ -87,10 +84,22 @@ interface VideoContract {
         fun showOwnerUser(owner: Owner)
 
         fun showOwnerGroup(owner: Owner)
-
     }
 
-    interface Presenter : BaseContract.Presenter<View> {
+    interface Presenter {
+
+        fun onClick(id: Int)
+
+        fun onCreate()
+
+        fun onResume()
+
+        fun onPause()
+
+        fun onStop()
+
+        fun onDestroyView()
+
         fun loadVideo(id: String)
 
         fun clickFullscreen()

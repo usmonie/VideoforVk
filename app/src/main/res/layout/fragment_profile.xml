@@ -29,24 +29,16 @@
                     android:layout_gravity="center"
                     android:orientation="vertical">
 
-                    <android.support.v7.widget.CardView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="@dimen/activity_vertical_margin"
-                        android:innerRadius="0dp"
-                        android:shape="ring"
-                        app:cardCornerRadius="75dp">
 
-                        <ImageView
-                            android:id="@+id/user_avatar"
-                            android:layout_width="86dp"
-                            android:layout_height="86dp"
-                            android:adjustViewBounds="true"
-                            android:cropToPadding="true"
-                            android:scaleType="fitXY"
-                            tools:src="@tools:sample/avatars" />
-                    </android.support.v7.widget.CardView>
+                    <ImageView
+                        android:id="@+id/user_avatar"
+                        android:layout_width="86dp"
+                        android:layout_height="86dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="16dp"
+                        android:foreground="@drawable/circle_image_view"
+                        android:scaleType="centerCrop"
+                        tools:src="@tools:sample/avatars" />
 
                     <TextView
                         android:id="@+id/user_name"

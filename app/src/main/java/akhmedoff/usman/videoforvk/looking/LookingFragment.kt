@@ -5,9 +5,10 @@ import akhmedoff.usman.data.model.Catalog
 import akhmedoff.usman.data.model.CatalogItem
 import akhmedoff.usman.data.utils.getVideoRepository
 import akhmedoff.usman.videoforvk.R
+import akhmedoff.usman.videoforvk.Router
 import akhmedoff.usman.videoforvk.album.AlbumActivity
 import akhmedoff.usman.videoforvk.search.SearchActivity
-import akhmedoff.usman.videoforvk.video.VideoActivity
+import akhmedoff.usman.videoforvk.videonew.VideoFragment
 import android.arch.paging.PagedList
 import android.content.Intent
 import android.os.Bundle
@@ -29,7 +30,7 @@ class LookingFragment : Fragment(), LookingContract.View {
     override lateinit var presenter: LookingContract.Presenter
 
     private val adapter by lazy {
-        LookingRecyclerAdapter(presenter::onCatalogItemClicked)
+        LookingRecyclerAdapter { presenter.onCatalogItemClicked(it) }
     }
 
     override fun onCreateView(
@@ -39,9 +40,8 @@ class LookingFragment : Fragment(), LookingContract.View {
         presenter = LookingPresenter(
             this,
             getVideoRepository(context!!, AppDatabase.getInstance(context!!).ownerDao())
-        ).apply { view = this@LookingFragment }
+        )
 
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_looking, container, false)
     }
 
@@ -55,8 +55,16 @@ class LookingFragment : Fragment(), LookingContract.View {
 
     override fun startSearch() = startActivity(Intent(context, SearchActivity::class.java))
 
-    override fun showVideo(item: CatalogItem) =
-        startActivity(VideoActivity.getActivity(item, context!!))
+    override fun showVideo(item: CatalogItem) {
+        activity?.supportFragmentManager?.let {
+            Router.replaceFragment(
+                it,
+                VideoFragment.getInstance(item),
+                true,
+                VideoFragment.FRAGMENT_TAG
+            )
+        }
+    }
 
     override fun showAlbum(album: CatalogItem) =
         startActivity(AlbumActivity.getActivity(album, context!!))

@@ -4,20 +4,21 @@ import akhmedoff.usman.data.db.AppDatabase
 import akhmedoff.usman.data.model.CatalogItem
 import akhmedoff.usman.data.utils.getVideoRepository
 import akhmedoff.usman.videoforvk.R
+import akhmedoff.usman.videoforvk.Router
 import akhmedoff.usman.videoforvk.album.AlbumActivity
-import akhmedoff.usman.videoforvk.base.BaseFragment
-import akhmedoff.usman.videoforvk.video.VideoActivity
+import akhmedoff.usman.videoforvk.videonew.VideoFragment
 import akhmedoff.usman.videoforvk.view.MarginItemDecorator
 import android.arch.paging.PagedList
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_catalog.*
 
-class CatalogFragment : BaseFragment<CatalogContract.View, CatalogContract.Presenter>(),
+class CatalogFragment : Fragment(),
     CatalogContract.View {
 
     companion object {
@@ -32,7 +33,7 @@ class CatalogFragment : BaseFragment<CatalogContract.View, CatalogContract.Prese
         }
     }
 
-    override lateinit var catalogPresenter: CatalogContract.Presenter
+    override lateinit var presenter: CatalogContract.Presenter
 
     private val adapter by lazy {
         CatalogRecyclerAdapter { presenter.clickItem(it) }
@@ -40,14 +41,14 @@ class CatalogFragment : BaseFragment<CatalogContract.View, CatalogContract.Prese
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        catalogPresenter =
-                CatalogPresenter(
-                    getVideoRepository(
-                        context!!,
-                        AppDatabase.getInstance(context!!).ownerDao()
-                    )
-                )
         super.onCreate(savedInstanceState)
+        presenter = CatalogPresenter(
+            this,
+            getVideoRepository(
+                context!!,
+                AppDatabase.getInstance(context!!).ownerDao()
+            )
+        )
     }
 
     override fun onCreateView(
@@ -68,15 +69,23 @@ class CatalogFragment : BaseFragment<CatalogContract.View, CatalogContract.Prese
 
         catalog_recycler.itemAnimator = DefaultItemAnimator()
 
-        update_catalog_layout.setOnRefreshListener { catalogPresenter.refresh() }
+        update_catalog_layout.setOnRefreshListener { presenter.refresh() }
 
-        catalogPresenter.onCreated()
+        presenter.onCreated()
     }
 
     override fun showList(videos: PagedList<CatalogItem>) = adapter.submitList(videos)
 
-    override fun showVideo(item: CatalogItem) =
-        startActivity(VideoActivity.getActivity(item, context!!))
+    override fun showVideo(item: CatalogItem) {
+        activity?.supportFragmentManager?.let {
+            Router.replaceFragment(
+                it,
+                VideoFragment.getInstance(item),
+                true,
+                VideoFragment.FRAGMENT_TAG
+            )
+        }
+    }
 
     override fun showAlbum(album: CatalogItem) =
         startActivity(AlbumActivity.getActivity(album, context!!))
@@ -104,6 +113,4 @@ class CatalogFragment : BaseFragment<CatalogContract.View, CatalogContract.Prese
             getText(R.string.error_loading),
             Snackbar.LENGTH_LONG
         ).show()
-
-    override fun initPresenter() = catalogPresenter
 }

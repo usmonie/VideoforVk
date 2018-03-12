@@ -15,7 +15,6 @@ class VideoViewHolder(private val picasso: Picasso, itemView: View) :
     private val videoTitle = itemView.findViewById<TextView>(R.id.video_title)
 
     override fun bind(item: Item) {
-
         val imageUri = when {
             item.photo800 != null -> item.photo800
             item.photo640 != null -> item.photo640
