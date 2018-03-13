@@ -5,8 +5,6 @@ import akhmedoff.usman.data.model.User
 import akhmedoff.usman.data.repository.UserRepository
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.base.BasePresenter
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.OnLifecycleEvent
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -14,15 +12,17 @@ import retrofit2.Response
 class MainPresenter(private val userRepository: UserRepository) :
     BasePresenter<MainContract.View>(), MainContract.Presenter {
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
-    fun onCreate() {
-        if (!userRepository.hasCurrentUser())
-            loadUser()
+    override fun onCreate() {
+        if (!userRepository.hasCurrentUser()) loadUser()
+
+        val thread = Thread.currentThread()
+
+        val stackTrace = thread.stackTrace
         view?.showHome()
     }
 
     override fun forwardTo(id: Int) {
-        view?.hidePrevious()
+//        view?.hidePrevious()
         when (id) {
             R.id.navigation_home -> {
                 view?.showHome()

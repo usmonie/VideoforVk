@@ -12,7 +12,6 @@ interface VideoContract {
 
         fun showOwnerInfo(owner: Owner)
 
-
         fun showVideo(item: Video)
 
         fun setSaved(saved: Boolean)
@@ -88,9 +87,13 @@ interface VideoContract {
 
     interface Presenter {
 
+        var view: View?
+
         fun onClick(id: Int)
 
         fun onCreate()
+
+        fun onStart()
 
         fun onResume()
 

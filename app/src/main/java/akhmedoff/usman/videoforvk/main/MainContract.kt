@@ -21,6 +21,8 @@ interface MainContract {
 
     interface Presenter : BaseContract.Presenter<View> {
 
+        fun onCreate()
+
         fun forwardTo(id: Int)
 
     }

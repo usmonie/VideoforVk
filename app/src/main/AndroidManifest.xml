@@ -40,7 +40,18 @@
         </activity>
         <activity
             android:name=".main.MainActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation" />
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:resizeableActivity="true"
+            android:supportsPictureInPicture="true"
+            tools:ignore="UnusedAttribute">
+
+            <layout
+                android:defaultHeight="640dp"
+                android:defaultWidth="330dp"
+                android:gravity="center"
+                android:minHeight="114dp"
+                android:minWidth="132dp" />
+        </activity>
         <activity
             android:name=".login.LoginActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
@@ -65,9 +76,6 @@
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation" />
         <activity
             android:name=".search.SearchActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation" />
-        <activity
-            android:name=".owner.OwnerActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation" />
     </application>
 

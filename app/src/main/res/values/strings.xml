@@ -54,8 +54,6 @@
     <string name="tab_title_ugc">Popular</string>
     <string name="tab_title_series_and_tv">Series and TV shows</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="videos_title">Videos</string>
     <string name="empty_list">Empty list</string>
     <string name="video_title">Video</string>

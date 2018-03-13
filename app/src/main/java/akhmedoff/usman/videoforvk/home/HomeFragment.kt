@@ -21,14 +21,15 @@ class HomeFragment : Fragment(), HomeContract.View {
 
     override var presenter: HomeContract.Presenter = HomePresenter()
 
-    private val catalogsPagerAdapter by lazy {
-        FragmentsViewPagerAdapter(childFragmentManager)
-    }
+    private lateinit var catalogsPagerAdapter: FragmentsViewPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         presenter.view = this
-        presenter.onCreated()
+        catalogsPagerAdapter = FragmentsViewPagerAdapter(childFragmentManager)
+
+        if (savedInstanceState == null)
+            presenter.onCreated()
     }
 
     override fun onCreateView(

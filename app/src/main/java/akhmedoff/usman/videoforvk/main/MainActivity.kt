@@ -3,7 +3,7 @@ package akhmedoff.usman.videoforvk.main
 import akhmedoff.usman.data.utils.getUserRepository
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.Router.hideFragment
-import akhmedoff.usman.videoforvk.Router.showFragment
+import akhmedoff.usman.videoforvk.Router.replaceFragment
 import akhmedoff.usman.videoforvk.base.BaseActivity
 import akhmedoff.usman.videoforvk.home.HomeFragment
 import akhmedoff.usman.videoforvk.looking.LookingFragment
@@ -11,6 +11,7 @@ import akhmedoff.usman.videoforvk.main.MainContract.Presenter
 import akhmedoff.usman.videoforvk.profile.ProfileFragment
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
+import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
@@ -23,6 +24,8 @@ class MainActivity : BaseActivity<MainContract.View, Presenter>(), MainContract.
     private lateinit var homeFragment: HomeFragment
     private lateinit var lookingFragment: LookingFragment
     private lateinit var profileFragment: ProfileFragment
+
+    private var currentFragment: Fragment? = null
 
     private val onNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -61,22 +64,26 @@ class MainActivity : BaseActivity<MainContract.View, Presenter>(), MainContract.
 
         navigation.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
         navigation.setOnNavigationItemReselectedListener(onNavigationItemReselectedListener)
+
+        if (savedInstanceState == null) {
+            mainPresenter.onCreate()
+        }
     }
 
-    override fun showHome() = showFragment(
+    override fun showHome() = replaceFragment(
         supportFragmentManager,
         homeFragment,
         fragmentTag = LookingFragment.FRAGMENT_TAG
     )
 
     override fun showProfile() =
-        showFragment(
+        replaceFragment(
             supportFragmentManager,
             profileFragment,
             fragmentTag = LookingFragment.FRAGMENT_TAG
         )
 
-    override fun showLooking() = showFragment(
+    override fun showLooking() = replaceFragment(
         supportFragmentManager,
         lookingFragment,
         fragmentTag = LookingFragment.FRAGMENT_TAG
@@ -107,7 +114,6 @@ class MainActivity : BaseActivity<MainContract.View, Presenter>(), MainContract.
             navigation.visibility = View.GONE
         } else {
             navigation.visibility = View.VISIBLE
-
         }
     }
 

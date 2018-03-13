@@ -47,7 +47,9 @@ class LookingFragment : Fragment(), LookingContract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.onCreated()
+        if (savedInstanceState == null)
+            presenter.onCreated()
+
         looking_recycler.adapter = adapter
 
         search_box_collapsed.setOnClickListener { presenter.searchClicked() }

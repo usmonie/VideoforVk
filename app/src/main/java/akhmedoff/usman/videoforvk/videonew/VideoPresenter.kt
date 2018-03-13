@@ -14,7 +14,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class VideoPresenter(
-    var view: VideoContract.View?,
+    override var view: VideoContract.View?,
     private val videoRepository: VideoRepository,
     private val userRepository: UserRepository
 ) : VideoContract.Presenter {
@@ -27,6 +27,9 @@ class VideoPresenter(
     private lateinit var video: Video
 
     override fun onCreate() {
+    }
+
+    override fun onStart() {
         view?.hideUi()
         view?.let { view ->
             loadVideo("${view.getOwnerId()}_${view.getVideoId()}")
@@ -181,7 +184,7 @@ class VideoPresenter(
 
     override fun onDestroyView() {
         view?.stopVideo()
-
+        view = null
     }
 
     override fun error(error: Error, message: String) {

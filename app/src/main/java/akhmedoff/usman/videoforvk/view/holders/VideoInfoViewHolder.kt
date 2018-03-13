@@ -20,7 +20,7 @@ class VideoInfoViewHolder(val clickListener: (Int) -> Unit, itemView: View) :
         itemView.video_title.text = item.title
 
         itemView.video_date.text = DateUtils.getRelativeTimeSpanString(
-            item.date,
+            item.date * 1000,
             System.currentTimeMillis(),
             DateUtils.DAY_IN_MILLIS
         )

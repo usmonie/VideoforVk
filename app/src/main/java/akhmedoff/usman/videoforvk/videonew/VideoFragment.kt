@@ -66,38 +66,19 @@ class VideoFragment : Fragment(), VideoContract.View {
 
     private lateinit var dataSourceFactory: DefaultDataSourceFactory
 
-    private val file by lazy {
-        File("${context!!.filesDir.parent}/cache")
-    }
+    private lateinit var file: File
 
-    private val cacheDataSourceFactory by lazy {
-        CacheDataSourceFactory(SimpleCache(file, NoOpCacheEvictor()), dataSourceFactory)
-    }
+    private lateinit var cacheDataSourceFactory: CacheDataSourceFactory
 
     private var player: SimpleExoPlayer? = null
 
-    private val audioManager by lazy {
-        context!!.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-    }
+    private lateinit var audioManager: AudioManager
 
-    private val audioFocusListener by lazy {
-        AudioFocusListener(player)
-    }
+    private lateinit var audioFocusListener: AudioFocusListener
 
-    private val adapter by lazy {
-        VideoInfoRecyclerAdapter { presenter.onClick(it) }
-    }
+    private lateinit var adapter: VideoInfoRecyclerAdapter
 
-    private val simpleControlDispatcher by lazy {
-        SimpleControlDispatcher(audioFocusListener, audioManager) {
-            startActivity(
-                Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse(it)
-                )
-            )
-        }
-    }
+    private lateinit var simpleControlDispatcher: SimpleControlDispatcher
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,6 +87,8 @@ class VideoFragment : Fragment(), VideoContract.View {
             getVideoRepository(context!!, AppDatabase.getInstance(context!!).ownerDao()),
             getUserRepository(context!!)
         )
+
+        if (savedInstanceState != null) presenter.view = this
     }
 
     override fun onCreateView(
@@ -117,9 +100,7 @@ class VideoFragment : Fragment(), VideoContract.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        video_info_recycler.adapter = adapter
-
-        presenter.onCreate()
+        file = File("${context!!.filesDir.parent}/cache")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) pip_toggle.visibility = View.VISIBLE
 
         fullscreen_toggle.setOnClickListener { presenter.clickFullscreen() }
@@ -128,18 +109,34 @@ class VideoFragment : Fragment(), VideoContract.View {
 
         // 1. Create a default TrackSelector
         val bandwidthMeter = DefaultBandwidthMeter()
-        val videoTrackSelectionFactory = AdaptiveTrackSelection.Factory(bandwidthMeter)
-        val trackSelector = DefaultTrackSelector(videoTrackSelectionFactory)
 
         // 2. Create the player
-        player = ExoPlayerFactory.newSimpleInstance(context, trackSelector)
+        player = ExoPlayerFactory.newSimpleInstance(
+            context,
+            DefaultTrackSelector(AdaptiveTrackSelection.Factory(bandwidthMeter))
+        )
 
         // Produces DataSource instances through which media data is loaded.
         dataSourceFactory = DefaultDataSourceFactory(
             App.context,
             Util.getUserAgent(App.context, "yourApplicationName"), bandwidthMeter
         )
+        cacheDataSourceFactory =
+                CacheDataSourceFactory(SimpleCache(file, NoOpCacheEvictor()), dataSourceFactory)
 
+        audioManager = context!!.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+
+        audioFocusListener = AudioFocusListener(player)
+
+        simpleControlDispatcher = SimpleControlDispatcher(audioFocusListener, audioManager) {
+            startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(it)
+                )
+            )
+        }
+        video_exo_player.setControlDispatcher(simpleControlDispatcher)
         video_exo_player.player = player
 
         video_info_recycler.itemAnimator = DefaultItemAnimator()
@@ -149,6 +146,14 @@ class VideoFragment : Fragment(), VideoContract.View {
                 resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin)
             )
         )
+        adapter = VideoInfoRecyclerAdapter { presenter.onClick(it) }
+        video_info_recycler.adapter = adapter
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        presenter.onStart()
     }
 
     override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean) =
@@ -165,7 +170,6 @@ class VideoFragment : Fragment(), VideoContract.View {
 
     private fun initExoPlayer(item: Video) {
         simpleControlDispatcher.item = item
-        video_exo_player.setControlDispatcher(simpleControlDispatcher)
 
         val mp4VideoUri = Uri.parse(
             when {
@@ -269,13 +273,12 @@ class VideoFragment : Fragment(), VideoContract.View {
     }
 
     override fun showProgress() {
-        video_loading.visibility = View.VISIBLE
+        video_loading?.visibility = View.VISIBLE
     }
 
     override fun hideProgress() {
-        video_loading.visibility = View.GONE
+        video_loading?.visibility = View.GONE
     }
-
 
     override fun showPlayer() {
         video_exo_player.visibility = View.VISIBLE
@@ -335,4 +338,8 @@ class VideoFragment : Fragment(), VideoContract.View {
     override fun showOwnerGroup(owner: Owner) {
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        presenter.onDestroyView()
+    }
 }
