@@ -35,9 +35,7 @@ class CatalogRecyclerAdapter(
         ).apply {
             itemView.setOnClickListener {
                 getItem(adapterPosition)?.let {
-                    clickListener(
-                        it
-                    )
+                    clickListener(it)
                 }
             }
         }

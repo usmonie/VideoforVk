@@ -17,7 +17,6 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.fragment_catalog.*
 import kotlinx.android.synthetic.main.fragment_looking.*
 import kotlinx.android.synthetic.main.search_toolbar.*
 
@@ -81,11 +80,10 @@ class LookingFragment : Fragment(), LookingContract.View {
 
     override fun showErrorLoading() =
         Snackbar.make(
-            update_catalog_layout,
+            update_looking_layout,
             getText(R.string.error_loading),
             Snackbar.LENGTH_LONG
         ).show()
-
 
     override fun setList(items: PagedList<Catalog>) = adapter.submitList(items)
 
