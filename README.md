@@ -14,3 +14,14 @@ I use in the application:
  - Firebase
  - Picasso
  - MVP
+![alt text](https://raw.githubusercontent.com/ukakhmedoff/VideoforVk/master/device-2018-03-10-212659.png)
+
+![alt text](https://raw.githubusercontent.com/ukakhmedoff/VideoforVk/master/device-2018-03-10-212717.png)
+
+![alt text](https://raw.githubusercontent.com/ukakhmedoff/VideoforVk/master/device-2018-03-10-213016.png)
+
+![alt text](https://raw.githubusercontent.com/ukakhmedoff/VideoforVk/master/device-2018-03-10-213320.png)
+
+![alt text](https://raw.githubusercontent.com/ukakhmedoff/VideoforVk/master/device-2018-03-10-213544.png)
+
+![alt text](https://raw.githubusercontent.com/ukakhmedoff/VideoforVk/master/device-2018-03-10-213717.png)
