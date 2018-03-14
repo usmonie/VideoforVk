@@ -15,14 +15,13 @@ class AlbumDeserializer : JsonDeserializer<Album> {
         context: JsonDeserializationContext?
     ): Album {
         Log.d("deserialize album", "start")
-        val jsonObject = json.asJsonObject["response"].asJsonObject
+        val jsonObject = json.asJsonObject
         val album = Album()
-
-        album.id = jsonObject["id"]?.asJsonPrimitive?.asInt!!
-        album.ownerId = jsonObject["owner_id"]?.asJsonPrimitive?.asInt!!
-        album.title = jsonObject["title"]?.asJsonPrimitive?.asString!!
-        album.count = jsonObject["count"]?.asJsonPrimitive?.asInt!!
-        album.photo320 = jsonObject["photo_320"]?.asJsonPrimitive?.asString!!
+        jsonObject["id"]?.asJsonPrimitive?.asInt?.let { album.id = it }
+        jsonObject["owner_id"]?.asJsonPrimitive?.asInt?.let { album.ownerId = it }
+        jsonObject["title"]?.asJsonPrimitive?.asString?.let { album.title = it }
+        jsonObject["count"]?.asJsonPrimitive?.asInt?.let { album.count = it }
+        jsonObject["photo_320"]?.asJsonPrimitive?.asString?.let { album.photo320 = it }
 
         return album
     }

@@ -31,8 +31,12 @@ interface ProfileContract {
 
         fun onCreated()
 
+        fun onDestroyed()
+
         fun onSearchClicked()
 
         fun onViewCreated()
+
+
     }
 }

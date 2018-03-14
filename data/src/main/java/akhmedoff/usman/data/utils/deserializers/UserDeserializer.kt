@@ -20,6 +20,9 @@ class UserDeserializer : JsonDeserializer<User> {
         responseJson["id"]?.let { user.id = it.asJsonPrimitive.asLong }
         responseJson["first_name"]?.let { user.firstName = it.asString }
         responseJson["last_name"]?.let { user.lastName = it.asString }
+
+        user.name = "${user.firstName} ${user.lastName}"
+
         responseJson["nickname"]?.let { user.nickname = it.asString }
         responseJson["screen_name"]?.let { user.screenName = it.asString }
         responseJson["photo_100"]?.let { user.photo100 = it.asString }

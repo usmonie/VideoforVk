@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 
 
-class VideosAdapter(
+class VideosRecyclerAdapter(
     private val clickListener: (Video) -> Unit,
     @LayoutRes private val layoutId: Int
 ) : PagedListAdapter<Video, VideoViewHolder>(VIDEO_COMPARATOR) {

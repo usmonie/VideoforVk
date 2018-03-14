@@ -62,7 +62,7 @@ class VideoRepository(
 
     fun getAlbum(ownerId: String?, albumId: String?) = vkApi.getAlbum(ownerId, albumId)
 
-    fun getAlbums(ownerId: String): LiveData<PagedList<Album>> {
+    fun getAlbums(ownerId: String? = null): LiveData<PagedList<Album>> {
         val pagedListConfig = PagedList.Config.Builder()
             .setEnablePlaceholders(false)
             .setPageSize(10)

@@ -54,7 +54,8 @@
     <string name="tab_title_ugc">Popular</string>
     <string name="tab_title_series_and_tv">Series and TV shows</string>
 
-    <string name="videos_title">Videos</string>
+    <string name="tab_videos_title">Videos</string>
     <string name="empty_list">Empty list</string>
     <string name="video_title">Video</string>
+    <string name="tab_albums_title">Albums</string>
 </resources>

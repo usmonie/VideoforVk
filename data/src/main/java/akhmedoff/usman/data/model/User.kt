@@ -3,10 +3,9 @@ package akhmedoff.usman.data.model
 import android.arch.persistence.room.Entity
 
 @Entity(tableName = "users")
-class User(
-    var firstName: String = "",
+class User : Owner() {
+    var firstName: String = ""
     var lastName: String = ""
-) : Owner("$firstName $lastName") {
     var nickname: String = ""
     var photoMax: String = ""
     var photoMaxOrig: String = ""

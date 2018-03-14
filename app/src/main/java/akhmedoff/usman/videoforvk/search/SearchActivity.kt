@@ -6,7 +6,7 @@ import akhmedoff.usman.data.utils.getVideoRepository
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.base.BaseActivity
 import akhmedoff.usman.videoforvk.video.VideoActivity
-import akhmedoff.usman.videoforvk.view.VideosAdapter
+import akhmedoff.usman.videoforvk.view.VideosRecyclerAdapter
 import android.arch.paging.PagedList
 import android.os.Bundle
 import android.text.Editable
@@ -21,8 +21,8 @@ class SearchActivity : BaseActivity<SearchContract.View, SearchContract.Presente
 
     override lateinit var searchPresenter: SearchContract.Presenter
 
-    private val adapter: VideosAdapter by lazy {
-        VideosAdapter({ searchPresenter.onClick(item = it) }, R.layout.search_videos)
+    private val adapter: VideosRecyclerAdapter by lazy {
+        VideosRecyclerAdapter({ searchPresenter.onClick(item = it) }, R.layout.search_videos)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -45,6 +45,7 @@ class HomeFragment : Fragment(), HomeContract.View {
 
         view_pager.adapter = catalogsPagerAdapter
         view_pager.offscreenPageLimit = 3
+
         tabs.setupWithViewPager(view_pager)
 
         if (savedInstanceState != null && savedInstanceState.containsKey(CURRENT_TAB_KEY)) {

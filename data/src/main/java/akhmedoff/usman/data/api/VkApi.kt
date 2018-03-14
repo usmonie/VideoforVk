@@ -40,7 +40,7 @@ interface VkApi {
         @Query("offset") offset: Long,
         @Query("count") count: Long,
         @Query("extended") extended: Int = 1
-    ): Call<ApiResponse<List<Album>>>
+    ): Call<ApiResponse<AlbumsResponse>>
 
     @GET("video.getCatalog")
     fun getCatalog(

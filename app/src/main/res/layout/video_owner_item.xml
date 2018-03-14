@@ -18,9 +18,9 @@
             android:id="@+id/owner_avatar"
             android:layout_width="68dp"
             android:layout_height="match_parent"
-            android:layout_marginBottom="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
             android:scaleType="centerCrop"
             tools:src="@tools:sample/avatars" />
 
@@ -28,7 +28,7 @@
             android:id="@+id/owner_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:layout_margin="16dp"
             android:layout_weight="1"
             android:lines="1"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"

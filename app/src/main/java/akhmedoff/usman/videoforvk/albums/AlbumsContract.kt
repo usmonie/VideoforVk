@@ -1,25 +1,25 @@
-package akhmedoff.usman.videoforvk.videos
+package akhmedoff.usman.videoforvk.albums
 
-import akhmedoff.usman.data.model.Video
+import akhmedoff.usman.data.model.Album
 import android.arch.lifecycle.LifecycleOwner
 import android.arch.paging.PagedList
 
-interface VideosContract {
+interface AlbumsContract {
 
     interface View : LifecycleOwner {
         var presenter: Presenter
 
-        fun showVideos(videos: PagedList<Video>)
+        fun getOwnerId(): String?
 
         fun showLoading(isLoading: Boolean)
 
-        fun showError(message: String)
-
-        fun getOwnerId(): String?
+        fun showErrorLoading()
 
         fun showEmptyList()
 
-        fun showVideo(item: Video)
+        fun showAlbum(item: Album)
+
+        fun setList(items: PagedList<Album>)
     }
 
     interface Presenter {
@@ -29,6 +29,8 @@ interface VideosContract {
 
         fun onDestroyed()
 
-        fun onVideoClicked(item: Video)
+        fun refresh()
+
+        fun onItemClicked(item: Album)
     }
 }

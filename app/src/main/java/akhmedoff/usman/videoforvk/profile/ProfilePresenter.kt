@@ -15,7 +15,11 @@ class ProfilePresenter(
     ProfileContract.Presenter {
 
     override fun onCreated() {
-        view?.showPages(userRepository.getCurrentUser().toString())
+        view?.showPages(userRepository.getCurrentUser() ?: "")
+    }
+
+    override fun onDestroyed() {
+        view = null
     }
 
     override fun onViewCreated() {
@@ -34,7 +38,7 @@ class ProfilePresenter(
                         view.hideTabs()
                         t?.message?.let {
                             view.showError(it)
-                            Log.d(javaClass.simpleName, it)
+                            Log.e(javaClass.simpleName, it)
                         }
                     }
 

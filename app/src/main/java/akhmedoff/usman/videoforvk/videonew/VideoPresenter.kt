@@ -103,16 +103,6 @@ class VideoPresenter(
         view?.let { view ->
             userRepository
                 .getUsers(user.id.toString())
-                /*.observe(view, Observer {
-                    it?.let { users ->
-                        if (users.isNotEmpty()) {
-                            view.showUserOwnerInfo(users[0])
-                            view.hideProgress()
-                            view.showUi()
-                            view.showPlayer()
-                        }
-                    }
-                })*/
                 .enqueue(object : Callback<ApiResponse<List<User>>> {
                     override fun onFailure(
                         call: Call<ApiResponse<List<User>>>?,
@@ -183,6 +173,7 @@ class VideoPresenter(
 
 
     override fun onDestroyView() {
+        view?.stopAudioFocusListener()
         view?.stopVideo()
         view = null
     }

@@ -156,6 +156,11 @@ class VideoFragment : Fragment(), VideoContract.View {
         presenter.onStart()
     }
 
+    override fun onStop() {
+        super.onStop()
+        presenter.onStop()
+    }
+
     override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean) =
         presenter.changedPipMode()
 
