@@ -43,7 +43,6 @@ class CatalogRecyclerAdapter(
         }
 
     override fun onBindViewHolder(holder: VideoViewHolder, position: Int) {
-
         getItem(position)?.let {
             holder.bind(it)
         }

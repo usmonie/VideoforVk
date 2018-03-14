@@ -64,7 +64,9 @@ class HomeFragment : Fragment(), HomeContract.View {
     override fun startSearch() = startActivity(Intent(context, SearchActivity::class.java))
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt(CURRENT_TAB_KEY, view_pager.currentItem)
+        view_pager?.currentItem?.let {
+            outState.putInt(CURRENT_TAB_KEY, it)
+        }
         super.onSaveInstanceState(outState)
     }
 
