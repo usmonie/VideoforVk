@@ -12,13 +12,14 @@ import retrofit2.Response
 class MainPresenter(private val userRepository: UserRepository) :
     BasePresenter<MainContract.View>(), MainContract.Presenter {
 
+
     override fun onCreate() {
         if (!userRepository.hasCurrentUser()) loadUser()
-
-        val thread = Thread.currentThread()
-
-        val stackTrace = thread.stackTrace
         view?.showHome()
+    }
+
+    override fun onRecreate() {
+        view?.showLastFragment()
     }
 
     override fun forwardTo(id: Int) {

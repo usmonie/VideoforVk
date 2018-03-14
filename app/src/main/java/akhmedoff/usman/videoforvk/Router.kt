@@ -43,7 +43,7 @@ object Router {
         fragmentManager: FragmentManager,
         fragment: Fragment,
         addToBackStack: Boolean = false,
-        fragmentTag: String
+        fragmentTag: String?
     ) {
         if (addToBackStack) {
             fragmentManager.beginTransaction()

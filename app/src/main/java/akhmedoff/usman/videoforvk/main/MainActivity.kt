@@ -18,6 +18,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity<MainContract.View, Presenter>(), MainContract.View,
     FragmentManager.OnBackStackChangedListener {
+    companion object {
+        const val CURRENT_FRAGMENT_TAG = "current_fragment"
+    }
 
     override lateinit var mainPresenter: Presenter
 
@@ -67,6 +70,11 @@ class MainActivity : BaseActivity<MainContract.View, Presenter>(), MainContract.
 
         if (savedInstanceState == null) {
             mainPresenter.onCreate()
+        } else if (savedInstanceState.containsKey(CURRENT_FRAGMENT_TAG)) {
+            currentFragment = supportFragmentManager.findFragmentByTag(
+                savedInstanceState.getString(CURRENT_FRAGMENT_TAG)
+            )
+            mainPresenter.onRecreate()
         }
     }
 
@@ -105,15 +113,19 @@ class MainActivity : BaseActivity<MainContract.View, Presenter>(), MainContract.
         }
     }
 
+    override fun showLastFragment() {
+        currentFragment?.let {
+            replaceFragment(supportFragmentManager, it, fragmentTag = it.tag)
+        }
+    }
 
     override fun showSettings() {
     }
 
     override fun onBackStackChanged() {
-        if (supportFragmentManager.backStackEntryCount > 0) {
-            navigation.visibility = View.GONE
-        } else {
-            navigation.visibility = View.VISIBLE
+        when {
+            supportFragmentManager.backStackEntryCount > 0 -> navigation.visibility = View.GONE
+            else -> navigation.visibility = View.VISIBLE
         }
     }
 

@@ -17,13 +17,15 @@ interface MainContract {
 
         fun hidePrevious()
 
+        fun showLastFragment()
+
     }
 
     interface Presenter : BaseContract.Presenter<View> {
-
         fun onCreate()
 
-        fun forwardTo(id: Int)
+        fun onRecreate()
 
+        fun forwardTo(id: Int)
     }
 }

@@ -17,6 +17,8 @@ class HomeFragment : Fragment(), HomeContract.View {
 
     companion object {
         const val FRAGMENT_TAG = "home_fragment_tag"
+        const val CURRENT_TAB_KEY = "current_tab"
+        const val RETAINED_KEY = "retained"
     }
 
     override var presenter: HomeContract.Presenter = HomePresenter()
@@ -28,8 +30,9 @@ class HomeFragment : Fragment(), HomeContract.View {
         presenter.view = this
         catalogsPagerAdapter = FragmentsViewPagerAdapter(childFragmentManager)
 
-        if (savedInstanceState == null)
+        if (savedInstanceState == null || !savedInstanceState.containsKey(RETAINED_KEY)) {
             presenter.onCreated()
+        }
     }
 
     override fun onCreateView(
@@ -41,7 +44,12 @@ class HomeFragment : Fragment(), HomeContract.View {
         super.onViewCreated(view, savedInstanceState)
 
         view_pager.adapter = catalogsPagerAdapter
+        view_pager.offscreenPageLimit = 3
         tabs.setupWithViewPager(view_pager)
+
+        if (savedInstanceState != null && savedInstanceState.containsKey(CURRENT_TAB_KEY)) {
+            view_pager.setCurrentItem(savedInstanceState.getInt(CURRENT_TAB_KEY), false)
+        }
 
         search_box_collapsed.setOnClickListener { presenter.searchClicked() }
     }
@@ -54,6 +62,11 @@ class HomeFragment : Fragment(), HomeContract.View {
     }
 
     override fun startSearch() = startActivity(Intent(context, SearchActivity::class.java))
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt(CURRENT_TAB_KEY, view_pager.currentItem)
+        super.onSaveInstanceState(outState)
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
