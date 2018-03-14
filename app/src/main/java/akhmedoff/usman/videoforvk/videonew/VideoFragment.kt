@@ -64,21 +64,21 @@ class VideoFragment : Fragment(), VideoContract.View {
 
     override lateinit var presenter: VideoContract.Presenter
 
-    private lateinit var dataSourceFactory: DefaultDataSourceFactory
-
     private lateinit var file: File
 
-    private lateinit var cacheDataSourceFactory: CacheDataSourceFactory
+    private lateinit var dataSourceFactory: DefaultDataSourceFactory
 
-    private var player: SimpleExoPlayer? = null
+    private lateinit var cacheDataSourceFactory: CacheDataSourceFactory
 
     private lateinit var audioManager: AudioManager
 
     private lateinit var audioFocusListener: AudioFocusListener
 
-    private lateinit var adapter: VideoInfoRecyclerAdapter
-
     private lateinit var simpleControlDispatcher: SimpleControlDispatcher
+
+    private var player: SimpleExoPlayer? = null
+
+    private lateinit var adapter: VideoInfoRecyclerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,17 +99,15 @@ class VideoFragment : Fragment(), VideoContract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        file = File("${context!!.filesDir.parent}/cache")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) pip_toggle.visibility = View.VISIBLE
 
         fullscreen_toggle.setOnClickListener { presenter.clickFullscreen() }
         pip_toggle.setOnClickListener { presenter.pipToggleButton() }
         exo_arrow_back.setOnClickListener { activity?.supportFragmentManager?.popBackStack() }
 
-        // 1. Create a default TrackSelector
-        val bandwidthMeter = DefaultBandwidthMeter()
+        file = File("${context!!.filesDir.parent}/cache")
 
+        val bandwidthMeter = DefaultBandwidthMeter()
         // 2. Create the player
         player = ExoPlayerFactory.newSimpleInstance(
             context,
@@ -121,6 +119,7 @@ class VideoFragment : Fragment(), VideoContract.View {
             App.context,
             Util.getUserAgent(App.context, "yourApplicationName"), bandwidthMeter
         )
+
         cacheDataSourceFactory =
                 CacheDataSourceFactory(SimpleCache(file, NoOpCacheEvictor()), dataSourceFactory)
 
@@ -136,6 +135,7 @@ class VideoFragment : Fragment(), VideoContract.View {
                 )
             )
         }
+
         video_exo_player.setControlDispatcher(simpleControlDispatcher)
         video_exo_player.player = player
 

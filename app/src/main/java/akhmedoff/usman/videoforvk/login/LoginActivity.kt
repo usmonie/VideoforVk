@@ -21,11 +21,9 @@ class LoginActivity : BaseActivity<LoginContract.View, LoginContract.Presenter>(
     override lateinit var loginPresenter: LoginContract.Presenter
 
     private val twoFactorDialog: TwoFactorAuthenticationDialog by lazy {
-        TwoFactorAuthenticationDialog(
-            this, {
-                loginPresenter.enterCode(it)
-            }
-        )
+        TwoFactorAuthenticationDialog(this) {
+            loginPresenter.enterCode(it)
+        }
     }
 
     private val captchaDialog: CaptchaDialog by lazy {

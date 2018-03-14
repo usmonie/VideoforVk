@@ -15,9 +15,8 @@ class VideoOwnerViewHolder(itemView: View) : AbstractViewHolder<Owner>(itemView)
         title.text = item.name
 
         Picasso
-            .with(itemView.context)
+            .with(title.context)
             .load(item.photo100)
-            .fit()
             .into(avatar)
     }
 }

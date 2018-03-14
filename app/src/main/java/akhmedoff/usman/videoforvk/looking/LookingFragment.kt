@@ -24,6 +24,7 @@ class LookingFragment : Fragment(), LookingContract.View {
 
     companion object {
         const val FRAGMENT_TAG = "looking_fragment_tag"
+        const val RETAINED_KEY = "retained"
     }
 
     override lateinit var presenter: LookingContract.Presenter
@@ -46,15 +47,14 @@ class LookingFragment : Fragment(), LookingContract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (savedInstanceState == null)
+
+        if (savedInstanceState == null || !savedInstanceState.containsKey(RETAINED_KEY))
             presenter.onCreated()
 
         looking_recycler.adapter = adapter
 
         search_box_collapsed.setOnClickListener { presenter.searchClicked() }
     }
-
-    override fun startSearch() = startActivity(Intent(context, SearchActivity::class.java))
 
     override fun showVideo(item: CatalogItem) {
         activity?.supportFragmentManager?.let {
@@ -66,6 +66,8 @@ class LookingFragment : Fragment(), LookingContract.View {
             )
         }
     }
+
+    override fun startSearch() = startActivity(Intent(context, SearchActivity::class.java))
 
     override fun showAlbum(album: CatalogItem) =
         startActivity(AlbumActivity.getActivity(album, context!!))
