@@ -275,6 +275,8 @@ class VideoFragment : Fragment(), VideoContract.View {
 
     override fun showUi() {
         video_info_recycler?.visibility = View.VISIBLE
+
+        video_exo_player.showController()
     }
 
     override fun showProgress() {
@@ -303,14 +305,14 @@ class VideoFragment : Fragment(), VideoContract.View {
     }
 
     override fun setPlayerFullscreen() {
-        video_exo_player.layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
-        video_exo_player.requestLayout()
+        appbar.layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
+        appbar.requestLayout()
     }
 
     override fun setPlayerNormal() {
-        video_exo_player.layoutParams.height =
+        appbar.layoutParams.height =
                 resources.getDimensionPixelSize(R.dimen.exo_player_height)
-        video_exo_player.requestLayout()
+        appbar.requestLayout()
     }
 
     override fun setLiked() {

@@ -10,15 +10,9 @@ interface VideoContract {
     interface View : LifecycleOwner {
         var presenter: Presenter
 
-        fun showOwnerInfo(owner: Owner)
-
         fun showVideo(item: Video)
 
-        fun setSaved(saved: Boolean)
-
-        fun showFullscreen(video: Video)
-
-        fun showSmallScreen()
+        fun getVideoId(): String
 
         fun pauseVideo()
 
@@ -26,17 +20,13 @@ interface VideoContract {
 
         fun stopVideo()
 
-        fun getVideoId(): String
+        fun showOwnerInfo(owner: Owner)
 
         fun getOwnerId(): String
 
-        fun getVideoState(): Boolean?
+        fun showFullscreen(video: Video)
 
-        fun getVideoPosition(): Long?
-
-        fun showRecommendations()
-
-        fun showLoadError()
+        fun showSmallScreen()
 
         fun enterPipMode()
 
@@ -48,9 +38,9 @@ interface VideoContract {
 
         fun showUi()
 
-        fun stopAudioFocusListener()
+        fun showRecommendations()
 
-        fun startAudioFocusListener()
+        fun showLoadError()
 
         fun showProgress()
 
@@ -59,6 +49,14 @@ interface VideoContract {
         fun showPlayer()
 
         fun hidePlayer()
+
+        fun getVideoState(): Boolean?
+
+        fun getVideoPosition(): Long?
+
+        fun stopAudioFocusListener()
+
+        fun startAudioFocusListener()
 
         fun setPlayerFullscreen()
 
@@ -77,6 +75,8 @@ interface VideoContract {
         fun hideSendDialog()
 
         fun setAdded()
+
+        fun setSaved(saved: Boolean)
 
         fun setDeleted()
 

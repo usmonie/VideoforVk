@@ -70,5 +70,5 @@
     <dimen name="width_owner_album">240dp</dimen>
     <dimen name="catalog_videos_margin">8dp</dimen>
     <dimen name="video_info_card_min_height">256dp</dimen>
-    <dimen name="video_owner_card_min_height">86dp</dimen>
+    <dimen name="video_owner_card_min_height">98dp</dimen>
 </resources>
