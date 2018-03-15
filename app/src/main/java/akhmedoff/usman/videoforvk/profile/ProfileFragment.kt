@@ -36,8 +36,17 @@ class ProfileFragment : Fragment(), ProfileContract.View {
 
     override lateinit var presenter: ProfileContract.Presenter
 
-    private val pagesPagerAdapter by lazy {
-        FragmentsViewPagerAdapter(childFragmentManager)
+    private lateinit var pagesPagerAdapter: FragmentsViewPagerAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        presenter = ProfilePresenter(this, getUserRepository(context!!))
+
+        pagesPagerAdapter = FragmentsViewPagerAdapter(childFragmentManager)
+
+        if (savedInstanceState == null || !savedInstanceState.containsKey(RETAINED_KEY)) {
+            presenter.onCreated()
+        }
     }
 
     override fun onCreateView(
@@ -45,23 +54,19 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        presenter = ProfilePresenter(this, getUserRepository(context!!))
-        presenter.view = this
         return inflater.inflate(R.layout.fragment_profile, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        presenter.onViewCreated()
 
-        search_box_collapsed.setOnClickListener { presenter.onSearchClicked() }
-
+        view_pager.offscreenPageLimit = 2
         view_pager.adapter = pagesPagerAdapter
         tabs.setupWithViewPager(view_pager)
 
-        if (savedInstanceState == null || !savedInstanceState.containsKey(RETAINED_KEY)) {
-            presenter.onCreated()
-        }
-        presenter.onViewCreated()
+        search_box_collapsed.setOnClickListener { presenter.onSearchClicked() }
+
     }
 
     override fun showUserName(name: String) {
@@ -109,8 +114,8 @@ class ProfileFragment : Fragment(), ProfileContract.View {
 
     override fun startSearch() = startActivity(Intent(context, SearchActivity::class.java))
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         presenter.onDestroyed()
     }
 }
