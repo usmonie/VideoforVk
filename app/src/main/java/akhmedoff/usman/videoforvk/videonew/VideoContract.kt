@@ -54,6 +54,21 @@ interface VideoContract {
 
         fun getVideoPosition(): Long?
 
+        fun loadIsFullscreen(): Boolean
+
+        fun loadVideoState(): Boolean
+
+        fun loadVideoPosition(): Long
+
+
+        fun setVideoPosition(position: Long)
+
+        fun saveVideoState(state: Boolean)
+
+        fun saveVideoPosition(position: Long)
+
+        fun saveIsFullscreen(isFullscreen: Boolean)
+
         fun stopAudioFocusListener()
 
         fun startAudioFocusListener()

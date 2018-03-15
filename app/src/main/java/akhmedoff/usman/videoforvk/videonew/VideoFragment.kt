@@ -47,15 +47,18 @@ class VideoFragment : Fragment(), VideoContract.View {
     companion object {
         const val FRAGMENT_TAG = "video_fragment_tag"
 
-        private const val VIDEO_ID = "video_id"
-        private const val OWNER_ID = "owner_id"
+        private const val VIDEO_ID_KEY = "video_id"
+        private const val OWNER_ID_KEY = "owner_id"
+        private const val VIDEO_STATE_KEY = "video_state"
+        private const val VIDEO_POSITION_KEY = "video_position"
+        private const val IS_FULLSCREEN_KEY = "is_fullscreen"
 
         fun getInstance(item: Item): Fragment {
             val fragment = VideoFragment()
             val bundle = Bundle()
 
-            bundle.putString(VIDEO_ID, item.id.toString())
-            bundle.putString(OWNER_ID, item.ownerId.toString())
+            bundle.putString(VIDEO_ID_KEY, item.id.toString())
+            bundle.putString(OWNER_ID_KEY, item.ownerId.toString())
             fragment.arguments = bundle
 
             return fragment
@@ -193,12 +196,12 @@ class VideoFragment : Fragment(), VideoContract.View {
         // This is the MediaSource representing the media to be played.
         val videoSource = when {
             item.files.hls != null -> HlsMediaSource.Factory(cacheDataSourceFactory)
+
             else -> ExtractorMediaSource.Factory(cacheDataSourceFactory)
         }.createMediaSource(mp4VideoUri, null, null)
 
         player?.let {
             it.prepare(videoSource)
-            it.seekTo(1)
             it.repeatMode = if (item.repeat) Player.REPEAT_MODE_ONE else Player.REPEAT_MODE_OFF
         }
     }
@@ -234,14 +237,6 @@ class VideoFragment : Fragment(), VideoContract.View {
         player?.playWhenReady = false
         player?.release()
     }
-
-    override fun getVideoId(): String = arguments!!.getString(VIDEO_ID)
-
-    override fun getOwnerId(): String = arguments!!.getString(OWNER_ID)
-
-    override fun getVideoState() = player?.playWhenReady
-
-    override fun getVideoPosition() = player?.currentPosition
 
     override fun showRecommendations() {
     }
@@ -348,5 +343,36 @@ class VideoFragment : Fragment(), VideoContract.View {
     override fun onDestroyView() {
         super.onDestroyView()
         presenter.onDestroyView()
+    }
+
+    override fun getVideoId(): String = arguments!!.getString(VIDEO_ID_KEY)
+
+    override fun getOwnerId(): String = arguments!!.getString(OWNER_ID_KEY)
+
+    override fun getVideoState() = player?.playWhenReady
+
+    override fun getVideoPosition() = player?.currentPosition
+
+    override fun loadIsFullscreen() = arguments?.getBoolean(IS_FULLSCREEN_KEY) ?: false
+
+    override fun loadVideoState() = arguments?.getBoolean(VIDEO_STATE_KEY) ?: false
+
+    override fun loadVideoPosition() = arguments?.getLong(VIDEO_POSITION_KEY) ?: 1
+
+    override fun saveVideoState(state: Boolean) {
+        arguments?.putBoolean(VIDEO_STATE_KEY, state)
+    }
+
+    override fun saveVideoPosition(position: Long) {
+        arguments?.putLong(VIDEO_STATE_KEY, position)
+
+    }
+
+    override fun saveIsFullscreen(isFullscreen: Boolean) {
+        arguments?.putBoolean(VIDEO_STATE_KEY, isFullscreen)
+    }
+
+    override fun setVideoPosition(position: Long) {
+        player?.seekTo(position)
     }
 }

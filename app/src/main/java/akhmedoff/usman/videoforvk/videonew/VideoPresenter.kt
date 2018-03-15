@@ -19,11 +19,6 @@ class VideoPresenter(
     private val userRepository: UserRepository
 ) : VideoContract.Presenter {
 
-    private var isFullscreen = false
-
-    private var isStarted = false
-
-    private var position = 0L
     private lateinit var video: Video
 
     override fun onCreate() {
@@ -81,6 +76,7 @@ class VideoPresenter(
                                     responseVideo.groups?.forEach {
                                         videoRepository.saveOwner(it)
                                     }
+                                    view.setVideoPosition(view.loadVideoPosition())
                                     videoRepository.saveOwnerId(responseVideo.groups!![0].id)
 
                                 }
@@ -134,20 +130,21 @@ class VideoPresenter(
 
     override fun clickFullscreen() {
         view?.let { view ->
-            isFullscreen = when (isFullscreen) {
-                true -> {
-                    view.showSmallScreen()
-                    view.setPlayerNormal()
-                    false
+            view.saveIsFullscreen(
+                when (view.loadIsFullscreen()) {
+                    true -> {
+                        view.showSmallScreen()
+                        view.setPlayerNormal()
+                        false
+                    }
+                    false -> {
+                        view.showFullscreen(video)
+                        view.setPlayerFullscreen()
+                        true
+                    }
                 }
-                false -> {
-                    view.showFullscreen(video)
-                    view.setPlayerFullscreen()
-                    true
-                }
-            }
+            )
         }
-
     }
 
     override fun changedPipMode() {
@@ -165,12 +162,11 @@ class VideoPresenter(
     override fun onStop() {
         view?.let { view ->
             view.pauseVideo()
-            view.getVideoState()?.let { isStartedVideo -> isStarted = isStartedVideo }
-            view.getVideoPosition()?.let { videoPosition -> position = videoPosition }
+            view.getVideoState()?.let { isStartedVideo -> view.saveVideoState(isStartedVideo) }
+            view.getVideoPosition()?.let { videoPosition -> view.saveVideoPosition(videoPosition) }
             view.stopAudioFocusListener()
         }
     }
-
 
     override fun onDestroyView() {
         view?.stopAudioFocusListener()
