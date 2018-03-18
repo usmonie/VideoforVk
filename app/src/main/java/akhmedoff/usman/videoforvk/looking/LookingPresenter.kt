@@ -2,18 +2,18 @@ package akhmedoff.usman.videoforvk.looking
 
 import akhmedoff.usman.data.model.CatalogItem
 import akhmedoff.usman.data.model.CatalogItemType
-import akhmedoff.usman.data.repository.VideoRepository
+import akhmedoff.usman.data.repository.CatalogRepository
 import android.arch.lifecycle.Observer
 
 class LookingPresenter(
     override var view: LookingContract.View?,
-    private val videoRepository: VideoRepository
+    private val catalogRepository: CatalogRepository
 ) : LookingContract.Presenter {
 
     override fun onCreated() {
         view?.let { view ->
             view.showLoading()
-            videoRepository
+            catalogRepository
                 .getCatalog("other")
                 .observe(view, Observer {
                     if (it != null && it.size > 0) {

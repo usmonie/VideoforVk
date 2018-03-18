@@ -2,12 +2,12 @@ package akhmedoff.usman.videoforvk.catalog
 
 import akhmedoff.usman.data.model.CatalogItem
 import akhmedoff.usman.data.model.CatalogItemType
-import akhmedoff.usman.data.repository.VideoRepository
+import akhmedoff.usman.data.repository.CatalogRepository
 import android.arch.lifecycle.Observer
 
 class CatalogPresenter(
     private var view: CatalogContract.View?,
-    private val videoRepository: VideoRepository
+    private val catalogRepository: CatalogRepository
 ) : CatalogContract.Presenter {
 
     override fun onCreated() = refresh()
@@ -22,7 +22,7 @@ class CatalogPresenter(
 
     override fun loadCatalogs() {
         view?.let { view ->
-            videoRepository
+            catalogRepository
                 .getCatalogSection(view.getPageCategory())
                 .observe(view, Observer { pagedList ->
                     when {

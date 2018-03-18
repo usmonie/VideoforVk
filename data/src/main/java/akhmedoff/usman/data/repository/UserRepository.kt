@@ -3,6 +3,7 @@ package akhmedoff.usman.data.repository
 import akhmedoff.usman.data.BuildConfig
 import akhmedoff.usman.data.api.VkApi
 import akhmedoff.usman.data.local.UserSettings
+import akhmedoff.usman.data.model.User
 
 class UserRepository(
     private val userSettings: UserSettings,
@@ -12,11 +13,26 @@ class UserRepository(
 
     fun saveToken(token: String) = userSettings.saveToken(token)
 
+    fun saveUser(user: User) {
+        userSettings.saveUserId(user.id)
+        userSettings.saveUserName("${user.firstName} ${user.lastName}")
+        userSettings.saveUserPhotoUrl(user.photoMaxOrig)
+    }
+
+    fun getUserPhotoUrl(): String? {
+        return userSettings.getUserPhotoUrl()
+    }
+
+    fun getUserName(): String? {
+        return userSettings.getUserName()
+    }
+
     fun getCurrentUser() = userSettings.getUserId()
 
     fun saveCurrentUser(userId: Long) = userSettings.saveUserId(userId)
 
     fun hasCurrentUser() = userSettings.hasUserId()
+
     fun checkToken() =
         api.checkToken("https://api.vk.com/method/secure.checkToken?token=" + userSettings.getToken())
 

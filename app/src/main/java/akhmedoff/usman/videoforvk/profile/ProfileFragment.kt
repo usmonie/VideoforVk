@@ -66,15 +66,14 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         tabs.setupWithViewPager(view_pager)
 
         search_box_collapsed.setOnClickListener { presenter.onSearchClicked() }
-
     }
 
     override fun showUserName(name: String) {
-        user_name.text = name
+        user_name?.text = name
     }
 
     override fun showUserPhoto(photoUrl: String) =
-        Picasso.with(context).load(photoUrl).into(user_avatar)
+        Picasso.get().load(photoUrl).into(user_avatar)
 
     override fun setIsUser(isUser: Boolean) {
 

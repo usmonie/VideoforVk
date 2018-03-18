@@ -1,6 +1,6 @@
 package akhmedoff.usman.data.model
 
-abstract class Item {
+open class Item {
     var id: Int = 0
     var ownerId: Int = 0
     lateinit var title: String

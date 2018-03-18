@@ -22,7 +22,7 @@ class CatalogViewHolder(
 ) : AbstractViewHolder<Catalog>(itemView) {
 
     private val adapter = CatalogItemsRecyclerAdapter(
-        Picasso.with(itemView.context),
+        Picasso.get(),
         clickListener
     )
 
@@ -62,7 +62,7 @@ class CatalogViewHolder(
 
         adapter.items = item.items
 
-        item.items?.get(0)?.type?.let {
+        item.items.get(0).type?.let {
             when (it) {
                 CatalogItemType.ALBUM -> catalogRecycler.layoutManager = linearLayoutManager
 

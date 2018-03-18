@@ -1,6 +1,5 @@
 package akhmedoff.usman.videoforvk.videonew
 
-import akhmedoff.usman.data.db.AppDatabase
 import akhmedoff.usman.data.model.Item
 import akhmedoff.usman.data.model.Owner
 import akhmedoff.usman.data.model.Video
@@ -87,7 +86,7 @@ class VideoFragment : Fragment(), VideoContract.View {
         super.onCreate(savedInstanceState)
         presenter = VideoPresenter(
             this,
-            getVideoRepository(context!!, AppDatabase.getInstance(context!!).ownerDao()),
+            getVideoRepository(context!!),
             getUserRepository(context!!)
         )
 

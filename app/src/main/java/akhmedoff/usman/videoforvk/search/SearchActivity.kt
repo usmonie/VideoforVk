@@ -1,6 +1,5 @@
 package akhmedoff.usman.videoforvk.search
 
-import akhmedoff.usman.data.db.AppDatabase
 import akhmedoff.usman.data.model.Video
 import akhmedoff.usman.data.utils.getVideoRepository
 import akhmedoff.usman.videoforvk.R
@@ -27,7 +26,7 @@ class SearchActivity : BaseActivity<SearchContract.View, SearchContract.Presente
 
     override fun onCreate(savedInstanceState: Bundle?) {
         searchPresenter =
-                SearchPresenter(getVideoRepository(this, AppDatabase.getInstance(this).ownerDao()))
+                SearchPresenter(getVideoRepository(this))
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)

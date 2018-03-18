@@ -7,6 +7,8 @@ import android.content.SharedPreferences
 object UserSettings {
     private const val USER_TOKEN = "user_token"
     private const val USER_ID = "user_id"
+    private const val USER_NAME = "user_name"
+    private const val USER_PHOTO_URL = "user_photo_url"
     private const val OWNER_ID = "owner_id"
 
     fun getUserSettings(context: Context): UserSettings {
@@ -38,4 +40,13 @@ object UserSettings {
 
     fun hasUserId() = sharedPreferences.contains(USER_ID)
 
+    fun saveUserName(name: String) = sharedPreferences.edit().putString(USER_NAME, name).apply()
+
+    fun saveUserPhotoUrl(photoUrl: String) =
+        sharedPreferences.edit().putString(USER_PHOTO_URL, photoUrl).apply()
+
+    fun getUserName() = sharedPreferences.getString(USER_NAME, null)
+
+    fun getUserPhotoUrl() =
+        sharedPreferences.getString(USER_PHOTO_URL, null)
 }

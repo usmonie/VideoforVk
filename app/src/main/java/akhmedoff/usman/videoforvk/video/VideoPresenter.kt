@@ -201,7 +201,8 @@ class VideoPresenter(
 
     override fun ownerClicked() {
         view?.let { view ->
-            videoRepository.getOwner()
+            videoRepository
+                .getOwner()
                 .observe(view, Observer { owner -> owner?.let { view.showOwnerGroup(it) } })
         }
 

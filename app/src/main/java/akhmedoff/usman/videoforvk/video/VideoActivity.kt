@@ -1,6 +1,5 @@
 package akhmedoff.usman.videoforvk.video
 
-import akhmedoff.usman.data.db.AppDatabase
 import akhmedoff.usman.data.local.UserSettings
 import akhmedoff.usman.data.model.*
 import akhmedoff.usman.data.repository.UserRepository
@@ -95,7 +94,7 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         videoPresenter = VideoPresenter(
-            getVideoRepository(this, AppDatabase.getInstance(this).ownerDao()),
+            getVideoRepository(this),
             UserRepository(
                 userSettings = UserSettings.getUserSettings(applicationContext),
                 api = vkApi
@@ -250,7 +249,7 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
     override fun showGroupOwnerInfo(group: Group) {
         owner_name?.text = group.name
         owner_photo?.let {
-            Picasso.with(context).load(group.photo100).into(it)
+            Picasso.get().load(group.photo100).into(it)
         }
 
         owner_follow?.text =
@@ -266,7 +265,7 @@ class VideoActivity : BaseActivity<VideoContract.View, VideoContract.Presenter>(
                 )
 
         owner_photo?.let {
-            Picasso.with(context).load(user.photo100).into(it)
+            Picasso.get().load(user.photo100).into(it)
         }
         owner_follow?.text =
                 if (user.isFriend) getText(R.string.followed) else getText(R.string.follow)

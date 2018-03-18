@@ -1,4 +1,4 @@
-package akhmedoff.usman.data.repository.source
+package akhmedoff.usman.data.repository.source.catalogs
 
 import akhmedoff.usman.data.api.VkApi
 import akhmedoff.usman.data.db.OwnerDao
@@ -16,6 +16,7 @@ class CatalogSectionDataSource(
     private val catalogSection: String,
     private val ownerDao: OwnerDao
 ) : PageKeyedDataSource<String, CatalogItem>() {
+
     override fun loadInitial(
         params: LoadInitialParams<String>,
         callback: LoadInitialCallback<String, CatalogItem>
@@ -29,7 +30,7 @@ class CatalogSectionDataSource(
         try {
             val response = apiSource.execute()
 
-            val items = response.body()?.catalogs?.get(0)?.items ?: emptyList<CatalogItem>()
+            val items = response.body()?.catalogs?.get(0)?.items ?: emptyList()
 
             callback.onResult(items, null, response.body()?.next)
         } catch (exception: Exception) {
@@ -65,8 +66,7 @@ class CatalogSectionDataSource(
                         ownerDao.insert(it)
                     }
 
-                    val items =
-                        if (it.catalogs.isNotEmpty() && it.catalogs[0].items != null) it.catalogs[0].items!! else emptyList<CatalogItem>()
+                    val items = if (it.catalogs.isNotEmpty()) it.catalogs[0].items else emptyList()
 
                     callback.onResult(items, it.next)
                 }

@@ -51,6 +51,7 @@ class MainPresenter(private val userRepository: UserRepository) :
                     response: Response<ApiResponse<List<User>>>?
                 ) {
                     response?.body()?.response?.get(0)?.let {
+                        userRepository.saveUser(it)
                         userRepository.saveCurrentUser(it.id)
                     }
                 }

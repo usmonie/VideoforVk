@@ -25,7 +25,7 @@ class AlbumRecyclerAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoViewHolder {
         val holder = VideoViewHolder(
-            Picasso.with(parent.context),
+            Picasso.get(),
             LayoutInflater.from(parent.context).inflate(
                 R.layout.search_videos,
                 parent,

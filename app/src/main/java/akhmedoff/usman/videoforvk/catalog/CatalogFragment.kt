@@ -1,8 +1,7 @@
 package akhmedoff.usman.videoforvk.catalog
 
-import akhmedoff.usman.data.db.AppDatabase
 import akhmedoff.usman.data.model.CatalogItem
-import akhmedoff.usman.data.utils.getVideoRepository
+import akhmedoff.usman.data.utils.getCatalogRepository
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.Router
 import akhmedoff.usman.videoforvk.album.AlbumActivity
@@ -44,9 +43,8 @@ class CatalogFragment : Fragment(),
         super.onCreate(savedInstanceState)
         presenter = CatalogPresenter(
             this,
-            getVideoRepository(
-                context!!,
-                AppDatabase.getInstance(context!!).ownerDao()
+            getCatalogRepository(
+                context!!
             )
         )
     }

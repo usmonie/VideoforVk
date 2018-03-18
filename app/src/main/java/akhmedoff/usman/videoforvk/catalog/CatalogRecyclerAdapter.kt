@@ -26,7 +26,7 @@ class CatalogRecyclerAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         VideoViewHolder(
-            Picasso.with(parent.context),
+            Picasso.get(),
             LayoutInflater.from(parent.context).inflate(
                 R.layout.catalog_video_item_big,
                 parent,

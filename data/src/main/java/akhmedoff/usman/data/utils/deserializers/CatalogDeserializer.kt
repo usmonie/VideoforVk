@@ -31,6 +31,10 @@ class CatalogDeserializer : JsonDeserializer<ResponseCatalog> {
 
                 val videosJsonArray = catalogJson?.get("items")?.asJsonArray
 
+
+                var catalogId = ""
+                catalogJson?.get("id")?.let { catalogId = it.asString }
+
                 videosJsonArray?.forEach { videoElement ->
                     val videoJson = videoElement.asJsonObject
 
@@ -39,6 +43,7 @@ class CatalogDeserializer : JsonDeserializer<ResponseCatalog> {
                         id = videoJson["id"].asJsonPrimitive.asInt
                         ownerId = videoJson["owner_id"].asInt
                         title = videoJson["title"].asString
+                        this.catalogId = catalogId
 
                         videoJson["duration"]?.let { duration = it.asInt }
                         videoJson["description"]?.let { description = it.asString }
@@ -73,18 +78,15 @@ class CatalogDeserializer : JsonDeserializer<ResponseCatalog> {
                 val name = catalogJson?.get("name")?.asString
 
 
-                var id: String? = null
-                catalogJson?.get("id")?.let { id = it.asString }
-
                 val view = catalogJson?.get("view")?.asString
                 val canHide = catalogJson?.get("can_hide")?.asBoolean
                 val type = catalogJson?.get("type")?.asString
 
                 if (videoList.isNotEmpty()) catalogs.add(
                     Catalog(
+                        catalogId,
                         videoList,
                         name,
-                        id,
                         view,
                         canHide,
                         type

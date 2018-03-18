@@ -11,8 +11,7 @@ import retrofit2.Response
 class ProfilePresenter(
     override var view: ProfileContract.View? = null,
     private val userRepository: UserRepository
-) :
-    ProfileContract.Presenter {
+) : ProfileContract.Presenter {
 
     override fun onCreated() {
         view?.showPages(userRepository.getCurrentUser() ?: "")
@@ -35,10 +34,22 @@ class ProfilePresenter(
                         t: Throwable?
                     ) {
                         view.showLoading(false)
-                        view.hideTabs()
-                        t?.message?.let {
-                            view.showError(it)
-                            Log.e(javaClass.simpleName, it)
+
+                        val name = userRepository.getUserName()
+
+                        if (name != null) {
+
+                            view.showUserName(name)
+                            userRepository.getUserPhotoUrl()?.let { view.showUserPhoto(it) }
+
+                            view.showTabs()
+                        } else {
+
+                            t?.message?.let {
+                                view.showError(it)
+                                Log.e(javaClass.simpleName, it)
+                            }
+                            view.hideTabs()
                         }
                     }
 
@@ -50,12 +61,23 @@ class ProfilePresenter(
 
                         val get = response?.body()?.response?.get(0)
                         if (get != null) get.let { user ->
+                            userRepository.saveUser(user)
+
                             view.showUserName("${user.firstName} ${user.lastName}")
                             view.showUserPhoto(user.photoMaxOrig)
                             view.showTabs()
                         } else {
-                            view.hideTabs()
-                            response?.message()?.let { view.showError(it) }
+                            val name = userRepository.getUserName()
+
+                            if (name != null) {
+
+                                view.showUserName(name)
+                                userRepository.getUserPhotoUrl()?.let { view.showUserPhoto(it) }
+
+                                view.showTabs()
+                            } else {
+                                view.hideTabs()
+                            }
                         }
                     }
                 })

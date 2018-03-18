@@ -1,9 +1,8 @@
 package akhmedoff.usman.videoforvk.album
 
-import akhmedoff.usman.data.db.AppDatabase
 import akhmedoff.usman.data.model.CatalogItem
 import akhmedoff.usman.data.model.Video
-import akhmedoff.usman.data.utils.getVideoRepository
+import akhmedoff.usman.data.utils.getAlbumRepository
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.base.BaseActivity
 import akhmedoff.usman.videoforvk.video.VideoActivity
@@ -47,7 +46,7 @@ class AlbumActivity : BaseActivity<AlbumContract.View, AlbumContract.Presenter>(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         albumPresenter =
-                AlbumPresenter(getVideoRepository(this, AppDatabase.getInstance(this).ownerDao()))
+                AlbumPresenter(getAlbumRepository(this))
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_album)
 
@@ -68,7 +67,7 @@ class AlbumActivity : BaseActivity<AlbumContract.View, AlbumContract.Presenter>(
 
     override fun showAlbumImage(poster: String) {
         Picasso
-            .with(this)
+            .get()
             .load(poster)
             .into(app_bar_album_poster_image)
     }

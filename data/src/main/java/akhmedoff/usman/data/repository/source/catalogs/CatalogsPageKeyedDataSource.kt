@@ -1,4 +1,4 @@
-package akhmedoff.usman.data.repository.source
+package akhmedoff.usman.data.repository.source.catalogs
 
 import akhmedoff.usman.data.api.VkApi
 import akhmedoff.usman.data.model.Catalog

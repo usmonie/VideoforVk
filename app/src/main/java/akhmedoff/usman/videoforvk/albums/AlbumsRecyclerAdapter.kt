@@ -26,7 +26,7 @@ class AlbumsRecyclerAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         VideoViewHolder(
-            Picasso.with(parent.context), LayoutInflater.from(parent.context).inflate(
+            Picasso.get(), LayoutInflater.from(parent.context).inflate(
                 layoutId, parent, false
             )
         ).apply { itemView.setOnClickListener { clickListener(getItem(adapterPosition)!!) } }

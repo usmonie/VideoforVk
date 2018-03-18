@@ -1,9 +1,8 @@
 package akhmedoff.usman.videoforvk.looking
 
-import akhmedoff.usman.data.db.AppDatabase
 import akhmedoff.usman.data.model.Catalog
 import akhmedoff.usman.data.model.CatalogItem
-import akhmedoff.usman.data.utils.getVideoRepository
+import akhmedoff.usman.data.utils.getCatalogRepository
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.Router
 import akhmedoff.usman.videoforvk.album.AlbumActivity
@@ -39,7 +38,7 @@ class LookingFragment : Fragment(), LookingContract.View {
     ): View? {
         presenter = LookingPresenter(
             this,
-            getVideoRepository(context!!, AppDatabase.getInstance(context!!).ownerDao())
+            getCatalogRepository(context!!)
         )
 
         return inflater.inflate(R.layout.fragment_looking, container, false)

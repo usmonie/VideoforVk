@@ -1,12 +1,12 @@
 package akhmedoff.usman.videoforvk.albums
 
 import akhmedoff.usman.data.model.Album
-import akhmedoff.usman.data.repository.VideoRepository
+import akhmedoff.usman.data.repository.AlbumRepository
 import android.arch.lifecycle.Observer
 
 class AlbumsPresenter(
     override var view: AlbumsContract.View?,
-    private val videosRepository: VideoRepository
+    private val albumRepository: AlbumRepository
 ) : AlbumsContract.Presenter {
 
     override fun onCreated() = refresh()
@@ -17,7 +17,7 @@ class AlbumsPresenter(
 
     override fun refresh() {
         view?.let { view ->
-            videosRepository
+            albumRepository
                 .getAlbums()
                 .observe(view, Observer {
                     if (it != null) {

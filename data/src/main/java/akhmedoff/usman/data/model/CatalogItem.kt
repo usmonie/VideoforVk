@@ -2,17 +2,20 @@ package akhmedoff.usman.data.model
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Index
+import android.arch.persistence.room.TypeConverters
 
 @Entity(
-    tableName = "albums",
+    tableName = "catalog_items",
     primaryKeys = ["id", "ownerId"],
     indices = [(Index(value = ["id", "ownerId"], unique = true))]
 )
 class CatalogItem : Item() {
     var accessKey: String? = null
     var platform: String? = null
-    var type: CatalogItemType? = null
+    var catalogId: String? = null
 
+    @TypeConverters(akhmedoff.usman.data.db.TypeConverters::class)
+    var type: CatalogItemType? = null
 
     override fun equals(other: Any?) = when {
         other !is CatalogItem -> false
@@ -26,4 +29,5 @@ class CatalogItem : Item() {
         result = 31 * result + (type?.hashCode() ?: 0)
         return result
     }
+
 }

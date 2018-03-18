@@ -1,6 +1,6 @@
 package akhmedoff.usman.data.model
 
-class Reposts(
-    val count: Int = -1,
-    val userReposted: Boolean = false
-)
+class Reposts {
+    var count: Int = -1
+    var userReposted: Boolean = false
+}

@@ -2,14 +2,14 @@ package akhmedoff.usman.videoforvk.album
 
 import akhmedoff.usman.data.Error
 import akhmedoff.usman.data.model.Video
-import akhmedoff.usman.data.repository.VideoRepository
+import akhmedoff.usman.data.repository.AlbumRepository
 import akhmedoff.usman.videoforvk.base.BasePresenter
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.OnLifecycleEvent
 import android.arch.paging.PagedList
 
-class AlbumPresenter(private val videoRepository: VideoRepository) :
+class AlbumPresenter(private val albumRepository: AlbumRepository) :
     BasePresenter<AlbumContract.View>(), AlbumContract.Presenter {
 
     override fun error(error: Error, message: String) {
@@ -24,7 +24,7 @@ class AlbumPresenter(private val videoRepository: VideoRepository) :
 
     private fun loadAlbumVideos() {
         view?.let { view ->
-            videoRepository.getVideos(
+            albumRepository.getVideos(
                 ownerId = view.getAlbumOwnerId(),
                 videos = null,
                 albumId = view.getAlbumId()
@@ -36,7 +36,7 @@ class AlbumPresenter(private val videoRepository: VideoRepository) :
 
     private fun loadAlbum() {
         view?.let { view ->
-            videoRepository.getAlbum(
+            albumRepository.getAlbum(
                 ownerId = view.getAlbumOwnerId(),
                 albumId = view.getAlbumId()
             ).observe(view, Observer { albumResponse ->

@@ -1,7 +1,6 @@
-package akhmedoff.usman.data.repository.source
+package akhmedoff.usman.data.repository.source.videos
 
 import akhmedoff.usman.data.api.VkApi
-import akhmedoff.usman.data.db.OwnerDao
 import akhmedoff.usman.data.model.ResponseVideo
 import akhmedoff.usman.data.model.Video
 import android.arch.paging.PositionalDataSource
@@ -10,21 +9,28 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class VideosDataSource(
+class SearchDataSource(
     private val vkApi: VkApi,
-    private val ownerId: String?,
-    private val videoId: String?,
-    private val albumId: String?,
-    val ownerDao: OwnerDao
+    private val query: String,
+    private val sort: Int?,
+    private val hd: Int?,
+    private val adult: Int?,
+    private val filters: String?,
+    private val searchOwn: Boolean?,
+    private val longer: Long?,
+    private val shorter: Long?
 ) : PositionalDataSource<Video>() {
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Video>) {
-        vkApi.getVideos(
-            ownerId = ownerId,
-            videos = videoId,
-            albumId = albumId,
-            count = params.loadSize,
-            offset = params.startPosition.toLong(),
-            extended = false
+        vkApi.searchVideos(
+            query,
+            sort,
+            hd,
+            adult,
+            filters,
+            searchOwn,
+            params.startPosition.toLong(),
+            longer,
+            shorter
         ).enqueue(object : Callback<ResponseVideo> {
 
             override fun onFailure(call: Call<ResponseVideo>?, t: Throwable?) {
@@ -35,17 +41,8 @@ class VideosDataSource(
                 call: Call<ResponseVideo>?,
                 response: Response<ResponseVideo>?
             ) {
-                response?.body()?.let {
-
-                    it.profiles?.forEach {
-                        ownerDao.insert(it)
-                    }
-
-                    it.groups?.forEach {
-                        ownerDao.insert(it)
-                    }
-
-                    callback.onResult(it.items)
+                response?.body()?.let { responseVideo ->
+                    callback.onResult(responseVideo.items)
                 }
             }
 
@@ -53,27 +50,21 @@ class VideosDataSource(
     }
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Video>) {
-        val apiSource = vkApi.getVideos(
-            ownerId = ownerId,
-            videos = videoId,
-            albumId = albumId,
-            count = params.requestedLoadSize,
-            offset = 0,
-            extended = false
+        val apiSource = vkApi.searchVideos(
+            query,
+            sort,
+            hd,
+            adult,
+            filters,
+            searchOwn,
+            0,
+            longer,
+            shorter
         )
-
         try {
             val response = apiSource.execute()
 
             val items = response.body()?.items ?: emptyList()
-
-            response.body()?.profiles?.forEach {
-                ownerDao.insert(it)
-            }
-
-            response.body()?.groups?.forEach {
-                ownerDao.insert(it)
-            }
 
             callback.onResult(items, 0)
         } catch (exception: Exception) {

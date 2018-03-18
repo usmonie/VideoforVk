@@ -1,8 +1,7 @@
 package akhmedoff.usman.videoforvk.albums
 
-import akhmedoff.usman.data.db.AppDatabase
 import akhmedoff.usman.data.model.Album
-import akhmedoff.usman.data.utils.getVideoRepository
+import akhmedoff.usman.data.utils.getAlbumRepository
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.view.MarginItemDecorator
 import android.arch.paging.PagedList
@@ -40,7 +39,7 @@ class AlbumsFragment : Fragment(), AlbumsContract.View {
     ): View? {
         presenter = AlbumsPresenter(
             this,
-            getVideoRepository(context!!, AppDatabase.getInstance(context!!).ownerDao())
+            getAlbumRepository(context!!)
         )
         return inflater.inflate(R.layout.fragment_catalog, container, false)
     }
@@ -77,4 +76,9 @@ class AlbumsFragment : Fragment(), AlbumsContract.View {
     }
 
     override fun setList(items: PagedList<Album>) = adapter.submitList(items)
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        presenter.onDestroyed()
+    }
 }

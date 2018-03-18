@@ -2,13 +2,13 @@ package akhmedoff.usman.data.utils
 
 import akhmedoff.usman.data.BuildConfig
 import akhmedoff.usman.data.api.VkApi
-import akhmedoff.usman.data.db.OwnerDao
+import akhmedoff.usman.data.db.AppDatabase
 import akhmedoff.usman.data.local.UserSettings
 import akhmedoff.usman.data.model.*
-import akhmedoff.usman.data.repository.GroupRepository
-import akhmedoff.usman.data.repository.UserRepository
-import akhmedoff.usman.data.repository.VideoRepository
+import akhmedoff.usman.data.repository.*
 import akhmedoff.usman.data.utils.deserializers.*
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -79,8 +79,29 @@ val gson: Gson by lazy {
     }.create()
 }
 
-fun getVideoRepository(context: Context, ownerDao: OwnerDao) =
-    VideoRepository(vkApi, UserSettings.getUserSettings(context), ownerDao)
+fun getVideoRepository(context: Context): VideoRepository =
+    VideoRepositoryImpl(
+        vkApi,
+        UserSettings.getUserSettings(context),
+        AppDatabase.getInstance(context).videoDao(),
+        AppDatabase.getInstance(context).ownerDao()
+    )
+
+fun getCatalogRepository(context: Context): CatalogRepository =
+    CatalogRepositoryImpl(
+        vkApi,
+        AppDatabase.getInstance(context).ownerDao(),
+        AppDatabase.getInstance(context).catalogDao()
+    )
+
+fun getAlbumRepository(context: Context): AlbumRepository =
+    AlbumRepositoryImpl(
+        vkApi,
+        UserSettings.getUserSettings(context),
+        AppDatabase.getInstance(context).ownerDao(),
+        AppDatabase.getInstance(context).albumDao(),
+        AppDatabase.getInstance(context).videoDao()
+    )
 
 fun getUserRepository(context: Context) =
     UserRepository(UserSettings.getUserSettings(context), vkApi)
@@ -88,3 +109,22 @@ fun getUserRepository(context: Context) =
 fun getGroupRepository(context: Context) =
     GroupRepository(vkApi, UserSettings.getUserSettings(context))
 
+fun PagingRequestHelper.createStatusLiveData(): LiveData<NetworkState> {
+    val liveData = MutableLiveData<NetworkState>()
+    addListener { report ->
+        when {
+            report.hasRunning() -> liveData.postValue(NetworkState.LOADING)
+            report.hasError() -> liveData.postValue(
+                NetworkState.error(getErrorMessage(report))
+            )
+            else -> liveData.postValue(NetworkState.LOADED)
+        }
+    }
+    return liveData
+}
+
+private fun getErrorMessage(report: PagingRequestHelper.StatusReport): String {
+    return PagingRequestHelper.RequestType.values().mapNotNull {
+        report.getErrorFor(it)?.message
+    }.first()
+}

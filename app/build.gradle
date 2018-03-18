@@ -57,8 +57,8 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 
-    implementation 'com.squareup.okhttp3:okhttp:3.9.1'
-    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.google.code.gson:gson:2.8.2'
 
     implementation 'com.google.android.exoplayer:exoplayer:2.6.1'
@@ -70,7 +70,7 @@ dependencies {
         transitive = true
     }
     implementation 'com.google.firebase:firebase-core:11.8.0'
-    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.squareup.picasso:picasso:2.71828'
 
     implementation project(':data')
 }

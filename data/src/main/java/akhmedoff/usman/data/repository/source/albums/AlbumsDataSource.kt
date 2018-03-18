@@ -1,4 +1,4 @@
-package akhmedoff.usman.data.repository.source
+package akhmedoff.usman.data.repository.source.albums
 
 import akhmedoff.usman.data.api.VkApi
 import akhmedoff.usman.data.model.Album

@@ -1,6 +1,8 @@
-package akhmedoff.usman.data.repository.source
+package akhmedoff.usman.data.repository.source.videos
 
 import akhmedoff.usman.data.api.VkApi
+import akhmedoff.usman.data.db.OwnerDao
+import akhmedoff.usman.data.db.VideoDao
 import akhmedoff.usman.data.model.Video
 import android.arch.paging.DataSource
 
@@ -13,7 +15,9 @@ class SearchDataSourceFactory(
     private val filters: String?,
     private val searchOwn: Boolean?,
     private val longer: Long?,
-    private val shorter: Long?
+    private val shorter: Long?,
+    val ownerDao: OwnerDao,
+    val videoDao: VideoDao
 ) : DataSource.Factory<Int, Video> {
     override fun create() =
         SearchDataSource(

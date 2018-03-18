@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
+            app:layout_scrollFlags="scroll|snap"
             app:layout_scrollInterpolator="@android:anim/decelerate_interpolator"
             app:toolbarId="@+id/toolbar">
 
@@ -34,7 +34,6 @@
                         android:layout_width="86dp"
                         android:layout_height="86dp"
                         android:layout_gravity="center"
-
                         android:layout_marginTop="?attr/actionBarSize"
                         android:foreground="@drawable/circle_image_view"
                         android:scaleType="centerCrop"
@@ -69,8 +68,8 @@
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:tabGravity="fill"
+            android:layout_gravity="bottom"
+            app:tabGravity="center"
             app:tabMode="fixed" />
     </android.support.design.widget.AppBarLayout>
 
