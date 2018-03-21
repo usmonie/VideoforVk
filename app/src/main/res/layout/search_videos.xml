@@ -5,6 +5,7 @@
     android:id="@+id/video_item_cardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:transitionName="video_player"
     app:cardCornerRadius="0dp">
 
     <LinearLayout

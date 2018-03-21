@@ -13,18 +13,18 @@ import retrofit2.Response
 
 class VideosDataSource(
     private val vkApi: VkApi,
-    private val ownerId: String?,
+    private val ownerId: Int?,
     private val videoId: String?,
-    private val albumId: String?,
+    private val albumId: Int?,
     val ownerDao: OwnerDao,
     val videoDao: VideoDao
 ) : PositionalDataSource<Video>() {
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Video>) {
         vkApi.getVideos(
-            ownerId = ownerId,
+            ownerId = ownerId?.toString(),
             videos = videoId,
-            albumId = albumId,
+            albumId = albumId?.toString(),
             count = params.loadSize,
             offset = params.startPosition.toLong(),
             extended = false
@@ -63,25 +63,24 @@ class VideosDataSource(
             }
 
         })
-        callback.onResult(videoDao.loadAll(params.loadSize, params.startPosition))
+        callback.onResult(videoDao.loadAll(params.loadSize, params.startPosition, ownerId))
 
     }
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Video>) {
         val apiSource = vkApi.getVideos(
-            ownerId = ownerId,
+            ownerId = ownerId?.toString(),
             videos = videoId,
-            albumId = albumId,
+            albumId = albumId?.toString(),
             count = params.requestedLoadSize,
             offset = 0,
             extended = false
         )
 
-        var items: List<Video> = mutableListOf()
         try {
             val response = apiSource.execute()
 
-            items = response.body()?.items ?: emptyList()
+            val items = response.body()?.items ?: emptyList()
 
             response.body()?.profiles?.forEach {
                 ownerDao.insert(it)
@@ -91,13 +90,13 @@ class VideosDataSource(
                 ownerDao.insert(it)
             }
 
+            videoDao.insert(items)
+
         } catch (exception: Exception) {
             Log.e("exception", exception.toString())
-        } finally {
-            videoDao.insert(items)
         }
 
-        callback.onResult(videoDao.loadAll(params.pageSize, 0), 0)
+        callback.onResult(videoDao.loadAll(params.requestedLoadSize, 0, ownerId), 0)
     }
 
 }

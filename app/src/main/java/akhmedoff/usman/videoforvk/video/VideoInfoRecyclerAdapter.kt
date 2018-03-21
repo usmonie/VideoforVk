@@ -1,4 +1,4 @@
-package akhmedoff.usman.videoforvk.videonew
+package akhmedoff.usman.videoforvk.video
 
 import akhmedoff.usman.data.model.Owner
 import akhmedoff.usman.data.model.Video

@@ -1,8 +1,10 @@
-package akhmedoff.usman.videoforvk.videonew
+package akhmedoff.usman.videoforvk.video
 
 import akhmedoff.usman.data.model.Item
 import akhmedoff.usman.data.model.Owner
+import akhmedoff.usman.data.model.Quality.*
 import akhmedoff.usman.data.model.Video
+import akhmedoff.usman.data.model.VideoUrl
 import akhmedoff.usman.data.utils.getUserRepository
 import akhmedoff.usman.data.utils.getVideoRepository
 import akhmedoff.usman.videoforvk.App
@@ -17,17 +19,20 @@ import android.media.AudioManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.support.annotation.DrawableRes
 import android.support.annotation.RequiresApi
 import android.support.design.widget.Snackbar
+import android.support.transition.*
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DefaultItemAnimator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.exoplayer2.ExoPlayerFactory
-import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.ExtractorMediaSource
+import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
@@ -51,6 +56,8 @@ class VideoFragment : Fragment(), VideoContract.View {
         private const val VIDEO_STATE_KEY = "video_state"
         private const val VIDEO_POSITION_KEY = "video_position"
         private const val IS_FULLSCREEN_KEY = "is_fullscreen"
+        private const val VIDEO_QUALITY_KEY = "video_quality"
+        private const val VIDEO_QUALITIES_KEY = "video_qualities"
 
         fun getInstance(item: Item): Fragment {
             val fragment = VideoFragment()
@@ -82,6 +89,9 @@ class VideoFragment : Fragment(), VideoContract.View {
 
     private lateinit var adapter: VideoInfoRecyclerAdapter
 
+    private var mediaSource: MediaSource? = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         presenter = VideoPresenter(
@@ -89,6 +99,24 @@ class VideoFragment : Fragment(), VideoContract.View {
             getVideoRepository(context!!),
             getUserRepository(context!!)
         )
+        startPostponedEnterTransition()
+        val sharedEnterTransition = TransitionSet()
+        sharedEnterTransition.addTransition(ChangeBounds())
+        sharedEnterTransition.addTransition(ChangeClipBounds())
+        sharedEnterTransition.addTransition(ChangeImageTransform())
+        sharedEnterTransition.addTransition(ChangeTransform())
+
+        val returnTransition = TransitionSet()
+        returnTransition.addTransition(ChangeBounds())
+        returnTransition.addTransition(ChangeClipBounds())
+        returnTransition.addTransition(ChangeImageTransform())
+        returnTransition.addTransition(ChangeTransform())
+
+        sharedElementReturnTransition = returnTransition
+        sharedElementEnterTransition = sharedEnterTransition
+
+        enterTransition = Fade()
+        exitTransition = Explode()
 
         if (savedInstanceState != null) presenter.view = this
     }
@@ -105,7 +133,12 @@ class VideoFragment : Fragment(), VideoContract.View {
 
         fullscreen_toggle.setOnClickListener { presenter.clickFullscreen() }
         pip_toggle.setOnClickListener { presenter.pipToggleButton() }
-        exo_arrow_back.setOnClickListener { activity?.supportFragmentManager?.popBackStack() }
+        exo_quality_toggle.setOnClickListener { presenter.changeQuality() }
+
+        exo_arrow_back.setOnClickListener {
+            activity?.supportFragmentManager?.popBackStack()
+            showSmallScreen()
+        }
 
         file = File("${context!!.filesDir.parent}/cache")
 
@@ -116,7 +149,6 @@ class VideoFragment : Fragment(), VideoContract.View {
             DefaultTrackSelector(AdaptiveTrackSelection.Factory(bandwidthMeter))
         )
 
-        // Produces DataSource instances through which media data is loaded.
         dataSourceFactory = DefaultDataSourceFactory(
             App.context,
             Util.getUserAgent(App.context, "yourApplicationName"), bandwidthMeter
@@ -151,6 +183,8 @@ class VideoFragment : Fragment(), VideoContract.View {
         adapter = VideoInfoRecyclerAdapter { presenter.onClick(it) }
         video_info_recycler.adapter = adapter
 
+
+
     }
 
     override fun onStart() {
@@ -168,45 +202,71 @@ class VideoFragment : Fragment(), VideoContract.View {
 
     override fun showVideo(item: Video) {
         adapter.video = item
-        initExoPlayer(item)
     }
 
     override fun showOwnerInfo(owner: Owner) {
         adapter.owner = owner
     }
 
-    private fun initExoPlayer(item: Video) {
-        simpleControlDispatcher.item = item
+    override fun setVideoSource(videoUrl: VideoUrl) = when (videoUrl.quality) {
+        HLS -> mediaSource =
+                HlsMediaSource.Factory(cacheDataSourceFactory).createMediaSource(
+                    Uri.parse(
+                        videoUrl.url
+                    )
+                )
+        else -> mediaSource = ExtractorMediaSource.Factory(cacheDataSourceFactory)
+            .createMediaSource(
+                Uri.parse(
+                    videoUrl.url
+                )
+            )
+    }
 
-        val mp4VideoUri = Uri.parse(
-            when {
-                item.files.hls != null -> item.files.hls
-                item.files.external != null -> item.files.external
-                item.files.mp41080 != null -> item.files.mp41080
-                item.files.mp4720 != null -> item.files.mp4720
-                item.files.mp4480 != null -> item.files.mp4480
-                item.files.mp4360 != null -> item.files.mp4360
-                else -> item.files.mp4240
+    override fun setQuality(videoUrl: VideoUrl) {
+        player?.prepare(
+            when (videoUrl.quality) {
+                HLS ->
+                    HlsMediaSource.Factory(cacheDataSourceFactory).createMediaSource(
+                        Uri.parse(
+                            videoUrl.url
+                        )
+                    )
+                else -> ExtractorMediaSource.Factory(cacheDataSourceFactory)
+                    .createMediaSource(
+                        Uri.parse(
+                            videoUrl.url
+                        )
+                    )
             }
+
         )
 
-        if (item.files.external != null) pip_toggle.visibility = View.GONE
-
-        // This is the MediaSource representing the media to be played.
-        val videoSource = when {
-            item.files.hls != null -> HlsMediaSource.Factory(cacheDataSourceFactory)
-
-            else -> ExtractorMediaSource.Factory(cacheDataSourceFactory)
-        }.createMediaSource(mp4VideoUri, null, null)
-
-        player?.let {
-            it.prepare(videoSource)
-            it.repeatMode = if (item.repeat) Player.REPEAT_MODE_ONE else Player.REPEAT_MODE_OFF
+        when (videoUrl.quality) {
+            HLS -> setImageDrawable(R.drawable.ic_auto_quality_24dp)
+            FULLHD -> setImageDrawable(R.drawable.ic_high_quality_24dp)
+            HD -> setImageDrawable(R.drawable.ic_hd_24dp)
+            qHD -> setImageDrawable(R.drawable.ic_hd_24dp)
+            LOW -> setImageDrawable(R.drawable.ic_low_quality_24dp)
+            P360 -> setImageDrawable(R.drawable.ic_low_quality_24dp)
+            P240 -> setImageDrawable(R.drawable.ic_low_quality_24dp)
         }
+    }
+
+    override fun setExternalUi(videoUrl: VideoUrl) {
+        pip_toggle?.visibility = View.GONE
+        exo_quality_toggle?.visibility = View.GONE
+        simpleControlDispatcher.isExternal = true
+        simpleControlDispatcher.url = videoUrl.url
     }
 
     override fun setSaved(saved: Boolean) {
     }
+
+    private fun setImageDrawable(@DrawableRes id: Int) =
+        context?.let {
+            exo_quality_toggle.setImageDrawable(ContextCompat.getDrawable(it, id))
+        }
 
     override fun showFullscreen(video: Video) {
         activity?.window?.decorView?.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -235,9 +295,6 @@ class VideoFragment : Fragment(), VideoContract.View {
     override fun stopVideo() {
         player?.playWhenReady = false
         player?.release()
-    }
-
-    override fun showRecommendations() {
     }
 
     override fun showLoadError() {
@@ -304,8 +361,7 @@ class VideoFragment : Fragment(), VideoContract.View {
     }
 
     override fun setPlayerNormal() {
-        appbar.layoutParams.height =
-                resources.getDimensionPixelSize(R.dimen.exo_player_height)
+        appbar.layoutParams.height = resources.getDimensionPixelSize(R.dimen.exo_player_height)
         appbar.requestLayout()
     }
 
@@ -358,20 +414,33 @@ class VideoFragment : Fragment(), VideoContract.View {
 
     override fun loadVideoPosition() = arguments?.getLong(VIDEO_POSITION_KEY) ?: 1
 
+    override fun getVideoQualities() =
+        arguments?.getStringArrayList(VIDEO_QUALITIES_KEY) ?: emptyList<String>()
+
+    override fun getCurrentQuality() = arguments?.getInt(VIDEO_QUALITY_KEY) ?: 0
+
     override fun saveVideoState(state: Boolean) {
         arguments?.putBoolean(VIDEO_STATE_KEY, state)
     }
 
     override fun saveVideoPosition(position: Long) {
-        arguments?.putLong(VIDEO_STATE_KEY, position)
+        arguments?.putLong(VIDEO_POSITION_KEY, position)
 
     }
 
     override fun saveIsFullscreen(isFullscreen: Boolean) {
-        arguments?.putBoolean(VIDEO_STATE_KEY, isFullscreen)
+        arguments?.putBoolean(IS_FULLSCREEN_KEY, isFullscreen)
     }
 
     override fun setVideoPosition(position: Long) {
         player?.seekTo(position)
+    }
+
+    override fun saveVideoQualities(qualities: ArrayList<String>) {
+        arguments?.putStringArrayList(VIDEO_QUALITIES_KEY, qualities)
+    }
+
+    override fun saveCurrentQuality(quality: Int) {
+        arguments?.putInt(VIDEO_QUALITY_KEY, quality)
     }
 }

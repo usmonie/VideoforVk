@@ -12,9 +12,9 @@ interface CatalogContract {
 
         fun showList(videos: PagedList<CatalogItem>)
 
-        fun showVideo(item: CatalogItem)
+        fun showVideo(item: CatalogItem, view: android.view.View)
 
-        fun showAlbum(album: CatalogItem)
+        fun showAlbum(album: CatalogItem, view: android.view.View)
 
         fun showLoading()
 

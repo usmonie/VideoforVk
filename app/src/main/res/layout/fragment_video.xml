@@ -15,16 +15,16 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="enterAlways|enterAlwaysCollapsed"
+            app:layout_scrollFlags="snap|exitUntilCollapsed"
             app:layout_scrollInterpolator="@android:anim/decelerate_interpolator"
             app:titleEnabled="false"
+            android:transitionName="video_player"
             app:toolbarId="@+id/toolbar">
 
             <com.google.android.exoplayer2.ui.SimpleExoPlayerView
                 android:id="@+id/video_exo_player"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:transitionName="video_player"
                 android:visibility="gone"
                 app:controller_layout_id="@layout/playback_exo_control_view"
                 app:resize_mode="fit"

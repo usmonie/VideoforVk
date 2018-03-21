@@ -8,9 +8,10 @@ import android.arch.paging.PagedListAdapter
 import android.support.v7.util.DiffUtil
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.View
 
 class LookingRecyclerAdapter(
-    private val clickListener: (CatalogItem) -> Unit
+    private val clickListener: (CatalogItem, View) -> Unit
 ) :
     PagedListAdapter<Catalog, CatalogViewHolder>(CATALOG_COMPARATOR) {
 

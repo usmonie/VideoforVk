@@ -1,6 +1,5 @@
 package akhmedoff.usman.videoforvk.player
 
-import akhmedoff.usman.data.model.Video
 import android.media.AudioAttributes
 import android.media.AudioFocusRequest
 import android.media.AudioManager
@@ -30,24 +29,25 @@ class SimpleControlDispatcher(
         }
     }
 
-    lateinit var item: Video
+    var isExternal: Boolean = false
+    var url: String = ""
 
     override fun dispatchSetPlayWhenReady(
         player: Player?,
         playWhenReady: Boolean
     ) = super.dispatchSetPlayWhenReady(
         player,
-        when (item.files.external) {
-            null ->
+        when (isExternal) {
+            true -> {
+                externalLinkListener(url)
+                false
+            }
+
+            else ->
                 when (getAudioFocusResponse()) {
                     AudioManager.AUDIOFOCUS_REQUEST_GRANTED -> playWhenReady
                     else -> false
                 }
-
-            else -> {
-                externalLinkListener(item.files.external!!)
-                false
-            }
         }
     )
 

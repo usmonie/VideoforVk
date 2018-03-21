@@ -8,9 +8,9 @@ import android.arch.paging.DataSource
 
 class VideosDataSourceFactory(
     private val vkApi: VkApi,
-    private val ownerId: String?,
+    private val ownerId: Int?,
     private val videoId: String?,
-    private val albumId: String?,
+    private val albumId: Int?,
     private val ownerDao: OwnerDao,
     private val videoDao: VideoDao
 ) : DataSource.Factory<Int, Video> {

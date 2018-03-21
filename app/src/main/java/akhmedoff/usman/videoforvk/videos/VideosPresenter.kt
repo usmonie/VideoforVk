@@ -13,7 +13,7 @@ class VideosPresenter(
         view?.let { view ->
             view.showLoading(true)
             videoRepository
-                .getVideos(view.getOwnerId())
+                .getVideos(view.getOwnerId()?.toInt())
                 .observe(view, Observer {
                     view.showLoading(false)
                     if (it != null && it.size > 0) view.showVideos(it)

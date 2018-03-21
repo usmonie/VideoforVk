@@ -10,8 +10,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <include layout="@layout/search_toolbar" />
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            app:contentScrim="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|snap"
+            app:layout_scrollInterpolator="@android:anim/decelerate_interpolator"
+            app:toolbarId="@+id/toolbar">
 
+            <include layout="@layout/search_toolbar" />
+        </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -19,7 +27,8 @@
         android:id="@+id/update_looking_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/looking_recycler"
@@ -28,6 +37,7 @@
             android:clipChildren="true"
             android:clipToPadding="true"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:listitem="@layout/catalog_item" />
 
     </android.support.v4.widget.SwipeRefreshLayout>

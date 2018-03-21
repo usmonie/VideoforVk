@@ -25,9 +25,9 @@ class AlbumPresenter(private val albumRepository: AlbumRepository) :
     private fun loadAlbumVideos() {
         view?.let { view ->
             albumRepository.getVideos(
-                ownerId = view.getAlbumOwnerId(),
+                ownerId = view.getAlbumOwnerId()?.toInt(),
                 videos = null,
-                albumId = view.getAlbumId()
+                albumId = view.getAlbumId()?.toInt()
             ).observe(view, Observer { pagedList: PagedList<Video>? ->
                 pagedList?.let { items -> view.showVideos(items) }
             })
@@ -36,22 +36,20 @@ class AlbumPresenter(private val albumRepository: AlbumRepository) :
 
     private fun loadAlbum() {
         view?.let { view ->
-            albumRepository.getAlbum(
-                ownerId = view.getAlbumOwnerId(),
-                albumId = view.getAlbumId()
-            ).observe(view, Observer { albumResponse ->
-                run {
+            albumRepository
+                .getAlbum(
+                    ownerId = view.getAlbumOwnerId()?.toInt(),
+                    albumId = view.getAlbumId()?.toInt()
+                ).observe(view, Observer { albumResponse ->
                     albumResponse?.response?.let { album ->
-                        run {
-                            view.showAlbumImage(album.photo320!!)
-                            when (view.getAlbumTitle()) {
-                                null -> view.showAlbumTitle(album.title)
-                                else -> view.showAlbumTitle(view.getAlbumTitle()!!)
-                            }
+                        album.photo320?.let { view.showAlbumImage(it) }
+                        when (view.getAlbumTitle()) {
+                            null -> view.showAlbumTitle(album.title)
+                            else -> view.showAlbumTitle(view.getAlbumTitle()!!)
                         }
+
                     }
-                }
-            })
+                })
         }
     }
 

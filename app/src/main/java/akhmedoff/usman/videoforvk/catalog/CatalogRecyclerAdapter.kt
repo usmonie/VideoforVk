@@ -6,11 +6,12 @@ import akhmedoff.usman.videoforvk.view.holders.VideoViewHolder
 import android.arch.paging.PagedListAdapter
 import android.support.v7.util.DiffUtil
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 
 class CatalogRecyclerAdapter(
-    private val clickListener: (CatalogItem) -> Unit
+    private val clickListener: (CatalogItem, View) -> Unit
 ) :
     PagedListAdapter<CatalogItem, VideoViewHolder>(CATALOG_COMPARATOR) {
 
@@ -35,7 +36,7 @@ class CatalogRecyclerAdapter(
         ).apply {
             itemView.setOnClickListener {
                 getItem(adapterPosition)?.let {
-                    clickListener(it)
+                    clickListener(it, cardView)
                 }
             }
         }

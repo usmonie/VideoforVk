@@ -16,8 +16,8 @@ class SearchDataSourceFactory(
     private val searchOwn: Boolean?,
     private val longer: Long?,
     private val shorter: Long?,
-    val ownerDao: OwnerDao,
-    val videoDao: VideoDao
+    private val ownerDao: OwnerDao,
+    private val videoDao: VideoDao
 ) : DataSource.Factory<Int, Video> {
     override fun create() =
         SearchDataSource(
@@ -29,6 +29,8 @@ class SearchDataSourceFactory(
             filters,
             searchOwn,
             longer,
-            shorter
+            shorter,
+            ownerDao,
+            videoDao
         )
 }

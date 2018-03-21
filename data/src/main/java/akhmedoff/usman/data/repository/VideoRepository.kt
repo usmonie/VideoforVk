@@ -16,9 +16,9 @@ interface VideoRepository {
     fun getOwner(): LiveData<Owner>
 
     fun getVideos(
-        ownerId: String? = null,
+        ownerId: Int? = null,
         videos: String? = null,
-        albumId: String? = null
+        albumId: Int? = null
     ): LiveData<PagedList<Video>>
 
     fun getVideo(video: String): Call<ResponseVideo>

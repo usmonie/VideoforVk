@@ -3,6 +3,8 @@ package akhmedoff.usman.videoforvk
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
+import android.support.v4.view.ViewCompat
+import android.view.View
 
 
 object Router {
@@ -47,14 +49,35 @@ object Router {
     ) {
         if (addToBackStack) {
             fragmentManager.beginTransaction()
+                .setReorderingAllowed(true)
                 .replace(R.id.container, fragment, fragmentTag)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .addToBackStack(null)
                 .commit()
         } else {
             fragmentManager.beginTransaction()
+                .setReorderingAllowed(true)
                 .replace(R.id.container, fragment, fragmentTag)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .commit()
+        }
+    }
+
+    fun replaceFragment(
+        fragmentManager: FragmentManager,
+        fragment: Fragment,
+        addToBackStack: Boolean = false,
+        fragmentTag: String?,
+        sharedElement: View
+    ) {
+        if (addToBackStack) {
+            fragmentManager.beginTransaction()
+                .addSharedElement(sharedElement, ViewCompat.getTransitionName(sharedElement))
+                .replace(R.id.container, fragment, fragmentTag)
+                .addToBackStack(null)
+                .commit()
+        } else {
+            fragmentManager.beginTransaction()
+                .addSharedElement(sharedElement, ViewCompat.getTransitionName(sharedElement))
+                .replace(R.id.container, fragment, fragmentTag)
                 .commit()
         }
     }

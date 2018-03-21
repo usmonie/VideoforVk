@@ -28,9 +28,9 @@ class VideoRepositoryImpl(
     override fun getOwner() = ownerDao.load(getOwnerId())
 
     override fun getVideos(
-        ownerId: String?,
+        ownerId: Int?,
         videos: String?,
-        albumId: String?
+        albumId: Int?
     ): LiveData<PagedList<Video>> {
         val pagedListConfig = PagedList.Config.Builder()
             .setEnablePlaceholders(false)
@@ -70,7 +70,7 @@ class VideoRepositoryImpl(
         val pagedListConfig = PagedList.Config.Builder()
             .setEnablePlaceholders(false)
             .setPageSize(10)
-            .setPrefetchDistance(15)
+            .setPrefetchDistance(20)
             .setInitialLoadSizeHint(10)
             .build()
 

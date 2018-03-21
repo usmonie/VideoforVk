@@ -44,11 +44,6 @@ class CatalogPresenter(
     }
 
     override fun clickItem(item: CatalogItem) {
-        when (item.type) {
-            CatalogItemType.VIDEO -> view?.showVideo(item)
-
-            CatalogItemType.ALBUM -> view?.showAlbum(item)
-        }
     }
 
 }

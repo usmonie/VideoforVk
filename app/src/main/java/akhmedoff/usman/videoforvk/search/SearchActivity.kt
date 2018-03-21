@@ -4,7 +4,6 @@ import akhmedoff.usman.data.model.Video
 import akhmedoff.usman.data.utils.getVideoRepository
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.base.BaseActivity
-import akhmedoff.usman.videoforvk.video.VideoActivity
 import akhmedoff.usman.videoforvk.view.VideosRecyclerAdapter
 import android.arch.paging.PagedList
 import android.os.Bundle
@@ -130,7 +129,9 @@ class SearchActivity : BaseActivity<SearchContract.View, SearchContract.Presente
     override fun showError(errorMessage: String) {
     }
 
-    override fun showVideo(item: Video) = startActivity(VideoActivity.getActivity(item, this))
+    override fun showVideo(item: Video) {
+//        startActivity(VideoActivity.getActivity(item, this))
+    }
 
     override fun initPresenter() = searchPresenter
 }

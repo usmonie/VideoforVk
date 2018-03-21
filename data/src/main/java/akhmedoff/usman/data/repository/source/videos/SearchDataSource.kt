@@ -1,6 +1,8 @@
 package akhmedoff.usman.data.repository.source.videos
 
 import akhmedoff.usman.data.api.VkApi
+import akhmedoff.usman.data.db.OwnerDao
+import akhmedoff.usman.data.db.VideoDao
 import akhmedoff.usman.data.model.ResponseVideo
 import akhmedoff.usman.data.model.Video
 import android.arch.paging.PositionalDataSource
@@ -18,8 +20,11 @@ class SearchDataSource(
     private val filters: String?,
     private val searchOwn: Boolean?,
     private val longer: Long?,
-    private val shorter: Long?
+    private val shorter: Long?,
+    val ownerDao: OwnerDao,
+    val videoDao: VideoDao
 ) : PositionalDataSource<Video>() {
+
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Video>) {
         vkApi.searchVideos(
             query,
@@ -41,12 +46,22 @@ class SearchDataSource(
                 call: Call<ResponseVideo>?,
                 response: Response<ResponseVideo>?
             ) {
-                response?.body()?.let { responseVideo ->
-                    callback.onResult(responseVideo.items)
+                response?.body()?.let {
+                    videoDao.insert(it.items)
+
+                    it.profiles?.forEach {
+                        ownerDao.insert(it)
+                    }
+
+                    it.groups?.forEach {
+                        ownerDao.insert(it)
+                    }
                 }
             }
 
         })
+
+        callback.onResult(videoDao.loadAll(params.loadSize, params.startPosition, query))
     }
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Video>) {
@@ -61,15 +76,18 @@ class SearchDataSource(
             longer,
             shorter
         )
+
         try {
             val response = apiSource.execute()
 
             val items = response.body()?.items ?: emptyList()
 
-            callback.onResult(items, 0)
+            videoDao.insert(items)
         } catch (exception: Exception) {
             Log.e(javaClass.simpleName, exception.toString())
         }
+
+        callback.onResult(videoDao.loadAll(params.pageSize, 0, query), 0)
     }
 
 }

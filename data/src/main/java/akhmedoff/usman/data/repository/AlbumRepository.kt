@@ -17,13 +17,13 @@ interface AlbumRepository {
 
     fun saveOwner(owner: Owner)
 
-    fun getAlbum(ownerId: String?, albumId: String?): LiveData<ApiResponse<Album>>
+    fun getAlbum(ownerId: Int?, albumId: Int?): LiveData<ApiResponse<Album>>
 
-    fun getAlbums(ownerId: String? = null): LiveData<PagedList<Album>>
+    fun getAlbums(ownerId: Int? = null): LiveData<PagedList<Album>>
 
     fun getVideos(
-        ownerId: String?,
+        ownerId: Int?,
         videos: String?,
-        albumId: String?
+        albumId: Int?
     ): LiveData<PagedList<Video>>
 }

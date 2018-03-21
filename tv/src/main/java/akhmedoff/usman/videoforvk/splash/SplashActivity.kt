@@ -22,9 +22,11 @@ class SplashActivity : BaseActivity<SplashContract.View, SplashContract.Presente
         super.onCreate(savedInstanceState)
     }
 
-    override fun showMain() = startActivity(Intent(this, MainActivity::class.java))
+    override fun showMain() {
+    }
 
-    override fun showLogin() = startActivity(Intent(this, LoginActivity::class.java))
+    override fun showLogin() {
+    }
 
     override fun initPresenter() = splashPresenter
 }

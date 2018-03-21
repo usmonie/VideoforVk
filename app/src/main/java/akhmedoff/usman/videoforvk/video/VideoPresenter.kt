@@ -2,184 +2,230 @@ package akhmedoff.usman.videoforvk.video
 
 import akhmedoff.usman.data.Error
 import akhmedoff.usman.data.model.ApiResponse
+import akhmedoff.usman.data.model.Quality.*
 import akhmedoff.usman.data.model.ResponseVideo
 import akhmedoff.usman.data.model.User
 import akhmedoff.usman.data.model.Video
 import akhmedoff.usman.data.repository.UserRepository
 import akhmedoff.usman.data.repository.VideoRepository
-import akhmedoff.usman.videoforvk.base.BasePresenter
-import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.OnLifecycleEvent
 import android.util.Log
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class VideoPresenter(
+    override var view: VideoContract.View?,
     private val videoRepository: VideoRepository,
     private val userRepository: UserRepository
-) :
-    BasePresenter<VideoContract.View>(), VideoContract.Presenter {
+) : VideoContract.Presenter {
 
-    private var isFullscreen = false
-
-    private var isStarted = false
-
-    private var position = 0L
     private lateinit var video: Video
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
-    fun onCreate() {
+    override fun onCreate() {
+    }
+
+    override fun onStart() {
         view?.hideUi()
         view?.let { view ->
-            loadVideo(view.getVideoId())
+            loadVideo("${view.getOwnerId()}_${view.getVideoId()}")
         }
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-    fun onResume() {
+    override fun onResume() {
         view?.startAudioFocusListener()
+        view?.setVideoPosition(view?.loadVideoPosition() ?: 0)
+    }
+
+    override fun onPause() {
+        view?.stopAudioFocusListener()
+        view?.pauseVideo()
+        view?.saveVideoPosition(view?.getVideoPosition() ?: 0)
+    }
+
+    override fun onClick(id: Int) {
+    }
+
+    override fun changeQuality() {
+        view?.saveVideoPosition(view?.getVideoPosition() ?: 0)
+
+        view?.let {
+            if (video.files.size - 1 > it.getCurrentQuality()) {
+                changeQuality(it.getCurrentQuality() + 1)
+            } else {
+                changeQuality(video.files.size - it.getCurrentQuality())
+            }
+
+        }
+
+
+    }
+
+    private fun changeQuality(index: Int) {
+        view?.setQuality(video.files[index])
+
+        view?.saveCurrentQuality(index)
+
+        view?.setVideoPosition(view?.loadVideoPosition() ?: 0)
     }
 
     override fun loadVideo(id: String) {
-        view?.let { view ->
-            view.showProgress()
-            videoRepository
-                .getVideo(id)
-                .enqueue(object : Callback<ResponseVideo> {
-                    override fun onFailure(call: Call<ResponseVideo>?, t: Throwable?) {
-                        view.showLoadError()
-                        view.hideProgress()
-                    }
-
-                    override fun onResponse(
-                        call: Call<ResponseVideo>?,
-                        response: Response<ResponseVideo>?
-                    ) {
-                        response?.body()?.let { responseVideo ->
-                            when {
-                                responseVideo.items.isNotEmpty() -> {
-                                    video = responseVideo.items[0]
-                                    view.showVideo(video)
-                                }
-
-                                else -> view.showLoadError()
-                            }
-
-                            when {
-                                responseVideo.groups != null && responseVideo.groups!!.isNotEmpty() -> {
-                                    view.showGroupOwnerInfo(responseVideo.groups!![0])
-                                    view.hideProgress()
-                                    view.showUi()
-                                    view.showPlayer()
-                                    responseVideo.groups?.forEach {
-                                        videoRepository.saveOwner(it)
-                                    }
-                                    videoRepository.saveOwnerId(responseVideo.groups!![0].id)
-
-                                }
-                                responseVideo.profiles != null && responseVideo.profiles!!.isNotEmpty() -> {
-                                    responseVideo.profiles?.forEach {
-                                        videoRepository.saveOwner(it)
-                                    }
-                                    loadUser(responseVideo.profiles!![0])
-                                }
-                            }
-
-                        }
-                    }
-
-                })
-        }
-    }
-
-    private fun loadUser(user: User) {
-        view?.let { view ->
-            userRepository
-                .getUsers(user.id.toString())
-                /*.observe(view, Observer {
-                    it?.let { users ->
-                        if (users.isNotEmpty()) {
-                            view.showUserOwnerInfo(users[0])
-                            view.hideProgress()
-                            view.showUi()
-                            view.showPlayer()
-                        }
-                    }
-                })*/
-                .enqueue(object : Callback<ApiResponse<List<User>>> {
-                    override fun onFailure(
-                        call: Call<ApiResponse<List<User>>>?,
-                        t: Throwable?
-                    ) {
-                        Log.e("error", t?.message)
-
-                        view.hideProgress()
-                        view.showLoadError()
-                    }
-
-                    override fun onResponse(
-                        call: Call<ApiResponse<List<User>>>?,
-                        response: Response<ApiResponse<List<User>>>?
-                    ) {
-                        view.hideProgress()
-                        response?.body()?.response?.get(0)?.let { user ->
-                            view.showUserOwnerInfo(user)
-                            view.hideProgress()
-                            view.showUi()
-                            view.showPlayer()
-                            videoRepository.saveOwnerId(user.id)
-                        }
-                    }
-                })
-        }
-
-    }
-
-    override fun clickFullscreen() {
-        view?.let { view ->
-            isFullscreen = when (isFullscreen) {
-                true -> {
-                    view.showSmallScreen()
-                    view.setPlayerNormal()
-                    false
+        view?.showProgress()
+        videoRepository
+            .getVideo(id)
+            .enqueue(object : Callback<ResponseVideo> {
+                override fun onFailure(call: Call<ResponseVideo>?, t: Throwable?) {
+                    view?.showLoadError()
+                    view?.hideProgress()
                 }
-                false -> {
-                    view.showFullscreen(video)
-                    view.setPlayerFullscreen()
-                    true
+
+                override fun onResponse(
+                    call: Call<ResponseVideo>?,
+                    response: Response<ResponseVideo>?
+                ) {
+                    response?.body()?.let { responseVideo ->
+                        when {
+                            responseVideo.items.isNotEmpty() -> {
+                                video = responseVideo.items[0]
+                                showVideo(video)
+                            }
+
+                            else -> view?.showLoadError()
+                        }
+
+                        when {
+                            responseVideo.groups != null && responseVideo.groups!!.isNotEmpty() -> {
+                                view?.showOwnerInfo(responseVideo.groups!![0])
+                                view?.hideProgress()
+                                view?.showUi()
+                                view?.showPlayer()
+                                responseVideo.groups?.forEach {
+                                    videoRepository.saveOwner(it)
+                                }
+                                view?.let { it.setVideoPosition(it.loadVideoPosition()) }
+                                videoRepository.saveOwnerId(responseVideo.groups!![0].id)
+
+                            }
+                            responseVideo.profiles != null && responseVideo.profiles!!.isNotEmpty() -> {
+                                responseVideo.profiles?.forEach {
+                                    videoRepository.saveOwner(it)
+                                }
+                                loadUser(responseVideo.profiles!![0])
+                            }
+                        }
+
+                    }
+                }
+
+            })
+
+    }
+
+    private fun showVideo(video: Video) {
+        video.files.forEachIndexed { index, videoUrl ->
+            when (videoUrl.quality) {
+                HLS -> {
+                    view?.setQuality(videoUrl)
+                    view?.saveCurrentQuality(index)
+                }
+                FULLHD -> {
+                    view?.setQuality(videoUrl)
+                    view?.saveCurrentQuality(index)
+                }
+                HD -> {
+                    view?.setQuality(videoUrl)
+                    view?.saveCurrentQuality(index)
+                }
+                qHD -> {
+                    view?.setQuality(videoUrl)
+                    view?.saveCurrentQuality(index)
+                }
+                P360 -> {
+                    view?.setQuality(videoUrl)
+                    view?.saveCurrentQuality(index)
+                }
+                P240 -> {
+                    view?.setQuality(videoUrl)
+                    view?.saveCurrentQuality(index)
+                }
+                LOW -> {
+                    view?.setQuality(videoUrl)
+                    view?.saveCurrentQuality(index)
+                }
+                EXTERNAL -> {
+                    view?.setExternalUi(videoUrl)
                 }
             }
         }
+    }
+
+    private fun loadUser(user: User) = userRepository
+        .getUsers(user.id.toString())
+        .enqueue(object : Callback<ApiResponse<List<User>>> {
+            override fun onFailure(
+                call: Call<ApiResponse<List<User>>>?,
+                t: Throwable?
+            ) {
+                Log.e("error", t?.message)
+
+                view?.hideProgress()
+                view?.showLoadError()
+            }
+
+            override fun onResponse(
+                call: Call<ApiResponse<List<User>>>?,
+                response: Response<ApiResponse<List<User>>>?
+            ) {
+                view?.hideProgress()
+                response?.body()?.response?.get(0)?.let { user ->
+                    view?.showOwnerInfo(user)
+                    view?.hideProgress()
+                    view?.showUi()
+                    view?.showPlayer()
+                    videoRepository.saveOwnerId(user.id)
+                }
+            }
+        })
+
+    override fun clickFullscreen() {
+        view?.saveIsFullscreen(
+            when (view?.loadIsFullscreen() == true) {
+                true -> {
+                    view?.showSmallScreen()
+                    view?.setPlayerNormal()
+                    false
+                }
+                false -> {
+                    view?.showFullscreen(video)
+                    view?.setPlayerFullscreen()
+                    true
+                }
+            }
+        )
 
     }
 
     override fun changedPipMode() {
-        view?.let { view ->
-            if (view.isPipMode()) {
-                view.setPlayerFullscreen()
-                view.hideUi()
-            } else {
-                view.setPlayerNormal()
-                view.showUi()
-            }
+        if (view?.isPipMode() == true) {
+            view?.setPlayerFullscreen()
+            view?.hideUi()
+        } else {
+            view?.setPlayerNormal()
+            view?.showUi()
         }
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    fun onStop() {
-        view?.let { view ->
-            view.pauseVideo()
-            view.getVideoState()?.let { isStartedVideo -> isStarted = isStartedVideo }
-            view.getVideoPosition()?.let { videoPosition -> position = videoPosition }
-            view.stopAudioFocusListener()
-        }
+    override fun onStop() {
+        view?.pauseVideo()
+        view?.getVideoState()?.let { isStartedVideo -> view?.saveVideoState(isStartedVideo) }
+        view?.getVideoPosition()?.let { videoPosition -> view?.saveVideoPosition(videoPosition) }
+        view?.stopAudioFocusListener()
     }
 
-    override fun onPresenterDestroy() {
+    override fun onDestroyView() {
+        view?.stopAudioFocusListener()
         view?.stopVideo()
-        super.onPresenterDestroy()
+        view = null
     }
 
     override fun error(error: Error, message: String) {
@@ -201,8 +247,7 @@ class VideoPresenter(
 
     override fun ownerClicked() {
         view?.let { view ->
-            videoRepository
-                .getOwner()
+            videoRepository.getOwner()
                 .observe(view, Observer { owner -> owner?.let { view.showOwnerGroup(it) } })
         }
 

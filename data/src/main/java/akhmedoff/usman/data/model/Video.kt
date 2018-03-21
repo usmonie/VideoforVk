@@ -3,6 +3,7 @@ package akhmedoff.usman.data.model
 import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Index
+import android.arch.persistence.room.TypeConverters
 
 @Entity(
     tableName = "videos",
@@ -16,8 +17,9 @@ class Video : Item() {
     var firstFrame130: String? = null
     var firstFrame800: String? = null
 
-    @Embedded
-    lateinit var files: Files
+    @TypeConverters(akhmedoff.usman.data.db.TypeConverters::class)
+    lateinit var files: List<VideoUrl>
+
     lateinit var player: String
     var canComment: Boolean = false
     var canRepost: Boolean = false

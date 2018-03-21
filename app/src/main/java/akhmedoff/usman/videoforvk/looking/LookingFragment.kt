@@ -7,7 +7,7 @@ import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.Router
 import akhmedoff.usman.videoforvk.album.AlbumActivity
 import akhmedoff.usman.videoforvk.search.SearchActivity
-import akhmedoff.usman.videoforvk.videonew.VideoFragment
+import akhmedoff.usman.videoforvk.video.VideoFragment
 import android.arch.paging.PagedList
 import android.content.Intent
 import android.os.Bundle
@@ -29,7 +29,17 @@ class LookingFragment : Fragment(), LookingContract.View {
     override lateinit var presenter: LookingContract.Presenter
 
     private val adapter by lazy {
-        LookingRecyclerAdapter { presenter.onCatalogItemClicked(it) }
+        LookingRecyclerAdapter { item, view ->
+            activity?.supportFragmentManager?.let {
+                Router.replaceFragment(
+                    it,
+                    VideoFragment.getInstance(item),
+                    true,
+                    VideoFragment.FRAGMENT_TAG,
+                    view
+                )
+            }
+        }
     }
 
     override fun onCreateView(

@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android'
 apply plugin: 'io.fabric'
-apply plugin: 'com.google.firebase.firebase-perf'
 
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
@@ -16,7 +15,7 @@ android {
         applicationId "akhmedoff.usman.videoforvk"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 13
+        versionCode 15
         versionName "2.0-beta1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -38,40 +37,31 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    productFlavors {
+    }
 }
 
 dependencies {
     // App's dependencies
-    implementation "com.android.support:palette-v7:$supportLibraryVersion"
-
     implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
     implementation "com.android.support:cardview-v7:$supportLibraryVersion"
     implementation "com.android.support:design:$supportLibraryVersion"
     implementation "com.android.support:recyclerview-v7:$supportLibraryVersion"
     implementation "com.android.support:support-v4:$supportLibraryVersion"
     implementation 'com.android.support.constraint:constraint-layout:1.1.0-beta5'
-
     implementation "android.arch.lifecycle:extensions:$archLifecycleVersion"
     implementation 'android.arch.paging:runtime:1.0.0-alpha6'
     kapt "android.arch.lifecycle:compiler:$archLifecycleVersion"
-
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.google.code.gson:gson:2.8.2'
-
     implementation 'com.google.android.exoplayer:exoplayer:2.6.1'
-
-    implementation 'com.google.firebase:firebase-core:11.8.0'
-    implementation 'com.google.firebase:firebase-perf:11.8.0'
-
     implementation('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
         transitive = true
     }
     implementation 'com.google.firebase:firebase-core:11.8.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
-
     implementation project(':data')
 }
 

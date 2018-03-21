@@ -24,6 +24,8 @@ class VideoDeserializer : JsonDeserializer<ResponseVideo> {
 
             val itemJson = it.asJsonObject
 
+            val videoUrls = mutableListOf<VideoUrl>()
+
             val fileJson = itemJson["files"].asJsonObject
             var external = fileJson["external"]?.asString
 
@@ -39,15 +41,13 @@ class VideoDeserializer : JsonDeserializer<ResponseVideo> {
                 external = null
             }
 
-            val files = Files()
-
-            files.mp4240 = mp4240
-            files.mp4360 = mp4360
-            files.mp4480 = mp4480
-            files.mp4720 = mp4720
-            files.mp41080 = mp41080
-            files.hls = hls
-            files.external = external
+            external?.let { videoUrls.add(VideoUrl(it, Quality.EXTERNAL)) }
+            mp4240?.let { videoUrls.add(VideoUrl(it, Quality.P240)) }
+            mp4360?.let { videoUrls.add(VideoUrl(it, Quality.P360)) }
+            mp4480?.let { videoUrls.add(VideoUrl(it, Quality.qHD)) }
+            mp4720?.let { videoUrls.add(VideoUrl(it, Quality.HD)) }
+            mp41080?.let { videoUrls.add(VideoUrl(it, Quality.FULLHD)) }
+            hls?.let { videoUrls.add(VideoUrl(it, Quality.HLS)) }
 
             val likesJson = itemJson["likes"]?.asJsonObject
 
@@ -102,7 +102,7 @@ class VideoDeserializer : JsonDeserializer<ResponseVideo> {
             itemJson["first_frame_800"]?.let {
                 item.firstFrame800 = it.asString
             }
-            item.files = files
+            item.files = videoUrls
             item.player = itemJson["player"].asString
 
             item.canAdd = when (itemJson["can_add"]?.asInt) {

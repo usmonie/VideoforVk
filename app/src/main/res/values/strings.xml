@@ -58,4 +58,11 @@
     <string name="empty_list">Empty list</string>
     <string name="video_title">Video</string>
     <string name="tab_albums_title">Albums</string>
+
+    <string name="video_quality_title_360p">360</string>
+    <string name="video_quality_title_480p">480</string>
+    <string name="video_quality_title_720p">720</string>
+    <string name="video_quality_title_1080p">1080</string>
+    <string name="video_quality_title_hls">Auto</string>
+
 </resources>

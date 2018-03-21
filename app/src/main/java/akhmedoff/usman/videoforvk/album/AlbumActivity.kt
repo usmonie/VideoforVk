@@ -5,7 +5,6 @@ import akhmedoff.usman.data.model.Video
 import akhmedoff.usman.data.utils.getAlbumRepository
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.base.BaseActivity
-import akhmedoff.usman.videoforvk.video.VideoActivity
 import android.arch.paging.PagedList
 import android.content.Context
 import android.content.Intent
@@ -72,7 +71,9 @@ class AlbumActivity : BaseActivity<AlbumContract.View, AlbumContract.Presenter>(
             .into(app_bar_album_poster_image)
     }
 
-    override fun showVideo(video: Video) = startActivity(VideoActivity.getActivity(video, this))
+    override fun showVideo(video: Video) {
+//        startActivity(VideoActivity.getActivity(video, this))
+    }
 
     override fun getAlbumTitle(): String? {
         return intent?.getStringExtra(ALBUM_NAME)

@@ -20,45 +20,73 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <LinearLayout
-                android:id="@+id/search_expanded_box"
+            <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="64dp"
-                android:background="@drawable/rounded_corners"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:minHeight="?attr/actionBarSize"
+                app:layout_scrollFlags="scroll|enterAlways">
 
-                <ImageButton
-                    android:id="@+id/search_expanded_back_button"
-                    android:layout_width="56dp"
-                    android:layout_height="match_parent"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_arrow_back"
-                    android:tint="@color/searchbox_icon_tint" />
+                <android.support.v7.widget.CardView
+                    android:id="@+id/search_box_collapsed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="8dp"
+                    android:foreground="?attr/selectableItemBackground"
+                    app:cardCornerRadius="6dp"
+                    app:cardElevation="2dp">
 
-                <EditText
-                    android:id="@+id/search_expanded_edit_text"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/search_box_icon_size"
-                    android:layout_marginStart="@dimen/search_box_text_left_margin"
-                    android:layout_weight="1"
-                    android:background="@null"
-                    android:imeOptions="actionSearch"
-                    android:inputType="textFilter"
-                    android:singleLine="true"
-                    android:textSize="@dimen/search_text_size" />
+                    <LinearLayout
+                        android:id="@+id/search_expanded_box"
+                        android:layout_width="match_parent"
+                        android:layout_height="64dp"
+                        android:background="@drawable/rounded_corners"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                <ImageButton
-                    android:id="@+id/search_expanded_magnifying_glass"
-                    android:layout_width="56dp"
-                    android:layout_height="match_parent"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:importantForAccessibility="no"
-                    android:src="@drawable/ic_search"
-                    android:tint="@color/searchbox_icon_tint"
-                    android:visibility="invisible"
-                    tools:visibility="visible" />
-            </LinearLayout>
+                        <ImageButton
+                            android:id="@+id/search_expanded_back_button"
+                            android:layout_width="56dp"
+                            android:layout_height="match_parent"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:src="@drawable/ic_arrow_back" />
+
+                        <EditText
+                            android:id="@+id/search_expanded_edit_text"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/search_box_icon_size"
+                            android:layout_marginStart="@dimen/search_box_text_left_margin"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:imeOptions="actionSearch"
+                            android:inputType="textFilter"
+                            android:singleLine="true"
+                            android:textSize="@dimen/search_text_size" />
+
+                        <ImageButton
+                            android:id="@+id/search_expanded_magnifying_glass"
+                            android:layout_width="56dp"
+                            android:layout_height="match_parent"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_search"
+                            android:tint="@color/searchbox_icon_tint"
+                            android:visibility="invisible"
+                            tools:visibility="visible" />
+                    </LinearLayout>
+
+                    <FrameLayout
+                        android:id="@+id/search_expanded_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                </android.support.v7.widget.CardView>
+            </android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
 
         <android.support.v7.widget.RecyclerView

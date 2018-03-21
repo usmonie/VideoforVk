@@ -1,46 +1,33 @@
 package akhmedoff.usman.videoforvk.video
 
 import akhmedoff.usman.data.Error
-import akhmedoff.usman.data.model.Group
 import akhmedoff.usman.data.model.Owner
-import akhmedoff.usman.data.model.User
 import akhmedoff.usman.data.model.Video
-import akhmedoff.usman.videoforvk.base.BaseContract
+import akhmedoff.usman.data.model.VideoUrl
+import android.arch.lifecycle.LifecycleOwner
 
 interface VideoContract {
 
-    interface View : BaseContract.View {
-        var videoPresenter: VideoPresenter
-
-        fun showGroupOwnerInfo(group: Group)
-
-        fun showUserOwnerInfo(user: User)
+    interface View : LifecycleOwner {
+        var presenter: Presenter
 
         fun showVideo(item: Video)
 
-        fun setSaved(saved: Boolean)
-
-        fun showFullscreen(video: Video)
-
-        fun showSmallScreen()
+        fun getVideoId(): String
 
         fun pauseVideo()
-
-        fun resumeVideo(state: Boolean, position: Long)
 
         fun startVideo()
 
         fun stopVideo()
 
-        fun getVideoId(): String
+        fun showOwnerInfo(owner: Owner)
 
-        fun getVideoState(): Boolean?
+        fun getOwnerId(): String
 
-        fun getVideoPosition(): Long?
+        fun showFullscreen(video: Video)
 
-        fun showRecommendations()
-
-        fun showLoadError()
+        fun showSmallScreen()
 
         fun enterPipMode()
 
@@ -52,9 +39,7 @@ interface VideoContract {
 
         fun showUi()
 
-        fun stopAudioFocusListener()
-
-        fun startAudioFocusListener()
+        fun showLoadError()
 
         fun showProgress()
 
@@ -63,6 +48,28 @@ interface VideoContract {
         fun showPlayer()
 
         fun hidePlayer()
+
+        fun getVideoState(): Boolean?
+
+        fun getVideoPosition(): Long?
+
+        fun loadIsFullscreen(): Boolean
+
+        fun loadVideoState(): Boolean
+
+        fun loadVideoPosition(): Long
+
+        fun setVideoPosition(position: Long)
+
+        fun saveVideoState(state: Boolean)
+
+        fun saveVideoPosition(position: Long)
+
+        fun saveIsFullscreen(isFullscreen: Boolean)
+
+        fun stopAudioFocusListener()
+
+        fun startAudioFocusListener()
 
         fun setPlayerFullscreen()
 
@@ -82,15 +89,48 @@ interface VideoContract {
 
         fun setAdded()
 
+        fun setSaved(saved: Boolean)
+
         fun setDeleted()
 
         fun showOwnerUser(owner: Owner)
 
         fun showOwnerGroup(owner: Owner)
 
+        fun setVideoSource(videoUrl: VideoUrl)
+
+        fun setExternalUi(videoUrl: VideoUrl)
+
+        fun getVideoQualities(): List<String>
+
+        fun getCurrentQuality(): Int
+
+        fun saveVideoQualities(qualities: ArrayList<String>)
+
+        fun saveCurrentQuality(quality: Int)
+
+        fun setQuality(videoUrl: VideoUrl)
+
     }
 
-    interface Presenter : BaseContract.Presenter<View> {
+    interface Presenter {
+
+        var view: View?
+
+        fun onClick(id: Int)
+
+        fun onCreate()
+
+        fun onStart()
+
+        fun onResume()
+
+        fun onPause()
+
+        fun onStop()
+
+        fun onDestroyView()
+
         fun loadVideo(id: String)
 
         fun clickFullscreen()
@@ -108,5 +148,8 @@ interface VideoContract {
         fun send()
 
         fun ownerClicked()
+
+        fun changeQuality()
+
     }
 }

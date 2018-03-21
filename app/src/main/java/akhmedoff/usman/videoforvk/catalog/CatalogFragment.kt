@@ -1,15 +1,17 @@
 package akhmedoff.usman.videoforvk.catalog
 
 import akhmedoff.usman.data.model.CatalogItem
+import akhmedoff.usman.data.model.CatalogItemType
 import akhmedoff.usman.data.utils.getCatalogRepository
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.Router
 import akhmedoff.usman.videoforvk.album.AlbumActivity
-import akhmedoff.usman.videoforvk.videonew.VideoFragment
+import akhmedoff.usman.videoforvk.video.VideoFragment
 import akhmedoff.usman.videoforvk.view.MarginItemDecorator
 import android.arch.paging.PagedList
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.transition.TransitionInflater
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
 import android.view.LayoutInflater
@@ -35,8 +37,15 @@ class CatalogFragment : Fragment(),
     override lateinit var presenter: CatalogContract.Presenter
 
     private val adapter by lazy {
-        CatalogRecyclerAdapter { presenter.clickItem(it) }
-            .apply { setHasStableIds(true) }
+        CatalogRecyclerAdapter { item, view ->
+            when (item.type) {
+                CatalogItemType.VIDEO -> showVideo(item, view)
+
+                CatalogItemType.ALBUM -> showAlbum(item, view)
+            }
+
+
+        }.apply { setHasStableIds(true) }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,18 +83,22 @@ class CatalogFragment : Fragment(),
 
     override fun showList(videos: PagedList<CatalogItem>) = adapter.submitList(videos)
 
-    override fun showVideo(item: CatalogItem) {
-        activity?.supportFragmentManager?.let {
-            Router.replaceFragment(
-                it,
-                VideoFragment.getInstance(item),
-                true,
-                VideoFragment.FRAGMENT_TAG
-            )
-        }
+    override fun showVideo(item: CatalogItem, view: View) {
+        val fragment = VideoFragment.getInstance(item)
+
+        fragment.sharedElementEnterTransition =
+                activity?.supportFragmentManager?.let {
+                    Router.replaceFragment(
+                        it,
+                        fragment,
+                        true,
+                        VideoFragment.FRAGMENT_TAG,
+                        view
+                    )
+                }
     }
 
-    override fun showAlbum(album: CatalogItem) =
+    override fun showAlbum(album: CatalogItem, view: View) =
         startActivity(AlbumActivity.getActivity(album, context!!))
 
     override fun getPageCategory() = arguments?.getString(PAGE_CATEGORY) ?: ""

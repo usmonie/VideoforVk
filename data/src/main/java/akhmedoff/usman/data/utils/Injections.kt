@@ -7,8 +7,6 @@ import akhmedoff.usman.data.local.UserSettings
 import akhmedoff.usman.data.model.*
 import akhmedoff.usman.data.repository.*
 import akhmedoff.usman.data.utils.deserializers.*
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
 import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -108,23 +106,3 @@ fun getUserRepository(context: Context) =
 
 fun getGroupRepository(context: Context) =
     GroupRepository(vkApi, UserSettings.getUserSettings(context))
-
-fun PagingRequestHelper.createStatusLiveData(): LiveData<NetworkState> {
-    val liveData = MutableLiveData<NetworkState>()
-    addListener { report ->
-        when {
-            report.hasRunning() -> liveData.postValue(NetworkState.LOADING)
-            report.hasError() -> liveData.postValue(
-                NetworkState.error(getErrorMessage(report))
-            )
-            else -> liveData.postValue(NetworkState.LOADED)
-        }
-    }
-    return liveData
-}
-
-private fun getErrorMessage(report: PagingRequestHelper.StatusReport): String {
-    return PagingRequestHelper.RequestType.values().mapNotNull {
-        report.getErrorFor(it)?.message
-    }.first()
-}
