@@ -70,7 +70,7 @@ object Router {
     ) {
         if (addToBackStack) {
             fragmentManager.beginTransaction()
-                .addSharedElement(sharedElement, ViewCompat.getTransitionName(sharedElement))
+                //.addSharedElement(sharedElement, ViewCompat.getTransitionName(sharedElement))
                 .replace(R.id.container, fragment, fragmentTag)
                 .addToBackStack(null)
                 .commit()

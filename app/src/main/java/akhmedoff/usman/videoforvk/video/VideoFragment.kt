@@ -22,10 +22,11 @@ import android.os.Bundle
 import android.support.annotation.DrawableRes
 import android.support.annotation.RequiresApi
 import android.support.design.widget.Snackbar
-import android.support.transition.*
+import android.support.transition.Explode
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DefaultItemAnimator
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -99,24 +100,9 @@ class VideoFragment : Fragment(), VideoContract.View {
             getVideoRepository(context!!),
             getUserRepository(context!!)
         )
-        startPostponedEnterTransition()
-        val sharedEnterTransition = TransitionSet()
-        sharedEnterTransition.addTransition(ChangeBounds())
-        sharedEnterTransition.addTransition(ChangeClipBounds())
-        sharedEnterTransition.addTransition(ChangeImageTransform())
-        sharedEnterTransition.addTransition(ChangeTransform())
-
-        val returnTransition = TransitionSet()
-        returnTransition.addTransition(ChangeBounds())
-        returnTransition.addTransition(ChangeClipBounds())
-        returnTransition.addTransition(ChangeImageTransform())
-        returnTransition.addTransition(ChangeTransform())
-
-        sharedElementReturnTransition = returnTransition
-        sharedElementEnterTransition = sharedEnterTransition
-
-        enterTransition = Fade()
-        exitTransition = Explode()
+/*
+        enterTransition = Explode()
+        returnTransition = Explode()*/
 
         if (savedInstanceState != null) presenter.view = this
     }
@@ -137,7 +123,6 @@ class VideoFragment : Fragment(), VideoContract.View {
 
         exo_arrow_back.setOnClickListener {
             activity?.supportFragmentManager?.popBackStack()
-            showSmallScreen()
         }
 
         file = File("${context!!.filesDir.parent}/cache")
@@ -180,11 +165,11 @@ class VideoFragment : Fragment(), VideoContract.View {
                 resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin)
             )
         )
+
         adapter = VideoInfoRecyclerAdapter { presenter.onClick(it) }
         video_info_recycler.adapter = adapter
-
-
-
+        video_info_recycler.layoutManager =
+                LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
     }
 
     override fun onStart() {

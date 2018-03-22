@@ -31,14 +31,16 @@ class VideoInfoRecyclerAdapter(private val clickListener: (Int) -> Unit) :
                     parent,
                     false
                 )
-            ).apply { itemView.setOnClickListener { clickListener(it.id) } }
+            )
+
             R.layout.video_owner_item -> VideoOwnerViewHolder(
                 LayoutInflater.from(parent.context).inflate(
                     viewType,
                     parent,
                     false
                 )
-            ).apply { itemView.setOnClickListener { clickListener(it.id) } }
+            )
+
             else -> VideoInfoViewHolder(
                 clickListener,
                 LayoutInflater.from(parent.context).inflate(
@@ -47,7 +49,7 @@ class VideoInfoRecyclerAdapter(private val clickListener: (Int) -> Unit) :
                     false
                 )
             )
-        }
+        }.apply { itemView.setOnClickListener { clickListener(it.id) } }
 
     override fun getItemViewType(position: Int) = when (position) {
         0 -> R.layout.video_info_item

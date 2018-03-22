@@ -11,7 +11,6 @@ import akhmedoff.usman.videoforvk.view.MarginItemDecorator
 import android.arch.paging.PagedList
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.transition.TransitionInflater
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
 import android.view.LayoutInflater
@@ -86,16 +85,15 @@ class CatalogFragment : Fragment(),
     override fun showVideo(item: CatalogItem, view: View) {
         val fragment = VideoFragment.getInstance(item)
 
-        fragment.sharedElementEnterTransition =
-                activity?.supportFragmentManager?.let {
-                    Router.replaceFragment(
-                        it,
-                        fragment,
-                        true,
-                        VideoFragment.FRAGMENT_TAG,
-                        view
-                    )
-                }
+        activity?.supportFragmentManager?.let {
+            Router.replaceFragment(
+                it,
+                fragment,
+                true,
+                VideoFragment.FRAGMENT_TAG,
+                view
+            )
+        }
     }
 
     override fun showAlbum(album: CatalogItem, view: View) =

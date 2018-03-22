@@ -99,10 +99,10 @@ class VideoPresenter(
                                 view?.hideProgress()
                                 view?.showUi()
                                 view?.showPlayer()
+                                view?.let { it.setVideoPosition(it.loadVideoPosition()) }
                                 responseVideo.groups?.forEach {
                                     videoRepository.saveOwner(it)
                                 }
-                                view?.let { it.setVideoPosition(it.loadVideoPosition()) }
                                 videoRepository.saveOwnerId(responseVideo.groups!![0].id)
 
                             }
@@ -157,6 +157,7 @@ class VideoPresenter(
                 }
             }
         }
+        view?.showVideo(video)
     }
 
     private fun loadUser(user: User) = userRepository

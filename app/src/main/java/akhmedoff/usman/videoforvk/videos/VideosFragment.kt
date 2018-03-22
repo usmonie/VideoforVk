@@ -3,6 +3,8 @@ package akhmedoff.usman.videoforvk.videos
 import akhmedoff.usman.data.model.Video
 import akhmedoff.usman.data.utils.getVideoRepository
 import akhmedoff.usman.videoforvk.R
+import akhmedoff.usman.videoforvk.Router
+import akhmedoff.usman.videoforvk.video.VideoFragment
 import akhmedoff.usman.videoforvk.view.MarginItemDecorator
 import akhmedoff.usman.videoforvk.view.VideosRecyclerAdapter
 import android.arch.paging.PagedList
@@ -66,7 +68,17 @@ class VideosFragment : Fragment(), VideosContract.View {
     }
 
     override fun showVideo(item: Video) {
-        //startActivity(VideoActivity.getActivity(item, context!!))
+        val fragment = VideoFragment.getInstance(item)
+
+
+        activity?.supportFragmentManager?.let {
+            Router.replaceFragment(
+                it,
+                fragment,
+                true,
+                VideoFragment.FRAGMENT_TAG
+            )
+        }
     }
 
     override fun showVideos(videos: PagedList<Video>) = adapter.submitList(videos)
