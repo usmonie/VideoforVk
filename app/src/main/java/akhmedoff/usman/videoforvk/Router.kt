@@ -1,5 +1,6 @@
 package akhmedoff.usman.videoforvk
 
+import android.support.transition.*
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
@@ -68,15 +69,41 @@ object Router {
         fragmentTag: String?,
         sharedElement: View
     ) {
+
+        // 2. Shared Elements Transition
+        val enterTransitionSet = TransitionSet()
+        enterTransitionSet.addTransition(
+            ChangeClipBounds()
+        )
+        enterTransitionSet.addTransition(
+            ChangeTransform()
+        )
+        enterTransitionSet.addTransition(
+            ChangeBounds()
+        )
+        enterTransitionSet.duration = 600
+        fragment.sharedElementEnterTransition = enterTransitionSet
+
+        // 3. Enter Transition for New Fragment
+        val explodeFade = Explode()
+        explodeFade.duration = 200
+        fragment.enterTransition = explodeFade
+
         if (addToBackStack) {
             fragmentManager.beginTransaction()
-                //.addSharedElement(sharedElement, ViewCompat.getTransitionName(sharedElement))
+                .addSharedElement(
+                    sharedElement,
+                    ViewCompat.getTransitionName(sharedElement)
+                )
                 .replace(R.id.container, fragment, fragmentTag)
                 .addToBackStack(null)
                 .commit()
         } else {
             fragmentManager.beginTransaction()
-                .addSharedElement(sharedElement, ViewCompat.getTransitionName(sharedElement))
+                .addSharedElement(
+                    sharedElement,
+                    ViewCompat.getTransitionName(sharedElement)
+                )
                 .replace(R.id.container, fragment, fragmentTag)
                 .commit()
         }

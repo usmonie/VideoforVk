@@ -23,6 +23,7 @@ import android.support.annotation.DrawableRes
 import android.support.annotation.RequiresApi
 import android.support.design.widget.Snackbar
 import android.support.transition.Explode
+import android.support.transition.TransitionInflater
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DefaultItemAnimator
@@ -92,7 +93,6 @@ class VideoFragment : Fragment(), VideoContract.View {
 
     private var mediaSource: MediaSource? = null
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         presenter = VideoPresenter(
@@ -100,9 +100,6 @@ class VideoFragment : Fragment(), VideoContract.View {
             getVideoRepository(context!!),
             getUserRepository(context!!)
         )
-/*
-        enterTransition = Explode()
-        returnTransition = Explode()*/
 
         if (savedInstanceState != null) presenter.view = this
     }

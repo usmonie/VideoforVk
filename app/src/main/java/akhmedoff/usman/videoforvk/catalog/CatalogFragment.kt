@@ -11,6 +11,8 @@ import akhmedoff.usman.videoforvk.view.MarginItemDecorator
 import android.arch.paging.PagedList
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.transition.Explode
+import android.support.transition.Fade
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
 import android.view.LayoutInflater
@@ -55,6 +57,9 @@ class CatalogFragment : Fragment(),
                 context!!
             )
         )
+        val explode = Explode()
+        explode.duration = 500
+        exitTransition = explode
     }
 
     override fun onCreateView(
