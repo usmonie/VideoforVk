@@ -16,4 +16,6 @@ open class Item {
     var photo640: String? = null
     var photo800: String? = null
     var canAdd: Boolean = false
+
+    var roomId: Int = 0
 }

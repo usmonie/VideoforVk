@@ -31,4 +31,14 @@ class TypeConverters {
     fun fromVideoUrls(data: List<VideoUrl>): String {
         return gson.toJson(data)
     }
+
+    @TypeConverter
+    fun toUsers(data: String): List<String> {
+        return data.split(", ")
+    }
+
+    @TypeConverter
+    fun fromUserIds(data: List<String>): String {
+        return data.joinToString()
+    }
 }

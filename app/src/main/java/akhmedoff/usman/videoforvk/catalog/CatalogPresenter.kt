@@ -1,7 +1,6 @@
 package akhmedoff.usman.videoforvk.catalog
 
 import akhmedoff.usman.data.model.CatalogItem
-import akhmedoff.usman.data.model.CatalogItemType
 import akhmedoff.usman.data.repository.CatalogRepository
 import android.arch.lifecycle.Observer
 
@@ -13,6 +12,7 @@ class CatalogPresenter(
     override fun onCreated() = refresh()
 
     override fun onStop() {
+        view = null
     }
 
     override fun refresh() {
@@ -41,9 +41,6 @@ class CatalogPresenter(
                     }
                 })
         }
-    }
-
-    override fun clickItem(item: CatalogItem) {
     }
 
 }

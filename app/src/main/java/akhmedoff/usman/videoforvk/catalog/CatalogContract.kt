@@ -36,8 +36,6 @@ interface CatalogContract {
 
         fun refresh()
 
-        fun clickItem(item: CatalogItem)
-
         fun loadCatalogs()
 
     }

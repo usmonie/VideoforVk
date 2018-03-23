@@ -11,7 +11,7 @@ import android.content.Context
 
 @Database(
     entities = [Owner::class, Video::class, Album::class, CatalogItem::class],
-    version = 6,
+    version = 8,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -21,7 +21,7 @@ abstract class AppDatabase : RoomDatabase() {
             Room
                 .databaseBuilder(
                     context.applicationContext,
-                    AppDatabase::class.java, "vt_database"
+                    AppDatabase::class.java, "vt_database.db"
                 )
                 .allowMainThreadQueries()
                 .fallbackToDestructiveMigration()

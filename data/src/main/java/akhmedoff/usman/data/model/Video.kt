@@ -31,4 +31,7 @@ class Video : Item() {
     var reposts: Reposts? = null
     var repeat: Boolean = false
 
+
+    @TypeConverters(akhmedoff.usman.data.db.TypeConverters::class)
+    var userIds: MutableList<String> = mutableListOf()
 }

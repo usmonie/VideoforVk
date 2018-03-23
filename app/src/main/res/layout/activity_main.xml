@@ -17,6 +17,7 @@
         android:id="@+id/navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:elevation="5dp"
         app:itemIconTint="@drawable/navigation_view_selector"
         app:itemTextColor="@drawable/navigation_view_selector"
         app:menu="@menu/navigation" />

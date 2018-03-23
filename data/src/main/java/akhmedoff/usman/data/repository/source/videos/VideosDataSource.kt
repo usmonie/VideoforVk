@@ -21,6 +21,7 @@ class VideosDataSource(
 ) : PositionalDataSource<Video>() {
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Video>) {
+
         vkApi.getVideos(
             ownerId = ownerId?.toString(),
             videos = videoId,
@@ -29,41 +30,45 @@ class VideosDataSource(
             offset = params.startPosition.toLong(),
             extended = false
         ).enqueue(object : Callback<ResponseVideo> {
-            /**
-             * Invoked when a network exception occurred talking to the server or when an unexpected
-             * exception occurred creating the request or processing the response.
-             */
             override fun onFailure(call: Call<ResponseVideo>?, t: Throwable?) {
                 Log.e("callback", "ERROR: " + t.toString())
+                callback.onResult(videoDao.loadAll(params.loadSize, params.startPosition, ownerId))
+
             }
 
-            /**
-             * Invoked for a received HTTP response.
-             *
-             *
-             * Note: An HTTP response may still indicate an application-level failure such as a 404 or 500.
-             * Call [Response.isSuccessful] to determine if the response indicates success.
-             */
             override fun onResponse(
                 call: Call<ResponseVideo>?,
                 response: Response<ResponseVideo>?
             ) {
-                response?.body()?.let {
-                    videoDao.insert(it.items)
+                response?.body()?.let { responseVideo ->
+                    videoDao.insert(responseVideo.items.mapIndexed { index, video ->
+                        ownerId?.toString()?.let { ownerId ->
+                            video.userIds.add(ownerId)
+                        }
+                        video.roomId = params.startPosition + index
+                        video
+                    })
 
-                    it.profiles?.forEach {
+                    responseVideo.profiles?.forEach {
                         ownerDao.insert(it)
                     }
 
-                    it.groups?.forEach {
+                    responseVideo.groups?.forEach {
                         ownerDao.insert(it)
                     }
+                    callback.onResult(
+                        videoDao.loadAll(
+                            params.loadSize,
+                            params.startPosition,
+                            ownerId
+                        )
+                    )
 
                 }
             }
 
         })
-        callback.onResult(videoDao.loadAll(params.loadSize, params.startPosition, ownerId))
+
 
     }
 
@@ -88,6 +93,13 @@ class VideosDataSource(
 
             response.body()?.groups?.forEach {
                 ownerDao.insert(it)
+            }
+            ownerId?.let { ownerId ->
+                videoDao.clear(ownerId)
+                items.forEachIndexed { index, video ->
+                    video.userIds.add(ownerId.toString())
+                    video.roomId = index
+                }
             }
 
             videoDao.insert(items)

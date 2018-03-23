@@ -36,6 +36,7 @@ class LoginPresenter(
     override fun enterCode(code: String) {
         view?.let {
             if (code.trim().isEmpty()) return
+
             auth(it.getUsername(), it.getPassword(), code = code)
 
         }
@@ -103,25 +104,23 @@ class LoginPresenter(
     private fun errorConvert(response: ResponseBody) {
         val auth = gson.fromJson<Auth>(response.string(), Auth::class.java)
 
-        view?.let { view ->
             when (auth.error) {
-                Error.ERROR_LOGIN -> view.onErrorLogin()
+                Error.ERROR_LOGIN -> view?.onErrorLogin()
 
                 Error.NEED_CAPTCHA -> {
                     captchaSid = auth.captchaSid!!
-                    view.captcha(auth.captchaImg!!)
+                    view?.captcha(auth.captchaImg!!)
                 }
 
                 Error.NEED_VALIDATION ->
                     when (auth.validationType) {
-                        null -> view.onErrorLogin()
-                        else -> view.validateTwoFactoryAuthorization(auth.phoneMask)
+                        null -> view?.onErrorLogin()
+                        else -> view?.validateTwoFactoryAuthorization(auth.phoneMask)
                     }
 
-                Error.INVALID_CODE -> view.showCodeError()
+                Error.INVALID_CODE -> view?.showCodeError()
 
-                else -> view.onErrorLogin()
+                else -> view?.onErrorLogin()
             }
-        }
     }
 }

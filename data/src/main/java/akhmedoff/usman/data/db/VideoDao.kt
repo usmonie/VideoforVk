@@ -8,10 +8,10 @@ import android.arch.persistence.room.*
 @Dao
 interface VideoDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(item: Video)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(item: List<Video>)
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
@@ -20,10 +20,12 @@ interface VideoDao {
     @Query("SELECT * FROM videos WHERE id IS :id LIMIT 1")
     fun load(id: Long): LiveData<Video>
 
-    @Query("SELECT * FROM videos WHERE ownerId = :ownerId LIMIT :count OFFSET :from ")
-    fun loadAll(count: Int, from: Int, ownerId: Int?): List<Video>
+    @Query("SELECT * FROM videos WHERE userIds LIKE :userId ORDER BY roomId ASC LIMIT :count OFFSET :from ")
+    fun loadAll(count: Int, from: Int, userId: Int?): List<Video>
 
-    @Query("SELECT * FROM videos WHERE title LIKE :query LIMIT :count OFFSET :from")
+    @Query("SELECT * FROM videos WHERE title LIKE :query ORDER BY roomId ASC LIMIT :count OFFSET :from")
     fun loadAll(count: Int, from: Int, query: String?): List<Video>
 
+    @Query("DELETE FROM videos WHERE userIds LIKE :userId")
+    fun clear(userId: Int)
 }
