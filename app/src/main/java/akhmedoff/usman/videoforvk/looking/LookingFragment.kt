@@ -63,6 +63,7 @@ class LookingFragment : Fragment(), LookingContract.View {
         looking_recycler.adapter = adapter
 
         search_box_collapsed.setOnClickListener { presenter.searchClicked() }
+        update_looking_layout.setOnRefreshListener { presenter.refresh() }
     }
 
     override fun showVideo(item: CatalogItem) {

@@ -1,6 +1,7 @@
 package akhmedoff.usman.data.repository.source.catalogs
 
 import akhmedoff.usman.data.api.VkApi
+import akhmedoff.usman.data.db.CatalogDao
 import akhmedoff.usman.data.db.OwnerDao
 import akhmedoff.usman.data.model.CatalogItem
 import akhmedoff.usman.data.model.ResponseCatalog
@@ -14,7 +15,8 @@ import retrofit2.Response
 class CatalogSectionDataSource(
     private val vkApi: VkApi,
     private val catalogSection: String,
-    private val ownerDao: OwnerDao
+    private val ownerDao: OwnerDao,
+    private val catalogDao: CatalogDao
 ) : PageKeyedDataSource<String, CatalogItem>() {
 
     override fun loadInitial(
@@ -57,6 +59,7 @@ class CatalogSectionDataSource(
                 response: Response<ResponseCatalog>?
             ) {
                 response?.body()?.let {
+
 
                     it.profiles?.forEach {
                         ownerDao.insert(it)

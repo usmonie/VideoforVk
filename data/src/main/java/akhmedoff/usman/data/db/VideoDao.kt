@@ -8,10 +8,10 @@ import android.arch.persistence.room.*
 @Dao
 interface VideoDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(item: Video)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(item: List<Video>)
 
     @Update(onConflict = OnConflictStrategy.REPLACE)

@@ -11,7 +11,7 @@ interface CatalogDao {
     fun insert(item: CatalogItem)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(item: List<CatalogItem>)
+    fun insert(item: List<CatalogItem>)
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     fun update(item: CatalogItem)

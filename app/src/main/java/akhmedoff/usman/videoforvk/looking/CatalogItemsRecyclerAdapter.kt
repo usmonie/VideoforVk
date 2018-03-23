@@ -1,7 +1,8 @@
 package akhmedoff.usman.videoforvk.looking
 
 import akhmedoff.usman.data.model.CatalogItem
-import akhmedoff.usman.data.model.CatalogItemType
+import akhmedoff.usman.data.model.CatalogItemType.ALBUM
+import akhmedoff.usman.data.model.CatalogItemType.VIDEO
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.view.holders.VideoViewHolder
 import android.support.v7.widget.RecyclerView
@@ -29,7 +30,7 @@ class CatalogItemsRecyclerAdapter(
 
         items?.let { items ->
             holder.itemView.setOnClickListener {
-                clickListener(items[holder.adapterPosition], holder.itemView.rootView)
+                clickListener(items[holder.adapterPosition], holder.cardView)
             }
         }
 
@@ -41,25 +42,22 @@ class CatalogItemsRecyclerAdapter(
     override fun getItemCount() = items?.size ?: 0
 
     override fun onBindViewHolder(holder: VideoViewHolder, position: Int) {
-        items?.get(position)?.let {
-            holder.bind(it)
+        holder.bind(items?.get(position)!!)
 
-            if (it.type == CatalogItemType.VIDEO && position == 0) {
-                holder.itemView.layoutParams.width =
-                        holder.itemView.resources.getDimensionPixelSize(R.dimen.width_main_list_first_video)
-            }
+        if (items?.get(position)?.type == VIDEO && position == 0) {
+            holder.itemView.layoutParams.width =
+                    holder.itemView.resources.getDimensionPixelSize(R.dimen.width_main_list_first_video)
         }
-
     }
 
     override fun getItemViewType(position: Int): Int {
         items?.get(position)?.type?.let {
             return when {
-                it == CatalogItemType.VIDEO && position == 0 -> R.layout.catalog_video_item_big
+                it == VIDEO && position == 0 -> R.layout.catalog_video_item_big
 
-                it == CatalogItemType.VIDEO && position > 0 -> R.layout.catalog_video_item_min
+                it == VIDEO && position > 0 -> R.layout.catalog_video_item_min
 
-                it == CatalogItemType.ALBUM -> R.layout.catalog_album_item
+                it == ALBUM -> R.layout.catalog_album_item
 
                 else -> throw Exception("Unchecked type")
             }

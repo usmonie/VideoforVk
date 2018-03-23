@@ -59,13 +59,16 @@ class ProfileFragment : Fragment(), ProfileContract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.onViewCreated()
-
         view_pager.offscreenPageLimit = 2
         view_pager.adapter = pagesPagerAdapter
         tabs.setupWithViewPager(view_pager)
 
         search_box_collapsed.setOnClickListener { presenter.onSearchClicked() }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        presenter.onViewCreated()
     }
 
     override fun showUserName(name: String) {

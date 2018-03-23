@@ -6,32 +6,33 @@ import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.view.holders.CatalogViewHolder
 import android.arch.paging.PagedListAdapter
 import android.support.v7.util.DiffUtil
+import android.util.Log
 import android.view.LayoutInflater
-import android.view.ViewGroup
 import android.view.View
+import android.view.ViewGroup
 
 class LookingRecyclerAdapter(
     private val clickListener: (CatalogItem, View) -> Unit
-) :
-    PagedListAdapter<Catalog, CatalogViewHolder>(CATALOG_COMPARATOR) {
+) : PagedListAdapter<Catalog, CatalogViewHolder>(CATALOG_COMPARATOR) {
 
     companion object {
         val CATALOG_COMPARATOR = object : DiffUtil.ItemCallback<Catalog>() {
-            override fun areItemsTheSame(oldItem: Catalog, newItem: Catalog) =
-                oldItem.id == newItem.id
+            override fun areItemsTheSame(oldItem: Catalog, newItem: Catalog): Boolean {
+                Log.d("ARE_ITEMS_THE_SAME", oldItem.name + newItem.name)
+                return false
+            }
 
-            override fun areContentsTheSame(oldItem: Catalog, newItem: Catalog) =
-                oldItem.items == newItem.items
+            override fun areContentsTheSame(oldItem: Catalog, newItem: Catalog): Boolean {
+                Log.d("ARE_ITEMS_THE_SAME", oldItem.toString() + newItem.toString())
+
+                return false
+            }
         }
     }
 
     override fun onBindViewHolder(holder: CatalogViewHolder, position: Int) {
-        val catalog = getItem(position)
-
-        catalog?.items?.let {
-            if (it.isNotEmpty()) {
-                holder.bind(catalog)
-            }
+        if (getItem(position)?.items!!.isNotEmpty()) {
+            holder.bind(getItem(position)!!)
         }
     }
 

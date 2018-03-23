@@ -35,7 +35,7 @@ class VideoRepositoryImpl(
         val pagedListConfig = PagedList.Config.Builder()
             .setEnablePlaceholders(false)
             .setPageSize(10)
-            .setPrefetchDistance(2)
+            .setPrefetchDistance(7)
             .setInitialLoadSizeHint(16)
             .build()
 

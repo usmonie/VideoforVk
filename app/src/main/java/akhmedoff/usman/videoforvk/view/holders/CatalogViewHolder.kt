@@ -61,8 +61,10 @@ class CatalogViewHolder(
         catalogTitle.text = item.name
 
         adapter.items = item.items
+        adapter.notifyDataSetChanged()
 
-        item.items.get(0).type?.let {
+
+        item.items[0].type?.let {
             when (it) {
                 CatalogItemType.ALBUM -> catalogRecycler.layoutManager = linearLayoutManager
 

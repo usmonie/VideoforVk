@@ -1,6 +1,7 @@
 package akhmedoff.usman.data.repository.source.catalogs
 
 import akhmedoff.usman.data.api.VkApi
+import akhmedoff.usman.data.db.CatalogDao
 import akhmedoff.usman.data.model.Catalog
 import akhmedoff.usman.data.model.ResponseCatalog
 import android.arch.paging.PageKeyedDataSource
@@ -10,9 +11,11 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.Collections.emptyList
 
-class CatalogsPageKeyedDataSource(private val vkApi: VkApi, private val filters: String) :
-
-    PageKeyedDataSource<String, Catalog>() {
+class CatalogsPageKeyedDataSource(
+    private val vkApi: VkApi,
+    private val filters: String,
+    private val catalogDao: CatalogDao
+) : PageKeyedDataSource<String, Catalog>() {
 
     override fun loadBefore(
         params: LoadParams<String>,
@@ -23,7 +26,7 @@ class CatalogsPageKeyedDataSource(private val vkApi: VkApi, private val filters:
 
     override fun loadAfter(params: LoadParams<String>, callback: LoadCallback<String, Catalog>) {
         vkApi.getCatalog(
-            count = 10,
+            count = params.requestedLoadSize,
             itemsCount = 7,
             from = params.key,
             filters = filters
@@ -48,19 +51,17 @@ class CatalogsPageKeyedDataSource(private val vkApi: VkApi, private val filters:
         params: LoadInitialParams<String>,
         callback: LoadInitialCallback<String, Catalog>
     ) {
-        val apiSource = vkApi.getCatalog(
-            count = 10,
-            itemsCount = 7,
-            filters = filters
-        )
-
         try {
-            val response = apiSource.execute()
+            val response = vkApi.getCatalog(
+                count = params.requestedLoadSize,
+                itemsCount = 7,
+                filters = filters
+            ).execute()
 
             val items = response.body()?.catalogs ?: emptyList<Catalog>()
-            response.body()?.let {
-                callback.onResult(items, null, it.next)
-            }
+
+            callback.onResult(items, null, response.body()?.next)
+
         } catch (exception: Exception) {
             Log.d(javaClass.simpleName, exception.toString())
         }

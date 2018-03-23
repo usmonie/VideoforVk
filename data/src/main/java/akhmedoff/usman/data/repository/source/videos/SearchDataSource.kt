@@ -46,14 +46,14 @@ class SearchDataSource(
                 call: Call<ResponseVideo>?,
                 response: Response<ResponseVideo>?
             ) {
-                response?.body()?.let {
-                    videoDao.insert(it.items)
+                response?.body()?.let { responseVideo ->
+                    videoDao.insert(responseVideo.items)
 
-                    it.profiles?.forEach {
+                    responseVideo.profiles?.forEach {
                         ownerDao.insert(it)
                     }
 
-                    it.groups?.forEach {
+                    responseVideo.groups?.forEach {
                         ownerDao.insert(it)
                     }
                 }

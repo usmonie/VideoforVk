@@ -7,6 +7,8 @@ import android.arch.paging.PagedList
 
 
 interface CatalogRepository {
+
     fun getCatalog(filters: String): LiveData<PagedList<Catalog>>
+
     fun getCatalogSection(catalogId: String): LiveData<PagedList<CatalogItem>>
 }

@@ -47,7 +47,7 @@ interface VkApi {
         @Query("count") count: Int,
         @Query("items_count") itemsCount: Int,
         @Query("from") from: String? = null,
-        @Query("filters") filters: String = "other"
+        @Query("filters") filters: String
     ): Call<ResponseCatalog>
 
     @GET

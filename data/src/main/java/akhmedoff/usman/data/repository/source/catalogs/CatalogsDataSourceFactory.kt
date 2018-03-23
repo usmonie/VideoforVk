@@ -8,10 +8,10 @@ import android.arch.paging.DataSource
 class CatalogsDataSourceFactory(
     private val vkApi: VkApi,
     private val filters: String,
-    val catalogDao: CatalogDao
+    private val catalogDao: CatalogDao
 ) :
     DataSource.Factory<String, Catalog> {
 
     override fun create() =
-        CatalogsPageKeyedDataSource(vkApi, filters)
+        CatalogsPageKeyedDataSource(vkApi, filters, catalogDao)
 }

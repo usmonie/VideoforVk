@@ -10,7 +10,9 @@ class LookingPresenter(
     private val catalogRepository: CatalogRepository
 ) : LookingContract.Presenter {
 
-    override fun onCreated() {
+    override fun onCreated() = refresh()
+
+    override fun refresh() {
         view?.let { view ->
             view.showLoading()
             catalogRepository
@@ -25,9 +27,6 @@ class LookingPresenter(
                     }
                 })
         }
-    }
-
-    override fun refresh() {
     }
 
     override fun onCatalogItemClicked(item: CatalogItem) {
