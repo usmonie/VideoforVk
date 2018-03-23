@@ -2,9 +2,10 @@ package akhmedoff.usman.videoforvk.home
 
 
 import akhmedoff.usman.videoforvk.R
-import akhmedoff.usman.videoforvk.search.SearchActivity
+import akhmedoff.usman.videoforvk.Router
+import akhmedoff.usman.videoforvk.search.SearchFragment
+import akhmedoff.usman.videoforvk.video.VideoFragment
 import akhmedoff.usman.videoforvk.view.FragmentsViewPagerAdapter
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -27,8 +28,8 @@ class HomeFragment : Fragment(), HomeContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        presenter.view = this
         catalogsPagerAdapter = FragmentsViewPagerAdapter(childFragmentManager)
+        presenter.view = this
 
         if (savedInstanceState == null || !savedInstanceState.containsKey(RETAINED_KEY)) {
             presenter.onCreated()
@@ -42,6 +43,7 @@ class HomeFragment : Fragment(), HomeContract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        presenter.view = this
 
         view_pager.adapter = catalogsPagerAdapter
         view_pager.offscreenPageLimit = 3
@@ -55,6 +57,12 @@ class HomeFragment : Fragment(), HomeContract.View {
         search_box_collapsed.setOnClickListener { presenter.searchClicked() }
     }
 
+    override fun onStart() {
+        super.onStart()
+        presenter.view = this
+
+    }
+
     override fun getResourcesString(id: Int) = context?.getString(id) ?: ""
 
     override fun initPage(pageCategory: String, pageTitle: String) {
@@ -62,7 +70,18 @@ class HomeFragment : Fragment(), HomeContract.View {
         catalogsPagerAdapter.notifyDataSetChanged()
     }
 
-    override fun startSearch() = startActivity(Intent(context, SearchActivity::class.java))
+    override fun startSearch() {
+        val fragment = SearchFragment()
+
+        activity?.supportFragmentManager?.let {
+            Router.replaceFragment(
+                it,
+                fragment,
+                true,
+                VideoFragment.FRAGMENT_TAG
+            )
+        }
+    }
 
     override fun onSaveInstanceState(outState: Bundle) {
         view_pager?.currentItem?.let {

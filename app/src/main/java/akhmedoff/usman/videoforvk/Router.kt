@@ -52,11 +52,13 @@ object Router {
             fragmentManager.beginTransaction()
                 .setReorderingAllowed(true)
                 .replace(R.id.container, fragment, fragmentTag)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .addToBackStack(null)
                 .commit()
         } else {
             fragmentManager.beginTransaction()
                 .setReorderingAllowed(true)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .replace(R.id.container, fragment, fragmentTag)
                 .commit()
         }
@@ -86,7 +88,7 @@ object Router {
 
         // 3. Enter Transition for New Fragment
         val explodeFade = Explode()
-        explodeFade.duration = 200
+        explodeFade.duration = 300
         fragment.enterTransition = explodeFade
 
         if (addToBackStack) {

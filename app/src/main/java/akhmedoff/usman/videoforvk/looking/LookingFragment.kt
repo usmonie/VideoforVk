@@ -6,10 +6,9 @@ import akhmedoff.usman.data.utils.getCatalogRepository
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.Router
 import akhmedoff.usman.videoforvk.album.AlbumFragment
-import akhmedoff.usman.videoforvk.search.SearchActivity
+import akhmedoff.usman.videoforvk.search.SearchFragment
 import akhmedoff.usman.videoforvk.video.VideoFragment
 import android.arch.paging.PagedList
-import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
@@ -77,7 +76,18 @@ class LookingFragment : Fragment(), LookingContract.View {
         }
     }
 
-    override fun startSearch() = startActivity(Intent(context, SearchActivity::class.java))
+    override fun startSearch() {
+        val fragment = SearchFragment()
+
+        activity?.supportFragmentManager?.let {
+            Router.replaceFragment(
+                it,
+                fragment,
+                true,
+                VideoFragment.FRAGMENT_TAG
+            )
+        }
+    }
 
     override fun showAlbum(album: CatalogItem) {
         val fragment = AlbumFragment.getFragment(album)

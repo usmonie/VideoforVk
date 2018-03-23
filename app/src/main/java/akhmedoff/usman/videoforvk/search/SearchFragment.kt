@@ -3,20 +3,23 @@ package akhmedoff.usman.videoforvk.search
 import akhmedoff.usman.data.model.Video
 import akhmedoff.usman.data.utils.getVideoRepository
 import akhmedoff.usman.videoforvk.R
-import akhmedoff.usman.videoforvk.base.BaseActivity
+import akhmedoff.usman.videoforvk.Router
+import akhmedoff.usman.videoforvk.video.VideoFragment
 import akhmedoff.usman.videoforvk.view.VideosRecyclerAdapter
 import android.arch.paging.PagedList
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
-import kotlinx.android.synthetic.main.activity_search.*
+import kotlinx.android.synthetic.main.fragment_search.*
 
-class SearchActivity : BaseActivity<SearchContract.View, SearchContract.Presenter>(),
-    SearchContract.View {
 
+class SearchFragment : Fragment(), SearchContract.View {
     override lateinit var searchPresenter: SearchContract.Presenter
 
     private val adapter: VideosRecyclerAdapter by lazy {
@@ -24,12 +27,23 @@ class SearchActivity : BaseActivity<SearchContract.View, SearchContract.Presente
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        searchPresenter =
-                SearchPresenter(getVideoRepository(this))
-
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search)
+        searchPresenter =
+                SearchPresenter(this, getVideoRepository(context!!))
 
+
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_search, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         search_recycler.adapter = adapter
 
         search_expanded_edit_text.addTextChangedListener(object : TextWatcher {
@@ -87,7 +101,7 @@ class SearchActivity : BaseActivity<SearchContract.View, SearchContract.Presente
     }
 
     override fun onBackClicked() {
-        onBackPressed()
+        activity?.onBackPressed()
     }
 
     override fun getQueryText() = search_expanded_edit_text.text.toString()
@@ -130,8 +144,15 @@ class SearchActivity : BaseActivity<SearchContract.View, SearchContract.Presente
     }
 
     override fun showVideo(item: Video) {
-//        startActivity(VideoActivity.getActivity(item, this))
-    }
+        val fragment = VideoFragment.getInstance(item)
 
-    override fun initPresenter() = searchPresenter
+        activity?.supportFragmentManager?.let {
+            Router.replaceFragment(
+                it,
+                fragment,
+                true,
+                VideoFragment.FRAGMENT_TAG
+            )
+        }
+    }
 }

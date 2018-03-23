@@ -2,11 +2,12 @@ package akhmedoff.usman.videoforvk.search
 
 import akhmedoff.usman.data.model.Video
 import akhmedoff.usman.videoforvk.base.BaseContract
+import android.arch.lifecycle.LifecycleOwner
 import android.arch.paging.PagedList
 
 interface SearchContract {
 
-    interface View : BaseContract.View {
+    interface View : LifecycleOwner {
         var searchPresenter: Presenter
 
         fun showFoundVideos(videos: PagedList<Video>)
@@ -38,7 +39,7 @@ interface SearchContract {
         fun onBackClicked()
     }
 
-    interface Presenter : BaseContract.Presenter<View> {
+    interface Presenter {
         fun onClick(item: Video)
 
         fun onBackClicked()

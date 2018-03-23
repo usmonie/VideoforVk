@@ -2,11 +2,12 @@ package akhmedoff.usman.videoforvk.profile
 
 import akhmedoff.usman.data.utils.getUserRepository
 import akhmedoff.usman.videoforvk.R
+import akhmedoff.usman.videoforvk.Router
 import akhmedoff.usman.videoforvk.albums.AlbumsFragment
-import akhmedoff.usman.videoforvk.search.SearchActivity
+import akhmedoff.usman.videoforvk.search.SearchFragment
+import akhmedoff.usman.videoforvk.video.VideoFragment
 import akhmedoff.usman.videoforvk.videos.VideosFragment
 import akhmedoff.usman.videoforvk.view.FragmentsViewPagerAdapter
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -114,7 +115,18 @@ class ProfileFragment : Fragment(), ProfileContract.View {
     override fun showLoading(isLoading: Boolean) {
     }
 
-    override fun startSearch() = startActivity(Intent(context, SearchActivity::class.java))
+    override fun startSearch() {
+        val fragment = SearchFragment()
+
+        activity?.supportFragmentManager?.let {
+            Router.replaceFragment(
+                it,
+                fragment,
+                true,
+                VideoFragment.FRAGMENT_TAG
+            )
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -56,6 +56,7 @@ class CatalogFragment : Fragment(),
                 context!!
             )
         )
+        presenter.onCreated()
         val explode = Explode()
         explode.duration = 500
         exitTransition = explode
@@ -81,7 +82,6 @@ class CatalogFragment : Fragment(),
 
         update_catalog_layout.setOnRefreshListener { presenter.refresh() }
 
-        presenter.onCreated()
     }
 
     override fun showList(videos: PagedList<CatalogItem>) = adapter.submitList(videos)
@@ -124,11 +124,11 @@ class CatalogFragment : Fragment(),
         ).show()
 
     override fun showLoading() {
-        update_catalog_layout.isRefreshing = true
+        update_catalog_layout?.isRefreshing = true
     }
 
     override fun hideLoading() {
-        update_catalog_layout.isRefreshing = false
+        update_catalog_layout?.isRefreshing = false
     }
 
     override fun showErrorLoading() =
