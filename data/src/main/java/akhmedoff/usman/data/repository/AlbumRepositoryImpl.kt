@@ -36,8 +36,8 @@ class AlbumRepositoryImpl(
         val pagedListConfig = PagedList.Config.Builder()
             .setEnablePlaceholders(false)
             .setPageSize(10)
-            .setPrefetchDistance(20)
-            .setInitialLoadSizeHint(10)
+            .setPrefetchDistance(8)
+            .setInitialLoadSizeHint(50)
             .build()
 
         val sourceFactory = AlbumsDataSourceFactory(

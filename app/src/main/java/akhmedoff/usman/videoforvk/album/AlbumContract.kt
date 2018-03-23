@@ -2,12 +2,12 @@ package akhmedoff.usman.videoforvk.album
 
 import akhmedoff.usman.data.Error
 import akhmedoff.usman.data.model.Video
-import akhmedoff.usman.videoforvk.base.BaseContract
+import android.arch.lifecycle.LifecycleOwner
 import android.arch.paging.PagedList
 
 interface AlbumContract {
 
-    interface View : BaseContract.View {
+    interface View : LifecycleOwner {
         var albumPresenter: Presenter
 
         fun showVideos(items: PagedList<Video>)
@@ -27,7 +27,9 @@ interface AlbumContract {
         fun getAlbumTitle(): String?
     }
 
-    interface Presenter : BaseContract.Presenter<View> {
+    interface Presenter {
+        fun onCreated()
+
         fun clickVideo(video: Video)
 
         fun clickAdd()

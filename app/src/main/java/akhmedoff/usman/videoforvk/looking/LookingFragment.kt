@@ -5,7 +5,7 @@ import akhmedoff.usman.data.model.CatalogItem
 import akhmedoff.usman.data.utils.getCatalogRepository
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.Router
-import akhmedoff.usman.videoforvk.album.AlbumActivity
+import akhmedoff.usman.videoforvk.album.AlbumFragment
 import akhmedoff.usman.videoforvk.search.SearchActivity
 import akhmedoff.usman.videoforvk.video.VideoFragment
 import android.arch.paging.PagedList
@@ -79,8 +79,18 @@ class LookingFragment : Fragment(), LookingContract.View {
 
     override fun startSearch() = startActivity(Intent(context, SearchActivity::class.java))
 
-    override fun showAlbum(album: CatalogItem) =
-        startActivity(AlbumActivity.getActivity(album, context!!))
+    override fun showAlbum(album: CatalogItem) {
+        val fragment = AlbumFragment.getFragment(album)
+
+        activity?.supportFragmentManager?.let {
+            Router.replaceFragment(
+                it,
+                fragment,
+                true,
+                VideoFragment.FRAGMENT_TAG
+            )
+        }
+    }
 
     override fun showLoading() {
         update_looking_layout.isRefreshing = true

@@ -3,6 +3,9 @@ package akhmedoff.usman.videoforvk.albums
 import akhmedoff.usman.data.model.Album
 import akhmedoff.usman.data.utils.getAlbumRepository
 import akhmedoff.usman.videoforvk.R
+import akhmedoff.usman.videoforvk.Router
+import akhmedoff.usman.videoforvk.album.AlbumFragment
+import akhmedoff.usman.videoforvk.video.VideoFragment
 import akhmedoff.usman.videoforvk.view.MarginItemDecorator
 import android.arch.paging.PagedList
 import android.os.Bundle
@@ -55,7 +58,7 @@ class AlbumsFragment : Fragment(), AlbumsContract.View {
                 resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin)
             )
         )
-
+        update_catalog_layout.setOnRefreshListener { presenter.refresh() }
         presenter.onCreated()
     }
 
@@ -66,7 +69,16 @@ class AlbumsFragment : Fragment(), AlbumsContract.View {
     }
 
     override fun showAlbum(item: Album) {
+        val fragment = AlbumFragment.getFragment(item)
 
+        activity?.supportFragmentManager?.let {
+            Router.replaceFragment(
+                it,
+                fragment,
+                true,
+                VideoFragment.FRAGMENT_TAG
+            )
+        }
     }
 
     override fun showErrorLoading() {

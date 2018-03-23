@@ -61,10 +61,6 @@
             android:theme="@style/LoginTheme" />
 
         <activity
-            android:name=".album.AlbumActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation" />
-
-        <activity
             android:name=".search.SearchActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation" />
     </application>

@@ -3,21 +3,19 @@ package akhmedoff.usman.videoforvk.album
 import akhmedoff.usman.data.Error
 import akhmedoff.usman.data.model.Video
 import akhmedoff.usman.data.repository.AlbumRepository
-import akhmedoff.usman.videoforvk.base.BasePresenter
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.OnLifecycleEvent
 import android.arch.paging.PagedList
 
-class AlbumPresenter(private val albumRepository: AlbumRepository) :
-    BasePresenter<AlbumContract.View>(), AlbumContract.Presenter {
+class AlbumPresenter(private var view: AlbumContract.View?, private val albumRepository: AlbumRepository) :
+    AlbumContract.Presenter {
 
     override fun error(error: Error, message: String) {
 
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    fun onStart() {
+    override fun onCreated() {
         loadAlbum()
         loadAlbumVideos()
     }

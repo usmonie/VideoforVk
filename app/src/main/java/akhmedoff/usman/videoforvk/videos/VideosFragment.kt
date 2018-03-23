@@ -62,6 +62,8 @@ class VideosFragment : Fragment(), VideosContract.View {
                 resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin)
             )
         )
+        update_catalog_layout.setOnRefreshListener { presenter.refresh() }
+
 
         presenter.onCreated()
 

@@ -30,5 +30,6 @@ class AlbumsPresenter(
     }
 
     override fun onItemClicked(item: Album) {
+        view?.showAlbum(item)
     }
 }

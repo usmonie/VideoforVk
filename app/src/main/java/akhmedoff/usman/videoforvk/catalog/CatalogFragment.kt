@@ -5,14 +5,13 @@ import akhmedoff.usman.data.model.CatalogItemType
 import akhmedoff.usman.data.utils.getCatalogRepository
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.Router
-import akhmedoff.usman.videoforvk.album.AlbumActivity
+import akhmedoff.usman.videoforvk.album.AlbumFragment
 import akhmedoff.usman.videoforvk.video.VideoFragment
 import akhmedoff.usman.videoforvk.view.MarginItemDecorator
 import android.arch.paging.PagedList
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.transition.Explode
-import android.support.transition.Fade
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
 import android.view.LayoutInflater
@@ -101,8 +100,19 @@ class CatalogFragment : Fragment(),
         }
     }
 
-    override fun showAlbum(album: CatalogItem, view: View) =
-        startActivity(AlbumActivity.getActivity(album, context!!))
+    override fun showAlbum(album: CatalogItem, view: View) {
+        val fragment = AlbumFragment.getFragment(album)
+
+        activity?.supportFragmentManager?.let {
+            Router.replaceFragment(
+                it,
+                fragment,
+                true,
+                VideoFragment.FRAGMENT_TAG,
+                view
+            )
+        }
+    }
 
     override fun getPageCategory() = arguments?.getString(PAGE_CATEGORY) ?: ""
 

@@ -17,7 +17,7 @@ class AlbumsDataSource(
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Album>) {
         val apiSource = vkApi.getAlbums(
             ownerId = ownerId?.toString(),
-            count = 20,
+            count = params.requestedLoadSize.toLong(),
             offset = 0
         )
 
@@ -35,8 +35,8 @@ class AlbumsDataSource(
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Album>) {
         vkApi.getAlbums(
             ownerId = ownerId?.toString(),
-            count = 10,
-            offset = 0
+            count = params.loadSize.toLong(),
+            offset = params.startPosition.toLong()
         ).enqueue(object : Callback<ApiResponse<AlbumsResponse>> {
             override fun onFailure(call: Call<ApiResponse<AlbumsResponse>>?, t: Throwable?) {
                 Log.e(javaClass.simpleName, "ERROR: " + t.toString())

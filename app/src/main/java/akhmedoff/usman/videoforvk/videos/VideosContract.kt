@@ -29,6 +29,8 @@ interface VideosContract {
 
         fun onDestroyed()
 
+        fun refresh()
+
         fun onVideoClicked(item: Video)
     }
 }

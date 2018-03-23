@@ -9,7 +9,9 @@ class VideosPresenter(
     private val videoRepository: VideoRepository
 ) : VideosContract.Presenter {
 
-    override fun onCreated() {
+    override fun onCreated() = refresh()
+
+    override fun refresh() {
         view?.let { view ->
             view.showLoading(true)
             videoRepository
