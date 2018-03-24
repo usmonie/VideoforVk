@@ -21,12 +21,12 @@
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
+            android:ellipsize="end"
             android:fontFamily="sans-serif"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:ellipsize="end"
             tools:text="@tools:sample/lorem" />
 
         <LinearLayout
@@ -45,10 +45,10 @@
                 tools:text="@tools:sample/date/hhmm" />
 
             <TextView
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:id="@+id/video_views"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
                 app:layout_constraintStart_toEndOf="@+id/video_date"
                 app:layout_constraintTop_toBottomOf="@+id/video_title"
                 tools:text="70k views" />
@@ -71,7 +71,7 @@
             app:layout_constraintStart_toStartOf="@+id/video_title"
             app:layout_constraintTop_toBottomOf="@+id/video_views"
             tools:text="@tools:sample/lorem/random" />
-        
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -85,17 +85,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:visibility="gone"
+                android:adjustViewBounds="false"
                 android:background="?attr/selectableItemBackgroundBorderless"
+                android:cropToPadding="false"
                 app:srcCompat="@drawable/ic_favorite_border" />
 
             <ImageView
                 android:id="@+id/share_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:layout_weight="1"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/like_button"
                 app:srcCompat="@drawable/ic_share" />
@@ -106,6 +107,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_weight="1"
+                android:visibility="gone"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -117,6 +119,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_weight="1"
+                android:visibility="gone"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/send_button"

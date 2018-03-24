@@ -8,6 +8,7 @@ import akhmedoff.usman.data.model.VideoUrl
 import akhmedoff.usman.data.utils.getUserRepository
 import akhmedoff.usman.data.utils.getVideoRepository
 import akhmedoff.usman.videoforvk.App
+import akhmedoff.usman.videoforvk.CaptchaDialog
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.player.AudioFocusListener
 import akhmedoff.usman.videoforvk.player.SimpleControlDispatcher
@@ -22,12 +23,11 @@ import android.os.Bundle
 import android.support.annotation.DrawableRes
 import android.support.annotation.RequiresApi
 import android.support.design.widget.Snackbar
-import android.support.transition.Explode
-import android.support.transition.TransitionInflater
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Rational
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -61,6 +61,8 @@ class VideoFragment : Fragment(), VideoContract.View {
         private const val VIDEO_QUALITY_KEY = "video_quality"
         private const val VIDEO_QUALITIES_KEY = "video_qualities"
 
+        private const val CAPTCHA_SID = "captcha_sid"
+
         fun getInstance(item: Item): Fragment {
             val fragment = VideoFragment()
             val bundle = Bundle()
@@ -92,6 +94,12 @@ class VideoFragment : Fragment(), VideoContract.View {
     private lateinit var adapter: VideoInfoRecyclerAdapter
 
     private var mediaSource: MediaSource? = null
+
+    private val captchaDialog: CaptchaDialog by lazy {
+        CaptchaDialog(context!!, {
+            presenter.enterCaptcha(it)
+        })
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -163,7 +171,10 @@ class VideoFragment : Fragment(), VideoContract.View {
             )
         )
 
-        adapter = VideoInfoRecyclerAdapter { presenter.onClick(it) }
+        adapter = VideoInfoRecyclerAdapter {
+
+            presenter.onClick(it.id)
+        }
         video_info_recycler.adapter = adapter
         video_info_recycler.layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -284,9 +295,10 @@ class VideoFragment : Fragment(), VideoContract.View {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun enterPipMode() {
+    override fun enterPipMode(video: Video) {
         activity?.enterPictureInPictureMode(
             PictureInPictureParams.Builder()
+                .setAspectRatio(Rational(video.width ?: 16, video.height ?: 9))
                 .build()
         )
     }
@@ -353,7 +365,12 @@ class VideoFragment : Fragment(), VideoContract.View {
     override fun setUnliked() {
     }
 
-    override fun showShareDialog() {
+    override fun showShareDialog(url: String) {
+        val sendIntent = Intent()
+        sendIntent.action = Intent.ACTION_SEND
+        sendIntent.putExtra(Intent.EXTRA_TEXT, url)
+        sendIntent.type = "text/plain"
+        startActivity(Intent.createChooser(sendIntent, resources.getText(R.string.send_to)))
     }
 
     override fun hideShareDialog() {
@@ -407,7 +424,6 @@ class VideoFragment : Fragment(), VideoContract.View {
 
     override fun saveVideoPosition(position: Long) {
         arguments?.putLong(VIDEO_POSITION_KEY, position)
-
     }
 
     override fun saveIsFullscreen(isFullscreen: Boolean) {
@@ -424,5 +440,18 @@ class VideoFragment : Fragment(), VideoContract.View {
 
     override fun saveCurrentQuality(quality: Int) {
         arguments?.putInt(VIDEO_QUALITY_KEY, quality)
+    }
+
+    override fun showCaptcha(captchaImg: String) {
+        captchaDialog.show()
+        captchaDialog.loadCaptcha(captchaImg)
+    }
+
+    override fun saveCaptchaSid(sid: String) {
+        arguments?.putString(CAPTCHA_SID, sid)
+    }
+
+    override fun loadCaptchaSid(): String {
+        return arguments?.getString(CAPTCHA_SID) ?: ""
     }
 }

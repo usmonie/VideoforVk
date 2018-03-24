@@ -1,15 +1,15 @@
 package akhmedoff.usman.videoforvk.video
 
 import akhmedoff.usman.data.Error
-import akhmedoff.usman.data.model.ApiResponse
+import akhmedoff.usman.data.model.*
 import akhmedoff.usman.data.model.Quality.*
-import akhmedoff.usman.data.model.ResponseVideo
-import akhmedoff.usman.data.model.User
-import akhmedoff.usman.data.model.Video
 import akhmedoff.usman.data.repository.UserRepository
 import akhmedoff.usman.data.repository.VideoRepository
+import akhmedoff.usman.data.utils.gson
+import akhmedoff.usman.videoforvk.R
 import android.arch.lifecycle.Observer
 import android.util.Log
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -44,21 +44,35 @@ class VideoPresenter(
     }
 
     override fun onClick(id: Int) {
+        when (id) {
+            R.id.like_button -> likeCurrentVideo()
+            R.id.share_button -> shareCurrentVideo()
+            R.id.add_button -> addCurrentVideo()
+        }
+    }
+
+    private fun addCurrentVideo() {
+
+    }
+
+    private fun shareCurrentVideo() {
+        view?.showShareDialog("https://vk.com/video?z=video${video.ownerId}_${video.id}")
+    }
+
+    private fun likeCurrentVideo() {
+        likeVideo(video.ownerId.toString(), video.id.toString(), null, null)
     }
 
     override fun changeQuality() {
         view?.saveVideoPosition(view?.getVideoPosition() ?: 0)
 
-        view?.let {
-            if (video.files.size - 1 > it.getCurrentQuality()) {
-                changeQuality(it.getCurrentQuality() + 1)
+        view?.let { view ->
+            if (video.files.size - 1 > view.getCurrentQuality()) {
+                changeQuality(view.getCurrentQuality() + 1)
             } else {
-                changeQuality(video.files.size - it.getCurrentQuality())
+                changeQuality(video.files.size - view.getCurrentQuality())
             }
-
         }
-
-
     }
 
     private fun changeQuality(index: Int) {
@@ -67,6 +81,20 @@ class VideoPresenter(
         view?.saveCurrentQuality(index)
 
         view?.setVideoPosition(view?.loadVideoPosition() ?: 0)
+    }
+
+    private fun errorConvert(response: ResponseBody) {
+        val auth = gson.fromJson<Auth>(response.string(), Auth::class.java)
+
+        when (auth.error) {
+            Error.NEED_CAPTCHA -> {
+                view?.saveCaptchaSid(auth.captchaSid!!)
+                view?.showCaptcha(auth.captchaImg!!)
+            }
+
+            else -> {
+            }
+        }
     }
 
     override fun loadVideo(id: String) {
@@ -234,7 +262,7 @@ class VideoPresenter(
 
     override fun pipToggleButton() {
         view?.hideUi()
-        view?.enterPipMode()
+        view?.enterPipMode(video)
     }
 
     override fun liked() {
@@ -251,6 +279,48 @@ class VideoPresenter(
             videoRepository.getOwner()
                 .observe(view, Observer { owner -> owner?.let { view.showOwnerGroup(it) } })
         }
+    }
 
+    override fun enterCaptcha(captchaCode: String) {
+        view?.let {
+            if (captchaCode.trim().isEmpty()) return
+
+            videoRepository.likeVideo(
+                video.ownerId.toString(),
+                video.id.toString(),
+                it.loadCaptchaSid(),
+                captchaCode
+            )
+        }
+    }
+
+    private fun likeVideo(
+        ownerId: String?,
+        itemId: String,
+        captchaSid: String?,
+        captchaCode: String?
+    ) {
+        videoRepository
+            .likeVideo(ownerId, itemId, captchaSid, captchaCode)
+            .enqueue(object : Callback<ApiResponse<Likes>> {
+                override fun onFailure(call: Call<ApiResponse<Likes>>?, t: Throwable?) {
+                    view?.setUnliked()
+                }
+
+                override fun onResponse(
+                    call: Call<ApiResponse<Likes>>?,
+                    response: Response<ApiResponse<Likes>>?
+                ) {
+                    response?.body()?.let {
+                        view?.setLiked()
+                    }
+                    response?.errorBody()?.let {
+                        errorConvert(it)
+                        view?.setUnliked()
+                    }
+
+                }
+
+            })
     }
 }

@@ -7,9 +7,10 @@ import akhmedoff.usman.videoforvk.view.holders.VideoInfoViewHolder
 import akhmedoff.usman.videoforvk.view.holders.VideoOwnerViewHolder
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 
-class VideoInfoRecyclerAdapter(private val clickListener: (Int) -> Unit) :
+class VideoInfoRecyclerAdapter(private val clickListener: (View) -> Unit) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var video: Video? = null
         set(value) {
@@ -49,7 +50,7 @@ class VideoInfoRecyclerAdapter(private val clickListener: (Int) -> Unit) :
                     false
                 )
             )
-        }.apply { itemView.setOnClickListener { clickListener(it.id) } }
+        }.apply { itemView.setOnClickListener { clickListener(it) } }
 
     override fun getItemViewType(position: Int) = when (position) {
         0 -> R.layout.video_info_item

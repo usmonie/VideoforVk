@@ -11,7 +11,7 @@ import android.content.Context
 
 @Database(
     entities = [Owner::class, Video::class, Album::class, CatalogItem::class],
-    version = 8,
+    version = 9,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

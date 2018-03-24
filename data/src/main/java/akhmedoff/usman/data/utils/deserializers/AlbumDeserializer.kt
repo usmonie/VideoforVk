@@ -20,7 +20,7 @@ class AlbumDeserializer : JsonDeserializer<Album> {
         jsonObject["id"]?.asJsonPrimitive?.asInt?.let { album.id = it }
         jsonObject["owner_id"]?.asJsonPrimitive?.asInt?.let { album.ownerId = it }
         jsonObject["title"]?.asJsonPrimitive?.asString?.let { album.title = it }
-        jsonObject["count"]?.asJsonPrimitive?.asInt?.let { album.count = it }
+        jsonObject["likes"]?.asJsonPrimitive?.asInt?.let { album.count = it }
         jsonObject["photo_320"]?.asJsonPrimitive?.asString?.let { album.photo320 = it }
 
         return album

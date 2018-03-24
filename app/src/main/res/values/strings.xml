@@ -64,5 +64,6 @@
     <string name="video_quality_title_720p">720</string>
     <string name="video_quality_title_1080p">1080</string>
     <string name="video_quality_title_hls">Auto</string>
+    <string name="send_to">Send to</string>
 
 </resources>

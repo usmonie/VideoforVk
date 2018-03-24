@@ -29,7 +29,7 @@ interface VideoContract {
 
         fun showSmallScreen()
 
-        fun enterPipMode()
+        fun enterPipMode(video: Video)
 
         fun exitPipMode()
 
@@ -79,9 +79,11 @@ interface VideoContract {
 
         fun setUnliked()
 
-        fun showShareDialog()
+        fun showShareDialog(url: String)
 
         fun hideShareDialog()
+
+        fun showCaptcha(captchaImg: String)
 
         fun showSendDialog()
 
@@ -110,6 +112,10 @@ interface VideoContract {
         fun saveCurrentQuality(quality: Int)
 
         fun setQuality(videoUrl: VideoUrl)
+
+        fun saveCaptchaSid(sid: String)
+
+        fun loadCaptchaSid(): String
 
     }
 
@@ -150,6 +156,8 @@ interface VideoContract {
         fun ownerClicked()
 
         fun changeQuality()
+
+        fun enterCaptcha(captchaCode: String)
 
     }
 }

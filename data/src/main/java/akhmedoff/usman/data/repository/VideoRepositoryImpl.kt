@@ -4,9 +4,7 @@ import akhmedoff.usman.data.api.VkApi
 import akhmedoff.usman.data.db.OwnerDao
 import akhmedoff.usman.data.db.VideoDao
 import akhmedoff.usman.data.local.UserSettings
-import akhmedoff.usman.data.model.Owner
-import akhmedoff.usman.data.model.ResponseVideo
-import akhmedoff.usman.data.model.Video
+import akhmedoff.usman.data.model.*
 import akhmedoff.usman.data.repository.source.videos.SearchDataSourceFactory
 import akhmedoff.usman.data.repository.source.videos.VideosDataSourceFactory
 import android.arch.lifecycle.LiveData
@@ -91,10 +89,20 @@ class VideoRepositoryImpl(
     }
 
 
-    /*fun followOwner(id: Long): Call<ApiResponse<Boolean>> =
-        return when {
-            id < 0 -> vkApi.joinGroup(id)
-            else ->
-        }*/
+    /* fun followOwner(id: Long): Call<ApiResponse<Boolean>> =
+         return when {
+             id < 0 -> vkApi.joinGroup(id)
+             else -> vkApi.
+         }*/
+
+
+    override fun likeVideo(
+        ownerId: String?,
+        itemId: String,
+        captchaSid: String?,
+        captchaCode: String?
+    ): Call<ApiResponse<Likes>> {
+        return vkApi.like("video", ownerId, itemId, captchaSid, captchaCode)
+    }
 
 }

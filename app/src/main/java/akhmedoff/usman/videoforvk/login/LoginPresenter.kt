@@ -77,12 +77,12 @@ class LoginPresenter(
                         if (view.isDialogShows()) view.hideDialogLoading()
                     }
 
-                    override fun onResponse(call: Call<Auth>, response: Response<Auth>) {
+                    override fun onResponse(call: Call<Auth>?, response: Response<Auth>?) {
                         view.hideProgress()
                         view.setButtonEnabled(enabled = true)
                         view.editTextEditable(editable = true)
 
-                        response.body()?.let { auth ->
+                        response?.body()?.let { auth ->
                             if (auth.isSuccessful) {
                                 repository.saveToken(auth.accessToken!!)
                                 repository.saveCurrentUser(auth.userId!!)
@@ -94,7 +94,7 @@ class LoginPresenter(
 
                         if (view.isDialogShows()) view.hideDialogLoading()
 
-                        response.errorBody()?.let { errorConvert(it) }
+                        response?.errorBody()?.let { errorConvert(it) }
                     }
                 })
         }

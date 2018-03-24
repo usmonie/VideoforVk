@@ -54,7 +54,7 @@ class VideoDeserializer : JsonDeserializer<ResponseVideo> {
             likesJson?.let {
                 val likes = Likes()
                 likes.userLikes = it["user_likes"].asJsonPrimitive.asBoolean
-                likes.count = it["count"].asJsonPrimitive.asInt
+                likes.likes = it["count"].asJsonPrimitive.asInt
 
                 item.likes = likes
             }

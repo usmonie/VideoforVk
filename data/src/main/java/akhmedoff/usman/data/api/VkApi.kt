@@ -23,7 +23,7 @@ interface VkApi {
         @Query("owner_id") ownerId: String?,
         @Query("videos") videos: String?,
         @Query("album_id") albumId: String?,
-        @Query("count") count: Int,
+        @Query("likes") count: Int,
         @Query("offset") offset: Long,
         @Query("extended") extended: Boolean = true
     ): Call<ResponseVideo>
@@ -38,13 +38,13 @@ interface VkApi {
     fun getAlbums(
         @Query("owner_id") ownerId: String?,
         @Query("offset") offset: Long,
-        @Query("count") count: Long,
+        @Query("likes") count: Long,
         @Query("extended") extended: Int = 1
     ): Call<ApiResponse<AlbumsResponse>>
 
     @GET("video.getCatalog")
     fun getCatalog(
-        @Query("count") count: Int,
+        @Query("likes") count: Int,
         @Query("items_count") itemsCount: Int,
         @Query("from") from: String? = null,
         @Query("filters") filters: String
@@ -107,8 +107,17 @@ interface VkApi {
     fun getCatalogSection(
         @Query("section_id") section_id: String,
         @Query("from") from: String,
-        @Query("count") count: Int,
+        @Query("likes") count: Int,
         @Query("extended") extended: Boolean = true
     ): Call<ResponseCatalog>
+
+    @GET("likes.add")
+    fun like(
+        @Query("type") type: String,
+        @Query("owner_id") ownerId: String?,
+        @Query("item_id") itemId: String,
+        @Query("captcha_sid") captchaSid: String?,
+        @Query("captcha_key")captchaKey: String?
+    ): Call<ApiResponse<Likes>>
 
 }

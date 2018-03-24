@@ -1,8 +1,6 @@
 package akhmedoff.usman.data.repository
 
-import akhmedoff.usman.data.model.Owner
-import akhmedoff.usman.data.model.ResponseVideo
-import akhmedoff.usman.data.model.Video
+import akhmedoff.usman.data.model.*
 import android.arch.lifecycle.LiveData
 import android.arch.paging.PagedList
 import retrofit2.Call
@@ -35,4 +33,12 @@ interface VideoRepository {
         longer: Long?,
         shorter: Long?
     ): LiveData<PagedList<Video>>
+
+    fun likeVideo(
+        ownerId: String? = null,
+        itemId: String,
+        captchaSid: String? = null,
+        captchaCode: String? = null
+    ): Call<ApiResponse<Likes>>
+
 }
