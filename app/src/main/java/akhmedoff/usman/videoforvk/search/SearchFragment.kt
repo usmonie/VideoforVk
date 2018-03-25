@@ -30,8 +30,6 @@ class SearchFragment : Fragment(), SearchContract.View {
         super.onCreate(savedInstanceState)
         searchPresenter =
                 SearchPresenter(this, getVideoRepository(context!!))
-
-
     }
 
     override fun onCreateView(
@@ -57,6 +55,8 @@ class SearchFragment : Fragment(), SearchContract.View {
                 searchPresenter.search()
             }
         })
+
+        adult_filter.isChecked = true
 
         search_expanded_back_button.setOnClickListener { searchPresenter.onBackClicked() }
 
@@ -112,8 +112,8 @@ class SearchFragment : Fragment(), SearchContract.View {
     }
 
     override fun getAdultFilter() = when {
-        adult_filter.isChecked -> 1
-        else -> 0
+        adult_filter.isChecked -> 0
+        else -> 1
     }
 
     override fun getSortFilter() = sort.selectedItemPosition

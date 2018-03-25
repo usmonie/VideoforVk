@@ -120,4 +120,13 @@ interface VkApi {
         @Query("captcha_key")captchaKey: String?
     ): Call<ApiResponse<Likes>>
 
+    @GET("likes.delete")
+    fun unlike(
+        @Query("type") type: String,
+        @Query("owner_id") ownerId: String?,
+        @Query("item_id") itemId: String,
+        @Query("captcha_sid") captchaSid: String?,
+        @Query("captcha_key") captchaKey: String?
+    ): Call<ApiResponse<Likes>>
+
 }

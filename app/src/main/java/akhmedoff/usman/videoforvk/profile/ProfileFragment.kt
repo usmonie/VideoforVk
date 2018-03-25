@@ -54,22 +54,21 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_profile, container, false)
-    }
+    ): View? = inflater.inflate(R.layout.fragment_profile, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view_pager.offscreenPageLimit = 2
         view_pager.adapter = pagesPagerAdapter
         tabs.setupWithViewPager(view_pager)
+        presenter.onViewCreated()
 
         search_box_collapsed.setOnClickListener { presenter.onSearchClicked() }
     }
 
     override fun onStart() {
         super.onStart()
-        presenter.onViewCreated()
+        presenter.view = this
     }
 
     override fun showUserName(name: String) {

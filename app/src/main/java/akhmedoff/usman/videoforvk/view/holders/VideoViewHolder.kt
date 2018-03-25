@@ -26,6 +26,7 @@ class VideoViewHolder(private val picasso: Picasso, itemView: View) :
         picasso
             .load(imageUri)
             .config(Bitmap.Config.RGB_565)
+            .centerCrop()
             .fit()
             .into(videoFrame)
 

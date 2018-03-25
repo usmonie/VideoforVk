@@ -34,17 +34,14 @@ class ProfilePresenter(
                         t: Throwable?
                     ) {
                         view.showLoading(false)
-
                         val name = userRepository.getUserName()
 
                         if (name != null) {
-
                             view.showUserName(name)
                             userRepository.getUserPhotoUrl()?.let { view.showUserPhoto(it) }
 
                             view.showTabs()
                         } else {
-
                             t?.message?.let {
                                 view.showError(it)
                                 Log.e(javaClass.simpleName, it)

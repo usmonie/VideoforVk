@@ -17,10 +17,10 @@ class LookingPresenter(
             view.showLoading()
             catalogRepository
                 .getCatalog("other")
-                .observe(view, Observer {
-                    if (it != null && it.size > 0) {
+                .observe(view, Observer { catalogs ->
+                    if (catalogs != null && catalogs.size > 0) {
                         view.hideLoading()
-                        view.setList(it)
+                        view.setList(catalogs)
                     } else {
                         view.hideLoading()
                         view.showErrorLoading()

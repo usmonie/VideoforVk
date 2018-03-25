@@ -43,9 +43,15 @@ class VideoPresenter(
         view?.saveVideoPosition(view?.getVideoPosition() ?: 0)
     }
 
-    override fun onClick(id: Int) {
-        when (id) {
-            R.id.like_button -> likeCurrentVideo()
+    override fun onClick(itemView: Int) {
+        when (itemView) {
+            R.id.like_button ->
+                if (video.likes?.userLikes == false)
+                    likeCurrentVideo()
+                else {
+                    unlikeCurrentVideo()
+                }
+
             R.id.share_button -> shareCurrentVideo()
             R.id.add_button -> addCurrentVideo()
         }
@@ -61,6 +67,73 @@ class VideoPresenter(
 
     private fun likeCurrentVideo() {
         likeVideo(video.ownerId.toString(), video.id.toString(), null, null)
+    }
+
+    private fun likeVideo(
+        ownerId: String?,
+        itemId: String,
+        captchaSid: String?,
+        captchaCode: String?
+    ) {
+        videoRepository
+            .likeVideo(ownerId, itemId, captchaSid, captchaCode)
+            .enqueue(object : Callback<ApiResponse<Likes>> {
+                override fun onFailure(call: Call<ApiResponse<Likes>>?, t: Throwable?) {
+                    video.likes?.let { view?.setUnliked(it) }
+                }
+
+                override fun onResponse(
+                    call: Call<ApiResponse<Likes>>?,
+                    response: Response<ApiResponse<Likes>>?
+                ) {
+                    response?.body()?.let {
+                        video.likes?.userLikes = true
+                        video.likes?.let { view?.setLiked(it) }
+
+                    }
+                    response?.errorBody()?.let {
+                        errorConvert(it)
+                        video.likes?.let { view?.setUnliked(it) }
+                    }
+
+                }
+
+            })
+    }
+
+    private fun unlikeCurrentVideo() {
+        unlikeVideo(video.ownerId.toString(), video.id.toString(), null, null)
+    }
+
+    private fun unlikeVideo(
+        ownerId: String?,
+        itemId: String,
+        captchaSid: String?,
+        captchaCode: String?
+    ) {
+        videoRepository
+            .unlikeVideo(ownerId, itemId, captchaSid, captchaCode)
+            .enqueue(object : Callback<ApiResponse<Likes>> {
+                override fun onFailure(call: Call<ApiResponse<Likes>>?, t: Throwable?) {
+                    video.likes?.let { view?.setLiked(it) }
+                }
+
+                override fun onResponse(
+                    call: Call<ApiResponse<Likes>>?,
+                    response: Response<ApiResponse<Likes>>?
+                ) {
+                    response?.body()?.let {
+                        video.likes?.userLikes = false
+                        video.likes?.let { view?.setUnliked(it) }
+                    }
+                    response?.errorBody()?.let {
+                        errorConvert(it)
+                        video.likes?.let { view?.setLiked(it) }
+                    }
+
+                }
+
+            })
     }
 
     override fun changeQuality() {
@@ -247,7 +320,8 @@ class VideoPresenter(
     override fun onStop() {
         view?.pauseVideo()
         view?.getVideoState()?.let { isStartedVideo -> view?.saveVideoState(isStartedVideo) }
-        view?.getVideoPosition()?.let { videoPosition -> view?.saveVideoPosition(videoPosition) }
+        view?.getVideoPosition()
+            ?.let { videoPosition -> view?.saveVideoPosition(videoPosition) }
         view?.stopAudioFocusListener()
     }
 
@@ -294,33 +368,11 @@ class VideoPresenter(
         }
     }
 
-    private fun likeVideo(
-        ownerId: String?,
-        itemId: String,
-        captchaSid: String?,
-        captchaCode: String?
-    ) {
-        videoRepository
-            .likeVideo(ownerId, itemId, captchaSid, captchaCode)
-            .enqueue(object : Callback<ApiResponse<Likes>> {
-                override fun onFailure(call: Call<ApiResponse<Likes>>?, t: Throwable?) {
-                    view?.setUnliked()
-                }
-
-                override fun onResponse(
-                    call: Call<ApiResponse<Likes>>?,
-                    response: Response<ApiResponse<Likes>>?
-                ) {
-                    response?.body()?.let {
-                        view?.setLiked()
-                    }
-                    response?.errorBody()?.let {
-                        errorConvert(it)
-                        view?.setUnliked()
-                    }
-
-                }
-
-            })
+    override fun onBackListener() {
+        if (view?.loadIsFullscreen() == true) {
+            clickFullscreen()
+        } else {
+            view?.back()
+        }
     }
 }

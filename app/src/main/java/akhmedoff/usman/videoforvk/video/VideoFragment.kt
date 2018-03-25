@@ -1,10 +1,7 @@
 package akhmedoff.usman.videoforvk.video
 
-import akhmedoff.usman.data.model.Item
-import akhmedoff.usman.data.model.Owner
+import akhmedoff.usman.data.model.*
 import akhmedoff.usman.data.model.Quality.*
-import akhmedoff.usman.data.model.Video
-import akhmedoff.usman.data.model.VideoUrl
 import akhmedoff.usman.data.utils.getUserRepository
 import akhmedoff.usman.data.utils.getVideoRepository
 import akhmedoff.usman.videoforvk.App
@@ -127,7 +124,7 @@ class VideoFragment : Fragment(), VideoContract.View {
         exo_quality_toggle.setOnClickListener { presenter.changeQuality() }
 
         exo_arrow_back.setOnClickListener {
-            activity?.supportFragmentManager?.popBackStack()
+            presenter.onBackListener()
         }
 
         file = File("${context!!.filesDir.parent}/cache")
@@ -172,8 +169,7 @@ class VideoFragment : Fragment(), VideoContract.View {
         )
 
         adapter = VideoInfoRecyclerAdapter {
-
-            presenter.onClick(it.id)
+            onRecyclerItemClicked(it)
         }
         video_info_recycler.adapter = adapter
         video_info_recycler.layoutManager =
@@ -188,6 +184,11 @@ class VideoFragment : Fragment(), VideoContract.View {
     override fun onStop() {
         super.onStop()
         presenter.onStop()
+    }
+
+
+    private fun onRecyclerItemClicked(it: Int) {
+        presenter.onClick(it)
     }
 
     override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean) =
@@ -262,6 +263,7 @@ class VideoFragment : Fragment(), VideoContract.View {
         }
 
     override fun showFullscreen(video: Video) {
+        video_layout.fitsSystemWindows = false
         activity?.window?.decorView?.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -270,8 +272,9 @@ class VideoFragment : Fragment(), VideoContract.View {
                 or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
     }
 
-
     override fun showSmallScreen() {
+        video_layout.fitsSystemWindows = true
+
         activity?.window?.decorView?.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
@@ -309,7 +312,7 @@ class VideoFragment : Fragment(), VideoContract.View {
         video_exo_player?.showController()
     }
 
-    override fun isPipMode(): Boolean =
+    override fun isPipMode() =
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && activity?.isInPictureInPictureMode ?: false
 
     override fun hideUi() {
@@ -359,10 +362,12 @@ class VideoFragment : Fragment(), VideoContract.View {
         appbar.requestLayout()
     }
 
-    override fun setLiked() {
+    override fun setLiked(likes: Likes) {
+        adapter.notifyItemChanged(0, likes)
     }
 
-    override fun setUnliked() {
+    override fun setUnliked(likes: Likes) {
+        adapter.notifyItemChanged(0, likes)
     }
 
     override fun showShareDialog(url: String) {
@@ -451,7 +456,9 @@ class VideoFragment : Fragment(), VideoContract.View {
         arguments?.putString(CAPTCHA_SID, sid)
     }
 
-    override fun loadCaptchaSid(): String {
-        return arguments?.getString(CAPTCHA_SID) ?: ""
+    override fun loadCaptchaSid(): String = arguments?.getString(CAPTCHA_SID) ?: ""
+
+    override fun back() {
+        activity?.supportFragmentManager?.popBackStack()
     }
 }

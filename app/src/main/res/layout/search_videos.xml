@@ -30,6 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:ellipsize="end"
             android:lines="1"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:textSize="@dimen/normal_text_size_video_item"

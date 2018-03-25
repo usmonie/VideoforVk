@@ -4,7 +4,9 @@ import akhmedoff.usman.data.api.VkApi
 import akhmedoff.usman.data.db.OwnerDao
 import akhmedoff.usman.data.db.VideoDao
 import akhmedoff.usman.data.local.UserSettings
-import akhmedoff.usman.data.model.*
+import akhmedoff.usman.data.model.Owner
+import akhmedoff.usman.data.model.ResponseVideo
+import akhmedoff.usman.data.model.Video
 import akhmedoff.usman.data.repository.source.videos.SearchDataSourceFactory
 import akhmedoff.usman.data.repository.source.videos.VideosDataSourceFactory
 import android.arch.lifecycle.LiveData
@@ -95,14 +97,17 @@ class VideoRepositoryImpl(
              else -> vkApi.
          }*/
 
-
     override fun likeVideo(
         ownerId: String?,
         itemId: String,
         captchaSid: String?,
         captchaCode: String?
-    ): Call<ApiResponse<Likes>> {
-        return vkApi.like("video", ownerId, itemId, captchaSid, captchaCode)
-    }
+    ) = vkApi.like("video", ownerId, itemId, captchaSid, captchaCode)
 
+    override fun unlikeVideo(
+        ownerId: String?,
+        itemId: String,
+        captchaSid: String?,
+        captchaCode: String?
+    ) = vkApi.unlike("video", ownerId, itemId, captchaSid, captchaCode)
 }

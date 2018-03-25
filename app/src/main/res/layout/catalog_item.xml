@@ -21,6 +21,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
+            android:ellipsize="end"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             tools:text="@tools:sample/full_names" />
 

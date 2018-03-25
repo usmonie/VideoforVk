@@ -109,15 +109,9 @@ class AlbumFragment : Fragment(), AlbumContract.View {
     override fun setAdded(isAdded: Boolean) {
     }
 
-    override fun getAlbumId(): String? {
-        return arguments?.getString(ALBUM_ID)
-    }
+    override fun getAlbumId(): String? = arguments?.getString(ALBUM_ID)
 
-    override fun getAlbumOwnerId(): String? {
-        return arguments?.getString(ALBUM_OWNER_ID)
-    }
+    override fun getAlbumOwnerId(): String? = arguments?.getString(ALBUM_OWNER_ID)
 
-    override fun getAlbumTitle(): String? {
-        return arguments?.getString(ALBUM_NAME)
-    }
+    override fun getAlbumTitle(): String? = arguments?.getString(ALBUM_NAME)
 }

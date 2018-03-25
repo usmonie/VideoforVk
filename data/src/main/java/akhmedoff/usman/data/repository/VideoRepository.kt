@@ -41,4 +41,10 @@ interface VideoRepository {
         captchaCode: String? = null
     ): Call<ApiResponse<Likes>>
 
+    fun unlikeVideo(
+        ownerId: String?,
+        itemId: String,
+        captchaSid: String?,
+        captchaCode: String?
+    ): Call<ApiResponse<Likes>>
 }

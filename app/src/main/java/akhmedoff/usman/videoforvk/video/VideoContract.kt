@@ -1,6 +1,7 @@
 package akhmedoff.usman.videoforvk.video
 
 import akhmedoff.usman.data.Error
+import akhmedoff.usman.data.model.Likes
 import akhmedoff.usman.data.model.Owner
 import akhmedoff.usman.data.model.Video
 import akhmedoff.usman.data.model.VideoUrl
@@ -75,9 +76,9 @@ interface VideoContract {
 
         fun setPlayerNormal()
 
-        fun setLiked()
+        fun setLiked(likes: Likes)
 
-        fun setUnliked()
+        fun setUnliked(likes: Likes)
 
         fun showShareDialog(url: String)
 
@@ -117,13 +118,15 @@ interface VideoContract {
 
         fun loadCaptchaSid(): String
 
+        fun back()
+
     }
 
     interface Presenter {
 
         var view: View?
 
-        fun onClick(id: Int)
+        fun onClick(itemView: Int)
 
         fun onCreate()
 
@@ -159,5 +162,6 @@ interface VideoContract {
 
         fun enterCaptcha(captchaCode: String)
 
+        fun onBackListener()
     }
 }

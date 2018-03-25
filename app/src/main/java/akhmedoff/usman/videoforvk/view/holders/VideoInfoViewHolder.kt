@@ -9,21 +9,21 @@ import android.view.View
 import android.widget.ImageView
 import kotlinx.android.synthetic.main.video_info_item.view.*
 
-class VideoInfoViewHolder(private val clickListener: (View) -> Unit, itemView: View) :
+class VideoInfoViewHolder(private val clickListener: (Int) -> Unit, itemView: View) :
     AbstractViewHolder<Video>(itemView) {
 
     init {
         itemView.like_button.setOnClickListener {
-            clickListener(it)
+            clickListener(it.id)
         }
         itemView.share_button.setOnClickListener {
-            clickListener(it)
+            clickListener(it.id)
         }
         itemView.send_button.setOnClickListener {
-            clickListener(it)
+            clickListener(it.id)
         }
         itemView.add_button.setOnClickListener {
-            clickListener(it)
+            clickListener(it.id)
         }
     }
 
@@ -48,7 +48,7 @@ class VideoInfoViewHolder(private val clickListener: (View) -> Unit, itemView: V
         itemView.video_desc.text = item.description
     }
 
-    private fun setDrawable(imageView: ImageView, @DrawableRes id: Int) {
+    fun setDrawable(imageView: ImageView, @DrawableRes id: Int) {
         imageView.setImageDrawable(ContextCompat.getDrawable(itemView.context, id))
     }
 }

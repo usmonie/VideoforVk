@@ -6,7 +6,6 @@ import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.view.holders.CatalogViewHolder
 import android.arch.paging.PagedListAdapter
 import android.support.v7.util.DiffUtil
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,13 +17,10 @@ class LookingRecyclerAdapter(
     companion object {
         val CATALOG_COMPARATOR = object : DiffUtil.ItemCallback<Catalog>() {
             override fun areItemsTheSame(oldItem: Catalog, newItem: Catalog): Boolean {
-                Log.d("ARE_ITEMS_THE_SAME", oldItem.name + newItem.name)
-                return false
+                return oldItem.name == newItem.name && oldItem.id == newItem.id
             }
 
             override fun areContentsTheSame(oldItem: Catalog, newItem: Catalog): Boolean {
-                Log.d("ARE_ITEMS_THE_SAME", oldItem.toString() + newItem.toString())
-
                 return false
             }
         }
