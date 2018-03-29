@@ -4,14 +4,14 @@ import akhmedoff.usman.data.model.ApiResponse
 import akhmedoff.usman.data.model.User
 import akhmedoff.usman.data.repository.UserRepository
 import akhmedoff.usman.videoforvk.R
-import akhmedoff.usman.videoforvk.base.BasePresenter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainPresenter(private val userRepository: UserRepository) :
-    BasePresenter<MainContract.View>(), MainContract.Presenter {
-
+class MainPresenter(
+    private val userRepository: UserRepository,
+    override var view: MainContract.View?
+) : MainContract.Presenter {
 
     override fun onCreate() {
         if (!userRepository.hasCurrentUser()) loadUser()

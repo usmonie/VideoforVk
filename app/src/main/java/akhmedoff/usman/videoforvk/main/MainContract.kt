@@ -1,10 +1,9 @@
 package akhmedoff.usman.videoforvk.main
 
-import akhmedoff.usman.videoforvk.base.BaseContract
 
 interface MainContract {
 
-    interface View : BaseContract.View {
+    interface View {
         var mainPresenter: Presenter
 
         fun showHome()
@@ -21,7 +20,8 @@ interface MainContract {
 
     }
 
-    interface Presenter : BaseContract.Presenter<View> {
+    interface Presenter {
+        var view: View?
         fun onCreate()
 
         fun onRecreate()

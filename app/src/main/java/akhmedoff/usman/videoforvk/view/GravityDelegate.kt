@@ -16,14 +16,16 @@ internal class GravityDelegate(
 
     private var verticalHelper: OrientationHelper? = null
     private var horizontalHelper: OrientationHelper? = null
-    private var isRtlHorizontal: Boolean = false
-    private var snapping: Boolean = false
+    private var isRtlHorizontal = false
+    private var snapping = false
+
     private val mScrollListener = object : RecyclerView.OnScrollListener() {
         override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
             super.onScrollStateChanged(recyclerView, newState)
             if (newState == RecyclerView.SCROLL_STATE_SETTLING) {
                 snapping = false
             }
+
             if (newState == RecyclerView.SCROLL_STATE_IDLE && snapping && listener != null) {
                 val position = getSnappedPosition(recyclerView!!)
                 if (position != RecyclerView.NO_POSITION) {
@@ -108,22 +110,18 @@ internal class GravityDelegate(
         targetView: View,
         helper: OrientationHelper,
         fromEnd: Boolean
-    ): Int {
-        return if (isRtlHorizontal && !fromEnd) {
-            distanceToEnd(targetView, helper, true)
-        } else helper.getDecoratedStart(targetView) - helper.startAfterPadding
-
+    ) = when {
+        isRtlHorizontal && !fromEnd -> distanceToEnd(targetView, helper, true)
+        else -> helper.getDecoratedStart(targetView) - helper.startAfterPadding
     }
 
     private fun distanceToEnd(
         targetView: View,
         helper: OrientationHelper,
         fromStart: Boolean
-    ): Int {
-        return if (isRtlHorizontal && !fromStart) {
-            distanceToStart(targetView, helper, true)
-        } else helper.getDecoratedEnd(targetView) - helper.endAfterPadding
-
+    ): Int = when {
+        isRtlHorizontal && !fromStart -> distanceToStart(targetView, helper, true)
+        else -> helper.getDecoratedEnd(targetView) - helper.endAfterPadding
     }
 
     /**

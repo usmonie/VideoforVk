@@ -21,13 +21,10 @@ class GravitySnapHelper @JvmOverloads constructor(
     override fun calculateDistanceToFinalSnap(
         layoutManager: RecyclerView.LayoutManager,
         targetView: View
-    ): IntArray? {
-        return delegate.calculateDistanceToFinalSnap(layoutManager, targetView)
-    }
+    ): IntArray? = delegate.calculateDistanceToFinalSnap(layoutManager, targetView)
 
-    override fun findSnapView(layoutManager: RecyclerView.LayoutManager): View? {
-        return delegate.findSnapView(layoutManager)
-    }
+    override fun findSnapView(layoutManager: RecyclerView.LayoutManager): View? =
+        delegate.findSnapView(layoutManager)
 
     /**
      * Enable snapping of the last item that's snappable.

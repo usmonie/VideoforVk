@@ -4,7 +4,6 @@ import akhmedoff.usman.data.utils.getUserRepository
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.Router.hideFragment
 import akhmedoff.usman.videoforvk.Router.replaceFragment
-import akhmedoff.usman.videoforvk.base.BaseActivity
 import akhmedoff.usman.videoforvk.home.HomeFragment
 import akhmedoff.usman.videoforvk.looking.LookingFragment
 import akhmedoff.usman.videoforvk.main.MainContract.Presenter
@@ -13,10 +12,11 @@ import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
+import android.support.v7.app.AppCompatActivity
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : BaseActivity<MainContract.View, Presenter>(), MainContract.View,
+class MainActivity : AppCompatActivity(), MainContract.View,
     FragmentManager.OnBackStackChangedListener {
     companion object {
         const val CURRENT_FRAGMENT_TAG = "current_fragment"
@@ -40,10 +40,10 @@ class MainActivity : BaseActivity<MainContract.View, Presenter>(), MainContract.
         BottomNavigationView.OnNavigationItemReselectedListener {}
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        mainPresenter = MainPresenter(getUserRepository(this))
+        mainPresenter = MainPresenter(getUserRepository(this), this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        mainPresenter.view = this
         supportFragmentManager.addOnBackStackChangedListener(this)
 
         homeFragment = when {
@@ -128,6 +128,4 @@ class MainActivity : BaseActivity<MainContract.View, Presenter>(), MainContract.
             else -> navigation.visibility = View.VISIBLE
         }
     }
-
-    override fun initPresenter() = mainPresenter
 }

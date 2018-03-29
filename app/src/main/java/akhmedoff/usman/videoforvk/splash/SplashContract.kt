@@ -1,10 +1,8 @@
 package akhmedoff.usman.videoforvk.splash
 
-import akhmedoff.usman.videoforvk.base.BaseContract
-
 interface SplashContract {
 
-    interface View : BaseContract.View {
+    interface View {
         var splashPresenter: Presenter
 
         fun showMain()
@@ -13,5 +11,12 @@ interface SplashContract {
 
     }
 
-    interface Presenter : BaseContract.Presenter<View>
+    interface Presenter {
+
+        var view: View?
+
+        fun onCreate()
+
+        fun onDestroy()
+    }
 }

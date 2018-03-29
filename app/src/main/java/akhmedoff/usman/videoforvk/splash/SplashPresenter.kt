@@ -1,17 +1,22 @@
 package akhmedoff.usman.videoforvk.splash
 
 import akhmedoff.usman.data.repository.UserRepository
-import akhmedoff.usman.videoforvk.base.BasePresenter
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.OnLifecycleEvent
 
-class SplashPresenter(private val repository: UserRepository) :
-    BasePresenter<SplashContract.View>(), SplashContract.Presenter {
+class SplashPresenter(
+    override var view: SplashContract.View?,
+    private val repository: UserRepository
+) :
+    SplashContract.Presenter {
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
-    fun onCreate() = when {
-        repository.isLogged -> view?.showMain()
+    override fun onCreate() {
+        when {
+            repository.isLogged -> view?.showMain()
 
-        else -> view?.showLogin()
+            else -> view?.showLogin()
+        }
+    }
+
+    override fun onDestroy() {
+        view = null
     }
 }

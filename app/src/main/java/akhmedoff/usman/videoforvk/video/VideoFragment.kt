@@ -150,10 +150,13 @@ class VideoFragment : Fragment(), VideoContract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) pip_toggle.visibility = View.VISIBLE
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            pip_toggle.visibility = View.VISIBLE
 
         appbar.transitionName = arguments?.getString(TRANSITION_NAME_KEY)
-        //video_frame.transitionName = arguments?.getString(TRANSITION_NAME_KEY)
+
+        video_frame.visibility = View.VISIBLE
+
         fullscreen_toggle.setOnClickListener { presenter.clickFullscreen() }
         pip_toggle.setOnClickListener { presenter.pipToggleButton() }
         exo_quality_toggle.setOnClickListener { presenter.changeQuality() }
@@ -173,9 +176,9 @@ class VideoFragment : Fragment(), VideoContract.View {
             )
         )
 
-        video_info_recycler.adapter = adapter
         video_info_recycler.layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        video_info_recycler.adapter = adapter
 
         if (savedInstanceState == null)
             presenter.onStart()
@@ -183,6 +186,7 @@ class VideoFragment : Fragment(), VideoContract.View {
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
+
         if (savedInstanceState?.get(IS_FULLSCREEN_KEY) ?: false == true) {
             showFullscreen()
         }
@@ -293,6 +297,7 @@ class VideoFragment : Fragment(), VideoContract.View {
 
     override fun startVideo() {
         player?.playWhenReady = true
+
     }
 
     override fun stopVideo() {
