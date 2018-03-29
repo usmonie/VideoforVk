@@ -18,7 +18,7 @@ class SearchDataSourceFactory(
     private val shorter: Long?,
     private val ownerDao: OwnerDao,
     private val videoDao: VideoDao
-) : DataSource.Factory<Int, Video> {
+) : DataSource.Factory<Int, Video>() {
     override fun create() =
         SearchDataSource(
             vkApi,

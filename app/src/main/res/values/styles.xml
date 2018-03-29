@@ -2,6 +2,7 @@
 
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="colorControlHighlight">?attr/colorAccent</item>
+        <item name="android:windowContentTransitions">true</item>
     </style>
 
     <style name="LoginTheme" parent="AppTheme">

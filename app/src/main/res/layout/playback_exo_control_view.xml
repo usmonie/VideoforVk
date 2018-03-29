@@ -28,6 +28,12 @@
         android:tint="@android:color/white"
         app:srcCompat="@drawable/ic_arrow_back_24dp" />
 
+    <ImageView
+        android:id="@+id/video_frame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
     <ImageButton
         android:id="@id/exo_pause"
         style="@style/ExoMediaButton.Pause"

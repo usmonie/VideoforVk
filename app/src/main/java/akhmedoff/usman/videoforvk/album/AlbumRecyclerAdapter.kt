@@ -6,11 +6,12 @@ import akhmedoff.usman.videoforvk.view.holders.VideoViewHolder
 import android.arch.paging.PagedListAdapter
 import android.support.v7.util.DiffUtil
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 
 class AlbumRecyclerAdapter(
-    private val clickListener: (Video) -> Unit
+    private val clickListener: (Video, View) -> Unit
 ) : PagedListAdapter<Video, VideoViewHolder>(VIDEO_COMPARATOR) {
 
     companion object {
@@ -34,7 +35,7 @@ class AlbumRecyclerAdapter(
         )
 
         holder.itemView.setOnClickListener {
-            clickListener(getItem(holder.layoutPosition)!!)
+            clickListener(getItem(holder.layoutPosition)!!, holder.videoFrame)
         }
 
         return holder
@@ -44,5 +45,7 @@ class AlbumRecyclerAdapter(
 
     override fun onBindViewHolder(holder: VideoViewHolder, position: Int) {
         getItem(position)?.let { holder.bind(it) }
+
+        holder.videoFrame.transitionName = "transition_name_$position"
     }
 }

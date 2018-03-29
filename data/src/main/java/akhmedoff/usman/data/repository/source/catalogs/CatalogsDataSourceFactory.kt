@@ -10,7 +10,7 @@ class CatalogsDataSourceFactory(
     private val filters: String,
     private val catalogDao: CatalogDao
 ) :
-    DataSource.Factory<String, Catalog> {
+    DataSource.Factory<String, Catalog>() {
 
     override fun create() =
         CatalogsPageKeyedDataSource(vkApi, filters, catalogDao)

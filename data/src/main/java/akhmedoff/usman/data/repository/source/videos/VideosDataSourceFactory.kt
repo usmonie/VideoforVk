@@ -13,7 +13,7 @@ class VideosDataSourceFactory(
     private val albumId: Int?,
     private val ownerDao: OwnerDao,
     private val videoDao: VideoDao
-) : DataSource.Factory<Int, Video> {
+) : DataSource.Factory<Int, Video>() {
     override fun create() =
         VideosDataSource(
             vkApi,

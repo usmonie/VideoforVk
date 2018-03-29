@@ -18,11 +18,11 @@ interface LookingContract {
 
         fun setList(items: PagedList<Catalog>)
 
-        fun showVideo(item: CatalogItem)
-
-        fun showAlbum(album: CatalogItem)
+        fun showAlbum(album: CatalogItem, view: android.view.View)
 
         fun startSearch()
+
+        fun showVideo(item: CatalogItem, view: android.view.View)
     }
 
     interface Presenter {

@@ -9,6 +9,7 @@ import akhmedoff.usman.videoforvk.view.VideosRecyclerAdapter
 import android.arch.paging.PagedList
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.view.ViewCompat
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
@@ -23,7 +24,7 @@ class SearchFragment : Fragment(), SearchContract.View {
     override lateinit var searchPresenter: SearchContract.Presenter
 
     private val adapter: VideosRecyclerAdapter by lazy {
-        VideosRecyclerAdapter({ searchPresenter.onClick(item = it) }, R.layout.search_videos)
+        VideosRecyclerAdapter({ video, view -> showVideo(video, view) }, R.layout.search_videos)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -143,12 +144,13 @@ class SearchFragment : Fragment(), SearchContract.View {
     override fun showError(errorMessage: String) {
     }
 
-    override fun showVideo(item: Video) {
-        val fragment = VideoFragment.getInstance(item)
+    override fun showVideo(item: Video, view: View) {
+        val fragment = VideoFragment.getInstance(item, ViewCompat.getTransitionName(view))
 
         activity?.supportFragmentManager?.let {
             Router.replaceFragment(
                 it,
+                this,
                 fragment,
                 true,
                 VideoFragment.FRAGMENT_TAG

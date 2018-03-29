@@ -3,9 +3,7 @@ package akhmedoff.usman.videoforvk.album
 import akhmedoff.usman.data.Error
 import akhmedoff.usman.data.model.Video
 import akhmedoff.usman.data.repository.AlbumRepository
-import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.OnLifecycleEvent
 import android.arch.paging.PagedList
 
 class AlbumPresenter(private var view: AlbumContract.View?, private val albumRepository: AlbumRepository) :
@@ -52,7 +50,6 @@ class AlbumPresenter(private var view: AlbumContract.View?, private val albumRep
     }
 
     override fun clickVideo(video: Video) {
-        view?.showVideo(video)
     }
 
     override fun clickAdd() {

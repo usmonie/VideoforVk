@@ -1,7 +1,6 @@
 package akhmedoff.usman.videoforvk.looking
 
 import akhmedoff.usman.data.model.CatalogItem
-import akhmedoff.usman.data.model.CatalogItemType
 import akhmedoff.usman.data.repository.CatalogRepository
 import android.arch.lifecycle.Observer
 
@@ -30,11 +29,7 @@ class LookingPresenter(
     }
 
     override fun onCatalogItemClicked(item: CatalogItem) {
-        when (item.type) {
-            CatalogItemType.VIDEO -> view?.showVideo(item)
 
-            CatalogItemType.ALBUM -> view?.showAlbum(item)
-        }
 
     }
 

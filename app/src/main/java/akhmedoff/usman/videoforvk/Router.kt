@@ -1,6 +1,7 @@
 package akhmedoff.usman.videoforvk
 
 import android.support.transition.*
+import android.support.transition.TransitionSet.ORDERING_TOGETHER
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
@@ -10,6 +11,9 @@ import android.view.View
 
 object Router {
 
+    private const val FADE_DEFAULT_TIME = 300L
+    private const val MOVE_DEFAULT_TIME = 500L
+
     fun showFragment(
         fragmentManager: FragmentManager,
         fragment: Fragment,
@@ -17,22 +21,16 @@ object Router {
         fragmentTag: String
     ) {
         if (fragment.isAdded) {
+            val transaction = fragmentManager.beginTransaction()
+                .show(fragment)
             if (addToBackStack) {
-                fragmentManager.beginTransaction()
-                    .show(fragment)
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                    .addToBackStack(null)
-                    .commit()
-            } else {
-                fragmentManager.beginTransaction()
-                    .show(fragment)
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                    .commit()
+                transaction.addToBackStack(null)
             }
+
+            transaction.commit()
         } else {
             addFragment(fragmentManager, fragment, fragmentTag)
         }
-
     }
 
     fun hideFragment(fragmentManager: FragmentManager, fragment: Fragment) {
@@ -44,71 +42,53 @@ object Router {
 
     fun replaceFragment(
         fragmentManager: FragmentManager,
-        fragment: Fragment,
-        addToBackStack: Boolean = false,
-        fragmentTag: String?
-    ) {
-        if (addToBackStack) {
-            fragmentManager.beginTransaction()
-                .setReorderingAllowed(true)
-                .replace(R.id.container, fragment, fragmentTag)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .addToBackStack(null)
-                .commit()
-        } else {
-            fragmentManager.beginTransaction()
-                .setReorderingAllowed(true)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(R.id.container, fragment, fragmentTag)
-                .commit()
-        }
-    }
-
-    fun replaceFragment(
-        fragmentManager: FragmentManager,
+        prevFragment: Fragment? = null,
         fragment: Fragment,
         addToBackStack: Boolean = false,
         fragmentTag: String?,
-        sharedElement: View
+        sharedElement: View? = null
     ) {
-
-        // 2. Shared Elements Transition
-        val enterTransitionSet = TransitionSet()
-        enterTransitionSet.addTransition(
-            ChangeClipBounds()
-        )
-        enterTransitionSet.addTransition(
-            ChangeTransform()
-        )
-        enterTransitionSet.addTransition(
-            ChangeBounds()
-        )
-        enterTransitionSet.duration = 600
-        fragment.sharedElementEnterTransition = enterTransitionSet
-
-        // 3. Enter Transition for New Fragment
-        val explodeFade = Explode()
-        explodeFade.duration = 300
-        fragment.enterTransition = explodeFade
+        val transaction =
+            fragmentManager
+                .beginTransaction()
+                .setReorderingAllowed(true)
+                .replace(R.id.container, fragment, fragmentTag)
 
         if (addToBackStack) {
-            fragmentManager.beginTransaction()
-                .addSharedElement(
-                    sharedElement,
-                    ViewCompat.getTransitionName(sharedElement)
-                )
-                .replace(R.id.container, fragment, fragmentTag)
-                .addToBackStack(null)
-                .commit()
-        } else {
-            fragmentManager.beginTransaction()
-                .addSharedElement(
-                    sharedElement,
-                    ViewCompat.getTransitionName(sharedElement)
-                )
-                .replace(R.id.container, fragment, fragmentTag)
-                .commit()
+            transaction.addToBackStack(fragmentTag)
         }
+
+
+        sharedElement?.let {
+            val exitFade = Fade()
+            prevFragment?.exitTransition = exitFade
+
+            val enterTransitionSet: Transition = when (prevFragment?.context) {
+                null -> TransitionSet()
+                    .setOrdering(ORDERING_TOGETHER)
+                    .addTransition(ChangeBounds())
+                    .addTransition(ChangeTransform())
+                    .addTransition(ChangeClipBounds())
+                    .addTransition(ChangeImageTransform())
+
+                else -> TransitionInflater.from(prevFragment.context).inflateTransition(android.R.transition.move)
+            }
+
+            enterTransitionSet.duration = MOVE_DEFAULT_TIME
+
+            fragment.sharedElementEnterTransition = enterTransitionSet
+
+            val enterFade = Fade()
+            fragment.enterTransition = enterFade
+
+            transaction
+                .addSharedElement(
+                    it,
+                    ViewCompat.getTransitionName(it)
+                )
+        }
+
+        transaction.commit()
     }
 
     fun addFragment(fragmentManager: FragmentManager, fragment: Fragment, tag: String) {

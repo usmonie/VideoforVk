@@ -80,20 +80,20 @@ class MainActivity : BaseActivity<MainContract.View, Presenter>(), MainContract.
 
     override fun showHome() = replaceFragment(
         supportFragmentManager,
-        homeFragment,
+        fragment = homeFragment,
         fragmentTag = LookingFragment.FRAGMENT_TAG
     )
 
     override fun showProfile() =
         replaceFragment(
             supportFragmentManager,
-            profileFragment,
+            fragment = profileFragment,
             fragmentTag = LookingFragment.FRAGMENT_TAG
         )
 
     override fun showLooking() = replaceFragment(
         supportFragmentManager,
-        lookingFragment,
+        fragment = lookingFragment,
         fragmentTag = LookingFragment.FRAGMENT_TAG
     )
 
@@ -115,7 +115,7 @@ class MainActivity : BaseActivity<MainContract.View, Presenter>(), MainContract.
 
     override fun showLastFragment() {
         currentFragment?.let {
-            replaceFragment(supportFragmentManager, it, fragmentTag = it.tag)
+            replaceFragment(supportFragmentManager, fragment = it, fragmentTag = it.tag)
         }
     }
 

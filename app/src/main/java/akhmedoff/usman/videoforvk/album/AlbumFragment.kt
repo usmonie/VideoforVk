@@ -10,6 +10,7 @@ import akhmedoff.usman.videoforvk.video.VideoFragment
 import android.arch.paging.PagedList
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.view.ViewCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -53,7 +54,7 @@ class AlbumFragment : Fragment(), AlbumContract.View {
     }
 
     private val adapter: AlbumRecyclerAdapter by lazy {
-        val adapter = AlbumRecyclerAdapter { albumPresenter.clickVideo(it) }
+        val adapter = AlbumRecyclerAdapter { video, view -> showVideo(video, view) }
 
         adapter.setHasStableIds(true)
         return@lazy adapter
@@ -95,11 +96,12 @@ class AlbumFragment : Fragment(), AlbumContract.View {
             .into(app_bar_album_poster_image)
     }
 
-    override fun showVideo(video: Video) {
+    override fun showVideo(video: Video, view: View) {
         activity?.supportFragmentManager?.let {
             Router.replaceFragment(
                 it,
-                VideoFragment.getInstance(video),
+                this,
+                VideoFragment.getInstance(video, ViewCompat.getTransitionName(view)),
                 true,
                 VideoFragment.FRAGMENT_TAG
             )

@@ -295,11 +295,13 @@ class VideoPresenter(
                 true -> {
                     view?.showSmallScreen()
                     view?.setPlayerNormal()
+
                     false
                 }
                 false -> {
-                    view?.showFullscreen(video)
+                    view?.showFullscreen()
                     view?.setPlayerFullscreen()
+
                     true
                 }
             }
@@ -319,9 +321,10 @@ class VideoPresenter(
 
     override fun onStop() {
         view?.pauseVideo()
+
         view?.getVideoState()?.let { isStartedVideo -> view?.saveVideoState(isStartedVideo) }
-        view?.getVideoPosition()
-            ?.let { videoPosition -> view?.saveVideoPosition(videoPosition) }
+        view?.getVideoPosition()?.let { videoPosition -> view?.saveVideoPosition(videoPosition) }
+
         view?.stopAudioFocusListener()
     }
 

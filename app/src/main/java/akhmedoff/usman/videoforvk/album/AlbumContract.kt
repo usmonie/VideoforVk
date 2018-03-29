@@ -16,7 +16,7 @@ interface AlbumContract {
 
         fun showAlbumImage(poster: String)
 
-        fun showVideo(video: Video)
+        fun showVideo(video: Video, view: android.view.View)
 
         fun setAdded(isAdded: Boolean)
 

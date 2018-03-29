@@ -11,8 +11,8 @@ import akhmedoff.usman.videoforvk.view.MarginItemDecorator
 import android.arch.paging.PagedList
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.transition.Explode
 import android.support.v4.app.Fragment
+import android.support.v4.view.ViewCompat
 import android.support.v7.widget.DefaultItemAnimator
 import android.view.LayoutInflater
 import android.view.View
@@ -57,9 +57,6 @@ class CatalogFragment : Fragment(),
             )
         )
         presenter.onCreated()
-        val explode = Explode()
-        explode.duration = 500
-        exitTransition = explode
     }
 
     override fun onCreateView(
@@ -87,11 +84,13 @@ class CatalogFragment : Fragment(),
     override fun showList(videos: PagedList<CatalogItem>) = adapter.submitList(videos)
 
     override fun showVideo(item: CatalogItem, view: View) {
-        val fragment = VideoFragment.getInstance(item)
+        val fragment = VideoFragment.getInstance(item, ViewCompat.getTransitionName(view))
+
 
         activity?.supportFragmentManager?.let {
             Router.replaceFragment(
                 it,
+                this,
                 fragment,
                 true,
                 VideoFragment.FRAGMENT_TAG,
@@ -106,6 +105,7 @@ class CatalogFragment : Fragment(),
         activity?.supportFragmentManager?.let {
             Router.replaceFragment(
                 it,
+                this,
                 fragment,
                 true,
                 VideoFragment.FRAGMENT_TAG,

@@ -1,7 +1,6 @@
 package akhmedoff.usman.videoforvk.search
 
 import akhmedoff.usman.data.model.Video
-import akhmedoff.usman.videoforvk.base.BaseContract
 import android.arch.lifecycle.LifecycleOwner
 import android.arch.paging.PagedList
 
@@ -34,9 +33,8 @@ interface SearchContract {
 
         fun getShorter(): Long
 
-        fun showVideo(item: Video)
-
         fun onBackClicked()
+        fun showVideo(item: Video, view: android.view.View)
     }
 
     interface Presenter {

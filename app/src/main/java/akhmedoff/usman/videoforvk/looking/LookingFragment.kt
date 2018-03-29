@@ -2,6 +2,7 @@ package akhmedoff.usman.videoforvk.looking
 
 import akhmedoff.usman.data.model.Catalog
 import akhmedoff.usman.data.model.CatalogItem
+import akhmedoff.usman.data.model.CatalogItemType
 import akhmedoff.usman.data.utils.getCatalogRepository
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.Router
@@ -12,6 +13,7 @@ import android.arch.paging.PagedList
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
+import android.support.v4.view.ViewCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,14 +31,10 @@ class LookingFragment : Fragment(), LookingContract.View {
 
     private val adapter by lazy {
         LookingRecyclerAdapter { item, view ->
-            activity?.supportFragmentManager?.let {
-                Router.replaceFragment(
-                    it,
-                    VideoFragment.getInstance(item),
-                    true,
-                    VideoFragment.FRAGMENT_TAG,
-                    view
-                )
+            when (item.type) {
+                CatalogItemType.VIDEO -> showVideo(item, view)
+
+                CatalogItemType.ALBUM -> showAlbum(item, view)
             }
         }
     }
@@ -65,13 +63,15 @@ class LookingFragment : Fragment(), LookingContract.View {
         update_looking_layout.setOnRefreshListener { presenter.refresh() }
     }
 
-    override fun showVideo(item: CatalogItem) {
+    override fun showVideo(item: CatalogItem, view: View) {
         activity?.supportFragmentManager?.let {
             Router.replaceFragment(
                 it,
-                VideoFragment.getInstance(item),
+                this,
+                VideoFragment.getInstance(item, ViewCompat.getTransitionName(view)),
                 true,
-                VideoFragment.FRAGMENT_TAG
+                VideoFragment.FRAGMENT_TAG,
+                view
             )
         }
     }
@@ -82,6 +82,7 @@ class LookingFragment : Fragment(), LookingContract.View {
         activity?.supportFragmentManager?.let {
             Router.replaceFragment(
                 it,
+                this,
                 fragment,
                 true,
                 VideoFragment.FRAGMENT_TAG
@@ -89,12 +90,13 @@ class LookingFragment : Fragment(), LookingContract.View {
         }
     }
 
-    override fun showAlbum(album: CatalogItem) {
+    override fun showAlbum(album: CatalogItem, view: View) {
         val fragment = AlbumFragment.getFragment(album)
 
         activity?.supportFragmentManager?.let {
             Router.replaceFragment(
                 it,
+                this,
                 fragment,
                 true,
                 VideoFragment.FRAGMENT_TAG

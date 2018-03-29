@@ -36,6 +36,5 @@ class SearchPresenter(
     }
 
     override fun onClick(item: Video) {
-        view?.showVideo(item)
     }
 }

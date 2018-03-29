@@ -30,7 +30,7 @@ class CatalogItemsRecyclerAdapter(
 
         items?.let { items ->
             holder.itemView.setOnClickListener {
-                clickListener(items[holder.adapterPosition], holder.cardView)
+                clickListener(items[holder.adapterPosition], holder.videoFrame)
             }
         }
 
@@ -48,6 +48,8 @@ class CatalogItemsRecyclerAdapter(
             holder.itemView.layoutParams.width =
                     holder.itemView.resources.getDimensionPixelSize(R.dimen.width_main_list_first_video)
         }
+
+        holder.videoFrame.transitionName = "transition_name_$position"
     }
 
     override fun getItemViewType(position: Int): Int {

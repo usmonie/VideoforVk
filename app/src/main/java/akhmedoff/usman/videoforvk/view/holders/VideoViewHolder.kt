@@ -13,7 +13,7 @@ class VideoViewHolder(private val picasso: Picasso, itemView: View) :
     AbstractViewHolder<Item>(itemView) {
 
     val cardView = itemView.findViewById<CardView>(R.id.video_item_cardView)
-    private val videoFrame = itemView.findViewById<ImageView>(R.id.video_poster)
+    val videoFrame = itemView.findViewById<ImageView>(R.id.video_poster)
     private val videoTitle = itemView.findViewById<TextView>(R.id.video_title)
 
     override fun bind(item: Item) {
@@ -31,5 +31,6 @@ class VideoViewHolder(private val picasso: Picasso, itemView: View) :
             .into(videoFrame)
 
         videoTitle.text = item.title
+
     }
 }

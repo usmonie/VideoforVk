@@ -11,7 +11,7 @@ class CatalogSectionDataSourceFactory(
     private val catalogSection: String,
     private val ownerDao: OwnerDao,
     private val catalogDao: CatalogDao
-) : DataSource.Factory<String, CatalogItem> {
+) : DataSource.Factory<String, CatalogItem>() {
     override fun create() =
         CatalogSectionDataSource(
             vkApi,

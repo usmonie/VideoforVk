@@ -29,6 +29,7 @@ class LookingRecyclerAdapter(
     override fun onBindViewHolder(holder: CatalogViewHolder, position: Int) {
         if (getItem(position)?.items!!.isNotEmpty()) {
             holder.bind(getItem(position)!!)
+
         }
     }
 

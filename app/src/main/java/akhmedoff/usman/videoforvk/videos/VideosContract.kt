@@ -19,7 +19,7 @@ interface VideosContract {
 
         fun showEmptyList()
 
-        fun showVideo(item: Video)
+        fun showVideo(item: Video, view: android.view.View)
     }
 
     interface Presenter {

@@ -26,7 +26,7 @@ interface VideoContract {
 
         fun getOwnerId(): String
 
-        fun showFullscreen(video: Video)
+        fun showFullscreen()
 
         fun showSmallScreen()
 

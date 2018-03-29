@@ -25,7 +25,6 @@ class VideosPresenter(
     }
 
     override fun onVideoClicked(item: Video) {
-        view?.showVideo(item)
     }
 
     override fun onDestroyed() {

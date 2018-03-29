@@ -11,6 +11,7 @@ import android.arch.paging.PagedList
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
+import android.support.v4.view.ViewCompat
 import android.support.v7.widget.DefaultItemAnimator
 import android.view.LayoutInflater
 import android.view.View
@@ -33,7 +34,10 @@ class VideosFragment : Fragment(), VideosContract.View {
     override lateinit var presenter: VideosContract.Presenter
 
     private val adapter by lazy {
-        VideosRecyclerAdapter({ presenter.onVideoClicked(it) }, R.layout.catalog_video_item_big)
+        VideosRecyclerAdapter(
+            { video, view -> showVideo(video, view) },
+            R.layout.catalog_video_item_big
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,16 +73,17 @@ class VideosFragment : Fragment(), VideosContract.View {
 
     }
 
-    override fun showVideo(item: Video) {
-        val fragment = VideoFragment.getInstance(item)
-
+    override fun showVideo(item: Video, view: View) {
+        val fragment = VideoFragment.getInstance(item, ViewCompat.getTransitionName(view))
 
         activity?.supportFragmentManager?.let {
             Router.replaceFragment(
                 it,
+                this,
                 fragment,
                 true,
-                VideoFragment.FRAGMENT_TAG
+                VideoFragment.FRAGMENT_TAG,
+                view
             )
         }
     }

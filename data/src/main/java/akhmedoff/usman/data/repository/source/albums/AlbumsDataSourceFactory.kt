@@ -11,6 +11,6 @@ class AlbumsDataSourceFactory(
     private val ownerId: Int?,
     val ownerDao: OwnerDao,
     val albumDao: AlbumDao
-) : DataSource.Factory<Int, Album> {
+) : DataSource.Factory<Int, Album>() {
     override fun create() = AlbumsDataSource(vkApi, ownerId)
 }
