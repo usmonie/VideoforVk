@@ -11,6 +11,7 @@ import akhmedoff.usman.videoforvk.player.AudioFocusListener
 import akhmedoff.usman.videoforvk.player.SimpleControlDispatcher
 import akhmedoff.usman.videoforvk.view.MarginItemDecorator
 import android.app.PictureInPictureParams
+import android.arch.paging.PagedList
 import android.content.Context
 import android.content.Intent
 import android.media.AudioManager
@@ -28,6 +29,8 @@ import android.util.Rational
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.PopupWindow
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.ExtractorMediaSource
@@ -43,6 +46,8 @@ import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import com.google.android.exoplayer2.util.Util
 import kotlinx.android.synthetic.main.fragment_video.*
 import kotlinx.android.synthetic.main.playback_exo_control_view.*
+import kotlinx.android.synthetic.main.popup_add_video_dialog.view.*
+import kotlinx.android.synthetic.main.video_info_item.*
 import java.io.File
 
 class VideoFragment : Fragment(), VideoContract.View {
@@ -82,14 +87,18 @@ class VideoFragment : Fragment(), VideoContract.View {
 
     private var player: SimpleExoPlayer? = null
 
-    private lateinit var adapter: VideoInfoRecyclerAdapter
+    private lateinit var videoInfoAdapter: VideoInfoRecyclerAdapter
 
     private var mediaSource: MediaSource? = null
 
+    private var addPopupWindow: PopupWindow? = null
+
+    private lateinit var albumsAdapter: AlbumsRecyclerAdapter
+
     private val captchaDialog: CaptchaDialog by lazy {
-        CaptchaDialog(context!!, {
+        CaptchaDialog(context!!) {
             presenter.enterCaptcha(it)
-        })
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,8 +108,10 @@ class VideoFragment : Fragment(), VideoContract.View {
             getVideoRepository(context!!),
             getUserRepository(context!!)
         )
+        if (savedInstanceState != null) presenter.view = this
 
-        adapter = VideoInfoRecyclerAdapter {
+        albumsAdapter = AlbumsRecyclerAdapter()
+        videoInfoAdapter = VideoInfoRecyclerAdapter {
             onRecyclerItemClicked(it)
         }
 
@@ -139,14 +150,27 @@ class VideoFragment : Fragment(), VideoContract.View {
             )
         }
 
-        if (savedInstanceState != null) presenter.view = this
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_video, container, false)
+    ): View? {
+        val popupView = inflater.inflate(R.layout.popup_add_video_dialog, null)
+        addPopupWindow = PopupWindow(
+            popupView,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+
+        popupView.albums_recycler.adapter = albumsAdapter
+
+        popupView.ok_add_popup.setOnClickListener { presenter.addToAlbums(albumsAdapter.selectedIds) }
+        popupView.cancel_add_popup.setOnClickListener { addPopupWindow?.dismiss() }
+
+        return inflater.inflate(R.layout.fragment_video, container, false)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -154,8 +178,6 @@ class VideoFragment : Fragment(), VideoContract.View {
             pip_toggle.visibility = View.VISIBLE
 
         appbar.transitionName = arguments?.getString(TRANSITION_NAME_KEY)
-
-        video_frame.visibility = View.VISIBLE
 
         fullscreen_toggle.setOnClickListener { presenter.clickFullscreen() }
         pip_toggle.setOnClickListener { presenter.pipToggleButton() }
@@ -178,7 +200,7 @@ class VideoFragment : Fragment(), VideoContract.View {
 
         video_info_recycler.layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        video_info_recycler.adapter = adapter
+        video_info_recycler.adapter = videoInfoAdapter
 
         if (savedInstanceState == null)
             presenter.onStart()
@@ -205,11 +227,11 @@ class VideoFragment : Fragment(), VideoContract.View {
         presenter.changedPipMode()
 
     override fun showVideo(item: Video) {
-        adapter.video = item
+        videoInfoAdapter.video = item
     }
 
     override fun showOwnerInfo(owner: Owner) {
-        adapter.owner = owner
+        videoInfoAdapter.owner = owner
     }
 
     override fun setVideoSource(videoUrl: VideoUrl) {
@@ -283,6 +305,8 @@ class VideoFragment : Fragment(), VideoContract.View {
                 or View.SYSTEM_UI_FLAG_FULLSCREEN
                 or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
     }
+
+    override fun getString(id: Int, vararg items: String): String = resources.getString(id, items)
 
     override fun showSmallScreen() {
         video_layout.fitsSystemWindows = true
@@ -370,11 +394,17 @@ class VideoFragment : Fragment(), VideoContract.View {
     }
 
     override fun setLiked(likes: Likes) {
-        adapter.notifyItemChanged(0, likes)
+        videoInfoAdapter.notifyItemChanged(
+            0,
+            if (likes.userLikes) VideoInfoPayloads.LIKED else VideoInfoPayloads.DISLIKED
+        )
     }
 
     override fun setUnliked(likes: Likes) {
-        adapter.notifyItemChanged(0, likes)
+        videoInfoAdapter.notifyItemChanged(
+            0,
+            if (likes.userLikes) VideoInfoPayloads.LIKED else VideoInfoPayloads.DISLIKED
+        )
     }
 
     override fun showShareDialog(url: String) {
@@ -394,10 +424,32 @@ class VideoFragment : Fragment(), VideoContract.View {
     override fun hideSendDialog() {
     }
 
+    override fun showAddDialog() {
+        addPopupWindow?.showAsDropDown(add_button)
+    }
+
+    override fun hideAddDialog() {
+    }
+
+    override fun showAlbumsLoading() {
+    }
+
+    override fun hideAlbumsLoading() {
+    }
+
+    override fun setAlbums(albums: PagedList<Album>) {
+    }
+
     override fun setAdded() {
+        videoInfoAdapter.notifyItemChanged(
+            0, VideoInfoPayloads.ADDED
+        )
     }
 
     override fun setDeleted() {
+        videoInfoAdapter.notifyItemChanged(
+            0, VideoInfoPayloads.DELETED
+        )
     }
 
     override fun showOwnerUser(owner: Owner) {

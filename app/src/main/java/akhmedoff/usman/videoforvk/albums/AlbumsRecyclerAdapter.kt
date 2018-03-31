@@ -12,10 +12,10 @@ import com.squareup.picasso.Picasso
 class AlbumsRecyclerAdapter(
     private val clickListener: (Album) -> Unit,
     @LayoutRes private val layoutId: Int
-) : PagedListAdapter<Album, VideoViewHolder>(VIDEO_COMPARATOR) {
+) : PagedListAdapter<Album, VideoViewHolder>(ALBUM_COMPARATOR) {
 
     companion object {
-        val VIDEO_COMPARATOR = object : DiffUtil.ItemCallback<Album>() {
+        val ALBUM_COMPARATOR = object : DiffUtil.ItemCallback<Album>() {
             override fun areContentsTheSame(oldItem: Album, newItem: Album) =
                 oldItem.description == newItem.description
 

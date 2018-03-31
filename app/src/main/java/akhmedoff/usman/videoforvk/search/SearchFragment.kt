@@ -5,7 +5,7 @@ import akhmedoff.usman.data.utils.getVideoRepository
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.Router
 import akhmedoff.usman.videoforvk.video.VideoFragment
-import akhmedoff.usman.videoforvk.view.VideosRecyclerAdapter
+import akhmedoff.usman.videoforvk.view.MarginItemDecorator
 import android.arch.paging.PagedList
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -18,13 +18,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import kotlinx.android.synthetic.main.fragment_search.*
+import java.util.*
 
 
 class SearchFragment : Fragment(), SearchContract.View {
     override lateinit var searchPresenter: SearchContract.Presenter
 
-    private val adapter: VideosRecyclerAdapter by lazy {
-        VideosRecyclerAdapter({ video, view -> showVideo(video, view) }, R.layout.search_videos)
+    private val adapter: SearchRecyclerAdapter by lazy {
+        SearchRecyclerAdapter({ video, view -> showVideo(video, view) }, R.layout.search_videos)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,25 +38,44 @@ class SearchFragment : Fragment(), SearchContract.View {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_search, container, false)
-    }
+    ): View? = inflater.inflate(R.layout.fragment_search, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         search_recycler.adapter = adapter
+        search_recycler.addItemDecoration(
+            MarginItemDecorator(
+                1,
+                resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin)
+            )
+        )
 
-        search_expanded_edit_text.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-            }
+        search_expanded_edit_text
+            .addTextChangedListener(object : TextWatcher {
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
+                var timer: Timer? = null
+                override fun afterTextChanged(s: Editable?) {
+                    timer = Timer()
+                    timer?.schedule(object : TimerTask() {
+                        override fun run() {
+                            searchPresenter.search()
+                        }
+                    }, 500L)
+                }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                searchPresenter.search()
-            }
-        })
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    timer?.cancel()
+                }
+            })
+
 
         adult_filter.isChecked = true
 

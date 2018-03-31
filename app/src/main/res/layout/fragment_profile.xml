@@ -14,8 +14,8 @@
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|snap"
+            app:contentScrim="?colorPrimary"
+            app:layout_scrollFlags="scroll|enterAlways"
             app:layout_scrollInterpolator="@android:anim/decelerate_interpolator"
             app:toolbarId="@+id/toolbar">
 
@@ -35,7 +35,7 @@
                         android:layout_width="86dp"
                         android:layout_height="86dp"
                         android:layout_gravity="center"
-                        android:layout_marginTop="?attr/actionBarSize"
+                        android:layout_marginTop="?actionBarSize"
                         android:foreground="@drawable/circle_image_view"
                         android:scaleType="centerCrop"
                         tools:src="@tools:sample/avatars" />

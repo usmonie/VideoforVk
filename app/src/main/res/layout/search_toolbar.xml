@@ -24,11 +24,13 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_gravity="center"
-            android:layout_margin="@dimen/search_box_collapsed_text_margin_left"
+            android:layout_marginBottom="@dimen/search_box_icon_margin"
+            android:layout_marginEnd="@dimen/search_box_icon_margin"
+            android:layout_marginStart="@dimen/search_box_collapsed_text_margin_left"
+            android:layout_marginTop="@dimen/search_box_icon_margin"
             android:drawablePadding="16dp"
             android:drawableStart="@drawable/ic_search"
             android:gravity="center_vertical"
-            android:padding="8dp"
             android:text="@string/search"
             android:textSize="@dimen/search_text_size" />
 

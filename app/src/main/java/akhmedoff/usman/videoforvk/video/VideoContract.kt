@@ -1,11 +1,10 @@
 package akhmedoff.usman.videoforvk.video
 
 import akhmedoff.usman.data.Error
-import akhmedoff.usman.data.model.Likes
-import akhmedoff.usman.data.model.Owner
-import akhmedoff.usman.data.model.Video
-import akhmedoff.usman.data.model.VideoUrl
+import akhmedoff.usman.data.model.*
 import android.arch.lifecycle.LifecycleOwner
+import android.arch.paging.PagedList
+import android.support.annotation.StringRes
 
 interface VideoContract {
 
@@ -90,6 +89,16 @@ interface VideoContract {
 
         fun hideSendDialog()
 
+        fun showAddDialog()
+
+        fun hideAddDialog()
+
+        fun showAlbumsLoading()
+
+        fun hideAlbumsLoading()
+
+        fun setAlbums(albums: PagedList<Album>)
+
         fun setAdded()
 
         fun setSaved(saved: Boolean)
@@ -120,6 +129,7 @@ interface VideoContract {
 
         fun back()
 
+        fun getString(@StringRes id: Int, vararg items: String): String
     }
 
     interface Presenter {
@@ -163,5 +173,7 @@ interface VideoContract {
         fun enterCaptcha(captchaCode: String)
 
         fun onBackListener()
+
+        fun addToAlbums(albumsIds: List<Int>)
     }
 }

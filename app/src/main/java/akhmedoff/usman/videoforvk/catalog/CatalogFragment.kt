@@ -86,7 +86,6 @@ class CatalogFragment : Fragment(),
     override fun showVideo(item: CatalogItem, view: View) {
         val fragment = VideoFragment.getInstance(item, ViewCompat.getTransitionName(view))
 
-
         activity?.supportFragmentManager?.let {
             Router.replaceFragment(
                 it,

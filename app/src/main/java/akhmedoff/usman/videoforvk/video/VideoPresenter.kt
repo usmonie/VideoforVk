@@ -19,6 +19,8 @@ class VideoPresenter(
     private val videoRepository: VideoRepository,
     private val userRepository: UserRepository
 ) : VideoContract.Presenter {
+    override fun addToAlbums(albumsIds: List<Int>) {
+    }
 
     private lateinit var video: Video
 
@@ -48,12 +50,13 @@ class VideoPresenter(
             R.id.like_button ->
                 if (video.likes?.userLikes == false)
                     likeCurrentVideo()
-                else {
-                    unlikeCurrentVideo()
-                }
+                else unlikeCurrentVideo()
 
             R.id.share_button -> shareCurrentVideo()
-            R.id.add_button -> addCurrentVideo()
+            R.id.add_button -> {
+                view?.showAddDialog()
+
+            }
         }
     }
 
@@ -62,7 +65,15 @@ class VideoPresenter(
     }
 
     private fun shareCurrentVideo() {
-        view?.showShareDialog("https://vk.com/video?z=video${video.ownerId}_${video.id}")
+        view?.let { view ->
+            view.showShareDialog(
+                view.getString(
+                    R.string.shared_with_vt,
+                    video.title,
+                    "https://vk.com/video?z=video${video.ownerId}_${video.id}"
+                )
+            )
+        }
     }
 
     private fun likeCurrentVideo() {

@@ -78,10 +78,13 @@ interface VkApi {
         @Query("shorter") shorter: Long?
     ): Call<ResponseVideo>
 
-    @GET("video.add")
-    fun addVideo(
-        @Query("video_id") videoId: String,
-        @Query("owner_id") ownerId: String
+    @GET("video.addToAlbum")
+    fun addVideoToAlbum(
+        @Query("target_id") targetId: String,
+        @Query("album_id") albumId: String,
+        @Query("album_ids") albumIds: String,
+        @Query("owner_id") ownerId: String,
+        @Query("video_id") videoId: String
     )
 
     @GET("groups.getById")
@@ -117,7 +120,7 @@ interface VkApi {
         @Query("owner_id") ownerId: String?,
         @Query("item_id") itemId: String,
         @Query("captcha_sid") captchaSid: String?,
-        @Query("captcha_key")captchaKey: String?
+        @Query("captcha_key") captchaKey: String?
     ): Call<ApiResponse<Likes>>
 
     @GET("likes.delete")

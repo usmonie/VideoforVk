@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ВТелевизоре</string>
+    <string name="login.button.text">Войти через ВКонтакте</string>
+    <string name="error.login">Ошибка входа, проверьте свой логин или пароль</string>
+    <string name="enter_code">Введите код</string>
+    <string name="error_code">Неверный код</string>
+    <string name="login.password.hint">Пароль</string>
+    <string name="login.username.hint">Номер телефона или почта</string>
+    <string name="password_too_short">Пароль слишком короткий</string>
+    <string name="username_too_short">Логин  слишком короткий</string>
+    <string name="follow">Подписаться</string>
+    <string name="followed">Подписан</string>
+    <string name="error_loading">Ошибка загрузки</string>
+    <string name="search">Поиск</string>
+    <string name="main_screen">Лента</string>
+    <string name="password_error">Проверьте свой пароль</string>
+    <string name="username_error">Проверьте свой логин</string>
+    <string name="enter_captcha">Введите код с картинки</string>
+    <string name="enter">Ввести</string>
+    <string name="two_factor_number">Мы отправили сообщение с кодом на номер %s</string>
+    <string name="action_settings">Настройки</string>
+    <string name="hd_filter">Высокое качество</string>
+    <string name="adult_filter">Безопасный поиск</string>
+    <string name="duration">По длительности</string>
+    <string name="sort">Сортировать по</string>
+    <string name="duration.any">Любая длительность</string>
+    <string name="duration.long">Длинные</string>
+    <string name="duration.short">Короткие</string>
+    <string name="sort_by.recent">Дате</string>
+    <string name="sort_by.duration">Длительности</string>
+    <string name="sort_by.relevance">Релевантности</string>
+    <string name="navigation.home.title">Главная</string>
+    <string name="navigation.looking.title">Обзор</string>
+    <string name="navigation.person.title">Профиль</string>
+    <string name="tab_title_top">Рекомендуемое</string>
+    <string name="tab_title_feed">Лента</string>
+    <string name="tab_title_ugc">Популярное</string>
+    <string name="tab_title_series_and_tv">Сериалы и ТВ-шоу</string>
+    <string name="tab_videos_title">Видеозаписи</string>
+    <string name="empty_list">Пустой список</string>
+    <string name="video_title">Видео</string>
+    <string name="tab_albums_title">Альбомы</string>
+    <string name="video_quality_title_hls">Авто</string>
+    <string name="send_to">Отправить</string>
+    <string name="add_to_albums_title">Добавить в альбом</string>
+    <string name="shared_with_vt">Посмотрите видео %s: %s. Отправлено из приложения ВТелевизоре: https://play.google.com/store/apps/details?id=akhmedoff.usman.videoforvk</string>
+</resources>

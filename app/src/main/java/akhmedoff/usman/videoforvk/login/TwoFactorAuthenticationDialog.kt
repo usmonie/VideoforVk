@@ -3,6 +3,7 @@ package akhmedoff.usman.videoforvk.login
 import akhmedoff.usman.videoforvk.R
 import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
@@ -10,9 +11,10 @@ import kotlinx.android.synthetic.main.two_factor_dialog.*
 
 class TwoFactorAuthenticationDialog(
     context: Context,
-    private val listener: (String) -> Unit
+    private val listener: (String) -> Unit,
+    cancelListener: () -> Unit
 ) :
-    Dialog(context) {
+    Dialog(context, false, DialogInterface.OnCancelListener { cancelListener() }) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,6 +24,7 @@ class TwoFactorAuthenticationDialog(
             WindowManager.LayoutParams.WRAP_CONTENT
         )
         enter_code_button?.setOnClickListener { listener(code_input.text.toString()) }
+        dismiss_code?.setOnClickListener { cancel() }
     }
 
     fun setNumber(number: String) {
@@ -33,6 +36,7 @@ class TwoFactorAuthenticationDialog(
     fun showLoading() {
         two_factor_number?.visibility = View.GONE
         enter_code_button?.visibility = View.GONE
+        dismiss_code?.visibility = View.GONE
         code_input_layout?.visibility = View.GONE
         dialog_progress?.visibility = View.VISIBLE
         dialog_progress?.animate()
@@ -42,6 +46,7 @@ class TwoFactorAuthenticationDialog(
         two_factor_number?.visibility = View.VISIBLE
         enter_code_button?.visibility = View.VISIBLE
         code_input_layout?.visibility = View.VISIBLE
+        dismiss_code?.visibility = View.VISIBLE
 
         dialog_progress?.visibility = View.GONE
         dialog_progress?.animate()

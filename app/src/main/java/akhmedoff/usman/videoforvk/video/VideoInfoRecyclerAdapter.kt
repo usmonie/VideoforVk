@@ -1,6 +1,5 @@
 package akhmedoff.usman.videoforvk.video
 
-import akhmedoff.usman.data.model.Likes
 import akhmedoff.usman.data.model.Owner
 import akhmedoff.usman.data.model.Video
 import akhmedoff.usman.videoforvk.R
@@ -80,21 +79,34 @@ class VideoInfoRecyclerAdapter(private val clickListener: (Int) -> Unit) :
             val item = payloads[0]
 
             if (position == 0
-                && item is Likes
+                && item is VideoInfoPayloads
                 && holder is VideoInfoViewHolder)
-                if (item.userLikes) {
-                    holder.setDrawable(
-                        holder.itemView.like_button,
-                        R.drawable.ic_favorite_fill_24dp
-                    )
-                } else {
-                    holder.setDrawable(
-                        holder.itemView.like_button,
-                        R.drawable.ic_favorite_border
-                    )
+
+                when (item) {
+                    VideoInfoPayloads.LIKED ->
+                        holder.setDrawable(
+                            holder.itemView.like_button,
+                            R.drawable.ic_favorite_fill_24dp
+                        )
+                    VideoInfoPayloads.DISLIKED ->
+                        holder.setDrawable(
+                            holder.itemView.like_button,
+                            R.drawable.ic_favorite_border
+                        )
+                    VideoInfoPayloads.ADDED ->
+                        holder.setDrawable(
+                            holder.itemView.add_button,
+                            R.drawable.ic_done_black_24dp
+                        )
+                    VideoInfoPayloads.DELETED ->
+                        holder.setDrawable(
+                            holder.itemView.add_button,
+                            R.drawable.ic_add
+                        )
                 }
         }
 
         super.onBindViewHolder(holder, position, payloads)
     }
+
 }
