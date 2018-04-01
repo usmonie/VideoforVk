@@ -81,7 +81,11 @@ class CatalogFragment : Fragment(),
 
     }
 
-    override fun showList(videos: PagedList<CatalogItem>) = adapter.submitList(videos)
+    override fun showList(videos: PagedList<CatalogItem>) {
+        catalog_recycler.visibility = View.VISIBLE
+        empty_state_text_view.visibility = View.GONE
+        adapter.submitList(videos)
+    }
 
     override fun showVideo(item: CatalogItem, view: View) {
         val fragment = VideoFragment.getInstance(item, ViewCompat.getTransitionName(view))
@@ -115,12 +119,10 @@ class CatalogFragment : Fragment(),
 
     override fun getPageCategory() = arguments?.getString(PAGE_CATEGORY) ?: ""
 
-    override fun showEmptyList() =
-        Snackbar.make(
-            update_catalog_layout,
-            getText(R.string.empty_list),
-            Snackbar.LENGTH_LONG
-        ).show()
+    override fun showEmptyList() {
+        catalog_recycler.visibility = View.GONE
+        empty_state_text_view.visibility = View.VISIBLE
+    }
 
     override fun showLoading() {
         update_catalog_layout?.isRefreshing = true

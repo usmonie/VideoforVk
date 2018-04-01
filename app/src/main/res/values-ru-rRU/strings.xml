@@ -38,7 +38,7 @@
     <string name="tab_title_ugc">Популярное</string>
     <string name="tab_title_series_and_tv">Сериалы и ТВ-шоу</string>
     <string name="tab_videos_title">Видеозаписи</string>
-    <string name="empty_list">Пустой список</string>
+    <string name="empty_list">Ничего нет! Попробуйте обновить страницу или подписаться на кого-нибудь.</string>
     <string name="video_title">Видео</string>
     <string name="tab_albums_title">Альбомы</string>
     <string name="video_quality_title_hls">Авто</string>
