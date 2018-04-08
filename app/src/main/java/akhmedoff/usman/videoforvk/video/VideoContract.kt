@@ -35,19 +35,13 @@ interface VideoContract {
 
         fun isPipMode(): Boolean
 
-        fun hideUi()
-
-        fun showUi()
+        fun showUi(isShowing: Boolean)
 
         fun showLoadError()
 
-        fun showProgress()
+        fun showProgress(isLoading: Boolean)
 
-        fun hideProgress()
-
-        fun showPlayer()
-
-        fun hidePlayer()
+        fun showPlayer(isShowing: Boolean)
 
         fun getVideoState(): Boolean?
 
@@ -66,10 +60,6 @@ interface VideoContract {
         fun saveVideoPosition(position: Long)
 
         fun saveIsFullscreen(isFullscreen: Boolean)
-
-        fun stopAudioFocusListener()
-
-        fun startAudioFocusListener()
 
         fun setPlayerFullscreen()
 
@@ -93,11 +83,11 @@ interface VideoContract {
 
         fun hideAddDialog()
 
-        fun showAlbumsLoading()
+        fun showAlbumsLoading(isLoading: Boolean)
 
-        fun hideAlbumsLoading()
+        fun showAlbums(albums: PagedList<Album>)
 
-        fun setAlbums(albums: PagedList<Album>)
+        fun showSelectedAlbums(ids: List<Int>)
 
         fun setAdded()
 
@@ -174,6 +164,6 @@ interface VideoContract {
 
         fun onBackListener()
 
-        fun addToAlbums(albumsIds: List<Int>)
+        fun addToAlbums(albumsIds: MutableList<Album>)
     }
 }

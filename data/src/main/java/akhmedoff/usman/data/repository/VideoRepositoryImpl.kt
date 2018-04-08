@@ -4,6 +4,7 @@ import akhmedoff.usman.data.api.VkApi
 import akhmedoff.usman.data.db.OwnerDao
 import akhmedoff.usman.data.db.VideoDao
 import akhmedoff.usman.data.local.UserSettings
+import akhmedoff.usman.data.model.ApiResponse
 import akhmedoff.usman.data.model.Owner
 import akhmedoff.usman.data.model.ResponseVideo
 import akhmedoff.usman.data.model.Video
@@ -20,7 +21,6 @@ class VideoRepositoryImpl(
     private val videoDao: VideoDao,
     private val ownerDao: OwnerDao
 ) : VideoRepository {
-
     override fun saveOwnerId(id: Long) = userSettings.saveOwnerId(id)
 
     override fun getOwnerId() = userSettings.getOwnerId()
@@ -55,6 +55,18 @@ class VideoRepositoryImpl(
         vkApi.getVideos(null, video, null, 1, 0)
 
     override fun saveOwner(owner: Owner) = ownerDao.insert(owner)
+
+    override fun addToAlbum(
+        target_id: String?,
+        albumIds: List<Int>,
+        ownerId: String,
+        videoId: String
+    ): Call<ApiResponse<Int>> = vkApi.addVideoToAlbum(
+        target_id,
+        albumIds = albumIds,
+        ownerId = ownerId,
+        videoId = videoId
+    )
 
     override fun search(
         query: String,

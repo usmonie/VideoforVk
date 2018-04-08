@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="365dp"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
     <TextView
@@ -14,13 +14,21 @@
         android:text="@string/add_to_albums_title"
         android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
+    <ProgressBar
+        android:id="@+id/albums_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/albums_recycler"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:visibility="gone"
         app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-        tools:listitem="@layout/add_video_multiselect_item" />
+        tools:listitem="@layout/add_video_multiselect_item"
+        tools:visibility="visible" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,6 +40,7 @@
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="4dp"
             android:layout_weight="1"
             android:text="@android:string/cancel" />
 
@@ -40,7 +49,12 @@
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginTop="4dp"
             android:layout_weight="1"
+            android:enabled="false"
             android:text="@android:string/ok" />
+
     </LinearLayout>
 </LinearLayout>

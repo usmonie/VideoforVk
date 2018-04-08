@@ -31,7 +31,7 @@ class AlbumsFragment : Fragment(), AlbumsContract.View {
 
     override lateinit var presenter: AlbumsContract.Presenter
 
-    private val adapter by lazy {
+    private val adapter: AlbumsRecyclerAdapter by lazy {
         AlbumsRecyclerAdapter({ presenter.onItemClicked(it) }, R.layout.catalog_video_item_big)
     }
 
@@ -39,16 +39,14 @@ class AlbumsFragment : Fragment(), AlbumsContract.View {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View? = inflater.inflate(R.layout.fragment_catalog, container, false)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         presenter = AlbumsPresenter(
             this,
             getAlbumRepository(context!!)
         )
-        return inflater.inflate(R.layout.fragment_catalog, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         catalog_recycler.adapter = adapter
 
         catalog_recycler.itemAnimator = DefaultItemAnimator()
@@ -58,6 +56,7 @@ class AlbumsFragment : Fragment(), AlbumsContract.View {
                 resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin)
             )
         )
+
         update_catalog_layout.setOnRefreshListener { presenter.refresh() }
         presenter.onCreated()
     }
@@ -71,9 +70,9 @@ class AlbumsFragment : Fragment(), AlbumsContract.View {
     override fun showAlbum(item: Album) {
         val fragment = AlbumFragment.getFragment(item)
 
-        activity?.supportFragmentManager?.let {
+        activity?.supportFragmentManager?.let { fragmentManager ->
             Router.replaceFragment(
-                it,
+                fragmentManager,
                 this,
                 fragment,
                 true,

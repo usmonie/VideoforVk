@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.video_info_item.view.*
 
 class VideoInfoRecyclerAdapter(private val clickListener: (Int) -> Unit) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
     var video: Video? = null
         set(value) {
             field = value
@@ -50,7 +51,7 @@ class VideoInfoRecyclerAdapter(private val clickListener: (Int) -> Unit) :
                     false
                 )
             )
-        }.apply { itemView.setOnClickListener { clickListener(it.id) } }
+        }
 
     override fun getItemViewType(position: Int) = when (position) {
         0 -> R.layout.video_info_item

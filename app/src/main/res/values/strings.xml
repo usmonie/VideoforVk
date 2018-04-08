@@ -68,4 +68,8 @@
     <string name="add_to_albums_title">Add to albums</string>
 
     <string name="shared_with_vt" formatted="false">Watch the video %s: %s from VT: https://play.google.com/store/apps/details?id=akhmedoff.usman.videoforvk</string>
+    <string name="my_album">My album</string>
+    <string name="album_added">Added</string>
+    <string name="add_to_my_videos">Add to my videos</string>
+    <string name="add_to_my_albums">Add  to my albums</string>
 </resources>

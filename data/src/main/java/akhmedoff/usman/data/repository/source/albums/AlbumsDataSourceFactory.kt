@@ -8,7 +8,7 @@ import android.arch.paging.DataSource
 
 class AlbumsDataSourceFactory(
     private val vkApi: VkApi,
-    private val ownerId: Int?,
+    private val ownerId: String?,
     val ownerDao: OwnerDao,
     val albumDao: AlbumDao
 ) : DataSource.Factory<Int, Album>() {

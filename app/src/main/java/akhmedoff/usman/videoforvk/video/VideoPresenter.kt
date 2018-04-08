@@ -3,6 +3,7 @@ package akhmedoff.usman.videoforvk.video
 import akhmedoff.usman.data.Error
 import akhmedoff.usman.data.model.*
 import akhmedoff.usman.data.model.Quality.*
+import akhmedoff.usman.data.repository.AlbumRepository
 import akhmedoff.usman.data.repository.UserRepository
 import akhmedoff.usman.data.repository.VideoRepository
 import akhmedoff.usman.data.utils.gson
@@ -17,10 +18,9 @@ import retrofit2.Response
 class VideoPresenter(
     override var view: VideoContract.View?,
     private val videoRepository: VideoRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val albumRepository: AlbumRepository
 ) : VideoContract.Presenter {
-    override fun addToAlbums(albumsIds: List<Int>) {
-    }
 
     private lateinit var video: Video
 
@@ -28,21 +28,68 @@ class VideoPresenter(
     }
 
     override fun onStart() {
-        view?.hideUi()
+        view?.showUi(false)
         view?.let { view ->
             loadVideo("${view.getOwnerId()}_${view.getVideoId()}")
         }
     }
 
     override fun onResume() {
-        view?.startAudioFocusListener()
         view?.setVideoPosition(view?.loadVideoPosition() ?: 0)
     }
 
     override fun onPause() {
-        view?.stopAudioFocusListener()
         view?.pauseVideo()
         view?.saveVideoPosition(view?.getVideoPosition() ?: 0)
+    }
+
+    override fun addToAlbums(albumsIds: MutableList<Album>) {
+        val ids = mutableListOf<Int>()
+
+        albumsIds.forEach {
+            ids.add(it.id)
+        }
+
+        videoRepository
+            .addToAlbum(
+                albumIds = ids,
+                ownerId = video.ownerId.toString(),
+                videoId = video.id.toString()
+            )
+            .enqueue(object : Callback<ApiResponse<Int>> {
+                override fun onFailure(call: Call<ApiResponse<Int>>?, t: Throwable?) {
+
+                }
+
+                override fun onResponse(
+                    call: Call<ApiResponse<Int>>?,
+                    response: Response<ApiResponse<Int>>?
+                ) {
+                    if (response?.body()?.response == 1) {
+                        view?.hideAddDialog()
+                        view?.setAdded()
+                    }
+                }
+            })
+    }
+
+    private fun getAlbumsByVideo(videoId: String, ownerId: String) {
+        albumRepository
+            .getAlbumsByVideo(videoId = videoId, ownerId = ownerId)
+            .enqueue(object : Callback<ApiResponse<List<Int>>> {
+                override fun onResponse(
+                    call: Call<ApiResponse<List<Int>>>?,
+                    response: Response<ApiResponse<List<Int>>>?
+                ) {
+                    response?.body()?.response?.let {
+                        view?.showSelectedAlbums(it)
+                    }
+                }
+
+                override fun onFailure(call: Call<ApiResponse<List<Int>>>?, t: Throwable?) {
+                }
+
+            })
     }
 
     override fun onClick(itemView: Int) {
@@ -53,15 +100,33 @@ class VideoPresenter(
                 else unlikeCurrentVideo()
 
             R.id.share_button -> shareCurrentVideo()
-            R.id.add_button -> {
+            R.id.add_to_videos -> addToMyVideos()
+            R.id.add_to_album -> {
                 view?.showAddDialog()
-
+                loadAlbums()
             }
         }
     }
 
-    private fun addCurrentVideo() {
+    private fun addToMyVideos() {
+        val album = Album()
+        album.id = -2
+        addToAlbums(mutableListOf(album))
+    }
 
+    private fun loadAlbums() {
+        view?.let { view ->
+            albumRepository
+                .getAlbums()
+                .observe(view, Observer { pagedList ->
+                    if (pagedList != null && pagedList.isNotEmpty()) {
+                        view.showAlbums(pagedList)
+                        view.showAlbumsLoading(false)
+                        getAlbumsByVideo(video.id.toString(), video.ownerId.toString())
+
+                    }
+                })
+        }
     }
 
     private fun shareCurrentVideo() {
@@ -182,13 +247,13 @@ class VideoPresenter(
     }
 
     override fun loadVideo(id: String) {
-        view?.showProgress()
+        view?.showProgress(true)
         videoRepository
             .getVideo(id)
             .enqueue(object : Callback<ResponseVideo> {
                 override fun onFailure(call: Call<ResponseVideo>?, t: Throwable?) {
                     view?.showLoadError()
-                    view?.hideProgress()
+                    view?.showProgress(false)
                 }
 
                 override fun onResponse(
@@ -208,9 +273,9 @@ class VideoPresenter(
                         when {
                             responseVideo.groups != null && responseVideo.groups!!.isNotEmpty() -> {
                                 view?.showOwnerInfo(responseVideo.groups!![0])
-                                view?.hideProgress()
-                                view?.showUi()
-                                view?.showPlayer()
+                                view?.showProgress(false)
+                                view?.showUi(true)
+                                view?.showPlayer(true)
                                 view?.let { it.setVideoPosition(it.loadVideoPosition()) }
                                 responseVideo.groups?.forEach {
                                     videoRepository.saveOwner(it)
@@ -281,7 +346,7 @@ class VideoPresenter(
             ) {
                 Log.e("error", t?.message)
 
-                view?.hideProgress()
+                view?.showProgress(false)
                 view?.showLoadError()
             }
 
@@ -289,12 +354,12 @@ class VideoPresenter(
                 call: Call<ApiResponse<List<User>>>?,
                 response: Response<ApiResponse<List<User>>>?
             ) {
-                view?.hideProgress()
+                view?.showProgress(false)
                 response?.body()?.response?.get(0)?.let { user ->
                     view?.showOwnerInfo(user)
-                    view?.hideProgress()
-                    view?.showUi()
-                    view?.showPlayer()
+                    view?.showProgress(false)
+                    view?.showUi(false)
+                    view?.showPlayer(false)
                     videoRepository.saveOwnerId(user.id)
                 }
             }
@@ -323,10 +388,10 @@ class VideoPresenter(
     override fun changedPipMode() {
         if (view?.isPipMode() == true) {
             view?.setPlayerFullscreen()
-            view?.hideUi()
+            view?.showUi(false)
         } else {
             view?.setPlayerNormal()
-            view?.showUi()
+            view?.showUi(true)
         }
     }
 
@@ -336,11 +401,9 @@ class VideoPresenter(
         view?.getVideoState()?.let { isStartedVideo -> view?.saveVideoState(isStartedVideo) }
         view?.getVideoPosition()?.let { videoPosition -> view?.saveVideoPosition(videoPosition) }
 
-        view?.stopAudioFocusListener()
     }
 
     override fun onDestroyView() {
-        view?.stopAudioFocusListener()
         view?.stopVideo()
         view = null
     }
@@ -349,7 +412,7 @@ class VideoPresenter(
     }
 
     override fun pipToggleButton() {
-        view?.hideUi()
+        view?.showUi(false)
         view?.enterPipMode(video)
     }
 

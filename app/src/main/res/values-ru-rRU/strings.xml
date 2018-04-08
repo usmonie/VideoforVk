@@ -44,5 +44,5 @@
     <string name="video_quality_title_hls">Авто</string>
     <string name="send_to">Отправить</string>
     <string name="add_to_albums_title">Добавить в альбом</string>
-    <string name="shared_with_vt">Посмотрите видео %s: %s. Отправлено из приложения ВТелевизоре: https://play.google.com/store/apps/details?id=akhmedoff.usman.videoforvk</string>
+    <string name="shared_with_vt" formatted="false">Посмотрите видео %s: %s. Отправлено из приложения ВТелевизоре: https://play.google.com/store/apps/details?id=akhmedoff.usman.videoforvk</string>
 </resources>

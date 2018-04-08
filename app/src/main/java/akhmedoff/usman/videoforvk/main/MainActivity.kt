@@ -53,13 +53,13 @@ class MainActivity : AppCompatActivity(), MainContract.View,
             else -> HomeFragment()
         }
         profileFragment = when {
-            supportFragmentManager.findFragmentByTag(HomeFragment.FRAGMENT_TAG) != null -> supportFragmentManager.findFragmentByTag(
+            supportFragmentManager.findFragmentByTag(ProfileFragment.FRAGMENT_TAG) != null -> supportFragmentManager.findFragmentByTag(
                 ProfileFragment.FRAGMENT_TAG
             ) as ProfileFragment
             else -> ProfileFragment()
         }
         lookingFragment = when {
-            supportFragmentManager.findFragmentByTag(HomeFragment.FRAGMENT_TAG) != null -> supportFragmentManager.findFragmentByTag(
+            supportFragmentManager.findFragmentByTag(LookingFragment.FRAGMENT_TAG) != null -> supportFragmentManager.findFragmentByTag(
                 LookingFragment.FRAGMENT_TAG
             ) as LookingFragment
             else -> LookingFragment()
@@ -81,14 +81,14 @@ class MainActivity : AppCompatActivity(), MainContract.View,
     override fun showHome() = replaceFragment(
         supportFragmentManager,
         fragment = homeFragment,
-        fragmentTag = LookingFragment.FRAGMENT_TAG
+        fragmentTag = HomeFragment.FRAGMENT_TAG
     )
 
     override fun showProfile() =
         replaceFragment(
             supportFragmentManager,
             fragment = profileFragment,
-            fragmentTag = LookingFragment.FRAGMENT_TAG
+            fragmentTag = ProfileFragment.FRAGMENT_TAG
         )
 
     override fun showLooking() = replaceFragment(

@@ -7,6 +7,7 @@ import akhmedoff.usman.data.utils.getAlbumRepository
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.Router
 import akhmedoff.usman.videoforvk.video.VideoFragment
+import akhmedoff.usman.videoforvk.view.MarginItemDecorator
 import android.arch.paging.PagedList
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -79,6 +80,12 @@ class AlbumFragment : Fragment(), AlbumContract.View {
 
         val layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         album_videos_recycler.layoutManager = layoutManager
+        album_videos_recycler.addItemDecoration(
+            MarginItemDecorator(
+                1,
+                resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin)
+            )
+        )
         album_videos_recycler.adapter = adapter
         albumPresenter.onCreated()
     }

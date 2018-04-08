@@ -12,6 +12,40 @@ interface VkApi {
         const val API_VERSION = "5.73"
     }
 
+    @GET
+    fun auth(
+        @Url url: String,
+        @Query("client_id") clientId: String,
+        @Query("client_secret") clientSecret: String,
+        @Query("username") username: String,
+        @Query("password") password: String,
+        @Query("scope") scope: String,
+        @Query("grant_type") grantType: String = "password",
+        @Query("code") code: String? = null,
+        @Query("captcha_sid") captchaSid: String? = null,
+        @Query("captcha_key") captchaKey: String? = null,
+        @Query("2fa_supported") supported: Int = 1
+    ): Call<Auth>
+
+    @GET
+    fun checkToken(@Url url: String): Call<CheckTokenResponse>
+
+    @GET("groups.getById")
+    fun getGroups(
+        @Query("group_ids") groupIds: List<String>? = null,
+        @Query("group_id") groupId: String? = null
+    ): Call<ApiResponse<List<Group>>>
+
+    @GET("groups.leave")
+    fun leaveGroup(
+        @Query("group_id") groupId: Long
+    ): Call<ApiResponse<Boolean>>
+
+    @GET("groups.join")
+    fun joinGroup(
+        @Query("group_id") groupId: Long
+    ): Call<ApiResponse<Boolean>>
+
     @GET("users.get")
     fun getUsers(
         @Query("user_ids") users_id: List<String>? = null,
@@ -39,7 +73,8 @@ interface VkApi {
         @Query("owner_id") ownerId: String?,
         @Query("offset") offset: Long,
         @Query("likes") count: Long,
-        @Query("extended") extended: Int = 1
+        @Query("extended") extended: Int = 1,
+        @Query("need_system") need_system: Int = 0
     ): Call<ApiResponse<AlbumsResponse>>
 
     @GET("video.getCatalog")
@@ -49,21 +84,6 @@ interface VkApi {
         @Query("from") from: String? = null,
         @Query("filters") filters: String
     ): Call<ResponseCatalog>
-
-    @GET
-    fun auth(
-        @Url url: String,
-        @Query("client_id") clientId: String,
-        @Query("client_secret") clientSecret: String,
-        @Query("username") username: String,
-        @Query("password") password: String,
-        @Query("scope") scope: String,
-        @Query("grant_type") grantType: String = "password",
-        @Query("code") code: String? = null,
-        @Query("captcha_sid") captchaSid: String? = null,
-        @Query("captcha_key") captchaKey: String? = null,
-        @Query("2fa_supported") supported: Int = 1
-    ): Call<Auth>
 
     @GET("video.search")
     fun searchVideos(
@@ -80,31 +100,20 @@ interface VkApi {
 
     @GET("video.addToAlbum")
     fun addVideoToAlbum(
-        @Query("target_id") targetId: String,
-        @Query("album_id") albumId: String,
-        @Query("album_ids") albumIds: String,
+        @Query("target_id") targetId: String? = null,
+        @Query("album_id") albumId: String? = null,
+        @Query("album_ids") albumIds: List<Int>? = null,
         @Query("owner_id") ownerId: String,
         @Query("video_id") videoId: String
-    )
+    ): Call<ApiResponse<Int>>
 
-    @GET("groups.getById")
-    fun getGroups(
-        @Query("group_ids") groupIds: List<String>? = null,
-        @Query("group_id") groupId: String? = null
-    ): Call<ApiResponse<List<Group>>>
-
-    @GET("groups.leave")
-    fun leaveGroup(
-        @Query("group_id") groupId: Long
-    ): Call<ApiResponse<Boolean>>
-
-    @GET("groups.join")
-    fun joinGroup(
-        @Query("group_id") groupId: Long
-    ): Call<ApiResponse<Boolean>>
-
-    @GET
-    fun checkToken(@Url url: String): Call<CheckTokenResponse>
+    @GET("video.getAlbumsByVideo")
+    fun getAlbumsByVideo(
+        @Query("target_id") targetId: String? = null,
+        @Query("owner_id") ownerId: String,
+        @Query("video_id") videoId: String,
+        @Query("extended") extended: Int = 0
+    ): Call<ApiResponse<List<Int>>>
 
     @GET("video.getCatalogSection")
     fun getCatalogSection(

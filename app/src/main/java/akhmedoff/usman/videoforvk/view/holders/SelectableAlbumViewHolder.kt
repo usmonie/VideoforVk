@@ -1,6 +1,14 @@
 package akhmedoff.usman.videoforvk.view.holders
 
-import android.support.v7.widget.RecyclerView
+import akhmedoff.usman.data.model.Album
 import android.view.View
+import kotlinx.android.synthetic.main.add_video_multiselect_item.view.*
 
-class SelectableAlbumViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView)
+class SelectableAlbumViewHolder(itemView: View) :
+    AbstractViewHolder<Album>(itemView) {
+
+    override fun bind(item: Album) {
+        itemView.checkBox.text = item.title
+    }
+
+}

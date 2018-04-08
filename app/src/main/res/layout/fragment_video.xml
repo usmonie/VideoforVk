@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="snap|exitUntilCollapsed"
+            app:layout_scrollFlags="scroll|snap|enterAlways"
             app:layout_scrollInterpolator="@android:anim/decelerate_interpolator"
             app:titleEnabled="false"
             app:toolbarId="@+id/toolbar">
@@ -27,7 +27,6 @@
                 android:id="@+id/video_exo_player"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"
                 app:controller_layout_id="@layout/playback_exo_control_view"
                 app:resize_mode="fit"
                 tools:visibility="visible" />

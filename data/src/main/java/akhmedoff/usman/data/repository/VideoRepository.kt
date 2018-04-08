@@ -23,6 +23,13 @@ interface VideoRepository {
 
     fun saveOwner(owner: Owner)
 
+    fun addToAlbum(
+        target_id: String? = null,
+        albumIds: List<Int>,
+        ownerId: String,
+        videoId: String
+    ): Call<ApiResponse<Int>>
+
     fun search(
         query: String,
         sort: Int?,

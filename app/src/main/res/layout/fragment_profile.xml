@@ -59,10 +59,10 @@
                     layout="@layout/search_toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom" />
+                    android:layout_gravity="bottom"
+                    app:layout_scrollFlags="scroll|enterAlways" />
 
             </LinearLayout>
-
         </android.support.design.widget.CollapsingToolbarLayout>
 
         <android.support.design.widget.TabLayout

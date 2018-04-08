@@ -6,7 +6,7 @@ import android.support.annotation.Px
 import android.support.v7.widget.RecyclerView
 import android.view.View
 
-class MarginItemDecorator(@IntRange(from = 0) private val columnsCount: Int, @Px private val margin: Int) :
+class MarginItemDecorator(@IntRange(from = 0) private val columnsCount: Int = 1, @Px private val margin: Int) :
     RecyclerView.ItemDecoration() {
 
     override fun getItemOffsets(
