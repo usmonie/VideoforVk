@@ -128,8 +128,6 @@ interface VideoContract {
 
         fun onClick(itemView: Int)
 
-        fun onCreate()
-
         fun onStart()
 
         fun onResume()

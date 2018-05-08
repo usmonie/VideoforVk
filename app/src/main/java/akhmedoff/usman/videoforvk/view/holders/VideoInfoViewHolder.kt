@@ -11,10 +11,9 @@ import android.widget.ImageView
 import kotlinx.android.synthetic.main.video_info_item.view.*
 
 class VideoInfoViewHolder(
-    private val clickListener: (Int) -> Unit,
-    itemView: View
-) :
-    AbstractViewHolder<Video>(itemView) {
+        private val clickListener: (Int) -> Unit,
+        itemView: View
+) : AbstractViewHolder<Video>(itemView) {
 
     private val popupMenu: PopupMenu = PopupMenu(itemView.context, itemView.add_button).apply {
         this.inflate(R.menu.add_video_menu)
@@ -43,24 +42,29 @@ class VideoInfoViewHolder(
         itemView.video_title.text = item.title
 
         itemView.video_date.text = DateUtils.getRelativeTimeSpanString(
-            item.date * 1000,
-            System.currentTimeMillis(),
-            DateUtils.DAY_IN_MILLIS
+                item.date * 1000,
+                System.currentTimeMillis(),
+                DateUtils.DAY_IN_MILLIS
         )
 
         itemView.video_views.text =
                 item.views?.let {
                     itemView.resources.getQuantityString(
-                        R.plurals.video_views,
-                        it,
-                        it.toString()
+                            R.plurals.video_views,
+                            it,
+                            it.toString()
                     )
                 }
 
         itemView.video_desc.text = item.description
+
+        setDrawable(itemView.like_button,
+                when (item.likes?.userLikes) {
+                    true -> R.drawable.ic_favorite_fill_24dp
+                    else -> R.drawable.ic_favorite_border
+                })
     }
 
-    fun setDrawable(imageView: ImageView, @DrawableRes id: Int) {
-        imageView.setImageDrawable(ContextCompat.getDrawable(itemView.context, id))
-    }
+    fun setDrawable(imageView: ImageView, @DrawableRes id: Int) =
+            imageView.setImageDrawable(ContextCompat.getDrawable(itemView.context, id))
 }

@@ -24,9 +24,6 @@ class VideoPresenter(
 
     private lateinit var video: Video
 
-    override fun onCreate() {
-    }
-
     override fun onStart() {
         view?.showUi(false)
         view?.let { view ->
@@ -54,8 +51,7 @@ class VideoPresenter(
                 .addToAlbum(
                         albumIds = ids,
                         ownerId = video.ownerId.toString(),
-                        videoId = video.id.toString()
-                )
+                        videoId = video.id.toString())
                 .enqueue(object : Callback<ApiResponse<Int>> {
                     override fun onFailure(call: Call<ApiResponse<Int>>?, t: Throwable?) {
 
@@ -123,7 +119,6 @@ class VideoPresenter(
                             view.showAlbums(pagedList)
                             view.showAlbumsLoading(false)
                             getAlbumsByVideo(video.id.toString(), video.ownerId.toString())
-
                         }
                     })
         }
@@ -131,13 +126,11 @@ class VideoPresenter(
 
     private fun shareCurrentVideo() {
         view?.let { view ->
-            view.showShareDialog(
-                    view.getString(
-                            R.string.shared_with_vt,
-                            video.title,
-                            "https://vk.com/video?z=video${video.ownerId}_${video.id}"
-                    )
-            )
+            view.showShareDialog(view.getString(
+                    R.string.shared_with_vt,
+                    video.title,
+                    "https://vk.com/video?z=video${video.ownerId}_${video.id}"
+            ))
         }
     }
 
@@ -165,7 +158,6 @@ class VideoPresenter(
                         response?.body()?.let {
                             video.likes?.userLikes = true
                             video.likes?.let { view?.setLiked(it) }
-
                         }
                         response?.errorBody()?.let {
                             errorConvert(it)
@@ -206,9 +198,7 @@ class VideoPresenter(
                             errorConvert(it)
                             video.likes?.let { view?.setLiked(it) }
                         }
-
                     }
-
                 })
     }
 
@@ -287,10 +277,6 @@ class VideoPresenter(
                                 else -> view?.showLoadError()
                             }
 
-                            view?.let { view ->
-                                isVideoLiked(ownerId = view.getOwnerId(), itemId = view.getVideoId())
-                            }
-
                             when {
                                 responseVideo.groups != null && responseVideo.groups!!.isNotEmpty() -> {
                                     view?.showOwnerInfo(responseVideo.groups!![0])
@@ -311,12 +297,9 @@ class VideoPresenter(
                                     loadUser(responseVideo.profiles!![0])
                                 }
                             }
-
                         }
                     }
-
                 })
-
     }
 
     private fun showVideo(video: Video) {

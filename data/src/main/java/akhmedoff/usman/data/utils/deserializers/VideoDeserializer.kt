@@ -24,12 +24,11 @@ class VideoDeserializer : JsonDeserializer<ResponseVideo> {
             val item = Video()
 
             val itemJson = it.asJsonObject
-
             val videoUrls = mutableListOf<VideoUrl>()
 
             val fileJson = itemJson["files"].asJsonObject
-            var external = fileJson["external"]?.asString
 
+            var external = fileJson["external"]?.asString
             var mp4240 = fileJson["mp4_240"]?.asString
             val mp4360 = fileJson["mp4_360"]?.asString
             val mp4480 = fileJson["mp4_480"]?.asString
@@ -54,13 +53,13 @@ class VideoDeserializer : JsonDeserializer<ResponseVideo> {
 
             likesJson?.let {
                 val likes = Likes()
-                likes.userLikes = when (itemJson["user_likes"]?.asInt) {
+                likes.userLikes = when (it["user_likes"]?.asJsonPrimitive?.asInt) {
                     null -> false
                     0 -> false
                     else -> true
                 }
-                likes.likes = it["count"].asJsonPrimitive.asInt
 
+                likes.likes = it["count"].asJsonPrimitive.asInt
                 item.likes = likes
             }
 
