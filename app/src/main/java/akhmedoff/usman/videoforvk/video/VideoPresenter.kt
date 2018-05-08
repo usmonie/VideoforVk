@@ -16,10 +16,10 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class VideoPresenter(
-    override var view: VideoContract.View?,
-    private val videoRepository: VideoRepository,
-    private val userRepository: UserRepository,
-    private val albumRepository: AlbumRepository
+        override var view: VideoContract.View?,
+        private val videoRepository: VideoRepository,
+        private val userRepository: UserRepository,
+        private val albumRepository: AlbumRepository
 ) : VideoContract.Presenter {
 
     private lateinit var video: Video
@@ -51,45 +51,45 @@ class VideoPresenter(
         }
 
         videoRepository
-            .addToAlbum(
-                albumIds = ids,
-                ownerId = video.ownerId.toString(),
-                videoId = video.id.toString()
-            )
-            .enqueue(object : Callback<ApiResponse<Int>> {
-                override fun onFailure(call: Call<ApiResponse<Int>>?, t: Throwable?) {
+                .addToAlbum(
+                        albumIds = ids,
+                        ownerId = video.ownerId.toString(),
+                        videoId = video.id.toString()
+                )
+                .enqueue(object : Callback<ApiResponse<Int>> {
+                    override fun onFailure(call: Call<ApiResponse<Int>>?, t: Throwable?) {
 
-                }
-
-                override fun onResponse(
-                    call: Call<ApiResponse<Int>>?,
-                    response: Response<ApiResponse<Int>>?
-                ) {
-                    if (response?.body()?.response == 1) {
-                        view?.hideAddDialog()
-                        view?.setAdded()
                     }
-                }
-            })
+
+                    override fun onResponse(
+                            call: Call<ApiResponse<Int>>?,
+                            response: Response<ApiResponse<Int>>?
+                    ) {
+                        if (response?.body()?.response == 1) {
+                            view?.hideAddDialog()
+                            view?.setAdded()
+                        }
+                    }
+                })
     }
 
     private fun getAlbumsByVideo(videoId: String, ownerId: String) {
         albumRepository
-            .getAlbumsByVideo(videoId = videoId, ownerId = ownerId)
-            .enqueue(object : Callback<ApiResponse<List<Int>>> {
-                override fun onResponse(
-                    call: Call<ApiResponse<List<Int>>>?,
-                    response: Response<ApiResponse<List<Int>>>?
-                ) {
-                    response?.body()?.response?.let {
-                        view?.showSelectedAlbums(it)
+                .getAlbumsByVideo(videoId = videoId, ownerId = ownerId)
+                .enqueue(object : Callback<ApiResponse<List<Int>>> {
+                    override fun onResponse(
+                            call: Call<ApiResponse<List<Int>>>?,
+                            response: Response<ApiResponse<List<Int>>>?
+                    ) {
+                        response?.body()?.response?.let {
+                            view?.showSelectedAlbums(it)
+                        }
                     }
-                }
 
-                override fun onFailure(call: Call<ApiResponse<List<Int>>>?, t: Throwable?) {
-                }
+                    override fun onFailure(call: Call<ApiResponse<List<Int>>>?, t: Throwable?) {
+                    }
 
-            })
+                })
     }
 
     override fun onClick(itemView: Int) {
@@ -117,26 +117,26 @@ class VideoPresenter(
     private fun loadAlbums() {
         view?.let { view ->
             albumRepository
-                .getAlbums()
-                .observe(view, Observer { pagedList ->
-                    if (pagedList != null && pagedList.isNotEmpty()) {
-                        view.showAlbums(pagedList)
-                        view.showAlbumsLoading(false)
-                        getAlbumsByVideo(video.id.toString(), video.ownerId.toString())
+                    .getAlbums()
+                    .observe(view, Observer { pagedList ->
+                        if (pagedList != null && pagedList.isNotEmpty()) {
+                            view.showAlbums(pagedList)
+                            view.showAlbumsLoading(false)
+                            getAlbumsByVideo(video.id.toString(), video.ownerId.toString())
 
-                    }
-                })
+                        }
+                    })
         }
     }
 
     private fun shareCurrentVideo() {
         view?.let { view ->
             view.showShareDialog(
-                view.getString(
-                    R.string.shared_with_vt,
-                    video.title,
-                    "https://vk.com/video?z=video${video.ownerId}_${video.id}"
-                )
+                    view.getString(
+                            R.string.shared_with_vt,
+                            video.title,
+                            "https://vk.com/video?z=video${video.ownerId}_${video.id}"
+                    )
             )
         }
     }
@@ -146,35 +146,35 @@ class VideoPresenter(
     }
 
     private fun likeVideo(
-        ownerId: String?,
-        itemId: String,
-        captchaSid: String?,
-        captchaCode: String?
+            ownerId: String?,
+            itemId: String,
+            captchaSid: String?,
+            captchaCode: String?
     ) {
         videoRepository
-            .likeVideo(ownerId, itemId, captchaSid, captchaCode)
-            .enqueue(object : Callback<ApiResponse<Likes>> {
-                override fun onFailure(call: Call<ApiResponse<Likes>>?, t: Throwable?) {
-                    video.likes?.let { view?.setUnliked(it) }
-                }
-
-                override fun onResponse(
-                    call: Call<ApiResponse<Likes>>?,
-                    response: Response<ApiResponse<Likes>>?
-                ) {
-                    response?.body()?.let {
-                        video.likes?.userLikes = true
-                        video.likes?.let { view?.setLiked(it) }
-
-                    }
-                    response?.errorBody()?.let {
-                        errorConvert(it)
+                .likeVideo(ownerId, itemId, captchaSid, captchaCode)
+                .enqueue(object : Callback<ApiResponse<Likes>> {
+                    override fun onFailure(call: Call<ApiResponse<Likes>>?, t: Throwable?) {
                         video.likes?.let { view?.setUnliked(it) }
                     }
 
-                }
+                    override fun onResponse(
+                            call: Call<ApiResponse<Likes>>?,
+                            response: Response<ApiResponse<Likes>>?
+                    ) {
+                        response?.body()?.let {
+                            video.likes?.userLikes = true
+                            video.likes?.let { view?.setLiked(it) }
 
-            })
+                        }
+                        response?.errorBody()?.let {
+                            errorConvert(it)
+                            video.likes?.let { view?.setUnliked(it) }
+                        }
+
+                    }
+
+                })
     }
 
     private fun unlikeCurrentVideo() {
@@ -182,34 +182,53 @@ class VideoPresenter(
     }
 
     private fun unlikeVideo(
-        ownerId: String?,
-        itemId: String,
-        captchaSid: String?,
-        captchaCode: String?
+            ownerId: String?,
+            itemId: String,
+            captchaSid: String?,
+            captchaCode: String?
     ) {
         videoRepository
-            .unlikeVideo(ownerId, itemId, captchaSid, captchaCode)
-            .enqueue(object : Callback<ApiResponse<Likes>> {
-                override fun onFailure(call: Call<ApiResponse<Likes>>?, t: Throwable?) {
-                    video.likes?.let { view?.setLiked(it) }
-                }
-
-                override fun onResponse(
-                    call: Call<ApiResponse<Likes>>?,
-                    response: Response<ApiResponse<Likes>>?
-                ) {
-                    response?.body()?.let {
-                        video.likes?.userLikes = false
-                        video.likes?.let { view?.setUnliked(it) }
-                    }
-                    response?.errorBody()?.let {
-                        errorConvert(it)
+                .unlikeVideo(ownerId, itemId, captchaSid, captchaCode)
+                .enqueue(object : Callback<ApiResponse<Likes>> {
+                    override fun onFailure(call: Call<ApiResponse<Likes>>?, t: Throwable?) {
                         video.likes?.let { view?.setLiked(it) }
                     }
 
-                }
+                    override fun onResponse(
+                            call: Call<ApiResponse<Likes>>?,
+                            response: Response<ApiResponse<Likes>>?
+                    ) {
+                        response?.body()?.let {
+                            video.likes?.userLikes = false
+                            video.likes?.let { view?.setUnliked(it) }
+                        }
+                        response?.errorBody()?.let {
+                            errorConvert(it)
+                            video.likes?.let { view?.setLiked(it) }
+                        }
 
-            })
+                    }
+
+                })
+    }
+
+    private fun isVideoLiked(userId: String? = null,
+                             ownerId: String? = null,
+                             itemId: String) {
+        videoRepository.isLiked(userId, "video", ownerId, itemId).enqueue(object : Callback<ApiResponse<Liked>?> {
+
+            override fun onFailure(call: Call<ApiResponse<Liked>?>?, t: Throwable?) {
+                view?.setLiked(Likes())
+            }
+
+            override fun onResponse(call: Call<ApiResponse<Liked>?>?, response: Response<ApiResponse<Liked>?>?) {
+                response?.body()?.response?.let {
+                    view?.setLiked(likes = Likes().apply {
+                        userLikes = it.liked == 1
+                    })
+                }
+            }
+        })
     }
 
     override fun changeQuality() {
@@ -226,9 +245,7 @@ class VideoPresenter(
 
     private fun changeQuality(index: Int) {
         view?.setQuality(video.files[index])
-
         view?.saveCurrentQuality(index)
-
         view?.setVideoPosition(view?.loadVideoPosition() ?: 0)
     }
 
@@ -249,52 +266,56 @@ class VideoPresenter(
     override fun loadVideo(id: String) {
         view?.showProgress(true)
         videoRepository
-            .getVideo(id)
-            .enqueue(object : Callback<ResponseVideo> {
-                override fun onFailure(call: Call<ResponseVideo>?, t: Throwable?) {
-                    view?.showLoadError()
-                    view?.showProgress(false)
-                }
-
-                override fun onResponse(
-                    call: Call<ResponseVideo>?,
-                    response: Response<ResponseVideo>?
-                ) {
-                    response?.body()?.let { responseVideo ->
-                        when {
-                            responseVideo.items.isNotEmpty() -> {
-                                video = responseVideo.items[0]
-                                showVideo(video)
-                            }
-
-                            else -> view?.showLoadError()
-                        }
-
-                        when {
-                            responseVideo.groups != null && responseVideo.groups!!.isNotEmpty() -> {
-                                view?.showOwnerInfo(responseVideo.groups!![0])
-                                view?.showProgress(false)
-                                view?.showUi(true)
-                                view?.showPlayer(true)
-                                view?.let { it.setVideoPosition(it.loadVideoPosition()) }
-                                responseVideo.groups?.forEach {
-                                    videoRepository.saveOwner(it)
-                                }
-                                videoRepository.saveOwnerId(responseVideo.groups!![0].id)
-
-                            }
-                            responseVideo.profiles != null && responseVideo.profiles!!.isNotEmpty() -> {
-                                responseVideo.profiles?.forEach {
-                                    videoRepository.saveOwner(it)
-                                }
-                                loadUser(responseVideo.profiles!![0])
-                            }
-                        }
-
+                .getVideo(id)
+                .enqueue(object : Callback<ResponseVideo> {
+                    override fun onFailure(call: Call<ResponseVideo>?, t: Throwable?) {
+                        view?.showLoadError()
+                        view?.showProgress(false)
                     }
-                }
 
-            })
+                    override fun onResponse(
+                            call: Call<ResponseVideo>?,
+                            response: Response<ResponseVideo>?
+                    ) {
+                        response?.body()?.let { responseVideo ->
+                            when {
+                                responseVideo.items.isNotEmpty() -> {
+                                    video = responseVideo.items[0]
+                                    showVideo(video)
+                                }
+
+                                else -> view?.showLoadError()
+                            }
+
+                            view?.let { view ->
+                                isVideoLiked(ownerId = view.getOwnerId(), itemId = view.getVideoId())
+                            }
+
+                            when {
+                                responseVideo.groups != null && responseVideo.groups!!.isNotEmpty() -> {
+                                    view?.showOwnerInfo(responseVideo.groups!![0])
+                                    view?.showProgress(false)
+                                    view?.showUi(true)
+                                    view?.showPlayer(true)
+                                    view?.let { it.setVideoPosition(it.loadVideoPosition()) }
+                                    responseVideo.groups?.forEach {
+                                        videoRepository.saveOwner(it)
+                                    }
+                                    videoRepository.saveOwnerId(responseVideo.groups!![0].id)
+
+                                }
+                                responseVideo.profiles != null && responseVideo.profiles!!.isNotEmpty() -> {
+                                    responseVideo.profiles?.forEach {
+                                        videoRepository.saveOwner(it)
+                                    }
+                                    loadUser(responseVideo.profiles!![0])
+                                }
+                            }
+
+                        }
+                    }
+
+                })
 
     }
 
@@ -338,49 +359,49 @@ class VideoPresenter(
     }
 
     private fun loadUser(user: User) = userRepository
-        .getUsers(user.id.toString())
-        .enqueue(object : Callback<ApiResponse<List<User>>> {
-            override fun onFailure(
-                call: Call<ApiResponse<List<User>>>?,
-                t: Throwable?
-            ) {
-                Log.e("error", t?.message)
+            .getUsers(user.id.toString())
+            .enqueue(object : Callback<ApiResponse<List<User>>> {
+                override fun onFailure(
+                        call: Call<ApiResponse<List<User>>>?,
+                        t: Throwable?
+                ) {
+                    Log.e("error", t?.message)
 
-                view?.showProgress(false)
-                view?.showLoadError()
-            }
-
-            override fun onResponse(
-                call: Call<ApiResponse<List<User>>>?,
-                response: Response<ApiResponse<List<User>>>?
-            ) {
-                view?.showProgress(false)
-                response?.body()?.response?.get(0)?.let { user ->
-                    view?.showOwnerInfo(user)
                     view?.showProgress(false)
-                    view?.showUi(false)
-                    view?.showPlayer(false)
-                    videoRepository.saveOwnerId(user.id)
+                    view?.showLoadError()
                 }
-            }
-        })
+
+                override fun onResponse(
+                        call: Call<ApiResponse<List<User>>>?,
+                        response: Response<ApiResponse<List<User>>>?
+                ) {
+                    view?.showProgress(false)
+                    response?.body()?.response?.get(0)?.let { user ->
+                        view?.showOwnerInfo(user)
+                        view?.showProgress(false)
+                        view?.showUi(false)
+                        view?.showPlayer(false)
+                        videoRepository.saveOwnerId(user.id)
+                    }
+                }
+            })
 
     override fun clickFullscreen() {
         view?.saveIsFullscreen(
-            when (view?.loadIsFullscreen() == true) {
-                true -> {
-                    view?.showSmallScreen()
-                    view?.setPlayerNormal()
+                when (view?.loadIsFullscreen() == true) {
+                    true -> {
+                        view?.showSmallScreen()
+                        view?.setPlayerNormal()
 
-                    false
-                }
-                false -> {
-                    view?.showFullscreen()
-                    view?.setPlayerFullscreen()
+                        false
+                    }
+                    false -> {
+                        view?.showFullscreen()
+                        view?.setPlayerFullscreen()
 
-                    true
+                        true
+                    }
                 }
-            }
         )
 
     }
@@ -428,7 +449,7 @@ class VideoPresenter(
     override fun ownerClicked() {
         view?.let { view ->
             videoRepository.getOwner()
-                .observe(view, Observer { owner -> owner?.let { view.showOwnerGroup(it) } })
+                    .observe(view, Observer { owner -> owner?.let { view.showOwnerGroup(it) } })
         }
     }
 
@@ -437,10 +458,10 @@ class VideoPresenter(
             if (captchaCode.trim().isEmpty()) return
 
             videoRepository.likeVideo(
-                video.ownerId.toString(),
-                video.id.toString(),
-                it.loadCaptchaSid(),
-                captchaCode
+                    video.ownerId.toString(),
+                    video.id.toString(),
+                    it.loadCaptchaSid(),
+                    captchaCode
             )
         }
     }

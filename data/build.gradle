@@ -39,7 +39,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation "android.arch.lifecycle:extensions:$archLifecycleVersion"
-    implementation 'android.arch.paging:runtime:1.0.0-beta1'
+    implementation 'android.arch.paging:runtime:1.0.0-rc1'
     api 'android.arch.persistence.room:runtime:1.0.0'
     kapt "android.arch.persistence.room:compiler:1.0.0"
     kapt "android.arch.lifecycle:compiler:$archLifecycleVersion"

@@ -4,6 +4,7 @@ import akhmedoff.usman.data.model.*
 import android.arch.lifecycle.LiveData
 import android.arch.paging.PagedList
 import retrofit2.Call
+import retrofit2.http.Query
 
 interface VideoRepository {
 
@@ -14,9 +15,9 @@ interface VideoRepository {
     fun getOwner(): LiveData<Owner>
 
     fun getVideos(
-        ownerId: Int? = null,
-        videos: String? = null,
-        albumId: Int? = null
+            ownerId: Int? = null,
+            videos: String? = null,
+            albumId: Int? = null
     ): LiveData<PagedList<Video>>
 
     fun getVideo(video: String): Call<ResponseVideo>
@@ -24,34 +25,40 @@ interface VideoRepository {
     fun saveOwner(owner: Owner)
 
     fun addToAlbum(
-        target_id: String? = null,
-        albumIds: List<Int>,
-        ownerId: String,
-        videoId: String
+            target_id: String? = null,
+            albumIds: List<Int>,
+            ownerId: String,
+            videoId: String
     ): Call<ApiResponse<Int>>
 
     fun search(
-        query: String,
-        sort: Int?,
-        hd: Int?,
-        adult: Int?,
-        filters: String?,
-        searchOwn: Boolean?,
-        longer: Long?,
-        shorter: Long?
+            query: String,
+            sort: Int?,
+            hd: Int?,
+            adult: Int?,
+            filters: String?,
+            searchOwn: Boolean?,
+            longer: Long?,
+            shorter: Long?
     ): LiveData<PagedList<Video>>
 
     fun likeVideo(
-        ownerId: String? = null,
-        itemId: String,
-        captchaSid: String? = null,
-        captchaCode: String? = null
+            ownerId: String? = null,
+            itemId: String,
+            captchaSid: String? = null,
+            captchaCode: String? = null
     ): Call<ApiResponse<Likes>>
 
     fun unlikeVideo(
-        ownerId: String?,
-        itemId: String,
-        captchaSid: String?,
-        captchaCode: String?
+            ownerId: String?,
+            itemId: String,
+            captchaSid: String?,
+            captchaCode: String?
     ): Call<ApiResponse<Likes>>
+
+    fun isLiked(userId: String? = null,
+                type: String,
+                ownerId: String? = null,
+                itemId: String
+    ): Call<ApiResponse<Liked>>
 }
