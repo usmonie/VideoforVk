@@ -63,18 +63,13 @@ object Router {
             val exitFade = Fade()
             prevFragment?.exitTransition = exitFade
 
-            val enterTransitionSet: Transition = when (prevFragment?.context) {
-                null -> TransitionSet()
-                    .setOrdering(ORDERING_TOGETHER)
+            val enterTransitionSet: Transition = TransitionSet()
                     .addTransition(ChangeBounds())
                     .addTransition(ChangeTransform())
                     .addTransition(ChangeClipBounds())
                     .addTransition(ChangeImageTransform())
 
-                else -> TransitionInflater.from(prevFragment.context).inflateTransition(android.R.transition.move)
-            }
-
-            enterTransitionSet.duration = MOVE_DEFAULT_TIME
+            enterTransitionSet.duration = 375L
 
             fragment.sharedElementEnterTransition = enterTransitionSet
 
