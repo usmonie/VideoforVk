@@ -12,8 +12,6 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import com.squareup.picasso.Picasso
@@ -53,9 +51,9 @@ class ProfileFragment : Fragment(), ProfileContract.View {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_profile, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -79,7 +77,7 @@ class ProfileFragment : Fragment(), ProfileContract.View {
     }
 
     override fun showUserPhoto(photoUrl: String) =
-        Picasso.get().load(photoUrl).into(user_avatar)
+            Picasso.get().load(photoUrl).into(user_avatar)
 
     override fun setIsUser(isUser: Boolean) {
 
@@ -87,13 +85,13 @@ class ProfileFragment : Fragment(), ProfileContract.View {
 
     override fun showPages(ownerId: String) {
         pagesPagerAdapter.addFragment(
-            VideosFragment.createFragment(ownerId),
-            resources.getString(R.string.tab_videos_title)
+                VideosFragment.createFragment(ownerId),
+                resources.getString(R.string.tab_videos_title)
         )
 
         pagesPagerAdapter.addFragment(
-            AlbumsFragment.createFragment(ownerId),
-            getString(R.string.tab_albums_title)
+                AlbumsFragment.createFragment(ownerId),
+                getString(R.string.tab_albums_title)
         )
 
         pagesPagerAdapter.notifyDataSetChanged()
@@ -122,11 +120,10 @@ class ProfileFragment : Fragment(), ProfileContract.View {
 
         activity?.supportFragmentManager?.let {
             Router.replaceFragment(
-                it,
-                this,
-                fragment,
-                true,
-                VideoFragment.FRAGMENT_TAG
+                    it,
+                    fragment,
+                    true,
+                    VideoFragment.FRAGMENT_TAG
             )
         }
     }

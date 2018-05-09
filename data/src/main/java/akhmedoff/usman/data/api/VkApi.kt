@@ -72,14 +72,14 @@ interface VkApi {
     fun getAlbums(
             @Query("owner_id") ownerId: String?,
             @Query("offset") offset: Long,
-            @Query("likes") count: Long,
+            @Query("count") count: Long,
             @Query("extended") extended: Int = 1,
             @Query("need_system") need_system: Int = 0
     ): Call<ApiResponse<AlbumsResponse>>
 
     @GET("video.getCatalog")
     fun getCatalog(
-            @Query("likes") count: Int,
+            @Query("count") count: Int,
             @Query("items_count") itemsCount: Int,
             @Query("from") from: String? = null,
             @Query("filters") filters: String
@@ -119,7 +119,7 @@ interface VkApi {
     fun getCatalogSection(
             @Query("section_id") section_id: String,
             @Query("from") from: String,
-            @Query("likes") count: Int,
+            @Query("count") count: Int,
             @Query("extended") extended: Boolean = true
     ): Call<ResponseCatalog>
 

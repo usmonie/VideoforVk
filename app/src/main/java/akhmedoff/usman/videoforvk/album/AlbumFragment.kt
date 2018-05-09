@@ -70,9 +70,9 @@ class AlbumFragment : Fragment(), AlbumContract.View {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.activity_album, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -81,10 +81,10 @@ class AlbumFragment : Fragment(), AlbumContract.View {
         val layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         album_videos_recycler.layoutManager = layoutManager
         album_videos_recycler.addItemDecoration(
-            MarginItemDecorator(
-                1,
-                resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin)
-            )
+                MarginItemDecorator(
+                        1,
+                        resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin)
+                )
         )
         album_videos_recycler.adapter = adapter
         albumPresenter.onCreated()
@@ -98,19 +98,20 @@ class AlbumFragment : Fragment(), AlbumContract.View {
 
     override fun showAlbumImage(poster: String) {
         Picasso
-            .get()
-            .load(poster)
-            .into(app_bar_album_poster_image)
+                .get()
+                .load(poster)
+                .into(app_bar_album_poster_image)
     }
 
     override fun showVideo(video: Video, view: View) {
         activity?.supportFragmentManager?.let {
             Router.replaceFragment(
-                it,
-                this,
-                VideoFragment.getInstance(video, ViewCompat.getTransitionName(view)),
-                true,
-                VideoFragment.FRAGMENT_TAG
+                    it,
+                    this,
+                    VideoFragment.getInstance(video, ViewCompat.getTransitionName(view)),
+                    true,
+                    VideoFragment.FRAGMENT_TAG,
+                    view
             )
         }
     }

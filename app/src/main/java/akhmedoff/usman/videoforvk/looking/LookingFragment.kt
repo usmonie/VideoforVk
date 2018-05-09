@@ -40,12 +40,12 @@ class LookingFragment : Fragment(), LookingContract.View {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         presenter = LookingPresenter(
-            this,
-            getCatalogRepository(context!!)
+                this,
+                getCatalogRepository(context!!)
         )
 
         return inflater.inflate(R.layout.fragment_looking, container, false)
@@ -66,12 +66,12 @@ class LookingFragment : Fragment(), LookingContract.View {
     override fun showVideo(item: CatalogItem, view: View) {
         activity?.supportFragmentManager?.let {
             Router.replaceFragment(
-                it,
-                this,
-                VideoFragment.getInstance(item, ViewCompat.getTransitionName(view)),
-                true,
-                VideoFragment.FRAGMENT_TAG,
-                view
+                    it,
+                    this,
+                    VideoFragment.getInstance(item, ViewCompat.getTransitionName(view)),
+                    true,
+                    VideoFragment.FRAGMENT_TAG,
+                    view
             )
         }
     }
@@ -81,11 +81,10 @@ class LookingFragment : Fragment(), LookingContract.View {
 
         activity?.supportFragmentManager?.let {
             Router.replaceFragment(
-                it,
-                this,
-                fragment,
-                true,
-                VideoFragment.FRAGMENT_TAG
+                    it,
+                    fragment,
+                    true,
+                    VideoFragment.FRAGMENT_TAG
             )
         }
     }
@@ -95,11 +94,12 @@ class LookingFragment : Fragment(), LookingContract.View {
 
         activity?.supportFragmentManager?.let {
             Router.replaceFragment(
-                it,
-                this,
-                fragment,
-                true,
-                VideoFragment.FRAGMENT_TAG
+                    it,
+                    this,
+                    fragment,
+                    true,
+                    VideoFragment.FRAGMENT_TAG,
+                    view
             )
         }
     }
@@ -113,11 +113,11 @@ class LookingFragment : Fragment(), LookingContract.View {
     }
 
     override fun showErrorLoading() =
-        Snackbar.make(
-            update_looking_layout,
-            getText(R.string.error_loading),
-            Snackbar.LENGTH_LONG
-        ).show()
+            Snackbar.make(
+                    update_looking_layout,
+                    getText(R.string.error_loading),
+                    Snackbar.LENGTH_LONG
+            ).show()
 
     override fun setList(items: PagedList<Catalog>) = adapter.submitList(items)
 

@@ -36,25 +36,25 @@ class AlbumsFragment : Fragment(), AlbumsContract.View {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_catalog, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter = AlbumsPresenter(
-            this,
-            getAlbumRepository(context!!)
+                this,
+                getAlbumRepository(context!!)
         )
         catalog_recycler.adapter = adapter
 
         catalog_recycler.itemAnimator = DefaultItemAnimator()
         catalog_recycler.addItemDecoration(
-            MarginItemDecorator(
-                1,
-                resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin)
-            )
+                MarginItemDecorator(
+                        1,
+                        resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin)
+                )
         )
 
         update_catalog_layout.setOnRefreshListener { presenter.refresh() }
@@ -72,11 +72,10 @@ class AlbumsFragment : Fragment(), AlbumsContract.View {
 
         activity?.supportFragmentManager?.let { fragmentManager ->
             Router.replaceFragment(
-                fragmentManager,
-                this,
-                fragment,
-                true,
-                VideoFragment.FRAGMENT_TAG
+                    fragmentManager,
+                    fragment,
+                    true,
+                    VideoFragment.FRAGMENT_TAG
             )
         }
     }

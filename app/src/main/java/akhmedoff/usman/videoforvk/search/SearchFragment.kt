@@ -35,46 +35,46 @@ class SearchFragment : Fragment(), SearchContract.View {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_search, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         search_recycler.adapter = adapter
         search_recycler.addItemDecoration(
-            MarginItemDecorator(
-                1,
-                resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin)
-            )
+                MarginItemDecorator(
+                        1,
+                        resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin)
+                )
         )
 
         search_expanded_edit_text
-            .addTextChangedListener(object : TextWatcher {
+                .addTextChangedListener(object : TextWatcher {
 
-                var timer: Timer? = null
-                override fun afterTextChanged(s: Editable?) {
-                    timer = Timer()
-                    timer?.schedule(object : TimerTask() {
-                        override fun run() {
-                            searchPresenter.search()
-                        }
-                    }, 500L)
-                }
+                    var timer: Timer? = null
+                    override fun afterTextChanged(s: Editable?) {
+                        timer = Timer()
+                        timer?.schedule(object : TimerTask() {
+                            override fun run() {
+                                searchPresenter.search()
+                            }
+                        }, 500L)
+                    }
 
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
-                }
+                    override fun beforeTextChanged(
+                            s: CharSequence?,
+                            start: Int,
+                            count: Int,
+                            after: Int
+                    ) {
+                    }
 
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    timer?.cancel()
-                }
-            })
+                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                        timer?.cancel()
+                    }
+                })
 
 
         adult_filter.isChecked = true
@@ -96,10 +96,10 @@ class SearchFragment : Fragment(), SearchContract.View {
             }
 
             override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
             ) {
                 searchPresenter.search()
             }
@@ -110,10 +110,10 @@ class SearchFragment : Fragment(), SearchContract.View {
             }
 
             override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
             ) {
                 searchPresenter.search()
             }
@@ -169,11 +169,12 @@ class SearchFragment : Fragment(), SearchContract.View {
 
         activity?.supportFragmentManager?.let {
             Router.replaceFragment(
-                it,
-                this,
-                fragment,
-                true,
-                VideoFragment.FRAGMENT_TAG
+                    it,
+                    this,
+                    fragment,
+                    true,
+                    VideoFragment.FRAGMENT_TAG,
+                    view
             )
         }
     }

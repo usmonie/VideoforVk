@@ -76,7 +76,6 @@ class HomeFragment : Fragment(), HomeContract.View {
         activity?.supportFragmentManager?.let {
             Router.replaceFragment(
                 it,
-                this,
                 fragment,
                 true,
                 VideoFragment.FRAGMENT_TAG
