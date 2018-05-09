@@ -1,6 +1,7 @@
 package akhmedoff.usman.data.utils.deserializers
 
 import akhmedoff.usman.data.model.*
+import android.util.Log
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
@@ -23,12 +24,11 @@ class VideoDeserializer : JsonDeserializer<ResponseVideo> {
             val item = Video()
 
             val itemJson = it.asJsonObject
-
             val videoUrls = mutableListOf<VideoUrl>()
 
             val fileJson = itemJson["files"].asJsonObject
-            var external = fileJson["external"]?.asString
 
+            var external = fileJson["external"]?.asString
             var mp4240 = fileJson["mp4_240"]?.asString
             val mp4360 = fileJson["mp4_360"]?.asString
             val mp4480 = fileJson["mp4_480"]?.asString
@@ -53,13 +53,13 @@ class VideoDeserializer : JsonDeserializer<ResponseVideo> {
 
             likesJson?.let {
                 val likes = Likes()
-                likes.userLikes = when (itemJson["user_likes"]?.asInt) {
+                likes.userLikes = when (it["user_likes"]?.asJsonPrimitive?.asInt) {
                     null -> false
                     0 -> false
                     else -> true
                 }
-                likes.likes = it["count"].asJsonPrimitive.asInt
 
+                likes.likes = it["count"].asJsonPrimitive.asInt
                 item.likes = likes
             }
 
@@ -87,6 +87,7 @@ class VideoDeserializer : JsonDeserializer<ResponseVideo> {
             itemJson["photo_130"]?.let {
                 item.photo130 = it.asString
             }
+
             itemJson["photo_320"]?.let {
                 item.photo320 = it.asString
             }
@@ -185,7 +186,7 @@ class VideoDeserializer : JsonDeserializer<ResponseVideo> {
             group.photo200 = groupJson["photo_200"].asString
             groups.add(group)
         }
-
+        Log.d("video deserializer", "end")
         return ResponseVideo(jsonObject["count"].asJsonPrimitive.asInt, items, profiles, groups)
     }
 }

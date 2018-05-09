@@ -2,7 +2,7 @@ package akhmedoff.usman.videoforvk.album
 
 import akhmedoff.usman.data.model.Video
 import akhmedoff.usman.videoforvk.R
-import akhmedoff.usman.videoforvk.view.holders.VideoViewHolder
+import akhmedoff.usman.videoforvk.view.holders.SearchViewHolder
 import android.arch.paging.PagedListAdapter
 import android.support.v7.util.DiffUtil
 import android.view.LayoutInflater
@@ -12,7 +12,7 @@ import com.squareup.picasso.Picasso
 
 class AlbumRecyclerAdapter(
     private val clickListener: (Video, View) -> Unit
-) : PagedListAdapter<Video, VideoViewHolder>(VIDEO_COMPARATOR) {
+) : PagedListAdapter<Video, SearchViewHolder>(VIDEO_COMPARATOR) {
 
     companion object {
         val VIDEO_COMPARATOR = object : DiffUtil.ItemCallback<Video>() {
@@ -24,8 +24,8 @@ class AlbumRecyclerAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoViewHolder {
-        val holder = VideoViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
+        val holder = SearchViewHolder(
             Picasso.get(),
             LayoutInflater.from(parent.context).inflate(
                 R.layout.search_videos,
@@ -43,7 +43,7 @@ class AlbumRecyclerAdapter(
 
     override fun getItemId(position: Int) = position.toLong() + 1
 
-    override fun onBindViewHolder(holder: VideoViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
         getItem(position)?.let { holder.bind(it) }
 
         holder.videoFrame.transitionName = "transition_name_$position"

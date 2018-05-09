@@ -46,6 +46,10 @@ class SearchDataSource(
                 call: Call<ResponseVideo>?,
                 response: Response<ResponseVideo>?
             ) {
+                if (response != null) {
+                    Log.d(javaClass.simpleName, "RESPONSE:" + response.message())
+                }
+
                 response?.body()?.let { responseVideo ->
                     videoDao.insert(responseVideo.items)
 

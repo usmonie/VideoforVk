@@ -12,11 +12,11 @@ import retrofit2.Response
 
 class AlbumsDataSource(
     private val vkApi: VkApi,
-    private val ownerId: Int?
+    private val ownerId: String?
 ) : PositionalDataSource<Album>() {
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Album>) {
         val apiSource = vkApi.getAlbums(
-            ownerId = ownerId?.toString(),
+            ownerId = ownerId,
             count = params.requestedLoadSize.toLong(),
             offset = 0
         )
@@ -34,7 +34,7 @@ class AlbumsDataSource(
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Album>) {
         vkApi.getAlbums(
-            ownerId = ownerId?.toString(),
+            ownerId = ownerId,
             count = params.loadSize.toLong(),
             offset = params.startPosition.toLong()
         ).enqueue(object : Callback<ApiResponse<AlbumsResponse>> {

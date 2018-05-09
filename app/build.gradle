@@ -15,8 +15,8 @@ android {
         applicationId "akhmedoff.usman.videoforvk"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 15
-        versionName "2.0-beta2"
+        versionCode 18
+        versionName "2.0-beta5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         buildConfigField('String', 'VK_APP_ID', vk_app_id)
@@ -48,9 +48,9 @@ dependencies {
     implementation "com.android.support:design:$supportLibraryVersion"
     implementation "com.android.support:recyclerview-v7:$supportLibraryVersion"
     implementation "com.android.support:support-v4:$supportLibraryVersion"
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0-beta6'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     implementation "android.arch.lifecycle:extensions:$archLifecycleVersion"
-    implementation 'android.arch.paging:runtime:1.0.0-alpha7'
+    implementation 'android.arch.paging:runtime:1.0.0-rc1'
     kapt "android.arch.lifecycle:compiler:$archLifecycleVersion"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
@@ -60,7 +60,11 @@ dependencies {
     implementation('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
         transitive = true
     }
-    implementation 'com.google.firebase:firebase-core:12.0.1'
+
+
+    implementation 'androidx.core:core-ktx:0.3'
+
+    implementation 'com.google.firebase:firebase-core:15.0.2'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation project(':data')
 }

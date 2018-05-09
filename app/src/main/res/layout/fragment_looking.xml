@@ -13,9 +13,9 @@
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
+            android:layout_height="match_parent"
             app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|snap"
+            app:layout_scrollFlags="scroll|enterAlways"
             app:layout_scrollInterpolator="@android:anim/decelerate_interpolator"
             app:toolbarId="@+id/toolbar">
 

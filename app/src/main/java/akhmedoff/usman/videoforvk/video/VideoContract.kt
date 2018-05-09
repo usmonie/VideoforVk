@@ -1,11 +1,10 @@
 package akhmedoff.usman.videoforvk.video
 
 import akhmedoff.usman.data.Error
-import akhmedoff.usman.data.model.Likes
-import akhmedoff.usman.data.model.Owner
-import akhmedoff.usman.data.model.Video
-import akhmedoff.usman.data.model.VideoUrl
+import akhmedoff.usman.data.model.*
 import android.arch.lifecycle.LifecycleOwner
+import android.arch.paging.PagedList
+import android.support.annotation.StringRes
 
 interface VideoContract {
 
@@ -36,19 +35,13 @@ interface VideoContract {
 
         fun isPipMode(): Boolean
 
-        fun hideUi()
-
-        fun showUi()
+        fun showUi(isShowing: Boolean)
 
         fun showLoadError()
 
-        fun showProgress()
+        fun showProgress(isLoading: Boolean)
 
-        fun hideProgress()
-
-        fun showPlayer()
-
-        fun hidePlayer()
+        fun showPlayer(isShowing: Boolean)
 
         fun getVideoState(): Boolean?
 
@@ -68,10 +61,6 @@ interface VideoContract {
 
         fun saveIsFullscreen(isFullscreen: Boolean)
 
-        fun stopAudioFocusListener()
-
-        fun startAudioFocusListener()
-
         fun setPlayerFullscreen()
 
         fun setPlayerNormal()
@@ -89,6 +78,16 @@ interface VideoContract {
         fun showSendDialog()
 
         fun hideSendDialog()
+
+        fun showAddDialog()
+
+        fun hideAddDialog()
+
+        fun showAlbumsLoading(isLoading: Boolean)
+
+        fun showAlbums(albums: PagedList<Album>)
+
+        fun showSelectedAlbums(ids: List<Int>)
 
         fun setAdded()
 
@@ -120,6 +119,7 @@ interface VideoContract {
 
         fun back()
 
+        fun getString(@StringRes id: Int, vararg items: String): String
     }
 
     interface Presenter {
@@ -127,8 +127,6 @@ interface VideoContract {
         var view: View?
 
         fun onClick(itemView: Int)
-
-        fun onCreate()
 
         fun onStart()
 
@@ -163,5 +161,7 @@ interface VideoContract {
         fun enterCaptcha(captchaCode: String)
 
         fun onBackListener()
+
+        fun addToAlbums(albumsIds: MutableList<Album>)
     }
 }

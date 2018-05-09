@@ -30,9 +30,10 @@ class AlbumRepositoryImpl(
 
     override fun saveOwner(owner: Owner) = ownerDao.insert(owner)
 
-    override fun getAlbum(ownerId: Int?, albumId: Int?) = vkApi.getAlbum(ownerId?.toString(), albumId?.toString())
+    override fun getAlbum(ownerId: Int?, albumId: Int?) =
+        vkApi.getAlbum(ownerId?.toString(), albumId?.toString())
 
-    override fun getAlbums(ownerId: Int?): LiveData<PagedList<Album>> {
+    override fun getAlbums(ownerId: String?): LiveData<PagedList<Album>> {
         val pagedListConfig = PagedList.Config.Builder()
             .setEnablePlaceholders(false)
             .setPageSize(10)
@@ -58,8 +59,8 @@ class AlbumRepositoryImpl(
         val pagedListConfig = PagedList.Config.Builder()
             .setEnablePlaceholders(false)
             .setPageSize(10)
-            .setPrefetchDistance(15)
-            .setInitialLoadSizeHint(10)
+            .setPrefetchDistance(8)
+            .setInitialLoadSizeHint(16)
             .build()
 
         val sourceFactory = VideosDataSourceFactory(
@@ -73,4 +74,10 @@ class AlbumRepositoryImpl(
 
         return LivePagedListBuilder(sourceFactory, pagedListConfig).build()
     }
+
+    override fun getAlbumsByVideo(
+        targetId: String?,
+        ownerId: String,
+        videoId: String
+    ) = vkApi.getAlbumsByVideo(targetId, ownerId, videoId)
 }

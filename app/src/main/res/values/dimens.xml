@@ -72,4 +72,7 @@
     <dimen name="catalog_videos_margin">8dp</dimen>
     <dimen name="video_info_card_min_height">256dp</dimen>
     <dimen name="video_owner_card_min_height">98dp</dimen>
+    <dimen name="search_video_item_height">192dp</dimen>
+    <dimen name="popup_elevation">16dp</dimen>
+    <dimen name="popup_size">248dp</dimen>
 </resources>

@@ -9,8 +9,8 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class ProfilePresenter(
-    override var view: ProfileContract.View? = null,
-    private val userRepository: UserRepository
+        override var view: ProfileContract.View? = null,
+        private val userRepository: UserRepository
 ) : ProfileContract.Presenter {
 
     override fun onCreated() {
@@ -22,67 +22,63 @@ class ProfilePresenter(
     }
 
     override fun onViewCreated() {
-        view?.let { view ->
-            view.showLoading(true)
-            view.hideTabs()
+        view?.showLoading(true)
+        view?.hideTabs()
 
-            userRepository
-                .getUsers(view.getUserId())
+        userRepository
+                .getUsers(view?.getUserId())
                 .enqueue(object : Callback<ApiResponse<List<User>>> {
                     override fun onFailure(
-                        call: Call<ApiResponse<List<User>>>?,
-                        t: Throwable?
+                            call: Call<ApiResponse<List<User>>>?,
+                            t: Throwable?
                     ) {
-                        view.showLoading(false)
+                        view?.showLoading(false)
                         val name = userRepository.getUserName()
 
                         if (name != null) {
-                            view.showUserName(name)
-                            userRepository.getUserPhotoUrl()?.let { view.showUserPhoto(it) }
+                            view?.showUserName(name)
+                            userRepository.getUserPhotoUrl()?.let { view?.showUserPhoto(it) }
 
-                            view.showTabs()
+                            view?.showTabs()
                         } else {
                             t?.message?.let {
-                                view.showError(it)
+                                view?.showError(it)
                                 Log.e(javaClass.simpleName, it)
                             }
-                            view.hideTabs()
+                            view?.hideTabs()
                         }
                     }
 
                     override fun onResponse(
-                        call: Call<ApiResponse<List<User>>>?,
-                        response: Response<ApiResponse<List<User>>>?
+                            call: Call<ApiResponse<List<User>>>?,
+                            response: Response<ApiResponse<List<User>>>?
                     ) {
-                        view.showLoading(false)
+                        view?.showLoading(false)
 
                         val get = response?.body()?.response?.get(0)
                         if (get != null) get.let { user ->
                             userRepository.saveUser(user)
 
-                            view.showUserName("${user.firstName} ${user.lastName}")
-                            view.showUserPhoto(user.photoMaxOrig)
-                            view.showTabs()
+                            view?.showUserName("${user.firstName} ${user.lastName}")
+                            view?.showUserPhoto(user.photoMaxOrig)
+                            view?.showTabs()
                         } else {
                             val name = userRepository.getUserName()
 
                             if (name != null) {
+                                view?.showUserName(name)
+                                userRepository.getUserPhotoUrl()?.let { view?.showUserPhoto(it) }
 
-                                view.showUserName(name)
-                                userRepository.getUserPhotoUrl()?.let { view.showUserPhoto(it) }
-
-                                view.showTabs()
+                                view?.showTabs()
                             } else {
-                                view.hideTabs()
+                                view?.hideTabs()
                             }
                         }
                     }
                 })
-        }
     }
 
     override fun onSearchClicked() {
         view?.startSearch()
     }
-
 }

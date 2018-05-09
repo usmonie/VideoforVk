@@ -1,6 +1,5 @@
 package akhmedoff.usman.videoforvk.catalog
 
-import akhmedoff.usman.data.model.CatalogItem
 import akhmedoff.usman.data.repository.CatalogRepository
 import android.arch.lifecycle.Observer
 

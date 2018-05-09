@@ -20,11 +20,7 @@ class LoginActivity : BaseActivity<LoginContract.View, LoginContract.Presenter>(
     LoginContract.View {
     override lateinit var loginPresenter: LoginContract.Presenter
 
-    private val twoFactorDialog: TwoFactorAuthenticationDialog by lazy {
-        TwoFactorAuthenticationDialog(this) {
-            loginPresenter.enterCode(it)
-        }
-    }
+    private lateinit var twoFactorDialog: TwoFactorAuthenticationDialog
 
     private val captchaDialog: CaptchaDialog by lazy {
         CaptchaDialog(this, {
@@ -43,6 +39,12 @@ class LoginActivity : BaseActivity<LoginContract.View, LoginContract.Presenter>(
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        twoFactorDialog = TwoFactorAuthenticationDialog(this, {
+            loginPresenter.enterCode(it)
+        }) {
+            twoFactorDialog.hide()
+        }
 
         login_button.setOnClickListener { loginPresenter.login() }
 

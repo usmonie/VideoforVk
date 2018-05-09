@@ -20,8 +20,8 @@ class CatalogRepositoryImpl(
     override fun getCatalogSection(catalogId: String): LiveData<PagedList<CatalogItem>> {
         val pagedListConfig = PagedList.Config.Builder()
             .setEnablePlaceholders(false)
-            .setPageSize(16)
-            .setPrefetchDistance(10)
+            .setPageSize(10)
+            .setPrefetchDistance(8)
             .setInitialLoadSizeHint(16)
             .build()
 

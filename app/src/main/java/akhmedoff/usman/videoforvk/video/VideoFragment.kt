@@ -2,6 +2,7 @@ package akhmedoff.usman.videoforvk.video
 
 import akhmedoff.usman.data.model.*
 import akhmedoff.usman.data.model.Quality.*
+import akhmedoff.usman.data.utils.getAlbumRepository
 import akhmedoff.usman.data.utils.getUserRepository
 import akhmedoff.usman.data.utils.getVideoRepository
 import akhmedoff.usman.videoforvk.App
@@ -11,6 +12,7 @@ import akhmedoff.usman.videoforvk.player.AudioFocusListener
 import akhmedoff.usman.videoforvk.player.SimpleControlDispatcher
 import akhmedoff.usman.videoforvk.view.MarginItemDecorator
 import android.app.PictureInPictureParams
+import android.arch.paging.PagedList
 import android.content.Context
 import android.content.Intent
 import android.media.AudioManager
@@ -28,6 +30,7 @@ import android.util.Rational
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.ExtractorMediaSource
@@ -74,6 +77,8 @@ class VideoFragment : Fragment(), VideoContract.View {
         }
     }
 
+    private val selectedAlbums = mutableListOf<Album>()
+
     override lateinit var presenter: VideoContract.Presenter
 
     private lateinit var cacheDataSourceFactory: CacheDataSourceFactory
@@ -82,14 +87,28 @@ class VideoFragment : Fragment(), VideoContract.View {
 
     private var player: SimpleExoPlayer? = null
 
-    private lateinit var adapter: VideoInfoRecyclerAdapter
+    private lateinit var videoInfoAdapter: VideoInfoRecyclerAdapter
 
     private var mediaSource: MediaSource? = null
 
+    private val addVideoDialog: AddVideoDialog by lazy {
+        AddVideoDialog(
+            context!!,
+            { addVideoDialog.hide() },
+            { album: Album, isChecked: Boolean ->
+                if (isChecked) selectedAlbums.add(album)
+                else selectedAlbums.remove(album)
+            },
+            {
+                addVideoDialog.hide()
+                presenter.addToAlbums(selectedAlbums)
+            })
+    }
+
     private val captchaDialog: CaptchaDialog by lazy {
-        CaptchaDialog(context!!, {
+        CaptchaDialog(context!!) {
             presenter.enterCaptcha(it)
-        })
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,10 +116,12 @@ class VideoFragment : Fragment(), VideoContract.View {
         presenter = VideoPresenter(
             this,
             getVideoRepository(context!!),
-            getUserRepository(context!!)
+            getUserRepository(context!!),
+            getAlbumRepository(context!!)
         )
+        if (savedInstanceState != null) presenter.view = this
 
-        adapter = VideoInfoRecyclerAdapter {
+        videoInfoAdapter = VideoInfoRecyclerAdapter {
             onRecyclerItemClicked(it)
         }
 
@@ -139,14 +160,15 @@ class VideoFragment : Fragment(), VideoContract.View {
             )
         }
 
-        if (savedInstanceState != null) presenter.view = this
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_video, container, false)
+    ): View? {
+        return inflater.inflate(R.layout.fragment_video, container, false)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -154,8 +176,6 @@ class VideoFragment : Fragment(), VideoContract.View {
             pip_toggle.visibility = View.VISIBLE
 
         appbar.transitionName = arguments?.getString(TRANSITION_NAME_KEY)
-
-        video_frame.visibility = View.VISIBLE
 
         fullscreen_toggle.setOnClickListener { presenter.clickFullscreen() }
         pip_toggle.setOnClickListener { presenter.pipToggleButton() }
@@ -178,7 +198,7 @@ class VideoFragment : Fragment(), VideoContract.View {
 
         video_info_recycler.layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        video_info_recycler.adapter = adapter
+        video_info_recycler.adapter = videoInfoAdapter
 
         if (savedInstanceState == null)
             presenter.onStart()
@@ -205,11 +225,11 @@ class VideoFragment : Fragment(), VideoContract.View {
         presenter.changedPipMode()
 
     override fun showVideo(item: Video) {
-        adapter.video = item
+        videoInfoAdapter.video = item
     }
 
     override fun showOwnerInfo(owner: Owner) {
-        adapter.owner = owner
+        videoInfoAdapter.owner = owner
     }
 
     override fun setVideoSource(videoUrl: VideoUrl) {
@@ -260,8 +280,8 @@ class VideoFragment : Fragment(), VideoContract.View {
     }
 
     override fun setExternalUi(videoUrl: VideoUrl) {
-        pip_toggle?.visibility = View.GONE
-        exo_quality_toggle?.visibility = View.GONE
+        pip_toggle?.isVisible = false
+        exo_quality_toggle?.isVisible = false
         simpleControlDispatcher.isExternal = true
         simpleControlDispatcher.url = videoUrl.url
     }
@@ -284,6 +304,7 @@ class VideoFragment : Fragment(), VideoContract.View {
                 or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
     }
 
+
     override fun showSmallScreen() {
         video_layout.fitsSystemWindows = true
         activity?.window?.decorView?.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -297,7 +318,6 @@ class VideoFragment : Fragment(), VideoContract.View {
 
     override fun startVideo() {
         player?.playWhenReady = true
-
     }
 
     override fun stopVideo() {
@@ -305,9 +325,8 @@ class VideoFragment : Fragment(), VideoContract.View {
         player?.release()
     }
 
-    override fun showLoadError() {
+    override fun showLoadError() =
         Snackbar.make(video_layout, getString(R.string.error_loading), Snackbar.LENGTH_LONG).show()
-    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun enterPipMode(video: Video) {
@@ -326,37 +345,21 @@ class VideoFragment : Fragment(), VideoContract.View {
     override fun isPipMode() =
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && activity?.isInPictureInPictureMode ?: false
 
-    override fun hideUi() {
-        video_info_recycler?.visibility = View.GONE
-        video_exo_player.hideController()
+
+    override fun showUi(isShowing: Boolean) {
+        video_info_recycler?.isVisible = isShowing
+        if (isShowing)
+            video_exo_player.showController()
     }
 
-    override fun showUi() {
-        video_info_recycler?.visibility = View.VISIBLE
-        video_exo_player.showController()
+    override fun showProgress(isLoading: Boolean) {
+        video_loading?.isVisible = isLoading
     }
 
-    override fun showProgress() {
-        video_loading?.visibility = View.VISIBLE
-    }
-
-    override fun hideProgress() {
-        video_loading?.visibility = View.GONE
-    }
-
-    override fun showPlayer() {
-        video_exo_player.visibility = View.VISIBLE
-        video_exo_player.showController()
-    }
-
-    override fun hidePlayer() {
-        video_exo_player.visibility = View.GONE
-    }
-
-    override fun stopAudioFocusListener() {
-    }
-
-    override fun startAudioFocusListener() {
+    override fun showPlayer(isShowing: Boolean) {
+        video_exo_player.isVisible = isShowing
+        if (isShowing)
+            video_exo_player.showController()
     }
 
     override fun setPlayerFullscreen() {
@@ -370,11 +373,17 @@ class VideoFragment : Fragment(), VideoContract.View {
     }
 
     override fun setLiked(likes: Likes) {
-        adapter.notifyItemChanged(0, likes)
+        videoInfoAdapter.notifyItemChanged(
+            0,
+            if (likes.userLikes) VideoInfoPayloads.LIKED else VideoInfoPayloads.DISLIKED
+        )
     }
 
     override fun setUnliked(likes: Likes) {
-        adapter.notifyItemChanged(0, likes)
+        videoInfoAdapter.notifyItemChanged(
+            0,
+            if (likes.userLikes) VideoInfoPayloads.LIKED else VideoInfoPayloads.DISLIKED
+        )
     }
 
     override fun showShareDialog(url: String) {
@@ -394,16 +403,45 @@ class VideoFragment : Fragment(), VideoContract.View {
     override fun hideSendDialog() {
     }
 
+    override fun showAddDialog() =
+        addVideoDialog.show()
+
+    override fun hideAddDialog() =
+        addVideoDialog.hide()
+
+    override fun showAlbumsLoading(isLoading: Boolean) =
+        addVideoDialog.showLoading(isLoading)
+
+    override fun showAlbums(albums: PagedList<Album>) {
+        if (addVideoDialog.isShowing)
+            addVideoDialog.showAlbums(albums)
+    }
+
+    override fun showSelectedAlbums(ids: List<Int>) {
+        addVideoDialog.setSelectedAlbums(ids)
+    }
+
     override fun setAdded() {
+        videoInfoAdapter.notifyItemChanged(
+            0, VideoInfoPayloads.ADDED
+        )
     }
 
     override fun setDeleted() {
+        videoInfoAdapter.notifyItemChanged(
+            0, VideoInfoPayloads.DELETED
+        )
     }
 
     override fun showOwnerUser(owner: Owner) {
     }
 
     override fun showOwnerGroup(owner: Owner) {
+    }
+
+    override fun showCaptcha(captchaImg: String) {
+        captchaDialog.show()
+        captchaDialog.loadCaptcha(captchaImg)
     }
 
     override fun onDestroyView() {
@@ -454,11 +492,6 @@ class VideoFragment : Fragment(), VideoContract.View {
         arguments?.putInt(VIDEO_QUALITY_KEY, quality)
     }
 
-    override fun showCaptcha(captchaImg: String) {
-        captchaDialog.show()
-        captchaDialog.loadCaptcha(captchaImg)
-    }
-
     override fun saveCaptchaSid(sid: String) {
         arguments?.putString(CAPTCHA_SID, sid)
     }
@@ -468,4 +501,6 @@ class VideoFragment : Fragment(), VideoContract.View {
     override fun back() {
         activity?.supportFragmentManager?.popBackStack()
     }
+
+    override fun getString(id: Int, vararg items: String): String = resources.getString(id, *items)
 }
