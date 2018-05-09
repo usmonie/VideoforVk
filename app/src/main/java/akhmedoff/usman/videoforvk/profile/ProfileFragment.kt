@@ -15,6 +15,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.search_toolbar.*
@@ -101,13 +102,13 @@ class ProfileFragment : Fragment(), ProfileContract.View {
     override fun getUserId(): String? = arguments?.getString(USER_ID)
 
     override fun showTabs() {
-        tabs.visibility = VISIBLE
-        view_pager.visibility = VISIBLE
+        tabs.isVisible = true
+        view_pager.isVisible = true
     }
 
     override fun hideTabs() {
-        tabs.visibility = GONE
-        view_pager.visibility = GONE
+        tabs.isVisible = false
+        view_pager.isVisible = false
     }
 
     override fun showError(message: String) {

@@ -13,7 +13,6 @@ import kotlinx.android.synthetic.main.add_video_multiselect_item.view.*
 class AlbumsRecyclerAdapter(private val changedListener: (Album, Boolean) -> Unit) :
     PagedListAdapter<Album, SelectableAlbumViewHolder>(ALBUM_COMPARATOR) {
 
-
     companion object {
         val ALBUM_COMPARATOR = object : DiffUtil.ItemCallback<Album>() {
             override fun areContentsTheSame(oldItem: Album, newItem: Album) =
@@ -42,7 +41,6 @@ class AlbumsRecyclerAdapter(private val changedListener: (Album, Boolean) -> Uni
         holder.itemView.checkBox.setOnCheckedChangeListener({ _, isChecked ->
             getItem(position)?.let { changedListener(it, isChecked) }
         })
-
     }
 
     override fun onBindViewHolder(
@@ -50,7 +48,6 @@ class AlbumsRecyclerAdapter(private val changedListener: (Album, Boolean) -> Uni
         position: Int,
         payloads: MutableList<Any>
     ) {
-
         if (payloads.isNotEmpty()) {
             val item = payloads[0]
 

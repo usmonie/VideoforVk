@@ -280,8 +280,8 @@ class VideoFragment : Fragment(), VideoContract.View {
     }
 
     override fun setExternalUi(videoUrl: VideoUrl) {
-        pip_toggle?.visibility = View.GONE
-        exo_quality_toggle?.visibility = View.GONE
+        pip_toggle?.isVisible = false
+        exo_quality_toggle?.isVisible = false
         simpleControlDispatcher.isExternal = true
         simpleControlDispatcher.url = videoUrl.url
     }

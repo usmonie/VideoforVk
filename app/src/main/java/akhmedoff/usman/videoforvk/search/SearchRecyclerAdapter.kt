@@ -42,6 +42,5 @@ class SearchRecyclerAdapter(
     override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
         holder.bind(getItem(position)!!)
         holder.videoFrame.transitionName = "transition_name_$position"
-
     }
 }
