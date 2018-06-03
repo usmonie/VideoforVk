@@ -1,3 +1,5 @@
+<p align="center"><img src="logo/1024.png" alt="VideoforVk" height="200px"></p>
+
 **Video for Vk (or VT) is client for Vk video API.** 
 
 [Google play](https://play.google.com/store/apps/details?id=akhmedoff.usman.videoforvk)
