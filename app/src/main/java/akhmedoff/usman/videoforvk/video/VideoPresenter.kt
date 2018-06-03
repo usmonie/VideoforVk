@@ -225,11 +225,14 @@ class VideoPresenter(
         view?.saveVideoPosition(view?.getVideoPosition() ?: 0)
 
         view?.let { view ->
-            if (video.files.size - 1 > view.getCurrentQuality()) {
-                changeQuality(view.getCurrentQuality() + 1)
-            } else {
-                changeQuality(video.files.size - view.getCurrentQuality())
-            }
+            changeQuality(
+                    if (video.files.size - 1 > view.getCurrentQuality()) {
+                        view.getCurrentQuality() + 1
+                    } else {
+                        video.files.size - view.getCurrentQuality()
+                    }
+            )
+
         }
     }
 
@@ -259,38 +262,49 @@ class VideoPresenter(
                 .getVideo(id)
                 .enqueue(object : Callback<ResponseVideo> {
                     override fun onFailure(call: Call<ResponseVideo>?, t: Throwable?) {
-                        view?.showLoadError()
                         view?.showProgress(false)
+                        view?.showUi(false)
+                        view?.showPlayer(false)
+                        view?.showLoadError(true)
                     }
 
                     override fun onResponse(
                             call: Call<ResponseVideo>?,
                             response: Response<ResponseVideo>?
                     ) {
+                        view?.showLoadError(false)
                         response?.body()?.let { responseVideo ->
                             when {
                                 responseVideo.items.isNotEmpty() -> {
                                     video = responseVideo.items[0]
                                     showVideo(video)
+                                    view?.showUi(true)
+                                    view?.showPlayer(true)
                                 }
 
-                                else -> view?.showLoadError()
+                                else -> view?.showLoadError(true)
                             }
 
                             when {
-                                responseVideo.groups != null && responseVideo.groups!!.isNotEmpty() -> {
+                                responseVideo.groups != null
+                                        && responseVideo.groups!!.isNotEmpty() -> {
+
                                     view?.showOwnerInfo(responseVideo.groups!![0])
                                     view?.showProgress(false)
-                                    view?.showUi(true)
-                                    view?.showPlayer(true)
-                                    view?.let { it.setVideoPosition(it.loadVideoPosition()) }
+
+                                    view?.let {
+                                        it.setVideoPosition(it.loadVideoPosition())
+                                    }
+
                                     responseVideo.groups?.forEach {
                                         videoRepository.saveOwner(it)
                                     }
-                                    videoRepository.saveOwnerId(responseVideo.groups!![0].id)
+                                    videoRepository
+                                            .saveOwnerId(responseVideo.groups!![0].id)
 
                                 }
-                                responseVideo.profiles != null && responseVideo.profiles!!.isNotEmpty() -> {
+                                responseVideo.profiles != null
+                                        && responseVideo.profiles!!.isNotEmpty() -> {
                                     responseVideo.profiles?.forEach {
                                         videoRepository.saveOwner(it)
                                     }
@@ -351,7 +365,6 @@ class VideoPresenter(
                     Log.e("error", t?.message)
 
                     view?.showProgress(false)
-                    view?.showLoadError()
                 }
 
                 override fun onResponse(
@@ -361,9 +374,6 @@ class VideoPresenter(
                     view?.showProgress(false)
                     response?.body()?.response?.get(0)?.let { user ->
                         view?.showOwnerInfo(user)
-                        view?.showProgress(false)
-                        view?.showUi(false)
-                        view?.showPlayer(false)
                         videoRepository.saveOwnerId(user.id)
                     }
                 }
@@ -454,6 +464,15 @@ class VideoPresenter(
             clickFullscreen()
         } else {
             view?.back()
+        }
+    }
+
+    override fun openBrowser() {
+        view?.let { view ->
+            view.showVideoInBrowser(
+                    "https://vk.com/video?z=video${view.getOwnerId()}" +
+                            "_${view.getVideoId()}"
+            )
         }
     }
 }

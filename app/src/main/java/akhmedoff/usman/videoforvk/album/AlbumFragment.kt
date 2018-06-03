@@ -12,8 +12,6 @@ import android.arch.paging.PagedList
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewCompat
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,27 +25,20 @@ class AlbumFragment : Fragment(), AlbumContract.View {
         private const val ALBUM_OWNER_ID = "album_owner_id"
         private const val ALBUM_NAME = "album_name"
 
-        fun getFragment(item: CatalogItem): AlbumFragment {
-            val fragment = AlbumFragment()
+        fun getFragment(item: CatalogItem) =
+                getFragment(item.id.toString(), item.ownerId.toString(), item.title)
+
+        fun getFragment(item: Album) =
+                getFragment(item.id.toString(), item.ownerId.toString(), item.title)
+
+        private fun getFragment(id: String, ownerId: String, title: String): AlbumFragment {
             val arguments = Bundle()
 
-            arguments.putString(ALBUM_ID, item.id.toString())
-            arguments.putString(ALBUM_OWNER_ID, item.ownerId.toString())
-            arguments.putString(ALBUM_NAME, item.title)
+            arguments.putString(ALBUM_ID, id)
+            arguments.putString(ALBUM_OWNER_ID, ownerId)
+            arguments.putString(ALBUM_NAME, title)
 
-            fragment.arguments = arguments
-
-            return fragment
-        }
-
-        fun getFragment(item: Album): AlbumFragment {
             val fragment = AlbumFragment()
-            val arguments = Bundle()
-
-            arguments.putString(ALBUM_ID, item.id.toString())
-            arguments.putString(ALBUM_OWNER_ID, item.ownerId.toString())
-            arguments.putString(ALBUM_NAME, item.title)
-
             fragment.arguments = arguments
 
             return fragment
@@ -78,8 +69,6 @@ class AlbumFragment : Fragment(), AlbumContract.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        album_videos_recycler.layoutManager = layoutManager
         album_videos_recycler.addItemDecoration(
                 MarginItemDecorator(
                         1,
@@ -96,19 +85,20 @@ class AlbumFragment : Fragment(), AlbumContract.View {
         toolbar.title = title
     }
 
-    override fun showAlbumImage(poster: String) {
-        Picasso
-                .get()
-                .load(poster)
-                .into(app_bar_album_poster_image)
-    }
+    override fun showAlbumImage(poster: String) = Picasso
+            .get()
+            .load(poster)
+            .into(app_bar_album_poster_image)
 
     override fun showVideo(video: Video, view: View) {
-        activity?.supportFragmentManager?.let {
+        val fragment =
+                VideoFragment.getInstance(video, ViewCompat.getTransitionName(view))
+
+        activity?.supportFragmentManager?.let { fragmentManager ->
             Router.replaceFragment(
-                    it,
+                    fragmentManager,
                     this,
-                    VideoFragment.getInstance(video, ViewCompat.getTransitionName(view)),
+                    fragment,
                     true,
                     VideoFragment.FRAGMENT_TAG,
                     view

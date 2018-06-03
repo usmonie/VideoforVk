@@ -44,6 +44,7 @@
         android:id="@+id/album_videos_recycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:listitem="@layout/search_videos" />
 </android.support.design.widget.CoordinatorLayout>

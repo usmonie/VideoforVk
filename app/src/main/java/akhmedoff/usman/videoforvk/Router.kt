@@ -14,25 +14,6 @@ object Router {
     private const val FADE_DEFAULT_TIME = 300L
     private const val MOVE_DEFAULT_TIME = 500L
 
-    fun showFragment(
-            fragmentManager: FragmentManager,
-            fragment: Fragment,
-            addToBackStack: Boolean = false,
-            fragmentTag: String
-    ) {
-        if (fragment.isAdded) {
-            val transaction = fragmentManager.beginTransaction()
-                    .show(fragment)
-            if (addToBackStack) {
-                transaction.addToBackStack(null)
-            }
-
-            transaction.commit()
-        } else {
-            addFragment(fragmentManager, fragment, fragmentTag)
-        }
-    }
-
     fun hideFragment(fragmentManager: FragmentManager, fragment: Fragment) {
         fragmentManager.beginTransaction()
                 .hide(fragment)
@@ -97,20 +78,6 @@ object Router {
         transaction.setTransition(TRANSIT_FRAGMENT_OPEN)
 
         transaction.commit()
-    }
-
-    fun addFragment(fragmentManager: FragmentManager, fragment: Fragment, tag: String) {
-        fragmentManager.beginTransaction()
-                .add(R.id.container, fragment, tag)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .commit()
-    }
-
-    fun removeFragment(fragmentManager: FragmentManager, fragment: Fragment) {
-        fragmentManager.beginTransaction()
-                .remove(fragment)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .commit()
     }
 
 }

@@ -4,8 +4,8 @@ import akhmedoff.usman.data.repository.CatalogRepository
 import android.arch.lifecycle.Observer
 
 class CatalogPresenter(
-    private var view: CatalogContract.View?,
-    private val catalogRepository: CatalogRepository
+        private var view: CatalogContract.View?,
+        private val catalogRepository: CatalogRepository
 ) : CatalogContract.Presenter {
 
     override fun onCreated() = refresh()
@@ -22,24 +22,16 @@ class CatalogPresenter(
     override fun loadCatalogs() {
         view?.let { view ->
             catalogRepository
-                .getCatalogSection(view.getPageCategory())
-                .observe(view, Observer { pagedList ->
-                    when {
-                        pagedList != null -> {
-                            view.hideLoading()
-                            when {
-                                pagedList.size > 0 -> view.showList(pagedList)
-                                else -> view.showEmptyList()
-                            }
+                    .getCatalogSection(view.getPageCategory())
+                    .observe(view, Observer { pagedList ->
+                        when {
+                            pagedList == null -> view.showErrorLoading()
+                            pagedList.size > 0 -> view.showList(pagedList)
+                            else -> view.showEmptyList()
                         }
-                        else -> {
-                            view.hideLoading()
 
-                            view.showErrorLoading()
-                        }
-                    }
-                })
+                        view.hideLoading()
+                    })
         }
     }
-
 }

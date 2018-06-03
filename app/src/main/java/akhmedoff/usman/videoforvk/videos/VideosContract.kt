@@ -13,7 +13,7 @@ interface VideosContract {
 
         fun showLoading(isLoading: Boolean)
 
-        fun showError(message: String)
+        fun showError()
 
         fun getOwnerId(): String?
 

@@ -5,8 +5,8 @@ import akhmedoff.usman.data.repository.VideoRepository
 import android.arch.lifecycle.Observer
 
 class VideosPresenter(
-    override var view: VideosContract.View?,
-    private val videoRepository: VideoRepository
+        override var view: VideosContract.View?,
+        private val videoRepository: VideoRepository
 ) : VideosContract.Presenter {
 
     override fun onCreated() = refresh()
@@ -15,12 +15,16 @@ class VideosPresenter(
         view?.let { view ->
             view.showLoading(true)
             videoRepository
-                .getVideos(view.getOwnerId()?.toInt())
-                .observe(view, Observer {
-                    view.showLoading(false)
-                    if (it != null && it.size > 0) view.showVideos(it)
-                    else view.showEmptyList()
-                })
+                    .getVideos(view.getOwnerId()?.toInt())
+                    .observe(view, Observer { pagedList ->
+                        view.showLoading(false)
+                        when {
+                            pagedList != null && pagedList.size > 0 ->
+                                view.showVideos(pagedList)
+                            pagedList == null -> view.showError()
+                            else -> view.showEmptyList()
+                        }
+                    })
         }
     }
 

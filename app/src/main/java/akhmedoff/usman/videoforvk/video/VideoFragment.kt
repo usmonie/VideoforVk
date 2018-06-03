@@ -21,7 +21,6 @@ import android.os.Build
 import android.os.Bundle
 import android.support.annotation.DrawableRes
 import android.support.annotation.RequiresApi
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DefaultItemAnimator
@@ -40,9 +39,8 @@ import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory
-import com.google.android.exoplayer2.upstream.cache.NoOpCacheEvictor
-import com.google.android.exoplayer2.upstream.cache.SimpleCache
+import com.google.android.exoplayer2.upstream.FileDataSourceFactory
+import com.google.android.exoplayer2.upstream.cache.*
 import com.google.android.exoplayer2.util.Util
 import kotlinx.android.synthetic.main.fragment_video.*
 import kotlinx.android.synthetic.main.playback_exo_control_view.*
@@ -84,6 +82,7 @@ class VideoFragment : Fragment(), VideoContract.View {
     private lateinit var cacheDataSourceFactory: CacheDataSourceFactory
 
     private lateinit var simpleControlDispatcher: SimpleControlDispatcher
+    private lateinit var simpleCache: Cache
 
     private var player: SimpleExoPlayer? = null
 
@@ -93,16 +92,16 @@ class VideoFragment : Fragment(), VideoContract.View {
 
     private val addVideoDialog: AddVideoDialog by lazy {
         AddVideoDialog(
-            context!!,
-            { addVideoDialog.hide() },
-            { album: Album, isChecked: Boolean ->
-                if (isChecked) selectedAlbums.add(album)
-                else selectedAlbums.remove(album)
-            },
-            {
-                addVideoDialog.hide()
-                presenter.addToAlbums(selectedAlbums)
-            })
+                context!!,
+                { addVideoDialog.hide() },
+                { album: Album, isChecked: Boolean ->
+                    if (isChecked) selectedAlbums.add(album)
+                    else selectedAlbums.remove(album)
+                },
+                {
+                    addVideoDialog.hide()
+                    presenter.addToAlbums(selectedAlbums)
+                })
     }
 
     private val captchaDialog: CaptchaDialog by lazy {
@@ -114,10 +113,10 @@ class VideoFragment : Fragment(), VideoContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         presenter = VideoPresenter(
-            this,
-            getVideoRepository(context!!),
-            getUserRepository(context!!),
-            getAlbumRepository(context!!)
+                this,
+                getVideoRepository(context!!),
+                getUserRepository(context!!),
+                getAlbumRepository(context!!)
         )
         if (savedInstanceState != null) presenter.view = this
 
@@ -125,55 +124,70 @@ class VideoFragment : Fragment(), VideoContract.View {
             onRecyclerItemClicked(it)
         }
 
+        initPlayer()
+
+    }
+
+    private fun initPlayer() {
         val bandwidthMeter = DefaultBandwidthMeter()
-        // 2. Create the player
+
         player = ExoPlayerFactory.newSimpleInstance(
-            context,
-            DefaultTrackSelector(AdaptiveTrackSelection.Factory(bandwidthMeter))
+                context,
+                DefaultTrackSelector(AdaptiveTrackSelection.Factory(bandwidthMeter))
         )
 
         val dataSourceFactory = DefaultDataSourceFactory(
-            App.context,
-            Util.getUserAgent(App.context, "yourApplicationName"), bandwidthMeter
+                App.context,
+                Util.getUserAgent(App.context, "yourApplicationName"), bandwidthMeter
         )
 
-        val file = File("${context!!.filesDir.parent}/cache")
-        cacheDataSourceFactory =
-                CacheDataSourceFactory(SimpleCache(file, NoOpCacheEvictor()), dataSourceFactory)
+        simpleCache = SimpleCache(
+                File(context!!.cacheDir, "video"),
+                LeastRecentlyUsedCacheEvictor(1024 * 1024 * 1024))
+        //FIXME: Here app down, there are two SimpleCache in one directory
 
-        val audioManager: AudioManager =
-            context!!.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        val audioFocusListener = AudioFocusListener {
-            if (isResumed)
-                player?.playWhenReady = it
+        cacheDataSourceFactory =
+                CacheDataSourceFactory(
+                        simpleCache,
+                        dataSourceFactory,
+                        FileDataSourceFactory(),
+                        CacheDataSinkFactory(simpleCache,
+                                1024 * 1024 * 1024),
+                        CacheDataSource.FLAG_BLOCK_ON_CACHE or
+                                CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR,
+                        null)
+
+        val audioManager =
+                context!!.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        val audioFocusListener = AudioFocusListener { isOnFocus ->
+            player?.playWhenReady = isResumed && isOnFocus
 
             if (isPipMode())
                 video_exo_player?.hideController()
         }
 
-        simpleControlDispatcher = SimpleControlDispatcher(audioFocusListener, audioManager) {
-            startActivity(
-                Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse(it)
-                )
-            )
-        }
+        simpleControlDispatcher =
+                SimpleControlDispatcher(audioFocusListener, audioManager) { url ->
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                }
 
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_video, container, false)
-    }
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View? = inflater.inflate(R.layout.fragment_video, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            pip_toggle.visibility = View.VISIBLE
+
+
+        error_button_reload.setOnClickListener { presenter.onStart() }
+
+        error_button_show_browser.setOnClickListener { presenter.openBrowser() }
+
+        pip_toggle.isVisible = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
 
         appbar.transitionName = arguments?.getString(TRANSITION_NAME_KEY)
 
@@ -190,10 +204,10 @@ class VideoFragment : Fragment(), VideoContract.View {
 
         video_info_recycler.itemAnimator = DefaultItemAnimator()
         video_info_recycler.addItemDecoration(
-            MarginItemDecorator(
-                1,
-                resources.getDimensionPixelSize(R.dimen.video_fragment_vertical_margin)
-            )
+                MarginItemDecorator(
+                        1,
+                        resources.getDimensionPixelSize(R.dimen.video_fragment_vertical_margin)
+                )
         )
 
         video_info_recycler.layoutManager =
@@ -217,12 +231,16 @@ class VideoFragment : Fragment(), VideoContract.View {
         presenter.onStop()
     }
 
-    private fun onRecyclerItemClicked(it: Int) {
-        presenter.onClick(it)
+    override fun onDestroy() {
+        super.onDestroy()
+        simpleCache.release()
     }
 
+    private fun onRecyclerItemClicked(it: Int) =
+            presenter.onClick(it)
+
     override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean) =
-        presenter.changedPipMode()
+            presenter.changedPipMode()
 
     override fun showVideo(item: Video) {
         videoInfoAdapter.video = item
@@ -235,35 +253,36 @@ class VideoFragment : Fragment(), VideoContract.View {
     override fun setVideoSource(videoUrl: VideoUrl) {
         mediaSource = when (videoUrl.quality) {
             HLS -> HlsMediaSource.Factory(cacheDataSourceFactory).createMediaSource(
-                Uri.parse(
-                    videoUrl.url
-                )
+                    Uri.parse(
+                            videoUrl.url
+                    )
             )
             else -> ExtractorMediaSource.Factory(cacheDataSourceFactory)
-                .createMediaSource(
-                    Uri.parse(
-                        videoUrl.url
+                    .createMediaSource(
+                            Uri.parse(
+                                    videoUrl.url
+                            )
                     )
-                )
         }
     }
 
+
     override fun setQuality(videoUrl: VideoUrl) {
         player?.prepare(
-            when (videoUrl.quality) {
-                HLS ->
-                    HlsMediaSource.Factory(cacheDataSourceFactory).createMediaSource(
-                        Uri.parse(
-                            videoUrl.url
+                when (videoUrl.quality) {
+                    HLS ->
+                        HlsMediaSource.Factory(cacheDataSourceFactory).createMediaSource(
+                                Uri.parse(
+                                        videoUrl.url
+                                )
                         )
-                    )
-                else -> ExtractorMediaSource.Factory(cacheDataSourceFactory)
-                    .createMediaSource(
-                        Uri.parse(
-                            videoUrl.url
-                        )
-                    )
-            }
+                    else -> ExtractorMediaSource.Factory(cacheDataSourceFactory)
+                            .createMediaSource(
+                                    Uri.parse(
+                                            videoUrl.url
+                                    )
+                            )
+                }
         )
 
         when (videoUrl.quality) {
@@ -290,9 +309,9 @@ class VideoFragment : Fragment(), VideoContract.View {
     }
 
     private fun setImageDrawable(@DrawableRes id: Int) =
-        context?.let {
-            exo_quality_toggle.setImageDrawable(ContextCompat.getDrawable(it, id))
-        }
+            context?.let {
+                exo_quality_toggle.setImageDrawable(ContextCompat.getDrawable(it, id))
+            }
 
     override fun showFullscreen() {
         video_layout.fitsSystemWindows = false
@@ -325,15 +344,19 @@ class VideoFragment : Fragment(), VideoContract.View {
         player?.release()
     }
 
-    override fun showLoadError() =
-        Snackbar.make(video_layout, getString(R.string.error_loading), Snackbar.LENGTH_LONG).show()
+    override fun showLoadError(isError: Boolean) {
+        error_mode.isVisible = isError
+        appbar.isVisible = !isError
+        video_info_recycler.isVisible = !isError
+        video_loading.isVisible = !isError
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun enterPipMode(video: Video) {
         activity?.enterPictureInPictureMode(
-            PictureInPictureParams.Builder()
-                .setAspectRatio(Rational(video.width ?: 16, video.height ?: 9))
-                .build()
+                PictureInPictureParams.Builder()
+                        .setAspectRatio(Rational(video.width ?: 16, video.height ?: 9))
+                        .build()
         )
     }
 
@@ -342,12 +365,12 @@ class VideoFragment : Fragment(), VideoContract.View {
         video_exo_player?.showController()
     }
 
-    override fun isPipMode() =
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && activity?.isInPictureInPictureMode ?: false
-
+    override fun isPipMode() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
+            && activity?.isInPictureInPictureMode ?: false
 
     override fun showUi(isShowing: Boolean) {
         video_info_recycler?.isVisible = isShowing
+        showLoadError(false)
         if (isShowing)
             video_exo_player.showController()
     }
@@ -374,15 +397,20 @@ class VideoFragment : Fragment(), VideoContract.View {
 
     override fun setLiked(likes: Likes) {
         videoInfoAdapter.notifyItemChanged(
-            0,
-            if (likes.userLikes) VideoInfoPayloads.LIKED else VideoInfoPayloads.DISLIKED
+                0,
+                if (likes.userLikes)
+                    VideoInfoPayloads.LIKED
+                else
+                    VideoInfoPayloads.DISLIKED
         )
     }
 
     override fun setUnliked(likes: Likes) {
         videoInfoAdapter.notifyItemChanged(
-            0,
-            if (likes.userLikes) VideoInfoPayloads.LIKED else VideoInfoPayloads.DISLIKED
+                0,
+                if (likes.userLikes)
+                    VideoInfoPayloads.LIKED
+                else VideoInfoPayloads.DISLIKED
         )
     }
 
@@ -404,13 +432,13 @@ class VideoFragment : Fragment(), VideoContract.View {
     }
 
     override fun showAddDialog() =
-        addVideoDialog.show()
+            addVideoDialog.show()
 
     override fun hideAddDialog() =
-        addVideoDialog.hide()
+            addVideoDialog.hide()
 
     override fun showAlbumsLoading(isLoading: Boolean) =
-        addVideoDialog.showLoading(isLoading)
+            addVideoDialog.showLoading(isLoading)
 
     override fun showAlbums(albums: PagedList<Album>) {
         if (addVideoDialog.isShowing)
@@ -423,13 +451,13 @@ class VideoFragment : Fragment(), VideoContract.View {
 
     override fun setAdded() {
         videoInfoAdapter.notifyItemChanged(
-            0, VideoInfoPayloads.ADDED
+                0, VideoInfoPayloads.ADDED
         )
     }
 
     override fun setDeleted() {
         videoInfoAdapter.notifyItemChanged(
-            0, VideoInfoPayloads.DELETED
+                0, VideoInfoPayloads.DELETED
         )
     }
 
@@ -464,7 +492,7 @@ class VideoFragment : Fragment(), VideoContract.View {
     override fun loadVideoPosition() = arguments?.getLong(VIDEO_POSITION_KEY) ?: 1
 
     override fun getVideoQualities() =
-        arguments?.getStringArrayList(VIDEO_QUALITIES_KEY) ?: emptyList<String>()
+            arguments?.getStringArrayList(VIDEO_QUALITIES_KEY) ?: emptyList<String>()
 
     override fun getCurrentQuality() = arguments?.getInt(VIDEO_QUALITY_KEY) ?: 0
 
@@ -502,5 +530,10 @@ class VideoFragment : Fragment(), VideoContract.View {
         activity?.supportFragmentManager?.popBackStack()
     }
 
-    override fun getString(id: Int, vararg items: String): String = resources.getString(id, *items)
+    override fun getString(id: Int, vararg items: String): String =
+            resources.getString(id, *items)
+
+    override fun showVideoInBrowser(url: String) =
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+
 }

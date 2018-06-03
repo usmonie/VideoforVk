@@ -47,7 +47,6 @@ class CatalogRecyclerAdapter(
         }
 
         holder.videoFrame.transitionName = "transition_name_$position"
-
     }
 
     override fun getItemId(position: Int) = position.toLong()

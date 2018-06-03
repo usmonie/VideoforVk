@@ -59,10 +59,6 @@
             android:name=".login.LoginActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:theme="@style/LoginTheme" />
-
-        <activity
-            android:name=".search.SearchActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation" />
     </application>
 
 </manifest>

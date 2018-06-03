@@ -16,6 +16,7 @@ import android.support.v7.widget.DefaultItemAnimator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.fragment_catalog.*
 
 class VideosFragment : Fragment(), VideosContract.View {
@@ -35,23 +36,23 @@ class VideosFragment : Fragment(), VideosContract.View {
 
     private val adapter by lazy {
         VideosRecyclerAdapter(
-            { video, view -> showVideo(video, view) },
-            R.layout.catalog_video_item_big
+                { video, view -> showVideo(video, view) },
+                R.layout.catalog_video_item_big
         )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         presenter = VideosPresenter(
-            this,
-            getVideoRepository(context!!)
+                this,
+                getVideoRepository(context!!)
         )
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_catalog, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -61,13 +62,12 @@ class VideosFragment : Fragment(), VideosContract.View {
 
         catalog_recycler.itemAnimator = DefaultItemAnimator()
         catalog_recycler.addItemDecoration(
-            MarginItemDecorator(
-                1,
-                resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin)
-            )
+                MarginItemDecorator(
+                        1,
+                        resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin)
+                )
         )
         update_catalog_layout.setOnRefreshListener { presenter.refresh() }
-
 
         presenter.onCreated()
 
@@ -78,31 +78,42 @@ class VideosFragment : Fragment(), VideosContract.View {
 
         activity?.supportFragmentManager?.let {
             Router.replaceFragment(
-                it,
-                this,
-                fragment,
-                true,
-                VideoFragment.FRAGMENT_TAG,
-                view
+                    it,
+                    this,
+                    fragment,
+                    true,
+                    VideoFragment.FRAGMENT_TAG,
+                    view
             )
         }
     }
 
-    override fun showVideos(videos: PagedList<Video>) = adapter.submitList(videos)
+    override fun showVideos(videos: PagedList<Video>) {
+        empty_state_text_view.isVisible = videos.size <= 0
+        adapter.submitList(videos)
+    }
 
     override fun showLoading(isLoading: Boolean) {
         update_catalog_layout.isRefreshing = isLoading
+        empty_state_text_view.isVisible = !isLoading
     }
 
-    override fun showError(message: String) {
+    override fun showError() {
+        Snackbar
+                .make(
+                        update_catalog_layout,
+                        R.string.error_loading,
+                        Snackbar.LENGTH_LONG
+                )
+                .setAction(R.string.retry, {
+                    presenter.refresh()
+                })
+                .show()
     }
 
     override fun getOwnerId() = arguments?.getString(OWNER_ID)
 
-    override fun showEmptyList() =
-        Snackbar.make(
-            update_catalog_layout,
-            getText(R.string.empty_list),
-            Snackbar.LENGTH_LONG
-        ).show()
+    override fun showEmptyList() {
+        empty_state_text_view.isVisible = true
+    }
 }

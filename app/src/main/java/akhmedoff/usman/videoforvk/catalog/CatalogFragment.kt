@@ -17,10 +17,11 @@ import android.support.v7.widget.DefaultItemAnimator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.fragment_catalog.*
 
 class CatalogFragment : Fragment(),
-    CatalogContract.View {
+        CatalogContract.View {
 
     companion object {
         const val PAGE_CATEGORY = "page_category"
@@ -51,28 +52,28 @@ class CatalogFragment : Fragment(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         presenter = CatalogPresenter(
-            this,
-            getCatalogRepository(
-                context!!
-            )
+                this,
+                getCatalogRepository(
+                        context!!
+                )
         )
         presenter.onCreated()
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_catalog, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         catalog_recycler.adapter = adapter
         catalog_recycler.addItemDecoration(
-            MarginItemDecorator(
-                1,
-                resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin)
-            )
+                MarginItemDecorator(
+                        1,
+                        resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin)
+                )
         )
 
         catalog_recycler.itemAnimator = DefaultItemAnimator()
@@ -82,8 +83,8 @@ class CatalogFragment : Fragment(),
     }
 
     override fun showList(videos: PagedList<CatalogItem>) {
-        catalog_recycler.visibility = View.VISIBLE
-        empty_state_text_view.visibility = View.GONE
+        catalog_recycler.isVisible = true
+        empty_state_text_view.isVisible = false
         adapter.submitList(videos)
     }
 
@@ -92,12 +93,12 @@ class CatalogFragment : Fragment(),
 
         activity?.supportFragmentManager?.let {
             Router.replaceFragment(
-                it,
-                this,
-                fragment,
-                true,
-                VideoFragment.FRAGMENT_TAG,
-                view
+                    it,
+                    this,
+                    fragment,
+                    true,
+                    VideoFragment.FRAGMENT_TAG,
+                    view
             )
         }
     }
@@ -107,12 +108,12 @@ class CatalogFragment : Fragment(),
 
         activity?.supportFragmentManager?.let {
             Router.replaceFragment(
-                it,
-                this,
-                fragment,
-                true,
-                VideoFragment.FRAGMENT_TAG,
-                view
+                    it,
+                    this,
+                    fragment,
+                    true,
+                    VideoFragment.FRAGMENT_TAG,
+                    view
             )
         }
     }
@@ -120,8 +121,8 @@ class CatalogFragment : Fragment(),
     override fun getPageCategory() = arguments?.getString(PAGE_CATEGORY) ?: ""
 
     override fun showEmptyList() {
-        catalog_recycler.visibility = View.GONE
-        empty_state_text_view.visibility = View.VISIBLE
+        catalog_recycler.isVisible = false
+        empty_state_text_view.isVisible = true
     }
 
     override fun showLoading() {
@@ -133,9 +134,14 @@ class CatalogFragment : Fragment(),
     }
 
     override fun showErrorLoading() =
-        Snackbar.make(
-            update_catalog_layout,
-            getText(R.string.error_loading),
-            Snackbar.LENGTH_LONG
-        ).show()
+            Snackbar
+                    .make(
+                            update_catalog_layout,
+                            getText(R.string.error_loading),
+                            Snackbar.LENGTH_LONG
+                    )
+                    .setAction(R.string.retry, {
+                        presenter.refresh()
+                    })
+                    .show()
 }

@@ -37,8 +37,6 @@ interface VideoContract {
 
         fun showUi(isShowing: Boolean)
 
-        fun showLoadError()
-
         fun showProgress(isLoading: Boolean)
 
         fun showPlayer(isShowing: Boolean)
@@ -120,6 +118,10 @@ interface VideoContract {
         fun back()
 
         fun getString(@StringRes id: Int, vararg items: String): String
+
+        fun showLoadError(isError: Boolean)
+
+        fun showVideoInBrowser(url: String)
     }
 
     interface Presenter {
@@ -163,5 +165,7 @@ interface VideoContract {
         fun onBackListener()
 
         fun addToAlbums(albumsIds: MutableList<Album>)
+
+        fun openBrowser()
     }
 }
