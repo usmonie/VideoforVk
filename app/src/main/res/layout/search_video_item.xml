@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/video_item_cardView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/search_video_item_height"
+        android:transitionName="video_player"
+        app:cardCornerRadius="6dp">
+
+        <ImageView
+            android:id="@+id/video_poster"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:foreground="?selectableItemBackground"
+            android:scaleType="centerCrop"
+            tools:src="@tools:sample/avatars" />
+
+        <android.support.v7.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="8dp"
+            app:cardBackgroundColor="#B3000000"
+            app:cardCornerRadius="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/video_source"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:padding="4dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                    android:textColor="#fff"
+                    android:textSize="12sp"
+                    android:visibility="gone"
+                    tools:text="YOUTUBE" />
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/video_duration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:padding="4dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                    android:textColor="#fff"
+                    android:textSize="12sp"
+                    tools:text="00:31" />
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+    </android.support.v7.widget.CardView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/video_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textSize="@dimen/normal_text_size_video_item"
+            app:autoSizeMaxTextSize="@dimen/max_text_size_big_video_item"
+            app:autoSizeMinTextSize="@dimen/min_text_size_big_video_item"
+            app:autoSizeStepGranularity="2sp"
+            tools:text="@tools:sample/full_names" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/video_views"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lines="1"
+                android:textSize="@dimen/normal_text_size_video_item"
+                app:autoSizeMaxTextSize="@dimen/max_text_size_big_video_item"
+                app:autoSizeMinTextSize="@dimen/min_text_size_big_video_item"
+                app:autoSizeStepGranularity="2sp"
+                tools:text="713 000 views" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/video_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_vertical_margin"
+                android:lines="1"
+                android:textSize="@dimen/normal_text_size_video_item"
+                app:autoSizeMaxTextSize="@dimen/max_text_size_big_video_item"
+                app:autoSizeMinTextSize="@dimen/min_text_size_big_video_item"
+                app:autoSizeStepGranularity="2sp"
+                tools:text="@tools:sample/date/ddmmyy" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
