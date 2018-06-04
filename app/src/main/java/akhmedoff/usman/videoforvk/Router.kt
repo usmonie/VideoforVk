@@ -1,6 +1,7 @@
 package akhmedoff.usman.videoforvk
 
 import android.support.transition.*
+import android.support.transition.TransitionSet.ORDERING_TOGETHER
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
@@ -46,16 +47,27 @@ object Router {
                 .addTransition(ChangeTransform())
                 .addTransition(ChangeClipBounds())
                 .addTransition(ChangeImageTransform())
+        enterTransitionSet.ordering = ORDERING_TOGETHER
+        enterTransitionSet.duration = 375L
 
+        val returnTransitionSet = TransitionSet()
+                .addTransition(ChangeBounds())
+                .addTransition(ChangeTransform())
+                .addTransition(ChangeClipBounds())
+                .addTransition(ChangeImageTransform())
+        enterTransitionSet.ordering = ORDERING_TOGETHER
         enterTransitionSet.duration = 375L
 
         fragment.sharedElementEnterTransition = enterTransitionSet
+        fragment.sharedElementReturnTransition = returnTransitionSet
 
-        val enterFade = Fade()
+        val enterFade = Explode()
         fragment.enterTransition = enterFade
 
-        transaction.addSharedElement(sharedElement, ViewCompat.getTransitionName(sharedElement))
-
+        transaction.addSharedElement(
+                sharedElement,
+                ViewCompat.getTransitionName(sharedElement)
+        )
 
         transaction.commit()
     }
