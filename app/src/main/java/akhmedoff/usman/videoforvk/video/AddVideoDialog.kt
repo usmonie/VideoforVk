@@ -8,7 +8,6 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.view.WindowManager
-import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.popup_add_video_dialog.*
 
@@ -48,7 +47,7 @@ class AddVideoDialog(
 
     fun showLoading(isLoading: Boolean) {
         albums_progress.isVisible = isLoading
-        albums_recycler.isGone = isLoading
+        albums_recycler.isVisible = !isLoading
         ok_add_popup.isEnabled = !isLoading
     }
 

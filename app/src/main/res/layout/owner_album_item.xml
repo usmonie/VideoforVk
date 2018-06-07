@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/width_owner_album"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:transitionName="video_player">
 
@@ -11,9 +11,9 @@
         android:id="@+id/video_item_cardView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_owner_album"
-        android:layout_marginEnd="@dimen/activity_vertical_margin"
         android:layout_marginStart="@dimen/activity_vertical_margin"
         android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginEnd="@dimen/activity_vertical_margin"
         app:cardCornerRadius="5dp">
 
         <ImageView
@@ -30,10 +30,10 @@
         android:id="@+id/video_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:ellipsize="end"
         android:lines="1"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
