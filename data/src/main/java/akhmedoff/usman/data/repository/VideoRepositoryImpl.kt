@@ -4,7 +4,10 @@ import akhmedoff.usman.data.api.VkApi
 import akhmedoff.usman.data.db.OwnerDao
 import akhmedoff.usman.data.db.VideoDao
 import akhmedoff.usman.data.local.UserSettings
-import akhmedoff.usman.data.model.*
+import akhmedoff.usman.data.model.ApiResponse
+import akhmedoff.usman.data.model.Owner
+import akhmedoff.usman.data.model.ResponseVideo
+import akhmedoff.usman.data.model.Video
 import akhmedoff.usman.data.repository.source.videos.SearchDataSourceFactory
 import akhmedoff.usman.data.repository.source.videos.VideosDataSourceFactory
 import android.arch.lifecycle.LiveData
@@ -120,7 +123,12 @@ class VideoRepositoryImpl(
             captchaCode: String?
     ) = vkApi.unlike("video", ownerId, itemId, captchaSid, captchaCode)
 
-    override fun isLiked(userId: String?, type: String, ownerId: String?, itemId: String): Call<ApiResponse<Liked>> {
-        return vkApi.isLiked(userId, type, ownerId, itemId)
-    }
+    override fun isLiked(userId: String?,
+                         type: String,
+                         ownerId: String?,
+                         itemId: String) =
+            vkApi.isLiked(userId, type, ownerId, itemId)
+
+    override fun deleteVideo(targetId: String?, ownerId: String, videoId: String) =
+            vkApi.deleteVideo(targetId, ownerId, videoId)
 }

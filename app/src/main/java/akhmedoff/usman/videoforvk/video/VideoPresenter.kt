@@ -2,7 +2,7 @@ package akhmedoff.usman.videoforvk.video
 
 import akhmedoff.usman.data.Error
 import akhmedoff.usman.data.model.*
-import akhmedoff.usman.data.model.Quality.*
+import akhmedoff.usman.data.model.Quality.EXTERNAL
 import akhmedoff.usman.data.repository.AlbumRepository
 import akhmedoff.usman.data.repository.UserRepository
 import akhmedoff.usman.data.repository.VideoRepository
@@ -42,9 +42,11 @@ class VideoPresenter(
 
     override fun addToAlbums(albumsIds: MutableList<Album>) {
         val ids = mutableListOf<Int>()
-
+        var isUserAlbum = false
         albumsIds.forEach {
             ids.add(it.id)
+
+            isUserAlbum = it.id == -2
         }
 
         videoRepository
@@ -53,8 +55,8 @@ class VideoPresenter(
                         ownerId = video.ownerId.toString(),
                         videoId = video.id.toString())
                 .enqueue(object : Callback<ApiResponse<Int>> {
-                    override fun onFailure(call: Call<ApiResponse<Int>>?, t: Throwable?) {
-
+                    override fun onFailure(call: Call<ApiResponse<Int>>?,
+                                           t: Throwable?) {
                     }
 
                     override fun onResponse(
@@ -63,7 +65,8 @@ class VideoPresenter(
                     ) {
                         if (response?.body()?.response == 1) {
                             view?.hideAddDialog()
-                            view?.setAdded()
+                            if (isUserAlbum)
+                                view?.setAdded()
                         }
                     }
                 })
@@ -96,12 +99,34 @@ class VideoPresenter(
                 else unlikeCurrentVideo()
 
             R.id.share_button -> shareCurrentVideo()
+
             R.id.add_to_videos -> addToMyVideos()
+
             R.id.add_to_album -> {
                 view?.showAddDialog()
                 loadAlbums()
             }
+            R.id.delete_from_videos -> {
+                deleteVideo()
+            }
         }
+    }
+
+    private fun deleteVideo() {
+        videoRepository
+                .deleteVideo(ownerId = video.ownerId.toString(),
+                        videoId = video.id.toString())
+                .enqueue(object : Callback<ApiResponse<Int>?> {
+                    override fun onFailure(call: Call<ApiResponse<Int>?>?, t: Throwable?) {
+
+                    }
+
+                    override fun onResponse(call: Call<ApiResponse<Int>?>?, response: Response<ApiResponse<Int>?>?) {
+                        if (response?.body()?.response == 1) {
+                            view?.setDeleted()
+                        }
+                    }
+                })
     }
 
     private fun addToMyVideos() {
@@ -126,11 +151,13 @@ class VideoPresenter(
 
     private fun shareCurrentVideo() {
         view?.let { view ->
-            view.showShareDialog(view.getString(
-                    R.string.shared_with_vt,
+            view.showShareDialog(
                     video.title,
-                    "https://vk.com/video?z=video${video.ownerId}_${video.id}"
-            ))
+                    view.getString(
+                            R.string.shared_with_vt,
+                            video.title,
+                            "https://vk.com/video?z=video${video.ownerId}_${video.id}"
+                    ))
         }
     }
 
@@ -148,7 +175,7 @@ class VideoPresenter(
                 .likeVideo(ownerId, itemId, captchaSid, captchaCode)
                 .enqueue(object : Callback<ApiResponse<Likes>> {
                     override fun onFailure(call: Call<ApiResponse<Likes>>?, t: Throwable?) {
-                        video.likes?.let { view?.setUnliked(it) }
+                        video.likes?.let { view?.setLiked(it) }
                     }
 
                     override fun onResponse(
@@ -161,7 +188,7 @@ class VideoPresenter(
                         }
                         response?.errorBody()?.let {
                             errorConvert(it)
-                            video.likes?.let { view?.setUnliked(it) }
+                            video.likes?.let { view?.setLiked(it) }
                         }
 
                     }
@@ -192,7 +219,7 @@ class VideoPresenter(
                     ) {
                         response?.body()?.let {
                             video.likes?.userLikes = false
-                            video.likes?.let { view?.setUnliked(it) }
+                            video.likes?.let { view?.setLiked(it) }
                         }
                         response?.errorBody()?.let {
                             errorConvert(it)
@@ -314,41 +341,17 @@ class VideoPresenter(
                         }
                     }
                 })
+
+
     }
 
     private fun showVideo(video: Video) {
         video.files.forEachIndexed { index, videoUrl ->
             when (videoUrl.quality) {
-                HLS -> {
+                EXTERNAL -> view?.setExternalUi(videoUrl)
+                else -> {
                     view?.setQuality(videoUrl)
                     view?.saveCurrentQuality(index)
-                }
-                FULLHD -> {
-                    view?.setQuality(videoUrl)
-                    view?.saveCurrentQuality(index)
-                }
-                HD -> {
-                    view?.setQuality(videoUrl)
-                    view?.saveCurrentQuality(index)
-                }
-                qHD -> {
-                    view?.setQuality(videoUrl)
-                    view?.saveCurrentQuality(index)
-                }
-                P360 -> {
-                    view?.setQuality(videoUrl)
-                    view?.saveCurrentQuality(index)
-                }
-                P240 -> {
-                    view?.setQuality(videoUrl)
-                    view?.saveCurrentQuality(index)
-                }
-                LOW -> {
-                    view?.setQuality(videoUrl)
-                    view?.saveCurrentQuality(index)
-                }
-                EXTERNAL -> {
-                    view?.setExternalUi(videoUrl)
                 }
             }
         }
@@ -400,20 +403,27 @@ class VideoPresenter(
     }
 
     override fun changedPipMode() {
-        if (view?.isPipMode() == true) {
-            view?.setPlayerFullscreen()
-            view?.showUi(false)
-        } else {
-            view?.setPlayerNormal()
-            view?.showUi(true)
-        }
+        view?.showUi(
+                if (view?.isPipMode() == true) {
+                    view?.setPlayerFullscreen()
+                    false
+                } else {
+                    view?.setPlayerNormal()
+                    true
+                }
+        )
+
     }
 
     override fun onStop() {
         view?.pauseVideo()
 
-        view?.getVideoState()?.let { isStartedVideo -> view?.saveVideoState(isStartedVideo) }
-        view?.getVideoPosition()?.let { videoPosition -> view?.saveVideoPosition(videoPosition) }
+        view?.getVideoState()?.let { isStartedVideo ->
+            view?.saveVideoState(isStartedVideo)
+        }
+        view?.getVideoPosition()?.let { videoPosition ->
+            view?.saveVideoPosition(videoPosition)
+        }
 
     }
 

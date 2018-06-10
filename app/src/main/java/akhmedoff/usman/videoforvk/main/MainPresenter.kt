@@ -23,7 +23,6 @@ class MainPresenter(
     }
 
     override fun forwardTo(id: Int) {
-//        view?.hidePrevious()
         when (id) {
             R.id.navigation_home -> {
                 view?.showHome()

@@ -4,7 +4,6 @@ import akhmedoff.usman.data.model.*
 import android.arch.lifecycle.LiveData
 import android.arch.paging.PagedList
 import retrofit2.Call
-import retrofit2.http.Query
 
 interface VideoRepository {
 
@@ -61,4 +60,6 @@ interface VideoRepository {
                 ownerId: String? = null,
                 itemId: String
     ): Call<ApiResponse<Liked>>
+
+    fun deleteVideo(targetId: String? = null, ownerId: String, videoId: String): Call<ApiResponse<Int>>
 }

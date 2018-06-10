@@ -21,8 +21,8 @@ class AuthenticationInterceptor(val context: Context) : Interceptor {
         val userSettings = UserSettings.getUserSettings(context)
         if (userSettings.isLogged) {
             httpBuilder.addQueryParameter(
-                "access_token",
-                userSettings.getToken()
+                    "access_token",
+                    userSettings.getToken()
             )
         }
 
@@ -41,25 +41,26 @@ class AuthenticationInterceptor(val context: Context) : Interceptor {
         }
 
         val request = requestBuilder
-            .header(
-                "User-Agent",
-                String.format(
-                    Locale.US,
-                    "VKAndroidApp/%s-%d (Android %s; SDK %d; %s; %s %s; %s)",
-                    str,
-                    Integer.valueOf(appbuild),
-                    Build.VERSION.RELEASE,
-                    Integer.valueOf(Build.VERSION.SDK_INT),
-                    Build.CPU_ABI,
-                    Build.MANUFACTURER,
-                    Build.MODEL,
-                    System.getProperty("user.language")
+                .header(
+                        "User-Agent",
+                        String.format(
+                                Locale.US,
+                                "VKAndroidApp/%s-%d (Android %s; SDK %d; %s; %s %s; %s)",
+                                str,
+                                Integer.valueOf(appbuild),
+                                Build.VERSION.RELEASE,
+                                Integer.valueOf(Build.VERSION.SDK_INT),
+                                Build.CPU_ABI,
+                                Build.MANUFACTURER,
+                                Build.MODEL,
+                                System.getProperty("user.language")
+                        )
                 )
-            )
-            .method(original.method(), original.body())
-            .build()
+                .method(original.method(), original.body())
+                .build()
+        /*val response = chain.proceed(request)
 
-        /*response?.body()?.let {
+        response?.body()?.let {
             if (it.string().contains("\"error_code\": 5")) {
                 requestBuilder.url("https://api.vk.com/method/secure.checkToken?token" + userSettings.getToken())
                 val tokenResponse = chain.proceed(requestBuilder.build())

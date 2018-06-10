@@ -7,7 +7,7 @@ import android.support.annotation.CallSuper
 import android.support.v7.app.AppCompatActivity
 
 abstract class BaseActivity<V : BaseContract.View, P : BaseContract.Presenter<V>> :
-    AppCompatActivity(), BaseContract.View {
+        AppCompatActivity(), BaseContract.View {
 
     protected lateinit var presenter: P
 
@@ -38,7 +38,8 @@ abstract class BaseActivity<V : BaseContract.View, P : BaseContract.Presenter<V>
 
     protected abstract fun initPresenter(): P
 
-    private inline fun <reified T : ViewModel> getViewModel() = ViewModelProviders
-        .of(this)
-        .get(T::class.java)
+    private inline fun <reified T : ViewModel> getViewModel() =
+            ViewModelProviders
+                    .of(this)
+                    .get(T::class.java)
 }

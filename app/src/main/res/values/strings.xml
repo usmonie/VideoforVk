@@ -71,6 +71,7 @@
     <string name="my_album">My album</string>
     <string name="album_added">Added</string>
     <string name="add_to_my_videos">Add to my videos</string>
+    <string name="delete_from_my_videos">Delete from my videos</string>
     <string name="add_to_my_albums">Add  to my albums</string>
     <string name="retry">Retry</string>
     <string name="error_loading_video">Error uploading video. It\'s possible that it was deleted or blocked</string>

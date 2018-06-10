@@ -33,13 +33,146 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/video_info_recycler"
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nested_scroll_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
         app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior"
-        tools:listitem="@layout/video_info_item" />
+        tools:visibility="visible">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/owner_avatar"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginStart="16dp"
+                        android:adjustViewBounds="false"
+                        android:cropToPadding="false"
+                        android:scaleType="centerCrop"
+                        tools:src="@tools:sample/avatars" />
+
+                    <TextView
+                        android:id="@+id/owner_name"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:lines="1"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textSize="16sp"
+                        tools:text="@tools:sample/full_names" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/video_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:ellipsize="end"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="@tools:sample/lorem" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/video_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="@+id/video_title"
+                        app:layout_constraintTop_toBottomOf="@+id/video_title"
+                        tools:text="@tools:sample/date/hhmm" />
+
+                    <TextView
+                        android:id="@+id/video_views"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        app:layout_constraintStart_toEndOf="@+id/video_date"
+                        app:layout_constraintTop_toBottomOf="@+id/video_title"
+                        tools:text="70k views" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <android.support.v7.widget.AppCompatImageView
+                        android:id="@+id/like_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:padding="16dp"
+                        app:srcCompat="@drawable/ic_favorite_border" />
+
+                    <android.support.v7.widget.AppCompatImageView
+                        android:id="@+id/share_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:padding="16dp"
+                        app:srcCompat="@drawable/ic_share" />
+
+                    <android.support.v7.widget.AppCompatImageView
+                        android:id="@+id/send_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:padding="16dp"
+                        android:visibility="gone"
+                        app:srcCompat="@drawable/ic_send" />
+
+                    <android.support.v7.widget.AppCompatImageView
+                        android:id="@+id/add_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:padding="16dp"
+                        app:srcCompat="@drawable/ic_add" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/video_desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autoLink="web"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="16dp"
+                    android:textAppearance="@android:style/TextAppearance.Material.Body2" />
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+    </android.support.v4.widget.NestedScrollView>
 
     <ProgressBar
         android:id="@+id/video_loading"

@@ -4,23 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:layout_height="match_parent">
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
         android:orientation="vertical">
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
-            android:fitsSystemWindows="true"
             android:layout_height="wrap_content">
 
-            <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
+            <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -36,29 +31,27 @@
                     android:layout_marginEnd="@dimen/activity_horizontal_margin"
                     android:layout_marginBottom="8dp"
                     android:foreground="?attr/selectableItemBackground"
-                    app:cardCornerRadius="6dp"
-                    app:cardElevation="2dp">
+                    app:cardCornerRadius="8dp">
 
                     <LinearLayout
                         android:id="@+id/search_expanded_box"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="44dp"
                         android:background="@drawable/rounded_corners"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
-                        <ImageButton
+                        <android.support.v7.widget.AppCompatImageButton
                             android:id="@+id/search_expanded_back_button"
-                            android:layout_width="56dp"
+                            android:layout_width="48dp"
                             android:layout_height="match_parent"
-                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:background="?attr/selectableItemBackground"
                             android:src="@drawable/ic_arrow_back" />
 
                         <android.support.design.widget.TextInputEditText
                             android:id="@+id/search_expanded_edit_text"
                             android:layout_width="0dp"
-                            android:layout_height="40dp"
-                            android:layout_margin="@dimen/search_box_icon_margin"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:background="@null"
                             android:drawableEnd="@drawable/ic_search"

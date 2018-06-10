@@ -67,7 +67,7 @@ interface VideoContract {
 
         fun setUnliked(likes: Likes)
 
-        fun showShareDialog(url: String)
+        fun showShareDialog(videoName: String, url: String)
 
         fun hideShareDialog()
 

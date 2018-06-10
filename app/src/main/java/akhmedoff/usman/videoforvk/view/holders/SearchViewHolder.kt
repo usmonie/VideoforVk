@@ -9,12 +9,11 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.video_info_item.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
 class SearchViewHolder(private val picasso: Picasso, itemView: View) :
-    AbstractViewHolder<Video>(itemView) {
+        AbstractViewHolder<Video>(itemView) {
 
     val videoFrame = itemView.findViewById<ImageView>(R.id.video_poster)
     private val videoTitle = itemView.findViewById<TextView>(R.id.video_title)
@@ -31,11 +30,11 @@ class SearchViewHolder(private val picasso: Picasso, itemView: View) :
         }
 
         picasso
-            .load(imageUri)
-            .config(Bitmap.Config.RGB_565)
-            .centerCrop()
-            .fit()
-            .into(videoFrame)
+                .load(imageUri)
+                .config(Bitmap.Config.RGB_565)
+                .centerCrop()
+                .fit()
+                .into(videoFrame)
 
         videoTitle.text = item.title
 
@@ -54,19 +53,18 @@ class SearchViewHolder(private val picasso: Picasso, itemView: View) :
             videoSource.text = "Youtube"
         }
 
-        itemView.video_views.text =
-                item.views?.let {
-                    itemView.resources.getQuantityString(
-                        R.plurals.video_views,
-                        it,
-                        it.toString()
-                    )
-                }
+        videoViews.text = item.views?.let {
+            itemView.resources.getQuantityString(
+                    R.plurals.video_views,
+                    it,
+                    it.toString()
+            )
+        }
 
         videoDate.text = DateUtils.getRelativeTimeSpanString(
-            item.date * 1000L,
-            System.currentTimeMillis(),
-            DateUtils.DAY_IN_MILLIS
+                item.date * 1000L,
+                System.currentTimeMillis(),
+                DateUtils.DAY_IN_MILLIS
         )
     }
 }

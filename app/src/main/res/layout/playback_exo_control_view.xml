@@ -80,9 +80,9 @@
             android:id="@id/exo_position"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginBottom="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:gravity="center"
             android:textColor="@android:color/white"
             tools:text="13:30" />
@@ -92,16 +92,19 @@
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="8dp"
             android:layout_weight="1" />
 
         <TextView
             android:id="@id/exo_duration"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="8dp"
             android:gravity="center"
             android:textAlignment="center"
             android:textColor="@android:color/white"
@@ -111,11 +114,12 @@
             android:id="@+id/fullscreen_toggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_gravity="center_vertical"
             android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
+            android:layout_marginEnd="8dp"
             android:focusable="true"
             app:srcCompat="@drawable/ic_fullscreen_white_24dp" />
     </LinearLayout>

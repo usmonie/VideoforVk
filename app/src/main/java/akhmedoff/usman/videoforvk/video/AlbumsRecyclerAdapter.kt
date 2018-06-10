@@ -55,7 +55,8 @@ class AlbumsRecyclerAdapter(private val changedListener: (Album, Boolean) -> Uni
                 if (item.isNotEmpty()) {
                     if (item[0] is Int)
                         item.forEach {
-                            holder.itemView.checkBox.isChecked = getItem(position)?.id == it
+                            holder.itemView.checkBox.isChecked =
+                                    getItem(position)?.id == it
                         }
                 }
             }

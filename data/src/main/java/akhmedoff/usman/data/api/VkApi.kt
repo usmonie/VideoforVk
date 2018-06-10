@@ -107,6 +107,13 @@ interface VkApi {
             @Query("video_id") videoId: String
     ): Call<ApiResponse<Int>>
 
+    @GET("video.addToAlbum")
+    fun deleteVideo(
+            @Query("target_id") targetId: String? = null,
+            @Query("owner_id") ownerId: String,
+            @Query("video_id") videoId: String
+    ): Call<ApiResponse<Int>>
+
     @GET("video.getAlbumsByVideo")
     fun getAlbumsByVideo(
             @Query("target_id") targetId: String? = null,

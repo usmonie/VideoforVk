@@ -10,7 +10,6 @@ import akhmedoff.usman.videoforvk.CaptchaDialog
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.player.AudioFocusListener
 import akhmedoff.usman.videoforvk.player.SimpleControlDispatcher
-import akhmedoff.usman.videoforvk.view.MarginItemDecorator
 import android.app.PictureInPictureParams
 import android.arch.paging.PagedList
 import android.content.Context
@@ -23,14 +22,17 @@ import android.support.annotation.DrawableRes
 import android.support.annotation.RequiresApi
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.PopupMenu
+import android.text.format.DateUtils
 import android.util.Rational
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.core.view.isVisible
 import com.google.android.exoplayer2.ExoPlayerFactory
+import com.google.android.exoplayer2.Player.REPEAT_MODE_OFF
+import com.google.android.exoplayer2.Player.REPEAT_MODE_ONE
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.MediaSource
@@ -42,6 +44,7 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.FileDataSourceFactory
 import com.google.android.exoplayer2.upstream.cache.*
 import com.google.android.exoplayer2.util.Util
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_video.*
 import kotlinx.android.synthetic.main.playback_exo_control_view.*
 import java.io.File
@@ -86,9 +89,9 @@ class VideoFragment : Fragment(), VideoContract.View {
 
     private var player: SimpleExoPlayer? = null
 
-    private lateinit var videoInfoAdapter: VideoInfoRecyclerAdapter
-
     private var mediaSource: MediaSource? = null
+
+    private lateinit var popupMenu: PopupMenu
 
     private val addVideoDialog: AddVideoDialog by lazy {
         AddVideoDialog(
@@ -120,12 +123,7 @@ class VideoFragment : Fragment(), VideoContract.View {
         )
         if (savedInstanceState != null) presenter.view = this
 
-        videoInfoAdapter = VideoInfoRecyclerAdapter {
-            onRecyclerItemClicked(it)
-        }
-
         initPlayer()
-
     }
 
     private fun initPlayer() {
@@ -144,7 +142,6 @@ class VideoFragment : Fragment(), VideoContract.View {
         simpleCache = SimpleCache(
                 File(context!!.cacheDir, "video"),
                 LeastRecentlyUsedCacheEvictor(1024 * 1024 * 1024))
-        //FIXME: Here app down, there are two SimpleCache in one directory
 
         cacheDataSourceFactory =
                 CacheDataSourceFactory(
@@ -171,6 +168,7 @@ class VideoFragment : Fragment(), VideoContract.View {
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
                 }
 
+
     }
 
     override fun onCreateView(
@@ -181,7 +179,6 @@ class VideoFragment : Fragment(), VideoContract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
 
         error_button_reload.setOnClickListener { presenter.onStart() }
 
@@ -202,28 +199,39 @@ class VideoFragment : Fragment(), VideoContract.View {
         video_exo_player.setControlDispatcher(simpleControlDispatcher)
         video_exo_player.player = player
 
-        video_info_recycler.itemAnimator = DefaultItemAnimator()
-        video_info_recycler.addItemDecoration(
-                MarginItemDecorator(
-                        1,
-                        resources.getDimensionPixelSize(R.dimen.video_fragment_vertical_margin)
-                )
-        )
-
-        video_info_recycler.layoutManager =
-                LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        video_info_recycler.adapter = videoInfoAdapter
-
         if (savedInstanceState == null)
             presenter.onStart()
+
+        popupMenu = PopupMenu(context!!, add_button).apply {
+            this.inflate(R.menu.add_video_menu)
+            this.setOnMenuItemClickListener {
+                presenter.onClick(it.itemId)
+                true
+            }
+        }
+
+        like_button.setOnClickListener {
+            presenter.onClick(it.id)
+        }
+
+        share_button.setOnClickListener {
+            presenter.onClick(it.id)
+        }
+
+        send_button.setOnClickListener {
+            presenter.onClick(it.id)
+        }
+
+        add_button.setOnClickListener {
+            popupMenu.show()
+        }
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
 
-        if (savedInstanceState?.get(IS_FULLSCREEN_KEY) ?: false == true) {
+        if (savedInstanceState?.get(IS_FULLSCREEN_KEY) ?: false == true)
             showFullscreen()
-        }
     }
 
     override fun onStop() {
@@ -236,18 +244,48 @@ class VideoFragment : Fragment(), VideoContract.View {
         simpleCache.release()
     }
 
-    private fun onRecyclerItemClicked(it: Int) =
-            presenter.onClick(it)
-
     override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean) =
             presenter.changedPipMode()
 
     override fun showVideo(item: Video) {
-        videoInfoAdapter.video = item
+        video_title.text = item.title
+
+        video_date.text = DateUtils.getRelativeTimeSpanString(
+                item.date * 1000,
+                System.currentTimeMillis(),
+                DateUtils.DAY_IN_MILLIS
+        )
+
+        video_views.text = item.views?.let {
+            resources.getQuantityString(
+                    R.plurals.video_views,
+                    it,
+                    it.toString()
+            )
+        }
+
+        video_desc.text = item.description
+
+        setDrawable(like_button, when (item.likes?.userLikes) {
+            true -> R.drawable.ic_favorite_fill_24dp
+            else -> R.drawable.ic_favorite_border
+        })
+
+        player?.repeatMode = if (item.repeat) REPEAT_MODE_ONE
+        else REPEAT_MODE_OFF
+
     }
 
+    private fun setDrawable(imageView: ImageView, @DrawableRes id: Int) =
+            imageView.setImageDrawable(ContextCompat.getDrawable(context!!, id))
+
     override fun showOwnerInfo(owner: Owner) {
-        videoInfoAdapter.owner = owner
+        owner_name.text = owner.name
+
+        Picasso
+                .get()
+                .load(owner.photo100)
+                .into(owner_avatar)
     }
 
     override fun setVideoSource(videoUrl: VideoUrl) {
@@ -265,7 +303,6 @@ class VideoFragment : Fragment(), VideoContract.View {
                     )
         }
     }
-
 
     override fun setQuality(videoUrl: VideoUrl) {
         player?.prepare(
@@ -303,6 +340,7 @@ class VideoFragment : Fragment(), VideoContract.View {
         exo_quality_toggle?.isVisible = false
         simpleControlDispatcher.isExternal = true
         simpleControlDispatcher.url = videoUrl.url
+        fullscreen_toggle.isVisible = false
     }
 
     override fun setSaved(saved: Boolean) {
@@ -347,7 +385,7 @@ class VideoFragment : Fragment(), VideoContract.View {
     override fun showLoadError(isError: Boolean) {
         error_mode.isVisible = isError
         appbar.isVisible = !isError
-        video_info_recycler.isVisible = !isError
+        nested_scroll_view.isVisible = !isError
         video_loading.isVisible = !isError
     }
 
@@ -355,7 +393,8 @@ class VideoFragment : Fragment(), VideoContract.View {
     override fun enterPipMode(video: Video) {
         activity?.enterPictureInPictureMode(
                 PictureInPictureParams.Builder()
-                        .setAspectRatio(Rational(video.width ?: 16, video.height ?: 9))
+                        .setAspectRatio(Rational(video.width ?: 16,
+                                video.height ?: 9))
                         .build()
         )
     }
@@ -369,7 +408,7 @@ class VideoFragment : Fragment(), VideoContract.View {
             && activity?.isInPictureInPictureMode ?: false
 
     override fun showUi(isShowing: Boolean) {
-        video_info_recycler?.isVisible = isShowing
+        nested_scroll_view?.isVisible = isShowing
         showLoadError(false)
         if (isShowing)
             video_exo_player.showController()
@@ -396,28 +435,20 @@ class VideoFragment : Fragment(), VideoContract.View {
     }
 
     override fun setLiked(likes: Likes) {
-        videoInfoAdapter.notifyItemChanged(
-                0,
-                if (likes.userLikes)
-                    VideoInfoPayloads.LIKED
-                else
-                    VideoInfoPayloads.DISLIKED
-        )
+        setDrawable(like_button,
+                if (likes.userLikes) R.drawable.ic_favorite_fill_24dp
+                else R.drawable.ic_favorite_border)
     }
 
     override fun setUnliked(likes: Likes) {
-        videoInfoAdapter.notifyItemChanged(
-                0,
-                if (likes.userLikes)
-                    VideoInfoPayloads.LIKED
-                else VideoInfoPayloads.DISLIKED
-        )
     }
 
-    override fun showShareDialog(url: String) {
+    override fun showShareDialog(videoName: String, url: String) {
         val sendIntent = Intent()
         sendIntent.action = Intent.ACTION_SEND
-        sendIntent.putExtra(Intent.EXTRA_TEXT, url)
+        sendIntent.putExtra(Intent.EXTRA_TEXT,
+                String.format(resources.getText(R.string.shared_with_vt).toString(), videoName, url))
+
         sendIntent.type = "text/plain"
         startActivity(Intent.createChooser(sendIntent, resources.getText(R.string.send_to)))
     }
@@ -431,11 +462,9 @@ class VideoFragment : Fragment(), VideoContract.View {
     override fun hideSendDialog() {
     }
 
-    override fun showAddDialog() =
-            addVideoDialog.show()
+    override fun showAddDialog() = addVideoDialog.show()
 
-    override fun hideAddDialog() =
-            addVideoDialog.hide()
+    override fun hideAddDialog() = addVideoDialog.hide()
 
     override fun showAlbumsLoading(isLoading: Boolean) =
             addVideoDialog.showLoading(isLoading)
@@ -445,20 +474,18 @@ class VideoFragment : Fragment(), VideoContract.View {
             addVideoDialog.showAlbums(albums)
     }
 
-    override fun showSelectedAlbums(ids: List<Int>) {
-        addVideoDialog.setSelectedAlbums(ids)
-    }
+    override fun showSelectedAlbums(ids: List<Int>) =
+            addVideoDialog.setSelectedAlbums(ids)
 
     override fun setAdded() {
-        videoInfoAdapter.notifyItemChanged(
-                0, VideoInfoPayloads.ADDED
-        )
+        setDrawable(add_button, R.drawable.ic_done_black_24dp)
+        popupMenu.inflate(R.menu.delete_video_menu)
     }
 
     override fun setDeleted() {
-        videoInfoAdapter.notifyItemChanged(
-                0, VideoInfoPayloads.DELETED
-        )
+        setDrawable(add_button, R.drawable.ic_add)
+        popupMenu.inflate(R.menu.add_video_menu)
+
     }
 
     override fun showOwnerUser(owner: Owner) {
@@ -535,5 +562,4 @@ class VideoFragment : Fragment(), VideoContract.View {
 
     override fun showVideoInBrowser(url: String) =
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-
 }

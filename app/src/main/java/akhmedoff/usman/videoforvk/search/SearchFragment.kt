@@ -25,13 +25,15 @@ class SearchFragment : Fragment(), SearchContract.View {
     override lateinit var searchPresenter: SearchContract.Presenter
 
     private val adapter: SearchRecyclerAdapter by lazy {
-        SearchRecyclerAdapter({ video, view -> showVideo(video, view) }, R.layout.search_videos)
+        SearchRecyclerAdapter(
+                { video, view -> showVideo(video, view) },
+                R.layout.search_videos
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        searchPresenter =
-                SearchPresenter(this, getVideoRepository(context!!))
+        searchPresenter = SearchPresenter(this, getVideoRepository(context!!))
     }
 
     override fun onCreateView(
@@ -42,17 +44,16 @@ class SearchFragment : Fragment(), SearchContract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        search_recycler.adapter = adapter
         search_recycler.addItemDecoration(
                 MarginItemDecorator(
                         1,
                         resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin)
                 )
         )
+        search_recycler.adapter = adapter
 
         search_expanded_edit_text
                 .addTextChangedListener(object : TextWatcher {
-
                     var timer: Timer? = null
                     override fun afterTextChanged(s: Editable?) {
                         timer = Timer()
@@ -100,10 +101,7 @@ class SearchFragment : Fragment(), SearchContract.View {
                     view: View?,
                     position: Int,
                     id: Long
-            ) {
-                searchPresenter.search()
-            }
-
+            ) = searchPresenter.search()
         }
         duration_filter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -114,10 +112,7 @@ class SearchFragment : Fragment(), SearchContract.View {
                     view: View?,
                     position: Int,
                     id: Long
-            ) {
-                searchPresenter.search()
-            }
-
+            ) = searchPresenter.search()
         }
     }
 
@@ -153,7 +148,8 @@ class SearchFragment : Fragment(), SearchContract.View {
         return 0
     }
 
-    override fun showFoundVideos(videos: PagedList<Video>) = adapter.submitList(videos)
+    override fun showFoundVideos(videos: PagedList<Video>) =
+            adapter.submitList(videos)
 
     override fun expandFilters() {
     }
@@ -165,7 +161,8 @@ class SearchFragment : Fragment(), SearchContract.View {
     }
 
     override fun showVideo(item: Video, view: View) {
-        val fragment = VideoFragment.getInstance(item, ViewCompat.getTransitionName(view))
+        val fragment =
+                VideoFragment.getInstance(item, ViewCompat.getTransitionName(view))
 
         activity?.supportFragmentManager?.let {
             Router.replaceFragment(

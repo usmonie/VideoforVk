@@ -39,6 +39,14 @@ class CatalogRecyclerAdapter(
                     clickListener(it, videoFrame)
                 }
             }
+
+            itemView.isLongClickable = true
+            /*itemView.setOnLongClickListener {
+                getItem(adapterPosition)?.let {
+                    longClickListener(it, videoFrame)
+                }
+                true
+            }*/
         }
 
     override fun onBindViewHolder(holder: VideoViewHolder, position: Int) {

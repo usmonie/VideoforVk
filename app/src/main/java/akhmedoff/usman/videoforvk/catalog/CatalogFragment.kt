@@ -20,6 +20,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.fragment_catalog.*
 
+
 class CatalogFragment : Fragment(),
         CatalogContract.View {
 
@@ -37,7 +38,7 @@ class CatalogFragment : Fragment(),
 
     override lateinit var presenter: CatalogContract.Presenter
 
-    private val adapter by lazy {
+    private val adapter: CatalogRecyclerAdapter by lazy {
         CatalogRecyclerAdapter { item, view ->
             when (item.type) {
                 CatalogItemType.VIDEO -> showVideo(item, view)
@@ -64,7 +65,8 @@ class CatalogFragment : Fragment(),
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_catalog, container, false)
+    ): View? =
+            inflater.inflate(R.layout.fragment_catalog, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -89,7 +91,8 @@ class CatalogFragment : Fragment(),
     }
 
     override fun showVideo(item: CatalogItem, view: View) {
-        val fragment = VideoFragment.getInstance(item, ViewCompat.getTransitionName(view))
+        val fragment = VideoFragment.getInstance(item,
+                ViewCompat.getTransitionName(view))
 
         activity?.supportFragmentManager?.let {
             Router.replaceFragment(
