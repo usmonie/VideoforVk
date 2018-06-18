@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context="akhmedoff.usman.videoforvk.login.LoginActivity">
+        tools:context=".ui.login.LoginActivity">
 
         <ImageView
             android:id="@+id/login_logo"

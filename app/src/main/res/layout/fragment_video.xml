@@ -42,8 +42,10 @@
         tools:visibility="visible">
 
         <android.support.v7.widget.CardView
+            android:id="@+id/video_info_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             app:cardUseCompatPadding="true">
 
             <LinearLayout
@@ -59,8 +61,8 @@
 
                     <ImageView
                         android:id="@+id/owner_avatar"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:layout_marginStart="16dp"
                         android:adjustViewBounds="false"
                         android:cropToPadding="false"
@@ -122,6 +124,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/video_buttons"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -158,6 +161,15 @@
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:padding="16dp"
                         app:srcCompat="@drawable/ic_add" />
+
+                    <android.support.v7.widget.AppCompatImageView
+                        android:id="@+id/download_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:padding="16dp"
+                        app:srcCompat="@drawable/ic_file_download_white_24dp"
+                        app:tint="?attr/colorControlNormal" />
                 </LinearLayout>
 
                 <TextView
@@ -168,7 +180,8 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:paddingBottom="16dp"
-                    android:textAppearance="@android:style/TextAppearance.Material.Body2" />
+                    android:textAppearance="@android:style/TextAppearance.Material.Body1"
+                    android:textSize="14sp" />
 
             </LinearLayout>
         </android.support.v7.widget.CardView>

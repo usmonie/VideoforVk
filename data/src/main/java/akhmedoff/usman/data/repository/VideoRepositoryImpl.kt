@@ -68,6 +68,17 @@ class VideoRepositoryImpl(
             videoId = videoId
     )
 
+    override fun addToUser(
+            target_id: String?,
+            ownerId: String,
+            videoId: String
+    ): Call<ApiResponse<Int>> = vkApi.addVideoToAlbum(
+            target_id,
+            albumId = (-2).toString(),
+            ownerId = ownerId,
+            videoId = videoId
+    )
+
     override fun search(
             query: String,
             sort: Int?,
@@ -129,6 +140,5 @@ class VideoRepositoryImpl(
                          itemId: String) =
             vkApi.isLiked(userId, type, ownerId, itemId)
 
-    override fun deleteVideo(targetId: String?, ownerId: String, videoId: String) =
-            vkApi.deleteVideo(targetId, ownerId, videoId)
+    override fun deleteVideo(ownerId: String, videoId: String) = vkApi.deleteVideo(ownerId = ownerId, videoId = videoId)
 }

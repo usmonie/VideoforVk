@@ -77,4 +77,11 @@
     <string name="error_loading_video">Error uploading video. It\'s possible that it was deleted or blocked</string>
     <string name="error_show_video_in_browser">Try to look through the browser</string>
     <string name="error_reload">Reload</string>
+    <string name="notification_channel_download_name">Downloads</string>
+    <string name="notification_channel_download_desc">Video downloads progress</string>
+    <string name="notification_downloading_title">Downloading</string>
+    <string name="notification_downloading_pause">Paused</string>
+    <string name="notification_downloading_successful">Successful</string>
+    <string name="notification_downloading_running">Downloading</string>
+    <string name="notification_downloading_failed">Failed</string>
 </resources>

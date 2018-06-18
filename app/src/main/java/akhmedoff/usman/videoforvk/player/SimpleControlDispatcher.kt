@@ -51,12 +51,14 @@ class SimpleControlDispatcher(
         }
     )
 
-    private fun getAudioFocusResponse() =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+    private fun getAudioFocusResponse(): Int {
+
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             audioManager.requestAudioFocus(audioFocusRequest)
         else audioManager.requestAudioFocus(
-            audioFocusListener,
-            AudioManager.STREAM_MUSIC,
-            AudioManager.AUDIOFOCUS_GAIN
+                audioFocusListener,
+                AudioManager.STREAM_MUSIC,
+                AudioManager.AUDIOFOCUS_GAIN
         )
+    }
 }

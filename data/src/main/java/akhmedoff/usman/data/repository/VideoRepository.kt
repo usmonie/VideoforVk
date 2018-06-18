@@ -30,6 +30,12 @@ interface VideoRepository {
             videoId: String
     ): Call<ApiResponse<Int>>
 
+    fun addToUser(
+            target_id: String? = null,
+            ownerId: String,
+            videoId: String
+    ): Call<ApiResponse<Int>>
+
     fun search(
             query: String,
             sort: Int?,
@@ -61,5 +67,5 @@ interface VideoRepository {
                 itemId: String
     ): Call<ApiResponse<Liked>>
 
-    fun deleteVideo(targetId: String? = null, ownerId: String, videoId: String): Call<ApiResponse<Int>>
+    fun deleteVideo(ownerId: String, videoId: String): Call<ApiResponse<Int>>
 }

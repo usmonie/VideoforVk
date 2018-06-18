@@ -49,7 +49,7 @@
     <string name="album_added">Добавлено</string>
     <string name="add_to_my_videos">Добавить к себе</string>
     <string name="delete_from_my_videos">Удалить из своих видеозаписей</string>
-    <string name="add_to_my_albums">Добавить в альбум</string>
+    <string name="add_to_my_albums">Добавить в альбом</string>
     <string name="retry">Повторить попытку</string>
     <string name="error_loading_video">Ошибка при загрузке видео. Возможно, оно был удален или заблокирован</string>
     <string name="error_show_video_in_browser">Попробовать посмотреть через браузер</string>

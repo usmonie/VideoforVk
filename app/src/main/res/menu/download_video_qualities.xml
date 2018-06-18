@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/download_quality_1080p"
+        android:enabled="false"
+        android:title="1080p" />
+    <item
+        android:id="@+id/download_quality_720p"
+        android:enabled="false"
+        android:title="720p" />
+    <item
+        android:id="@+id/download_quality_480p"
+        android:enabled="false"
+        android:title="480p" />
+    <item
+        android:id="@+id/download_quality_360p"
+        android:enabled="false"
+        android:title="360p" />
+    <item
+        android:id="@+id/download_quality_240p"
+        android:enabled="false"
+        android:title="240p" />
+</menu>
