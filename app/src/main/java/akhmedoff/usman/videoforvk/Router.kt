@@ -5,6 +5,7 @@ import android.support.transition.TransitionSet.ORDERING_TOGETHER
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
+import android.support.v4.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE
 import android.support.v4.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN
 import android.support.v4.view.ViewCompat
 import android.view.View
@@ -34,13 +35,9 @@ object Router {
                 .beginTransaction()
                 .setReorderingAllowed(true)
                 .replace(R.id.container, fragment, fragmentTag)
+                .setTransition(TRANSIT_FRAGMENT_FADE)
 
-        if (addToBackStack) {
-            transaction.addToBackStack(fragmentTag)
-        }
-
-        val exitFade = Fade()
-        prevFragment?.exitTransition = exitFade
+        if (addToBackStack) transaction.addToBackStack(fragmentTag)
 
         val enterTransitionSet = TransitionSet()
                 .addTransition(ChangeBounds())
@@ -50,6 +47,11 @@ object Router {
         enterTransitionSet.ordering = ORDERING_TOGETHER
         enterTransitionSet.duration = 375L
 
+        fragment.sharedElementEnterTransition = enterTransitionSet
+
+        val enterFade = Fade()
+        fragment.enterTransition = enterFade
+
         val returnTransitionSet = TransitionSet()
                 .addTransition(ChangeBounds())
                 .addTransition(ChangeTransform())
@@ -57,12 +59,7 @@ object Router {
                 .addTransition(ChangeImageTransform())
         enterTransitionSet.ordering = ORDERING_TOGETHER
         enterTransitionSet.duration = 375L
-
-        fragment.sharedElementEnterTransition = enterTransitionSet
         fragment.sharedElementReturnTransition = returnTransitionSet
-
-        val enterFade = Explode()
-        fragment.enterTransition = enterFade
 
         transaction.addSharedElement(
                 sharedElement,

@@ -13,10 +13,7 @@ class App : Application() {
         lateinit var context: Context
 
         init {
-            AppCompatDelegate
-                .setDefaultNightMode(
-                    AppCompatDelegate.MODE_NIGHT_AUTO
-                )
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO)
         }
     }
 

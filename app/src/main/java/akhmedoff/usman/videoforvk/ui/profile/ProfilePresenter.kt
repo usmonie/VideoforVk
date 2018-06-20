@@ -23,7 +23,7 @@ class ProfilePresenter(
 
     override fun onViewCreated() {
         view?.showLoading(true)
-        view?.hideTabs()
+        view?.showTabs(false)
 
         userRepository
                 .getUsers(view?.getUserId())
@@ -39,13 +39,13 @@ class ProfilePresenter(
                             view?.showUserName(name)
                             userRepository.getUserPhotoUrl()?.let { view?.showUserPhoto(it) }
 
-                            view?.showTabs()
+                            view?.showTabs(true)
                         } else {
                             t?.message?.let {
                                 view?.showError(it)
                                 Log.e(javaClass.simpleName, it)
                             }
-                            view?.hideTabs()
+                            view?.showTabs(false)
                         }
                     }
 
@@ -61,7 +61,7 @@ class ProfilePresenter(
 
                             view?.showUserName("${user.firstName} ${user.lastName}")
                             view?.showUserPhoto(user.photoMaxOrig)
-                            view?.showTabs()
+                            view?.showTabs(true)
                         } else {
                             val name = userRepository.getUserName()
 
@@ -69,9 +69,9 @@ class ProfilePresenter(
                                 view?.showUserName(name)
                                 userRepository.getUserPhotoUrl()?.let { view?.showUserPhoto(it) }
 
-                                view?.showTabs()
+                                view?.showTabs(true)
                             } else {
-                                view?.hideTabs()
+                                view?.showTabs(false)
                             }
                         }
                     }

@@ -11,9 +11,7 @@ interface ProfileContract {
 
         fun setIsUser(isUser: Boolean)
 
-        fun showTabs()
-
-        fun hideTabs()
+        fun showTabs(isShowing: Boolean)
 
         fun showPages(ownerId: String)
 
@@ -24,6 +22,8 @@ interface ProfileContract {
         fun showLoading(isLoading: Boolean)
 
         fun getUserId(): String?
+
+        fun getIsUser(): Boolean
     }
 
     interface Presenter {

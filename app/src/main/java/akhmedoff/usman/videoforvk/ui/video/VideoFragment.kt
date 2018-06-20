@@ -39,7 +39,6 @@ import com.google.android.exoplayer2.Player.REPEAT_MODE_OFF
 import com.google.android.exoplayer2.Player.REPEAT_MODE_ONE
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.ExtractorMediaSource
-import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
@@ -93,8 +92,6 @@ class VideoFragment : Fragment(), VideoContract.View {
     private lateinit var simpleCache: Cache
 
     private var player: SimpleExoPlayer? = null
-
-    private var mediaSource: MediaSource? = null
 
     private lateinit var popupAddMenu: PopupMenu
 
@@ -161,8 +158,7 @@ class VideoFragment : Fragment(), VideoContract.View {
         video_exo_player.setControlDispatcher(simpleControlDispatcher)
         video_exo_player.player = player
 
-        if (savedInstanceState == null)
-            presenter.onStart()
+        presenter.onStart()
 
         popupAddMenu = PopupMenu(context!!, add_button).apply {
             inflate(R.menu.add_video_menu)
@@ -327,19 +323,7 @@ class VideoFragment : Fragment(), VideoContract.View {
     }
 
     override fun setVideoSource(videoUrl: VideoUrl) {
-        mediaSource = when (videoUrl.quality) {
-            HLS -> HlsMediaSource.Factory(cacheDataSourceFactory).createMediaSource(
-                    Uri.parse(
-                            videoUrl.url
-                    )
-            )
-            else -> ExtractorMediaSource.Factory(cacheDataSourceFactory)
-                    .createMediaSource(
-                            Uri.parse(
-                                    videoUrl.url
-                            )
-                    )
-        }
+
     }
 
     override fun setQuality(videoUrl: VideoUrl) {

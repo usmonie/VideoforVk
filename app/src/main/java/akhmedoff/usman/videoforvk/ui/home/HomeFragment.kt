@@ -4,7 +4,6 @@ package akhmedoff.usman.videoforvk.ui.home
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.Router
 import akhmedoff.usman.videoforvk.ui.search.SearchFragment
-import akhmedoff.usman.videoforvk.ui.video.VideoFragment
 import akhmedoff.usman.videoforvk.ui.view.FragmentsViewPagerAdapter
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -37,8 +36,8 @@ class HomeFragment : Fragment(), HomeContract.View {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_home, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -75,10 +74,12 @@ class HomeFragment : Fragment(), HomeContract.View {
 
         activity?.supportFragmentManager?.let {
             Router.replaceFragment(
-                it,
-                fragment,
-                true,
-                VideoFragment.FRAGMENT_TAG
+                    it,
+                    this,
+                    fragment,
+                    true,
+                    SearchFragment.FRAGMENT_TAG,
+                    search_box_collapsed
             )
         }
     }

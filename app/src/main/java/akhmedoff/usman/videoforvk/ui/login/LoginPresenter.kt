@@ -4,7 +4,6 @@ import akhmedoff.usman.data.Error
 import akhmedoff.usman.data.model.Auth
 import akhmedoff.usman.data.repository.UserRepository
 import akhmedoff.usman.data.utils.gson
-import akhmedoff.usman.videoforvk.ui.base.BasePresenter
 import android.util.Log
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -12,9 +11,9 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class LoginPresenter(
-    private val repository: UserRepository
-) : BasePresenter<LoginContract.View>(),
-    LoginContract.Presenter {
+        override var view: LoginContract.View?,
+        private val repository: UserRepository
+) : LoginContract.Presenter {
 
     private lateinit var captchaSid: String
 
@@ -50,11 +49,11 @@ class LoginPresenter(
     }
 
     private fun auth(
-        username: String,
-        password: String,
-        captchaSid: String? = null,
-        captchaKey: String? = null,
-        code: String? = null
+            username: String,
+            password: String,
+            captchaSid: String? = null,
+            captchaKey: String? = null,
+            code: String? = null
     ) {
 
         view?.let { view ->
@@ -65,38 +64,38 @@ class LoginPresenter(
             view.editTextEditable(editable = false)
 
             repository
-                .auth(username, password, captchaSid, captchaKey, code)
-                .enqueue(object : Callback<Auth> {
-                    override fun onFailure(call: Call<Auth>?, t: Throwable?) {
-                        Log.e("failed", t?.toString())
-                        view.hideProgress()
-                        view.setButtonEnabled(enabled = true)
-                        view.editTextEditable(editable = true)
-                        view.onErrorLogin()
+                    .auth(username, password, captchaSid, captchaKey, code)
+                    .enqueue(object : Callback<Auth> {
+                        override fun onFailure(call: Call<Auth>?, t: Throwable?) {
+                            Log.e("failed", t?.toString())
+                            view.hideProgress()
+                            view.setButtonEnabled(enabled = true)
+                            view.editTextEditable(editable = true)
+                            view.onErrorLogin()
 
-                        if (view.isDialogShows()) view.hideDialogLoading()
-                    }
-
-                    override fun onResponse(call: Call<Auth>?, response: Response<Auth>?) {
-                        view.hideProgress()
-                        view.setButtonEnabled(enabled = true)
-                        view.editTextEditable(editable = true)
-
-                        response?.body()?.let { auth ->
-                            if (auth.isSuccessful) {
-                                repository.saveToken(auth.accessToken!!)
-                                repository.saveCurrentUser(auth.userId!!)
-                                view.startMain()
-                            } else {
-                                view.onErrorLogin()
-                            }
+                            if (view.isDialogShows()) view.hideDialogLoading()
                         }
 
-                        if (view.isDialogShows()) view.hideDialogLoading()
+                        override fun onResponse(call: Call<Auth>?, response: Response<Auth>?) {
+                            view.hideProgress()
+                            view.setButtonEnabled(enabled = true)
+                            view.editTextEditable(editable = true)
 
-                        response?.errorBody()?.let { errorConvert(it) }
-                    }
-                })
+                            response?.body()?.let { auth ->
+                                if (auth.isSuccessful) {
+                                    repository.saveToken(auth.accessToken!!)
+                                    repository.saveCurrentUser(auth.userId!!)
+                                    view.startMain()
+                                } else {
+                                    view.onErrorLogin()
+                                }
+                            }
+
+                            if (view.isDialogShows()) view.hideDialogLoading()
+
+                            response?.errorBody()?.let { errorConvert(it) }
+                        }
+                    })
         }
 
     }
@@ -104,23 +103,23 @@ class LoginPresenter(
     private fun errorConvert(response: ResponseBody) {
         val auth = gson.fromJson<Auth>(response.string(), Auth::class.java)
 
-            when (auth.error) {
-                Error.ERROR_LOGIN -> view?.onErrorLogin()
+        when (auth.error) {
+            Error.ERROR_LOGIN -> view?.onErrorLogin()
 
-                Error.NEED_CAPTCHA -> {
-                    captchaSid = auth.captchaSid!!
-                    view?.captcha(auth.captchaImg!!)
+            Error.NEED_CAPTCHA -> {
+                captchaSid = auth.captchaSid!!
+                view?.captcha(auth.captchaImg!!)
+            }
+
+            Error.NEED_VALIDATION ->
+                when (auth.validationType) {
+                    null -> view?.onErrorLogin()
+                    else -> view?.validateTwoFactoryAuthorization(auth.phoneMask)
                 }
 
-                Error.NEED_VALIDATION ->
-                    when (auth.validationType) {
-                        null -> view?.onErrorLogin()
-                        else -> view?.validateTwoFactoryAuthorization(auth.phoneMask)
-                    }
+            Error.INVALID_CODE -> view?.showCodeError()
 
-                Error.INVALID_CODE -> view?.showCodeError()
-
-                else -> view?.onErrorLogin()
-            }
+            else -> view?.onErrorLogin()
+        }
     }
 }

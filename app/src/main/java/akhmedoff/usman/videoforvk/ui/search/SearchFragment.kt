@@ -22,6 +22,11 @@ import java.util.*
 
 
 class SearchFragment : Fragment(), SearchContract.View {
+
+    companion object {
+        const val FRAGMENT_TAG = "search_fragment"
+    }
+
     override lateinit var searchPresenter: SearchContract.Presenter
 
     private val adapter: SearchRecyclerAdapter by lazy {

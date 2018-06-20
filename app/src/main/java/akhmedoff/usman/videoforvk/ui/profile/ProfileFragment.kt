@@ -5,7 +5,6 @@ import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.Router
 import akhmedoff.usman.videoforvk.ui.albums.AlbumsFragment
 import akhmedoff.usman.videoforvk.ui.search.SearchFragment
-import akhmedoff.usman.videoforvk.ui.video.VideoFragment
 import akhmedoff.usman.videoforvk.ui.videos.VideosFragment
 import akhmedoff.usman.videoforvk.ui.view.FragmentsViewPagerAdapter
 import android.os.Bundle
@@ -18,19 +17,21 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.search_toolbar.*
 
+private const val USER_ID = "user_id"
+private const val IS_USER = "is_user"
+
 class ProfileFragment : Fragment(), ProfileContract.View {
 
     companion object {
         const val FRAGMENT_TAG = "profile_fragment_tag"
         const val RETAINED_KEY = "retained"
 
-        private const val USER_ID = "user_id"
-
         fun createFragment(userId: String?) = ProfileFragment().apply {
             val bundle = Bundle()
             bundle.putString(USER_ID, userId)
-
+            bundle.putBoolean(IS_USER, false)
             arguments = bundle
+
         }
     }
 
@@ -45,9 +46,7 @@ class ProfileFragment : Fragment(), ProfileContract.View {
 
         pagesPagerAdapter = FragmentsViewPagerAdapter(childFragmentManager)
 
-        if (savedInstanceState == null || !savedInstanceState.containsKey(RETAINED_KEY)) {
-            presenter.onCreated()
-        }
+        if (savedInstanceState == null || !savedInstanceState.containsKey(RETAINED_KEY)) presenter.onCreated()
     }
 
     override fun onCreateView(
@@ -97,16 +96,11 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         pagesPagerAdapter.notifyDataSetChanged()
     }
 
-    override fun getUserId(): String? = arguments?.getString(USER_ID)
+    override fun getUserId() = arguments?.getString(USER_ID)
 
-    override fun showTabs() {
-        tabs.isVisible = true
-        view_pager.isVisible = true
-    }
-
-    override fun hideTabs() {
-        tabs.isVisible = false
-        view_pager.isVisible = false
+    override fun showTabs(isShowing: Boolean) {
+        tabs.isVisible = isShowing
+        view_pager.isVisible = isShowing
     }
 
     override fun showError(message: String) {
@@ -121,9 +115,11 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         activity?.supportFragmentManager?.let {
             Router.replaceFragment(
                     it,
+                    this,
                     fragment,
                     true,
-                    VideoFragment.FRAGMENT_TAG
+                    SearchFragment.FRAGMENT_TAG,
+                    search_box_collapsed
             )
         }
     }
@@ -132,4 +128,6 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         super.onDestroyView()
         presenter.onDestroyed()
     }
+
+    override fun getIsUser() = arguments?.getBoolean(IS_USER) ?: true
 }

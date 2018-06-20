@@ -82,9 +82,11 @@ class LookingFragment : Fragment(), LookingContract.View {
         activity?.supportFragmentManager?.let {
             Router.replaceFragment(
                     it,
+                    this,
                     fragment,
                     true,
-                    VideoFragment.FRAGMENT_TAG
+                    SearchFragment.FRAGMENT_TAG,
+                    search_box_collapsed
             )
         }
     }

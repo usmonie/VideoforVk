@@ -150,12 +150,6 @@ interface VideoContract {
 
         fun changedPipMode()
 
-        fun liked()
-
-        fun share()
-
-        fun send()
-
         fun ownerClicked()
 
         fun changeQuality()

@@ -1,10 +1,9 @@
 package akhmedoff.usman.videoforvk.ui.login
 
-import akhmedoff.usman.videoforvk.ui.base.BaseContract
 
 interface LoginContract {
 
-    interface View : BaseContract.View {
+    interface View {
         var loginPresenter: Presenter
 
         fun startMain()
@@ -47,7 +46,10 @@ interface LoginContract {
 
     }
 
-    interface Presenter : BaseContract.Presenter<View> {
+    interface Presenter {
+
+        var view: View?
+
         fun login()
 
         fun enterCaptcha(captchaKey: String)

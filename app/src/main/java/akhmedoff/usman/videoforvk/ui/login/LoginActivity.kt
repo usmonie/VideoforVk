@@ -5,38 +5,35 @@ import akhmedoff.usman.data.repository.UserRepository
 import akhmedoff.usman.data.utils.vkApi
 import akhmedoff.usman.videoforvk.CaptchaDialog
 import akhmedoff.usman.videoforvk.R
-import akhmedoff.usman.videoforvk.ui.base.BaseActivity
 import akhmedoff.usman.videoforvk.ui.main.MainActivity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import kotlinx.android.synthetic.main.activity_login.*
 
-class LoginActivity : BaseActivity<LoginContract.View, LoginContract.Presenter>(),
-    LoginContract.View {
+class LoginActivity : AppCompatActivity(), LoginContract.View {
     override lateinit var loginPresenter: LoginContract.Presenter
 
     private lateinit var twoFactorDialog: TwoFactorAuthenticationDialog
 
     private val captchaDialog: CaptchaDialog by lazy {
-        CaptchaDialog(this, {
+        CaptchaDialog(this) {
             loginPresenter.enterCaptcha(it)
-
-        })
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        loginPresenter = LoginPresenter(
-            UserRepository(
-                UserSettings.getUserSettings(applicationContext),
-                vkApi
-            )
+        loginPresenter = LoginPresenter(this,
+                UserRepository(
+                        UserSettings.getUserSettings(applicationContext),
+                        vkApi
+                )
         )
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
@@ -84,11 +81,11 @@ class LoginActivity : BaseActivity<LoginContract.View, LoginContract.Presenter>(
     }
 
     override fun showCodeError() =
-        twoFactorDialog.showErrorCode(getString(R.string.error_code))
+            twoFactorDialog.showErrorCode(getString(R.string.error_code))
 
 
     override fun onErrorLogin() =
-        Snackbar.make(login_constraint, R.string.error_login, Snackbar.LENGTH_LONG).show()
+            Snackbar.make(login_constraint, R.string.error_login, Snackbar.LENGTH_LONG).show()
 
 
     override fun validateTwoFactoryAuthorization(phoneMask: String?) {
@@ -136,8 +133,6 @@ class LoginActivity : BaseActivity<LoginContract.View, LoginContract.Presenter>(
         captchaDialog.show()
         captchaDialog.loadCaptcha(captchaUrl)
     }
-
-    override fun initPresenter() = loginPresenter
 
     override fun getUsername() = username_et.text.toString().trim()
 

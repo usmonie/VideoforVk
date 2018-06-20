@@ -232,20 +232,20 @@ class VideoPresenter(
     private fun isVideoLiked(userId: String? = null,
                              ownerId: String? = null,
                              itemId: String) =
-        videoRepository.isLiked(userId, "video", ownerId, itemId).enqueue(object : Callback<ApiResponse<Liked>?> {
+            videoRepository.isLiked(userId, "video", ownerId, itemId).enqueue(object : Callback<ApiResponse<Liked>?> {
 
-            override fun onFailure(call: Call<ApiResponse<Liked>?>?, t: Throwable?) {
-                view?.setLiked(Likes())
-            }
-
-            override fun onResponse(call: Call<ApiResponse<Liked>?>?, response: Response<ApiResponse<Liked>?>?) {
-                response?.body()?.response?.let {
-                    view?.setLiked(likes = Likes().apply {
-                        userLikes = it.liked == 1
-                    })
+                override fun onFailure(call: Call<ApiResponse<Liked>?>?, t: Throwable?) {
+                    view?.setLiked(Likes())
                 }
-            }
-        })
+
+                override fun onResponse(call: Call<ApiResponse<Liked>?>?, response: Response<ApiResponse<Liked>?>?) {
+                    response?.body()?.response?.let {
+                        view?.setLiked(likes = Likes().apply {
+                            userLikes = it.liked == 1
+                        })
+                    }
+                }
+            })
 
     override fun changeQuality() {
         view?.saveVideoPosition(view?.getVideoPosition() ?: 0)
@@ -421,7 +421,6 @@ class VideoPresenter(
         view?.getVideoPosition()?.let { videoPosition ->
             view?.saveVideoPosition(videoPosition)
         }
-
     }
 
     override fun onDestroyView() {
@@ -437,19 +436,14 @@ class VideoPresenter(
         view?.enterPipMode(video)
     }
 
-    override fun liked() {
-    }
-
-    override fun share() {
-    }
-
-    override fun send() {
-    }
-
     override fun ownerClicked() {
         view?.let { view ->
             videoRepository.getOwner()
-                    .observe(view, Observer { owner -> owner?.let { view.showOwnerGroup(it) } })
+                    .observe(view, Observer { owner ->
+                        owner?.let {
+                            view.showOwnerGroup(it)
+                        }
+                    })
         }
     }
 
