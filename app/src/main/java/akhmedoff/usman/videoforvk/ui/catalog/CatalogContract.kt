@@ -16,9 +16,7 @@ interface CatalogContract {
 
         fun showAlbum(album: CatalogItem, view: android.view.View)
 
-        fun showLoading()
-
-        fun hideLoading()
+        fun showLoading(isRefreshing: Boolean)
 
         fun showErrorLoading()
 

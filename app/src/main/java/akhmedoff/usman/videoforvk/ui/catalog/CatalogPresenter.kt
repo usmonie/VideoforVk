@@ -15,7 +15,7 @@ class CatalogPresenter(
     }
 
     override fun refresh() {
-        view?.showLoading()
+        view?.showLoading(true)
         loadCatalogs()
     }
 
@@ -30,7 +30,7 @@ class CatalogPresenter(
                             else -> view.showEmptyList()
                         }
 
-                        view.hideLoading()
+                        view.showLoading(true)
                     })
         }
     }

@@ -65,8 +65,7 @@ class CatalogFragment : Fragment(),
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? =
-            inflater.inflate(R.layout.fragment_catalog, container, false)
+    ): View? = inflater.inflate(R.layout.fragment_catalog, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -81,7 +80,6 @@ class CatalogFragment : Fragment(),
         catalog_recycler.itemAnimator = DefaultItemAnimator()
 
         update_catalog_layout.setOnRefreshListener { presenter.refresh() }
-
     }
 
     override fun showList(videos: PagedList<CatalogItem>) {
@@ -128,23 +126,18 @@ class CatalogFragment : Fragment(),
         empty_state_text_view.isVisible = true
     }
 
-    override fun showLoading() {
-        update_catalog_layout?.isRefreshing = true
+    override fun showLoading(isRefreshing: Boolean) {
+        update_catalog_layout?.isRefreshing = isRefreshing
     }
 
-    override fun hideLoading() {
-        update_catalog_layout?.isRefreshing = false
-    }
 
     override fun showErrorLoading() =
-            Snackbar
-                    .make(
-                            update_catalog_layout,
-                            getText(R.string.error_loading),
-                            Snackbar.LENGTH_LONG
-                    )
-                    .setAction(R.string.retry, {
+            Snackbar.make(update_catalog_layout,
+                    getText(R.string.error_loading),
+                    Snackbar.LENGTH_LONG
+            )
+                    .setAction(R.string.retry) {
                         presenter.refresh()
-                    })
+                    }
                     .show()
 }

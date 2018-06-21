@@ -5,7 +5,8 @@
     android:id="@+id/video_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:keepScreenOn="true">
+    android:keepScreenOn="true"
+    android:transitionGroup="true">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -46,7 +47,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            app:cardUseCompatPadding="true">
+            app:cardUseCompatPadding="true"
+            tools:visibility="visible">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -176,10 +178,9 @@
                     android:id="@+id/video_desc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/activity_horizontal_margin"
                     android:autoLink="web"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:paddingBottom="16dp"
+                    android:minHeight="0dp"
                     android:textAppearance="@android:style/TextAppearance.Material.Body1"
                     android:textSize="14sp" />
 

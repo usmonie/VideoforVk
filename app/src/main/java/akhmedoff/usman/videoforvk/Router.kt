@@ -26,7 +26,7 @@ object Router {
     fun replaceFragment(
             fragmentManager: FragmentManager,
             prevFragment: Fragment? = null,
-            fragment: Fragment,
+            detailFragment: Fragment,
             addToBackStack: Boolean = false,
             fragmentTag: String?,
             sharedElement: View
@@ -34,10 +34,12 @@ object Router {
         val transaction = fragmentManager
                 .beginTransaction()
                 .setReorderingAllowed(true)
-                .replace(R.id.container, fragment, fragmentTag)
+                .replace(R.id.container, detailFragment, fragmentTag)
                 .setTransition(TRANSIT_FRAGMENT_FADE)
 
         if (addToBackStack) transaction.addToBackStack(fragmentTag)
+
+        prevFragment?.exitTransition = Explode()
 
         val enterTransitionSet = TransitionSet()
                 .addTransition(ChangeBounds())
@@ -47,10 +49,9 @@ object Router {
         enterTransitionSet.ordering = ORDERING_TOGETHER
         enterTransitionSet.duration = 375L
 
-        fragment.sharedElementEnterTransition = enterTransitionSet
+        detailFragment.sharedElementEnterTransition = enterTransitionSet
 
-        val enterFade = Fade()
-        fragment.enterTransition = enterFade
+        detailFragment.enterTransition = Slide()
 
         val returnTransitionSet = TransitionSet()
                 .addTransition(ChangeBounds())
@@ -59,7 +60,8 @@ object Router {
                 .addTransition(ChangeImageTransform())
         enterTransitionSet.ordering = ORDERING_TOGETHER
         enterTransitionSet.duration = 375L
-        fragment.sharedElementReturnTransition = returnTransitionSet
+        detailFragment.sharedElementReturnTransition = returnTransitionSet
+        detailFragment.returnTransition = null
 
         transaction.addSharedElement(
                 sharedElement,

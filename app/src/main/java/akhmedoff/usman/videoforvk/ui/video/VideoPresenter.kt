@@ -229,24 +229,6 @@ class VideoPresenter(
                 }
             })
 
-    private fun isVideoLiked(userId: String? = null,
-                             ownerId: String? = null,
-                             itemId: String) =
-            videoRepository.isLiked(userId, "video", ownerId, itemId).enqueue(object : Callback<ApiResponse<Liked>?> {
-
-                override fun onFailure(call: Call<ApiResponse<Liked>?>?, t: Throwable?) {
-                    view?.setLiked(Likes())
-                }
-
-                override fun onResponse(call: Call<ApiResponse<Liked>?>?, response: Response<ApiResponse<Liked>?>?) {
-                    response?.body()?.response?.let {
-                        view?.setLiked(likes = Likes().apply {
-                            userLikes = it.liked == 1
-                        })
-                    }
-                }
-            })
-
     override fun changeQuality() {
         view?.saveVideoPosition(view?.getVideoPosition() ?: 0)
 

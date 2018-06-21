@@ -134,31 +134,13 @@ class VideoFragment : Fragment(), VideoContract.View {
         if (savedInstanceState != null) presenter.view = this
 
         initPlayer()
-
-        error_button_reload.setOnClickListener { presenter.onStart() }
-
-        error_button_show_browser.setOnClickListener { presenter.openBrowser() }
+        video_exo_player.setControlDispatcher(simpleControlDispatcher)
+        video_exo_player.player = player
+        presenter.onStart()
 
         pip_toggle.isVisible = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
 
         appbar.transitionName = arguments?.getString(TRANSITION_NAME_KEY)
-
-        fullscreen_toggle.setOnClickListener { presenter.clickFullscreen() }
-        pip_toggle.setOnClickListener { presenter.pipToggleButton() }
-        exo_quality_toggle.setOnClickListener { presenter.changeQuality() }
-
-        exo_arrow_back.setOnClickListener {
-            presenter.onBackListener()
-        }
-
-        download_button.setOnClickListener {
-            popupDownloadQualityMenu.show()
-        }
-
-        video_exo_player.setControlDispatcher(simpleControlDispatcher)
-        video_exo_player.player = player
-
-        presenter.onStart()
 
         popupAddMenu = PopupMenu(context!!, add_button).apply {
             inflate(R.menu.add_video_menu)
@@ -167,7 +149,14 @@ class VideoFragment : Fragment(), VideoContract.View {
                 true
             }
         }
+        setClickListeners()
 
+    }
+
+    private fun setClickListeners() {
+        error_button_reload.setOnClickListener { presenter.onStart() }
+
+        error_button_show_browser.setOnClickListener { presenter.openBrowser() }
 
         like_button.setOnClickListener {
             presenter.onClick(it.id)
@@ -184,6 +173,19 @@ class VideoFragment : Fragment(), VideoContract.View {
         add_button.setOnClickListener {
             popupAddMenu.show()
         }
+
+        fullscreen_toggle.setOnClickListener { presenter.clickFullscreen() }
+        pip_toggle.setOnClickListener { presenter.pipToggleButton() }
+        exo_quality_toggle.setOnClickListener { presenter.changeQuality() }
+
+        exo_arrow_back.setOnClickListener {
+            presenter.onBackListener()
+        }
+
+        download_button.setOnClickListener {
+            popupDownloadQualityMenu.show()
+        }
+
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -252,6 +254,8 @@ class VideoFragment : Fragment(), VideoContract.View {
 
 
     override fun showVideo(item: Video) {
+        add_button.isVisible = item.canAdd
+
         video_title.text = item.title
 
         video_date.text = DateUtils.getRelativeTimeSpanString(
@@ -329,9 +333,8 @@ class VideoFragment : Fragment(), VideoContract.View {
     override fun setQuality(videoUrl: VideoUrl) {
         player?.prepare(
                 when (videoUrl.quality) {
-                    HLS ->
-                        HlsMediaSource.Factory(cacheDataSourceFactory)
-                                .createMediaSource(Uri.parse(videoUrl.url))
+                    HLS -> HlsMediaSource.Factory(cacheDataSourceFactory)
+                            .createMediaSource(Uri.parse(videoUrl.url))
                     else -> ExtractorMediaSource.Factory(cacheDataSourceFactory)
                             .createMediaSource(Uri.parse(videoUrl.url))
                 }
@@ -365,7 +368,8 @@ class VideoFragment : Fragment(), VideoContract.View {
 
     private fun setImageDrawable(@DrawableRes id: Int) =
             context?.let {
-                exo_quality_toggle.setImageDrawable(ContextCompat.getDrawable(it, id))
+                exo_quality_toggle
+                        .setImageDrawable(ContextCompat.getDrawable(it, id))
             }
 
     override fun showFullscreen() {
@@ -455,9 +459,6 @@ class VideoFragment : Fragment(), VideoContract.View {
         setDrawable(like_button,
                 if (likes.userLikes) R.drawable.ic_favorite_fill_24dp
                 else R.drawable.ic_favorite_border)
-    }
-
-    override fun setUnliked(likes: Likes) {
     }
 
     override fun showShareDialog(videoName: String, url: String) {
