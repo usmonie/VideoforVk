@@ -256,7 +256,7 @@ class VideoFragment : Fragment(), VideoContract.View {
     override fun showVideo(item: Video) {
         add_button.isVisible = item.canAdd
 
-        video_title.text = item.title
+        title.text = item.title
 
         video_date.text = DateUtils.getRelativeTimeSpanString(
                 item.date * 1000,

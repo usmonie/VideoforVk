@@ -1,29 +1,36 @@
 package akhmedoff.usman.videoforvk.ui.profile
 
+import akhmedoff.usman.data.model.Album
+import akhmedoff.usman.data.model.Video
+import android.arch.lifecycle.LifecycleOwner
+import android.arch.paging.PagedList
+
 interface ProfileContract {
 
-    interface View {
+    interface View : LifecycleOwner {
         var presenter: Presenter
 
         fun showUserName(name: String)
+
+        fun showUserStatus(status: String)
 
         fun showUserPhoto(photoUrl: String)
 
         fun setIsUser(isUser: Boolean)
 
-        fun showTabs(isShowing: Boolean)
+        fun showAlbums(albums: PagedList<Album>)
 
-        fun showPages(ownerId: String)
+        fun showVideos(videos: PagedList<Video>)
 
-        fun startSearch()
-
-        fun showError(message: String)
+        fun showLoadingError()
 
         fun showLoading(isLoading: Boolean)
 
         fun getUserId(): String?
 
         fun getIsUser(): Boolean
+
+
     }
 
     interface Presenter {
@@ -32,8 +39,6 @@ interface ProfileContract {
         fun onCreated()
 
         fun onDestroyed()
-
-        fun onSearchClicked()
 
         fun onViewCreated()
 

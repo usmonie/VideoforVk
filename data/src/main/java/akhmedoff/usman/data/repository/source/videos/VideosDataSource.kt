@@ -21,7 +21,6 @@ class VideosDataSource(
 ) : PositionalDataSource<Video>() {
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Video>) {
-
         vkApi.getVideos(
             ownerId = ownerId?.toString(),
             videos = videoId,
@@ -46,16 +45,13 @@ class VideosDataSource(
                             video.userIds.add(ownerId)
                         }
                         video.roomId = params.startPosition + index
-                        video
+                        return@mapIndexed video
                     })
 
-                    responseVideo.profiles?.forEach {
-                        ownerDao.insert(it)
-                    }
+                    responseVideo.profiles?.let { ownerDao.insertAll(it) }
 
-                    responseVideo.groups?.forEach {
-                        ownerDao.insert(it)
-                    }
+                    responseVideo.groups?.let { ownerDao.insertAll(it) }
+
                     callback.onResult(
                         videoDao.loadAll(
                             params.loadSize,
@@ -68,8 +64,6 @@ class VideosDataSource(
             }
 
         })
-
-
     }
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Video>) {
@@ -87,13 +81,11 @@ class VideosDataSource(
 
             val items = response.body()?.items ?: emptyList()
 
-            response.body()?.profiles?.forEach {
-                ownerDao.insert(it)
-            }
 
-            response.body()?.groups?.forEach {
-                ownerDao.insert(it)
-            }
+            response.body()?.profiles?.let { ownerDao.insertAll(it) }
+
+            response.body()?.groups?.let { ownerDao.insertAll(it) }
+
             ownerId?.let { ownerId ->
                 videoDao.clear(ownerId)
                 items.forEachIndexed { index, video ->

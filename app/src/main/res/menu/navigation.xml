@@ -8,8 +8,8 @@
 
     <item
         android:id="@+id/navigation_looking"
-        android:icon="@drawable/ic_whatshot_black_24dp"
-        android:title="@string/navigation.looking.title" />
+        android:icon="@drawable/ic_search"
+        android:title="@string/navigation.explore.title" />
 
     <item
         android:id="@+id/navigation_person"

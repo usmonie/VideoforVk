@@ -17,7 +17,6 @@ interface AlbumsContract {
 
         fun showEmptyList()
 
-        fun showAlbum(item: Album)
 
         fun setList(items: PagedList<Album>)
     }

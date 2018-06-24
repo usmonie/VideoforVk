@@ -15,8 +15,8 @@ import java.util.*
 class SearchViewHolder(private val picasso: Picasso, itemView: View) :
         AbstractViewHolder<Video>(itemView) {
 
-    val videoFrame = itemView.findViewById<ImageView>(R.id.video_poster)
-    private val videoTitle = itemView.findViewById<TextView>(R.id.video_title)
+    val videoFrame = itemView.findViewById<ImageView>(R.id.poster)
+    private val videoTitle = itemView.findViewById<TextView>(R.id.title)
     private val videoDuration = itemView.findViewById<TextView>(R.id.video_duration)
     private val videoSource = itemView.findViewById<TextView>(R.id.video_source)
     private val videoViews = itemView.findViewById<TextView>(R.id.video_views)

@@ -4,31 +4,29 @@ import akhmedoff.usman.data.utils.getUserRepository
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.Router.hideFragment
 import akhmedoff.usman.videoforvk.Router.replaceFragment
+import akhmedoff.usman.videoforvk.ui.explore.ExploreFragment
 import akhmedoff.usman.videoforvk.ui.home.HomeFragment
-import akhmedoff.usman.videoforvk.ui.looking.LookingFragment
 import akhmedoff.usman.videoforvk.ui.main.MainContract.Presenter
 import akhmedoff.usman.videoforvk.ui.profile.ProfileFragment
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
-import android.view.View
+import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.activity_main.*
+
+private const val CURRENT_FRAGMENT_TAG = "current_fragment"
 
 class MainActivity : AppCompatActivity(), MainContract.View,
         FragmentManager.OnBackStackChangedListener {
-    companion object {
-        const val CURRENT_FRAGMENT_TAG = "current_fragment"
-    }
 
     override lateinit var mainPresenter: Presenter
 
     private lateinit var homeFragment: HomeFragment
-    private lateinit var lookingFragment: LookingFragment
+    private lateinit var exploreFragment: ExploreFragment
     private lateinit var profileFragment: ProfileFragment
 
     private var currentFragment: Fragment? = null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         mainPresenter = MainPresenter(getUserRepository(this), this)
@@ -45,12 +43,12 @@ class MainActivity : AppCompatActivity(), MainContract.View,
         profileFragment = when {
             supportFragmentManager.findFragmentByTag(ProfileFragment.FRAGMENT_TAG) != null -> supportFragmentManager.findFragmentByTag(ProfileFragment.FRAGMENT_TAG) as ProfileFragment
 
-            else -> ProfileFragment()
+            else -> ProfileFragment.createFragment(mainPresenter.getUserId())
         }
-        lookingFragment = when {
-            supportFragmentManager.findFragmentByTag(LookingFragment.FRAGMENT_TAG) != null -> supportFragmentManager.findFragmentByTag(LookingFragment.FRAGMENT_TAG) as LookingFragment
+        exploreFragment = when {
+            supportFragmentManager.findFragmentByTag(ExploreFragment.FRAGMENT_TAG) != null -> supportFragmentManager.findFragmentByTag(ExploreFragment.FRAGMENT_TAG) as ExploreFragment
 
-            else -> LookingFragment()
+            else -> ExploreFragment()
         }
 
         navigation.setOnNavigationItemSelectedListener { item ->
@@ -67,7 +65,6 @@ class MainActivity : AppCompatActivity(), MainContract.View,
             )
             mainPresenter.onRecreate()
         }
-
     }
 
     override fun showHome() = replaceFragment(
@@ -76,17 +73,16 @@ class MainActivity : AppCompatActivity(), MainContract.View,
             fragmentTag = HomeFragment.FRAGMENT_TAG
     )
 
-    override fun showProfile() =
-            replaceFragment(
-                    supportFragmentManager,
-                    fragment = profileFragment,
-                    fragmentTag = ProfileFragment.FRAGMENT_TAG
-            )
-
-    override fun showLooking() = replaceFragment(
+    override fun showProfile() = replaceFragment(
             supportFragmentManager,
-            fragment = lookingFragment,
-            fragmentTag = LookingFragment.FRAGMENT_TAG
+            fragment = profileFragment,
+            fragmentTag = ProfileFragment.FRAGMENT_TAG
+    )
+
+    override fun showExplore() = replaceFragment(
+            supportFragmentManager,
+            fragment = exploreFragment,
+            fragmentTag = ExploreFragment.FRAGMENT_TAG
     )
 
     override fun hidePrevious() {
@@ -98,7 +94,7 @@ class MainActivity : AppCompatActivity(), MainContract.View,
                     when {
                         homeFragment.isVisible -> homeFragment
                         profileFragment.isVisible -> profileFragment
-                        lookingFragment.isVisible -> lookingFragment
+                        exploreFragment.isVisible -> exploreFragment
                         else -> homeFragment
                     }
             )
@@ -115,10 +111,6 @@ class MainActivity : AppCompatActivity(), MainContract.View,
     }
 
     override fun onBackStackChanged() {
-        when {
-            supportFragmentManager.backStackEntryCount > 0 ->
-                navigation.visibility = View.GONE
-            else -> navigation.visibility = View.VISIBLE
-        }
+        navigation.isVisible = supportFragmentManager.backStackEntryCount <= 0
     }
 }

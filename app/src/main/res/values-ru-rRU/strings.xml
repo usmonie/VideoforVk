@@ -31,7 +31,7 @@
     <string name="sort_by.duration">Длительности</string>
     <string name="sort_by.relevance">Релевантности</string>
     <string name="navigation.home.title">Главная</string>
-    <string name="navigation.looking.title">Обзор</string>
+    <string name="navigation.explore.title">Обзор</string>
     <string name="navigation.person.title">Профиль</string>
     <string name="tab_title_top">Рекомендуемое</string>
     <string name="tab_title_feed">Лента</string>
@@ -54,4 +54,12 @@
     <string name="error_loading_video">Ошибка при загрузке видео. Возможно, оно был удален или заблокирован</string>
     <string name="error_show_video_in_browser">Попробовать посмотреть через браузер</string>
     <string name="error_reload">Перезагрузить</string>
+    <string name="notification_channel_download_name">Загрузки</string>
+    <string name="notification_channel_download_desc">Прогресс загрузки видео</string>
+    <string name="notification_downloading_title">Загружается</string>
+    <string name="notification_downloading_pause">Приостановлено</string>
+    <string name="notification_downloading_successful">Успешно</string>
+    <string name="notification_downloading_running">Загружается</string>
+    <string name="notification_downloading_failed">Ошибка</string>
+    <string name="navigation.search.title">Поиск</string>
 </resources>

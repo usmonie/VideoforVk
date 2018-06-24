@@ -15,7 +15,7 @@
         app:cardCornerRadius="6dp">
 
         <ImageView
-            android:id="@+id/video_poster"
+            android:id="@+id/poster"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="?selectableItemBackground"
@@ -72,7 +72,7 @@
         android:orientation="vertical">
 
         <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/video_title"
+            android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"

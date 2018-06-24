@@ -10,6 +10,9 @@ interface OwnerDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(item: Owner)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAll(item: List<Owner>)
+
     @Update(onConflict = OnConflictStrategy.REPLACE)
     fun update(item: Owner)
 

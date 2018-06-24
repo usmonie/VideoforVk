@@ -1,4 +1,4 @@
-package akhmedoff.usman.videoforvk.ui.looking
+package akhmedoff.usman.videoforvk.ui.explore
 
 import akhmedoff.usman.data.model.Catalog
 import akhmedoff.usman.data.model.CatalogItem
@@ -10,37 +10,33 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-class LookingRecyclerAdapter(
-    private val clickListener: (CatalogItem, View) -> Unit
+class ExploreRecyclerAdapter(
+        private val clickListener: (CatalogItem, View) -> Unit
 ) : PagedListAdapter<Catalog, CatalogViewHolder>(CATALOG_COMPARATOR) {
 
     companion object {
         val CATALOG_COMPARATOR = object : DiffUtil.ItemCallback<Catalog>() {
-            override fun areItemsTheSame(oldItem: Catalog, newItem: Catalog): Boolean {
-                return oldItem.name == newItem.name && oldItem.id == newItem.id
-            }
+            override fun areItemsTheSame(oldItem: Catalog, newItem: Catalog): Boolean =
+                    oldItem.name == newItem.name && oldItem.id == newItem.id
 
-            override fun areContentsTheSame(oldItem: Catalog, newItem: Catalog): Boolean {
-                return false
-            }
+            override fun areContentsTheSame(oldItem: Catalog, newItem: Catalog): Boolean =
+                    oldItem.items == newItem.items
         }
     }
 
     override fun onBindViewHolder(holder: CatalogViewHolder, position: Int) {
         if (getItem(position)?.items!!.isNotEmpty()) {
             holder.bind(getItem(position)!!)
-
         }
     }
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        CatalogViewHolder(
-            LayoutInflater.from(parent.context).inflate(
-                R.layout.catalog_item,
-                parent,
-                false
-            ), clickListener
-        )
+            CatalogViewHolder(
+                    LayoutInflater.from(parent.context).inflate(
+                            R.layout.catalog_item,
+                            parent,
+                            false
+                    ), clickListener
+            )
 
 }

@@ -1,13 +1,13 @@
-package akhmedoff.usman.videoforvk.ui.looking
+package akhmedoff.usman.videoforvk.ui.explore
 
 import akhmedoff.usman.data.model.CatalogItem
 import akhmedoff.usman.data.repository.CatalogRepository
 import android.arch.lifecycle.Observer
 
-class LookingPresenter(
-    override var view: LookingContract.View?,
-    private val catalogRepository: CatalogRepository
-) : LookingContract.Presenter {
+class ExplorePresenter(
+        override var view: ExploreContract.View?,
+        private val catalogRepository: CatalogRepository
+) : ExploreContract.Presenter {
 
     override fun onCreated() = refresh()
 
@@ -15,7 +15,7 @@ class LookingPresenter(
         view?.let { view ->
             view.showLoading()
             catalogRepository
-                .getCatalog("other")
+                    .getCatalog("ugc")
                 .observe(view, Observer { catalogs ->
                     if (catalogs != null && catalogs.size > 0) {
                         view.hideLoading()

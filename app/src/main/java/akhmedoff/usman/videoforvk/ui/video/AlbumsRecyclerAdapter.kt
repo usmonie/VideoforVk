@@ -38,9 +38,9 @@ class AlbumsRecyclerAdapter(private val changedListener: (Album, Boolean) -> Uni
         if (itemCount > position)
             getItem(position)?.let { holder.bind(it) }
 
-        holder.itemView.checkBox.setOnCheckedChangeListener({ _, isChecked ->
+        holder.itemView.checkBox.setOnCheckedChangeListener { _, isChecked ->
             getItem(position)?.let { changedListener(it, isChecked) }
-        })
+        }
     }
 
     override fun onBindViewHolder(

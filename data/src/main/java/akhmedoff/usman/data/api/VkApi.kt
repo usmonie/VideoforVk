@@ -1,7 +1,6 @@
 package akhmedoff.usman.data.api
 
 import akhmedoff.usman.data.model.*
-import android.arch.lifecycle.LiveData
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -66,7 +65,7 @@ interface VkApi {
     fun getAlbum(
             @Query("owner_id") ownerId: String?,
             @Query("album_id") albumId: String?
-    ): LiveData<ApiResponse<Album>>
+    ): Call<ApiResponse<Album>>
 
     @GET("video.getAlbums")
     fun getAlbums(

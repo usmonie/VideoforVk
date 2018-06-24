@@ -10,7 +10,7 @@ interface MainContract {
 
         fun showProfile()
 
-        fun showLooking()
+        fun showExplore()
 
         fun showSettings()
 
@@ -27,5 +27,7 @@ interface MainContract {
         fun onRecreate()
 
         fun forwardTo(id: Int)
+
+        fun getUserId(): String
     }
 }

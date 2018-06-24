@@ -18,7 +18,7 @@ interface AlbumRepository {
 
     fun saveOwner(owner: Owner)
 
-    fun getAlbum(ownerId: Int?, albumId: Int?): LiveData<ApiResponse<Album>>
+    fun getAlbum(ownerId: Int?, albumId: Int?): Call<ApiResponse<Album>>
 
     fun getAlbums(ownerId: String? = null): LiveData<PagedList<Album>>
 

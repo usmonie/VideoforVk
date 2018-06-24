@@ -7,6 +7,7 @@ import akhmedoff.usman.videoforvk.Router
 import akhmedoff.usman.videoforvk.ui.album.AlbumFragment
 import akhmedoff.usman.videoforvk.ui.video.VideoFragment
 import akhmedoff.usman.videoforvk.ui.view.MarginItemDecorator
+import akhmedoff.usman.videoforvk.ui.view.adapters.AlbumsRecyclerAdapter
 import android.arch.paging.PagedList
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -32,7 +33,7 @@ class AlbumsFragment : Fragment(), AlbumsContract.View {
     override lateinit var presenter: AlbumsContract.Presenter
 
     private val adapter: AlbumsRecyclerAdapter by lazy {
-        AlbumsRecyclerAdapter({ presenter.onItemClicked(it) }, R.layout.catalog_video_item_big)
+        AlbumsRecyclerAdapter({ video, view -> showAlbum(video, view) }, R.layout.catalog_video_item_big)
     }
 
     override fun onCreateView(
@@ -67,15 +68,17 @@ class AlbumsFragment : Fragment(), AlbumsContract.View {
         update_catalog_layout.isRefreshing = isLoading
     }
 
-    override fun showAlbum(item: Album) {
-        val fragment = AlbumFragment.getFragment(item)
+    private fun showAlbum(item: Album, view: View) {
+        val fragment = AlbumFragment.getFragment(item, view.transitionName)
 
         activity?.supportFragmentManager?.let { fragmentManager ->
             Router.replaceFragment(
                     fragmentManager,
+                    this,
                     fragment,
                     true,
-                    VideoFragment.FRAGMENT_TAG
+                    VideoFragment.FRAGMENT_TAG,
+                    view
             )
         }
     }

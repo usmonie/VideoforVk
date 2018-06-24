@@ -2,7 +2,10 @@ package akhmedoff.usman.videoforvk.ui.profile
 
 import akhmedoff.usman.data.model.ApiResponse
 import akhmedoff.usman.data.model.User
+import akhmedoff.usman.data.repository.AlbumRepository
 import akhmedoff.usman.data.repository.UserRepository
+import akhmedoff.usman.data.repository.VideoRepository
+import android.arch.lifecycle.Observer
 import android.util.Log
 import retrofit2.Call
 import retrofit2.Callback
@@ -10,11 +13,12 @@ import retrofit2.Response
 
 class ProfilePresenter(
         override var view: ProfileContract.View? = null,
-        private val userRepository: UserRepository
+        private val userRepository: UserRepository,
+        private val videoRepository: VideoRepository,
+        private val albumRepository: AlbumRepository
 ) : ProfileContract.Presenter {
 
     override fun onCreated() {
-        view?.showPages(userRepository.getCurrentUser() ?: "")
     }
 
     override fun onDestroyed() {
@@ -22,8 +26,39 @@ class ProfilePresenter(
     }
 
     override fun onViewCreated() {
-        view?.showLoading(true)
-        view?.showTabs(false)
+        var albumsLoading = true
+        var videosLoading = true
+
+        view?.let { view ->
+            view.showLoading(albumsLoading && videosLoading)
+            albumRepository
+                    .getAlbums(view.getUserId())
+                    .observe(view, Observer { pagedList ->
+                        when {
+                            pagedList != null && pagedList.size > 0 -> {
+                                view.showAlbums(pagedList)
+                                albumsLoading = false
+                                view.showLoading(albumsLoading && videosLoading)
+                            }
+                            pagedList == null -> view.showLoadingError()
+                        }
+                    })
+            videoRepository
+                    .getVideos(view.getUserId()?.toInt())
+                    .observe(view, Observer { pagedList ->
+                        view.showLoading(false)
+                        when {
+                            pagedList != null && pagedList.size > 0 -> {
+                                view.showVideos(pagedList)
+                                videosLoading = false
+                                view.showLoading(albumsLoading && videosLoading)
+                            }
+
+                            pagedList == null -> view.showLoadingError()
+                        }
+                    })
+        }
+
 
         userRepository
                 .getUsers(view?.getUserId())
@@ -32,20 +67,17 @@ class ProfilePresenter(
                             call: Call<ApiResponse<List<User>>>?,
                             t: Throwable?
                     ) {
-                        view?.showLoading(false)
                         val name = userRepository.getUserName()
 
                         if (name != null) {
                             view?.showUserName(name)
                             userRepository.getUserPhotoUrl()?.let { view?.showUserPhoto(it) }
 
-                            view?.showTabs(true)
                         } else {
                             t?.message?.let {
-                                view?.showError(it)
+                                view?.showLoadingError()
                                 Log.e(javaClass.simpleName, it)
                             }
-                            view?.showTabs(false)
                         }
                     }
 
@@ -53,32 +85,24 @@ class ProfilePresenter(
                             call: Call<ApiResponse<List<User>>>?,
                             response: Response<ApiResponse<List<User>>>?
                     ) {
-                        view?.showLoading(false)
-
                         val get = response?.body()?.response?.get(0)
                         if (get != null) get.let { user ->
                             userRepository.saveUser(user)
 
                             view?.showUserName("${user.firstName} ${user.lastName}")
+
                             view?.showUserPhoto(user.photoMaxOrig)
-                            view?.showTabs(true)
                         } else {
                             val name = userRepository.getUserName()
 
                             if (name != null) {
                                 view?.showUserName(name)
-                                userRepository.getUserPhotoUrl()?.let { view?.showUserPhoto(it) }
-
-                                view?.showTabs(true)
-                            } else {
-                                view?.showTabs(false)
+                                userRepository.getUserPhotoUrl()?.let {
+                                    view?.showUserPhoto(it)
+                                }
                             }
                         }
                     }
                 })
-    }
-
-    override fun onSearchClicked() {
-        view?.startSearch()
     }
 }

@@ -46,9 +46,10 @@ dependencies {
     implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
     implementation "com.android.support:cardview-v7:$supportLibraryVersion"
     implementation "com.android.support:design:$supportLibraryVersion"
+    implementation "com.android.support:palette-v7:$supportLibraryVersion"
     implementation "com.android.support:recyclerview-v7:$supportLibraryVersion"
     implementation "com.android.support:support-v4:$supportLibraryVersion"
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     implementation "android.arch.lifecycle:extensions:$archLifecycleVersion"
     implementation 'android.arch.paging:runtime:1.0.0'
     kapt "android.arch.lifecycle:compiler:$archLifecycleVersion"
@@ -64,7 +65,7 @@ dependencies {
 
     implementation 'androidx.core:core-ktx:0.3'
 
-    implementation 'com.google.firebase:firebase-core:16.0.0'
+    implementation 'com.google.firebase:firebase-core:16.0.1'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation project(':data')
 }

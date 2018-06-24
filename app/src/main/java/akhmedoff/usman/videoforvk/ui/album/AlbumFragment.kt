@@ -18,27 +18,31 @@ import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_album.*
 
+private const val ALBUM_ID = "album_id"
+private const val ALBUM_OWNER_ID = "album_owner_id"
+private const val ALBUM_NAME = "album_name"
+private const val TRANSITION_NAME = "transition_name"
+
 class AlbumFragment : Fragment(), AlbumContract.View {
 
     companion object {
-        private const val ALBUM_ID = "album_id"
-        private const val ALBUM_OWNER_ID = "album_owner_id"
-        private const val ALBUM_NAME = "album_name"
 
-        fun getFragment(item: CatalogItem) =
-                getFragment(item.id.toString(), item.ownerId.toString(), item.title)
+        fun getFragment(item: CatalogItem, transitionName: String) =
+                getFragment(item.id.toString(), item.ownerId.toString(), item.title, transitionName)
 
-        fun getFragment(item: Album) =
-                getFragment(item.id.toString(), item.ownerId.toString(), item.title)
+        fun getFragment(item: Album, transitionName: String) =
+                getFragment(item.id.toString(), item.ownerId.toString(), item.title, transitionName)
 
         private fun getFragment(id: String,
                                 ownerId: String,
-                                title: String): AlbumFragment {
+                                title: String,
+                                transitionName: String): AlbumFragment {
             val arguments = Bundle()
 
             arguments.putString(ALBUM_ID, id)
             arguments.putString(ALBUM_OWNER_ID, ownerId)
             arguments.putString(ALBUM_NAME, title)
+            arguments.putString(TRANSITION_NAME, transitionName)
 
             val fragment = AlbumFragment()
             fragment.arguments = arguments
@@ -71,6 +75,7 @@ class AlbumFragment : Fragment(), AlbumContract.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        appbar.transitionName = arguments?.getString(TRANSITION_NAME)
         album_videos_recycler.addItemDecoration(
                 MarginItemDecorator(
                         1,
@@ -84,12 +89,13 @@ class AlbumFragment : Fragment(), AlbumContract.View {
     override fun showVideos(items: PagedList<Video>) = adapter.submitList(items)
 
     override fun showAlbumTitle(title: String) {
-        toolbar.title = title
+        album_title.text = title
     }
 
     override fun showAlbumImage(poster: String) = Picasso
             .get()
             .load(poster)
+            .fit()
             .into(app_bar_album_poster_image)
 
     override fun showVideo(video: Video, view: View) {

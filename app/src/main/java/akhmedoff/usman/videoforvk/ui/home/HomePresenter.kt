@@ -13,10 +13,6 @@ class HomePresenter(override var view: HomeContract.View? = null) : HomeContract
         }
     }
 
-    override fun searchClicked() {
-        view?.startSearch()
-    }
-
     override fun onDestroyed() {
         view = null
     }

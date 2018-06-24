@@ -105,9 +105,9 @@ class VideosFragment : Fragment(), VideosContract.View {
                         R.string.error_loading,
                         Snackbar.LENGTH_LONG
                 )
-                .setAction(R.string.retry, {
+                .setAction(R.string.retry) {
                     presenter.refresh()
-                })
+                }
                 .show()
     }
 

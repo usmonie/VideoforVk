@@ -1,11 +1,11 @@
-package akhmedoff.usman.videoforvk.ui.looking
+package akhmedoff.usman.videoforvk.ui.explore
 
 import akhmedoff.usman.data.model.Catalog
 import akhmedoff.usman.data.model.CatalogItem
 import android.arch.lifecycle.LifecycleOwner
 import android.arch.paging.PagedList
 
-interface LookingContract {
+interface ExploreContract {
 
     interface View : LifecycleOwner {
         var presenter: Presenter

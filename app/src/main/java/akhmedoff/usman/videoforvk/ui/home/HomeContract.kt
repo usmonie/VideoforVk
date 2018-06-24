@@ -8,8 +8,6 @@ interface HomeContract {
 
         fun initPage(pageCategory: String, pageTitle: String)
 
-        fun startSearch()
-
         fun getResourcesString(id: Int): String
     }
 
@@ -18,8 +16,6 @@ interface HomeContract {
         var view: View?
 
         fun onCreated()
-
-        fun searchClicked()
 
         fun onDestroyed()
     }

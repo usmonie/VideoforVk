@@ -46,7 +46,7 @@
     <string name="sort_by.relevance">Relevance</string>
 
     <string name="navigation.home.title">Home</string>
-    <string name="navigation.looking.title">Looking</string>
+    <string name="navigation.explore.title">Explore</string>
     <string name="navigation.person.title">Profile</string>
 
     <string name="tab_title_top">Top</string>
@@ -84,4 +84,6 @@
     <string name="notification_downloading_successful">Successful</string>
     <string name="notification_downloading_running">Downloading</string>
     <string name="notification_downloading_failed">Failed</string>
+    <string name="navigation.search.title">Search</string>
+    <string name="my_albums">Albums</string>
 </resources>

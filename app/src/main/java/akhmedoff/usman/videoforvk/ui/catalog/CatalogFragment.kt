@@ -52,12 +52,7 @@ class CatalogFragment : Fragment(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        presenter = CatalogPresenter(
-                this,
-                getCatalogRepository(
-                        context!!
-                )
-        )
+        presenter = CatalogPresenter(this, getCatalogRepository(context!!))
         presenter.onCreated()
     }
 
@@ -105,7 +100,7 @@ class CatalogFragment : Fragment(),
     }
 
     override fun showAlbum(album: CatalogItem, view: View) {
-        val fragment = AlbumFragment.getFragment(album)
+        val fragment = AlbumFragment.getFragment(album, view.transitionName)
 
         activity?.supportFragmentManager?.let {
             Router.replaceFragment(

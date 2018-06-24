@@ -36,14 +36,14 @@ class CatalogRecyclerAdapter(
         ).apply {
             itemView.setOnClickListener {
                 getItem(adapterPosition)?.let {
-                    clickListener(it, videoFrame)
+                    clickListener(it, poster)
                 }
             }
 
             itemView.isLongClickable = true
             /*itemView.setOnLongClickListener {
                 getItem(adapterPosition)?.let {
-                    longClickListener(it, videoFrame)
+                    longClickListener(it, poster)
                 }
                 true
             }*/
@@ -54,7 +54,7 @@ class CatalogRecyclerAdapter(
             holder.bind(it)
         }
 
-        holder.videoFrame.transitionName = "transition_name_$position"
+        holder.poster.transitionName = "transition_name_$position"
     }
 
     override fun getItemId(position: Int) = position.toLong()

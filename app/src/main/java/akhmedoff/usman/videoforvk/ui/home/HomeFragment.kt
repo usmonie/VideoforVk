@@ -2,8 +2,6 @@ package akhmedoff.usman.videoforvk.ui.home
 
 
 import akhmedoff.usman.videoforvk.R
-import akhmedoff.usman.videoforvk.Router
-import akhmedoff.usman.videoforvk.ui.search.SearchFragment
 import akhmedoff.usman.videoforvk.ui.view.FragmentsViewPagerAdapter
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -11,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.search_toolbar.*
 
 class HomeFragment : Fragment(), HomeContract.View {
 
@@ -52,8 +49,6 @@ class HomeFragment : Fragment(), HomeContract.View {
         if (savedInstanceState != null && savedInstanceState.containsKey(CURRENT_TAB_KEY)) {
             view_pager.setCurrentItem(savedInstanceState.getInt(CURRENT_TAB_KEY), false)
         }
-
-        search_box_collapsed.setOnClickListener { presenter.searchClicked() }
     }
 
     override fun onStart() {
@@ -69,20 +64,6 @@ class HomeFragment : Fragment(), HomeContract.View {
         catalogsPagerAdapter.notifyDataSetChanged()
     }
 
-    override fun startSearch() {
-        val fragment = SearchFragment()
-
-        activity?.supportFragmentManager?.let {
-            Router.replaceFragment(
-                    it,
-                    this,
-                    fragment,
-                    true,
-                    SearchFragment.FRAGMENT_TAG,
-                    search_box_collapsed
-            )
-        }
-    }
 
     override fun onSaveInstanceState(outState: Bundle) {
         view_pager?.currentItem?.let {

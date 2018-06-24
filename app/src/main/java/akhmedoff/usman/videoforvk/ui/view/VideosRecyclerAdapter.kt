@@ -35,14 +35,14 @@ class VideosRecyclerAdapter(
             itemView.setOnClickListener {
                 clickListener(
                     getItem(adapterPosition)!!,
-                    videoFrame
+                        poster
                 )
             }
         }
 
     override fun onBindViewHolder(holder: VideoViewHolder, position: Int) {
         holder.bind(getItem(position)!!)
-        holder.videoFrame.transitionName = "transition_name_$position"
+        holder.poster.transitionName = "transition_name_$position"
 
     }
 }

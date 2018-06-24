@@ -1,4 +1,4 @@
-package akhmedoff.usman.videoforvk.ui.looking
+package akhmedoff.usman.videoforvk.ui.explore
 
 import akhmedoff.usman.data.model.CatalogItem
 import akhmedoff.usman.data.model.CatalogItemType.ALBUM
@@ -30,7 +30,7 @@ class CatalogItemsRecyclerAdapter(
 
         items?.let { items ->
             holder.itemView.setOnClickListener {
-                clickListener(items[holder.adapterPosition], holder.videoFrame)
+                clickListener(items[holder.adapterPosition], holder.poster)
             }
         }
 
@@ -49,7 +49,7 @@ class CatalogItemsRecyclerAdapter(
                     holder.itemView.resources.getDimensionPixelSize(R.dimen.width_main_list_first_video)
         }
 
-        holder.videoFrame.transitionName = "transition_name_$position"
+        holder.poster.transitionName = "transition_name_$position"
     }
 
     override fun getItemViewType(position: Int): Int {

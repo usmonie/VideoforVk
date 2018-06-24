@@ -30,7 +30,7 @@ class CatalogPresenter(
                             else -> view.showEmptyList()
                         }
 
-                        view.showLoading(true)
+                        view.showLoading(false)
                     })
         }
     }
