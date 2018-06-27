@@ -52,19 +52,13 @@ class CatalogItemsRecyclerAdapter(
         holder.poster.transitionName = "transition_name_$position"
     }
 
-    override fun getItemViewType(position: Int): Int {
-        items?.get(position)?.type?.let {
-            return when {
-                it == VIDEO && position == 0 -> R.layout.catalog_video_item_big
+    override fun getItemViewType(position: Int): Int = when {
+        items?.get(position)?.type == VIDEO && position == 0 -> R.layout.catalog_video_item_big
 
-                it == VIDEO && position > 0 -> R.layout.catalog_video_item_min
+        items?.get(position)?.type == VIDEO && position > 0 -> R.layout.catalog_video_item_min
 
-                it == ALBUM -> R.layout.catalog_album_item
+        items?.get(position)?.type == ALBUM -> R.layout.catalog_album_item
 
-                else -> throw Exception("Unchecked type")
-            }
-        }
-
-        return super.getItemViewType(position)
+        else -> throw Exception("Unchecked type")
     }
 }

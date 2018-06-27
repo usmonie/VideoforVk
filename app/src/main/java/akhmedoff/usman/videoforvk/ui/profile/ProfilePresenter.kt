@@ -26,40 +26,6 @@ class ProfilePresenter(
     }
 
     override fun onViewCreated() {
-        var albumsLoading = true
-        var videosLoading = true
-
-        view?.let { view ->
-            view.showLoading(albumsLoading && videosLoading)
-            albumRepository
-                    .getAlbums(view.getUserId())
-                    .observe(view, Observer { pagedList ->
-                        when {
-                            pagedList != null && pagedList.size > 0 -> {
-                                view.showAlbums(pagedList)
-                                albumsLoading = false
-                                view.showLoading(albumsLoading && videosLoading)
-                            }
-                            pagedList == null -> view.showLoadingError()
-                        }
-                    })
-            videoRepository
-                    .getVideos(view.getUserId()?.toInt())
-                    .observe(view, Observer { pagedList ->
-                        view.showLoading(false)
-                        when {
-                            pagedList != null && pagedList.size > 0 -> {
-                                view.showVideos(pagedList)
-                                videosLoading = false
-                                view.showLoading(albumsLoading && videosLoading)
-                            }
-
-                            pagedList == null -> view.showLoadingError()
-                        }
-                    })
-        }
-
-
         userRepository
                 .getUsers(view?.getUserId())
                 .enqueue(object : Callback<ApiResponse<List<User>>> {
@@ -104,5 +70,43 @@ class ProfilePresenter(
                         }
                     }
                 })
+
+        refresh()
+    }
+
+    override fun refresh() {
+        var albumsLoading = true
+        var videosLoading = true
+
+        view?.let { view ->
+            view.showLoading(albumsLoading && videosLoading)
+            albumRepository
+                    .getAlbums(view.getUserId())
+                    .observe(view, Observer { pagedList ->
+                        when {
+                            pagedList != null && pagedList.size > 0 -> {
+                                view.showAlbums(pagedList)
+                                albumsLoading = false
+                                view.showLoading(albumsLoading && videosLoading)
+                            }
+                            pagedList == null -> view.showLoadingError()
+                        }
+                    })
+            videoRepository
+                    .getVideos(view.getUserId()?.toInt())
+                    .observe(view, Observer { pagedList ->
+                        view.showLoading(false)
+                        when {
+                            pagedList != null && pagedList.size > 0 -> {
+                                view.showVideos(pagedList)
+                                videosLoading = false
+                                view.showLoading(albumsLoading && videosLoading)
+                            }
+
+                            pagedList == null -> view.showLoadingError()
+                        }
+                    })
+        }
+
     }
 }

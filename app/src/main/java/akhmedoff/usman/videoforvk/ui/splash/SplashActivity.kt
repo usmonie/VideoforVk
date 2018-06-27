@@ -22,7 +22,6 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
                 vkApi
             )
         )
-        splashPresenter.view = this
 
         splashPresenter.onCreate()
     }

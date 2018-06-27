@@ -8,6 +8,7 @@ import akhmedoff.usman.data.utils.getVideoRepository
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.Router
 import akhmedoff.usman.videoforvk.ui.album.AlbumFragment
+import akhmedoff.usman.videoforvk.ui.albums.AlbumsFragment
 import akhmedoff.usman.videoforvk.ui.video.VideoFragment
 import akhmedoff.usman.videoforvk.ui.view.MarginItemDecorator
 import android.arch.paging.PagedList
@@ -41,7 +42,8 @@ class ProfileFragment : Fragment(), ProfileContract.View {
 
     private val recyclerAdapter: ProfileRecyclerAdapter by lazy {
         ProfileRecyclerAdapter({ video, view -> showVideo(video, view) },
-                { album, view -> showAlbum(album, view) })
+                { album, view -> showAlbum(album, view) },
+                { view -> showAlbumsPage(getUserId()!!, view) })
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -136,6 +138,21 @@ class ProfileFragment : Fragment(), ProfileContract.View {
 
     private fun showAlbum(album: Album, view: View) {
         val fragment = AlbumFragment.getFragment(album, view.transitionName)
+
+        activity?.supportFragmentManager?.let { fragmentManager ->
+            Router.replaceFragment(
+                    fragmentManager,
+                    this,
+                    fragment,
+                    true,
+                    VideoFragment.FRAGMENT_TAG,
+                    view
+            )
+        }
+    }
+
+    private fun showAlbumsPage(id: String, view: View) {
+        val fragment = AlbumsFragment.getFragment(id, view.transitionName)
 
         activity?.supportFragmentManager?.let { fragmentManager ->
             Router.replaceFragment(

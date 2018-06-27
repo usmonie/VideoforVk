@@ -17,14 +17,17 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_catalog.*
 
+private const val OWNER_ID = "owner_id"
+private const val TRANSITION_NAME = "transition_name"
+
 class AlbumsFragment : Fragment(), AlbumsContract.View {
 
     companion object {
-        private const val OWNER_ID = "owner_id"
 
-        fun createFragment(ownerId: String) = AlbumsFragment().apply {
+        fun getFragment(ownerId: String, transitionName: String) = AlbumsFragment().apply {
             val bundle = Bundle()
             bundle.putString(OWNER_ID, ownerId)
+            bundle.putString(TRANSITION_NAME, transitionName)
 
             arguments = bundle
         }

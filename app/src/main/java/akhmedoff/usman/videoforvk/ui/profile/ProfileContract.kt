@@ -29,8 +29,6 @@ interface ProfileContract {
         fun getUserId(): String?
 
         fun getIsUser(): Boolean
-
-
     }
 
     interface Presenter {
@@ -42,6 +40,7 @@ interface ProfileContract {
 
         fun onViewCreated()
 
+        fun refresh()
 
     }
 }

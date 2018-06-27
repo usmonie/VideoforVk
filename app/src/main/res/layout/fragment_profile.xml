@@ -26,6 +26,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="192dp"
                 android:scaleType="centerCrop"
+                app:layout_collapseMode="parallax"
+                app:layout_collapseParallaxMultiplier="1.0"
                 tools:src="@android:drawable/sym_def_app_icon" />
 
             <android.support.v7.widget.Toolbar

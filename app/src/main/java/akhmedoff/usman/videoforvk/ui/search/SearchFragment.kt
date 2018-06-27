@@ -30,8 +30,7 @@ class SearchFragment : Fragment(), SearchContract.View {
     override lateinit var searchPresenter: SearchContract.Presenter
 
     private val adapter: SearchRecyclerAdapter by lazy {
-        SearchRecyclerAdapter(
-                { video, view -> showVideo(video, view) },
+        SearchRecyclerAdapter({ video, view -> showVideo(video, view) },
                 R.layout.search_videos
         )
     }

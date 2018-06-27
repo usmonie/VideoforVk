@@ -14,7 +14,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 
-class ProfileRecyclerAdapter(private val videoClickListener: (Video, View) -> Unit, private val albumClickListener: (Album, View) -> Unit) : PagedListAdapter<Video, RecyclerView.ViewHolder>(CATALOG_COMPARATOR) {
+class ProfileRecyclerAdapter(private val videoClickListener: (Video, View) -> Unit,
+                             private val albumClickListener: (Album, View) -> Unit,
+                             private val albumsClickListener: (View) -> Unit) : PagedListAdapter<Video, RecyclerView.ViewHolder>(CATALOG_COMPARATOR) {
 
     var albums: PagedList<Album>? = null
         set(value) {
@@ -36,7 +38,12 @@ class ProfileRecyclerAdapter(private val videoClickListener: (Video, View) -> Un
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
             if (viewType == 0 && albums?.isNotEmpty() == true) {
-                ProfileAlbumsSectorViewHolder(albumClickListener, LayoutInflater.from(parent.context).inflate(R.layout.albums_item, parent, false))
+                ProfileAlbumsSectorViewHolder(albumClickListener, LayoutInflater.from(parent.context).inflate(R.layout.albums_item, parent, false)).apply {
+                    cardView.setOnClickListener {
+                        cardView.transitionName = "transition_name_$adapterPosition"
+                        albumsClickListener(cardView)
+                    }
+                }
             } else {
                 SearchViewHolder(Picasso.get(), LayoutInflater.from(parent.context).inflate(R.layout.search_videos, parent, false)).apply {
                     videoFrame.setOnClickListener {
