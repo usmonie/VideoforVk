@@ -85,8 +85,8 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
             val intent = Intent(context, VideoActivity::class.java)
 
             intent.putExtra(TRANSITION_NAME_KEY, transitionName)
-
-            intent.putExtra(VIDEO_KEY, item)
+            intent.putExtra(VIDEO_ID_KEY, item.id.toString())
+            intent.putExtra(OWNER_ID_KEY, item.ownerId.toString())
 
             return intent
         }
@@ -532,11 +532,13 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
         captchaDialog.loadCaptcha(captchaImg)
     }
 
-    override fun getVideoId(): String = intent.getStringExtra(VIDEO_ID_KEY)
-            ?: intent.getParcelableExtra<Video>(VIDEO_ID_KEY).id.toString()
+    override fun getVideoId(): String =
+            intent.getStringExtra(VIDEO_ID_KEY)
+                    ?: intent.getParcelableExtra<Video>(VIDEO_ID_KEY)?.id?.toString() ?: ""
 
-    override fun getOwnerId(): String = intent.getStringExtra(OWNER_ID_KEY)
-            ?: intent.extras.getParcelable<Video>(VIDEO_ID_KEY).ownerId.toString()
+    override fun getOwnerId(): String =
+            intent.getStringExtra(OWNER_ID_KEY)
+                    ?: intent.extras.getParcelable<Video>(VIDEO_ID_KEY)?.ownerId?.toString() ?: ""
 
     override fun getVideoState() = player?.playWhenReady
 

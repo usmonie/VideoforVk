@@ -1,6 +1,10 @@
 package akhmedoff.usman.data.model
 
-enum class Quality {
+import android.os.Parcel
+import android.os.Parcelable
+
+enum class Quality() : Parcelable {
+
     EXTERNAL,
     HLS,
     HD,
@@ -9,5 +13,17 @@ enum class Quality {
     P360,
     P240,
 
-    LOW
+    LOW;
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeInt(ordinal)
+    }
+
+    override fun describeContents(): Int = 0
+
+    companion object CREATOR : Parcelable.Creator<Quality> {
+        override fun createFromParcel(`in`: Parcel) = Quality.values()[`in`.readInt()]
+
+        override fun newArray(size: Int): Array<Quality?> = arrayOfNulls(size)
+    }
 }
