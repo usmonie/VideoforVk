@@ -1,12 +1,16 @@
 package akhmedoff.usman.videoforvk
 
+import android.app.Activity
+import android.content.Intent
 import android.support.transition.*
 import android.support.transition.TransitionSet.ORDERING_TOGETHER
+import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 import android.support.v4.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE
 import android.support.v4.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN
+import android.support.v4.util.Pair
 import android.support.v4.view.ViewCompat
 import android.view.View
 
@@ -21,6 +25,12 @@ object Router {
                 .hide(fragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit()
+    }
+
+    fun startActivityWithTransition(activity: Activity, intent: Intent, view: View) {
+        val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, Pair(view, view.transitionName))
+
+        activity.startActivity(intent, optionsCompat.toBundle())
     }
 
     fun replaceFragment(

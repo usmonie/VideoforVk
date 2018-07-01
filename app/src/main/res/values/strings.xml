@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">VT</string>
+    <string name="app_name">The VTelevizore</string>
 
     <string name="login.button.text">Login with VK</string>
     <string name="error.login">Error login, check your login or password</string>
@@ -86,4 +86,7 @@
     <string name="notification_downloading_failed">Failed</string>
     <string name="navigation.search.title">Search</string>
     <string name="my_albums">Albums</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

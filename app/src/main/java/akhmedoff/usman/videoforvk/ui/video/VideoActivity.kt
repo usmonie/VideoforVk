@@ -5,7 +5,6 @@ import akhmedoff.usman.data.model.Quality.*
 import akhmedoff.usman.data.utils.getAlbumRepository
 import akhmedoff.usman.data.utils.getUserRepository
 import akhmedoff.usman.data.utils.getVideoRepository
-import akhmedoff.usman.videoforvk.App
 import akhmedoff.usman.videoforvk.CaptchaDialog
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.player.AudioFocusListener
@@ -16,19 +15,21 @@ import akhmedoff.usman.videoforvk.services.download.EXTRA_VIDEO_NAME
 import akhmedoff.usman.videoforvk.services.download.VideoDownloadingService
 import android.app.PictureInPictureParams
 import android.arch.paging.PagedList
+import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.media.AudioManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.support.annotation.DrawableRes
 import android.support.annotation.RequiresApi
-import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.PopupMenu
 import android.text.format.DateUtils
 import android.util.Rational
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -48,13 +49,14 @@ import com.google.android.exoplayer2.upstream.FileDataSourceFactory
 import com.google.android.exoplayer2.upstream.cache.*
 import com.google.android.exoplayer2.util.Util
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.fragment_video.*
+import kotlinx.android.synthetic.main.activity_video.*
 import kotlinx.android.synthetic.main.playback_exo_control_view.*
 import java.io.File
 import java.util.*
 
 private const val TRANSITION_NAME_KEY = "transition_name"
 private const val VIDEO_ID_KEY = "video_id"
+private const val VIDEO_KEY = "video"
 private const val OWNER_ID_KEY = "owner_id"
 private const val VIDEO_STATE_KEY = "video_state"
 private const val VIDEO_POSITION_KEY = "video_position"
@@ -64,21 +66,29 @@ private const val VIDEO_QUALITIES_KEY = "video_qualities"
 
 private const val CAPTCHA_SID = "captcha_sid"
 
-class VideoFragment : Fragment(), VideoContract.View {
+class VideoActivity : AppCompatActivity(), VideoContract.View {
 
     companion object {
         const val FRAGMENT_TAG = "video_fragment_tag"
 
-        fun getInstance(item: Item, transitionName: String): Fragment {
-            val fragment = VideoFragment()
-            val bundle = Bundle()
+        fun getInstance(item: CatalogItem, transitionName: String, context: Context): Intent {
+            val intent = Intent(context, VideoActivity::class.java)
 
-            bundle.putString(TRANSITION_NAME_KEY, transitionName)
-            bundle.putString(VIDEO_ID_KEY, item.id.toString())
-            bundle.putString(OWNER_ID_KEY, item.ownerId.toString())
-            fragment.arguments = bundle
+            intent.putExtra(TRANSITION_NAME_KEY, transitionName)
+            intent.putExtra(VIDEO_ID_KEY, item.id.toString())
+            intent.putExtra(OWNER_ID_KEY, item.ownerId.toString())
 
-            return fragment
+            return intent
+        }
+
+        fun getInstance(item: Pair<Owner, Video>, transitionName: String, context: Context): Intent {
+            val intent = Intent(context, VideoActivity::class.java)
+
+            intent.putExtra(TRANSITION_NAME_KEY, transitionName)
+
+            intent.putExtra(VIDEO_KEY, item.second)
+
+            return intent
         }
     }
 
@@ -99,7 +109,7 @@ class VideoFragment : Fragment(), VideoContract.View {
 
     private val addVideoDialog: AddVideoDialog by lazy {
         AddVideoDialog(
-                context!!,
+                this,
                 { addVideoDialog.hide() },
                 { album: Album, isChecked: Boolean ->
                     if (isChecked) selectedAlbums.add(album)
@@ -112,45 +122,43 @@ class VideoFragment : Fragment(), VideoContract.View {
     }
 
     private val captchaDialog: CaptchaDialog by lazy {
-        CaptchaDialog(context!!) {
+        CaptchaDialog(this) {
             presenter.enterCaptcha(it)
         }
     }
 
-    override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_video, container, false)
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_video)
         presenter = VideoPresenter(
                 this,
-                getVideoRepository(context!!),
-                getUserRepository(context!!),
-                getAlbumRepository(context!!)
+                getVideoRepository(this),
+                getUserRepository(this),
+                getAlbumRepository(this)
         )
-        if (savedInstanceState != null) presenter.view = this
 
         initPlayer()
+
+        if (savedInstanceState?.containsKey(VIDEO_KEY) == true) {
+            presenter.setVideo(savedInstanceState.getParcelable(VIDEO_KEY))
+        } else {
+            presenter.onStart()
+        }
+
         video_exo_player.setControlDispatcher(simpleControlDispatcher)
         video_exo_player.player = player
-        presenter.onStart()
 
         pip_toggle.isVisible = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
 
-        appbar.transitionName = arguments?.getString(TRANSITION_NAME_KEY)
+        appbar.transitionName = intent.getStringExtra(TRANSITION_NAME_KEY)
 
-        popupAddMenu = PopupMenu(context!!, add_button).apply {
-            inflate(R.menu.add_video_menu)
-            setOnMenuItemClickListener {
-                presenter.onClick(it.itemId)
-                true
-            }
+        popupAddMenu = PopupMenu(this, add_button)
+        popupAddMenu.inflate(R.menu.add_video_menu)
+        popupAddMenu.setOnMenuItemClickListener {
+            presenter.onClick(it.itemId)
+            true
         }
         setClickListeners()
-
     }
 
     private fun setClickListeners() {
@@ -185,14 +193,18 @@ class VideoFragment : Fragment(), VideoContract.View {
         download_button.setOnClickListener {
             popupDownloadQualityMenu.show()
         }
-
     }
 
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
 
-        if (savedInstanceState?.get(IS_FULLSCREEN_KEY) ?: false == true)
+        if (savedInstanceState?.get(IS_FULLSCREEN_KEY) ?: false == true) {
             showFullscreen()
+        }
+
+        if (savedInstanceState?.containsKey(VIDEO_KEY) == true) {
+            presenter.setVideo(savedInstanceState.getParcelable(VIDEO_KEY))
+        }
     }
 
     override fun onStop() {
@@ -205,24 +217,32 @@ class VideoFragment : Fragment(), VideoContract.View {
         simpleCache.release()
     }
 
-    override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean) =
-            presenter.changedPipMode()
+    override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
+        outState?.putParcelable(VIDEO_KEY, presenter.getVideo())
+        super.onSaveInstanceState(outState, outPersistentState)
+
+    }
+
+    override fun onPictureInPictureModeChanged(
+            isInPictureInPictureMode: Boolean,
+            newConfig: Configuration?
+    ) = presenter.changedPipMode()
 
     private fun initPlayer() {
         val bandwidthMeter = DefaultBandwidthMeter()
 
         player = ExoPlayerFactory.newSimpleInstance(
-                context,
+                this,
                 DefaultTrackSelector(AdaptiveTrackSelection.Factory(bandwidthMeter))
         )
 
         val dataSourceFactory = DefaultDataSourceFactory(
-                App.context,
-                Util.getUserAgent(App.context, "yourApplicationName"), bandwidthMeter
+                this,
+                Util.getUserAgent(this, "yourApplicationName"), bandwidthMeter
         )
 
         simpleCache = SimpleCache(
-                File(context!!.cacheDir, "video"),
+                File(cacheDir, "video"),
                 LeastRecentlyUsedCacheEvictor(1024 * 1024 * 1024))
 
         val maxCacheFileSize: Long = 1024 * 1024 * 2048L
@@ -238,10 +258,10 @@ class VideoFragment : Fragment(), VideoContract.View {
                 null
         )
 
-        val audioManager = context!!.systemService<AudioManager>()
+        val audioManager = systemService<AudioManager>()
 
         val audioFocusListener = AudioFocusListener { isOnFocus ->
-            player?.playWhenReady = isResumed && isOnFocus
+            player?.playWhenReady = isOnFocus
 
             if (isPipMode()) video_exo_player?.hideController()
         }
@@ -256,7 +276,7 @@ class VideoFragment : Fragment(), VideoContract.View {
     override fun showVideo(item: Video) {
         add_button.isVisible = item.canAdd
 
-        title.text = item.title
+        title_text_view.text = item.title
 
         video_date.text = DateUtils.getRelativeTimeSpanString(
                 item.date * 1000,
@@ -280,10 +300,9 @@ class VideoFragment : Fragment(), VideoContract.View {
             else -> R.drawable.ic_favorite_border
         })
 
-        player?.repeatMode = if (item.repeat) REPEAT_MODE_ONE
-        else REPEAT_MODE_OFF
+        player?.repeatMode = if (item.repeat) REPEAT_MODE_ONE else REPEAT_MODE_OFF
 
-        popupDownloadQualityMenu = PopupMenu(context!!, add_button).apply {
+        popupDownloadQualityMenu = PopupMenu(this, add_button).apply {
             inflate(R.menu.download_video_qualities)
             val files = item.files.asReversed()
             files.forEach {
@@ -297,7 +316,6 @@ class VideoFragment : Fragment(), VideoContract.View {
                     }
                 }
             }
-
 
             setOnMenuItemClickListener {
                 startService(item.title, when (it.itemId) {
@@ -315,7 +333,7 @@ class VideoFragment : Fragment(), VideoContract.View {
     }
 
     private fun setDrawable(imageView: ImageView, @DrawableRes id: Int) =
-            imageView.setImageDrawable(ContextCompat.getDrawable(context!!, id))
+            imageView.setImageDrawable(ContextCompat.getDrawable(this, id))
 
     override fun showOwnerInfo(owner: Owner) {
         owner_name.text = owner.name
@@ -367,14 +385,11 @@ class VideoFragment : Fragment(), VideoContract.View {
     }
 
     private fun setImageDrawable(@DrawableRes id: Int) =
-            context?.let {
-                exo_quality_toggle
-                        .setImageDrawable(ContextCompat.getDrawable(it, id))
-            }
+            exo_quality_toggle.setImageDrawable(ContextCompat.getDrawable(this, id))
 
     override fun showFullscreen() {
         video_layout.fitsSystemWindows = false
-        activity?.window?.decorView?.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
@@ -382,10 +397,9 @@ class VideoFragment : Fragment(), VideoContract.View {
                 or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
     }
 
-
     override fun showSmallScreen() {
         video_layout.fitsSystemWindows = true
-        activity?.window?.decorView?.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
     }
@@ -412,11 +426,10 @@ class VideoFragment : Fragment(), VideoContract.View {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun enterPipMode(video: Video) {
-        activity?.enterPictureInPictureMode(
-                PictureInPictureParams.Builder()
-                        .setAspectRatio(Rational(video.width ?: 16,
-                                video.height ?: 9))
-                        .build()
+        enterPictureInPictureMode(PictureInPictureParams.Builder()
+                .setAspectRatio(Rational(video.width ?: 16,
+                        video.height ?: 9))
+                .build()
         )
     }
 
@@ -426,7 +439,7 @@ class VideoFragment : Fragment(), VideoContract.View {
     }
 
     override fun isPipMode() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
-            && activity?.isInPictureInPictureMode ?: false
+            && isInPictureInPictureMode ?: false
 
     override fun showUi(isShowing: Boolean) {
         nested_scroll_view?.isVisible = isShowing
@@ -492,8 +505,7 @@ class VideoFragment : Fragment(), VideoContract.View {
             addVideoDialog.showAlbums(albums)
     }
 
-    override fun showSelectedAlbums(ids: List<Int>) =
-            addVideoDialog.setSelectedAlbums(ids)
+    override fun showSelectedAlbums(ids: List<Int>) = addVideoDialog.setSelectedAlbums(ids)
 
     override fun setAdded() {
         setDrawable(add_button, R.drawable.ic_done_black_24dp)
@@ -518,40 +530,37 @@ class VideoFragment : Fragment(), VideoContract.View {
         captchaDialog.loadCaptcha(captchaImg)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        presenter.onDestroyView()
-    }
+    override fun getVideoId(): String = intent.getStringExtra(VIDEO_ID_KEY)
+            ?: intent.getParcelableExtra<Video>(VIDEO_ID_KEY).id.toString()
 
-    override fun getVideoId(): String = arguments!!.getString(VIDEO_ID_KEY)
-
-    override fun getOwnerId(): String = arguments!!.getString(OWNER_ID_KEY)
+    override fun getOwnerId(): String = intent.getStringExtra(OWNER_ID_KEY)
+            ?: intent.extras.getParcelable<Video>(VIDEO_ID_KEY).ownerId.toString()
 
     override fun getVideoState() = player?.playWhenReady
 
     override fun getVideoPosition() = player?.currentPosition
 
-    override fun loadIsFullscreen() = arguments?.getBoolean(IS_FULLSCREEN_KEY) ?: false
+    override fun loadIsFullscreen() = intent.getBooleanExtra(IS_FULLSCREEN_KEY, false)
 
-    override fun loadVideoState() = arguments?.getBoolean(VIDEO_STATE_KEY) ?: false
+    override fun loadVideoState() = intent.getBooleanExtra(VIDEO_STATE_KEY, false)
 
-    override fun loadVideoPosition() = arguments?.getLong(VIDEO_POSITION_KEY) ?: 1
+    override fun loadVideoPosition() = intent.getLongExtra(VIDEO_POSITION_KEY, 1)
 
     override fun getVideoQualities() =
-            arguments?.getStringArrayList(VIDEO_QUALITIES_KEY) ?: emptyList<String>()
+            intent.getStringArrayListExtra(VIDEO_QUALITIES_KEY) ?: emptyList<String>()
 
-    override fun getCurrentQuality() = arguments?.getInt(VIDEO_QUALITY_KEY) ?: 0
+    override fun getCurrentQuality() = intent.getIntExtra(VIDEO_QUALITY_KEY, 0)
 
     override fun saveVideoState(state: Boolean) {
-        arguments?.putBoolean(VIDEO_STATE_KEY, state)
+        intent.putExtra(VIDEO_STATE_KEY, state)
     }
 
     override fun saveVideoPosition(position: Long) {
-        arguments?.putLong(VIDEO_POSITION_KEY, position)
+        intent.putExtra(VIDEO_POSITION_KEY, position)
     }
 
     override fun saveIsFullscreen(isFullscreen: Boolean) {
-        arguments?.putBoolean(IS_FULLSCREEN_KEY, isFullscreen)
+        intent.putExtra(IS_FULLSCREEN_KEY, isFullscreen)
     }
 
     override fun setVideoPosition(position: Long) {
@@ -559,22 +568,20 @@ class VideoFragment : Fragment(), VideoContract.View {
     }
 
     override fun saveVideoQualities(qualities: ArrayList<String>) {
-        arguments?.putStringArrayList(VIDEO_QUALITIES_KEY, qualities)
+        intent.putStringArrayListExtra(VIDEO_QUALITIES_KEY, qualities)
     }
 
     override fun saveCurrentQuality(quality: Int) {
-        arguments?.putInt(VIDEO_QUALITY_KEY, quality)
+        intent.putExtra(VIDEO_QUALITY_KEY, quality)
     }
 
     override fun saveCaptchaSid(sid: String) {
-        arguments?.putString(CAPTCHA_SID, sid)
+        intent.putExtra(CAPTCHA_SID, sid)
     }
 
-    override fun loadCaptchaSid(): String = arguments?.getString(CAPTCHA_SID) ?: ""
+    override fun loadCaptchaSid(): String = intent.getStringExtra(CAPTCHA_SID) ?: ""
 
-    override fun back() {
-        activity?.supportFragmentManager?.popBackStack()
-    }
+    override fun back() = onBackPressed()
 
     override fun getString(id: Int, vararg items: String): String =
             resources.getString(id, *items)
@@ -583,11 +590,11 @@ class VideoFragment : Fragment(), VideoContract.View {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
 
     private fun startService(title: String, url: String) {
-        ContextCompat.startForegroundService(context!!,
-                Intent(context, VideoDownloadingService::class.java).apply {
-                    this.action = ACTION_DOWNLOAD
-                    this.putExtra(EXTRA_VIDEO_NAME, title)
-                    this.putExtra(EXTRA_URL, url)
+        ContextCompat.startForegroundService(this,
+                Intent(this, VideoDownloadingService::class.java).apply {
+                    action = ACTION_DOWNLOAD
+                    putExtra(EXTRA_VIDEO_NAME, title)
+                    putExtra(EXTRA_URL, url)
                 })
     }
 }

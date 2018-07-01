@@ -87,7 +87,6 @@ class LoginActivity : AppCompatActivity(), LoginContract.View {
     override fun onErrorLogin() =
             Snackbar.make(login_constraint, R.string.error_login, Snackbar.LENGTH_LONG).show()
 
-
     override fun validateTwoFactoryAuthorization(phoneMask: String?) {
         twoFactorDialog.show()
         phoneMask?.let { twoFactorDialog.setNumber(it) }
@@ -119,12 +118,11 @@ class LoginActivity : AppCompatActivity(), LoginContract.View {
         username_et.isEnabled = editable
     }
 
-    override fun isDialogShows(): Boolean = twoFactorDialog.isShowing || captchaDialog.isShowing
+    override fun isDialogShows(): Boolean =
+            twoFactorDialog.isShowing || captchaDialog.isShowing
 
     override fun showDialogLoading() {
-        when {
-            twoFactorDialog.isShowing -> twoFactorDialog.showLoading()
-        }
+        if (twoFactorDialog.isShowing) twoFactorDialog.showLoading()
     }
 
     override fun hideDialogLoading() = twoFactorDialog.hideLoading()

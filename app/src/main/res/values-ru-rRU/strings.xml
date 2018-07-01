@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ВТелевизоре</string>
+    <string name="app_name">The ВТелевизоре</string>
     <string name="login.button.text">Войти через ВКонтакте</string>
     <string name="error.login">Ошибка входа, проверьте свой логин или пароль</string>
     <string name="enter_code">Введите код</string>

@@ -161,5 +161,7 @@ interface VideoContract {
         fun openBrowser()
 
         fun getVideo(): Video
+
+        fun setVideo(video: Video)
     }
 }

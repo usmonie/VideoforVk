@@ -8,12 +8,13 @@ import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.Router
 import akhmedoff.usman.videoforvk.ui.album.AlbumFragment
 import akhmedoff.usman.videoforvk.ui.search.SearchFragment
-import akhmedoff.usman.videoforvk.ui.video.VideoFragment
+import akhmedoff.usman.videoforvk.ui.video.VideoActivity
 import android.arch.paging.PagedList
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewCompat
+import android.support.v7.widget.DefaultItemAnimator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,26 +52,20 @@ class ExploreFragment : Fragment(), ExploreContract.View {
                 getCatalogRepository(context!!)
         )
 
-        if (savedInstanceState == null || !savedInstanceState.containsKey(RETAINED_KEY))
+        if (savedInstanceState == null)
             presenter.onCreated()
 
         looking_recycler.adapter = adapter
-
+        looking_recycler.itemAnimator = DefaultItemAnimator()
         search_box_collapsed.setOnClickListener { presenter.searchClicked() }
         update_looking_layout.setOnRefreshListener { presenter.refresh() }
     }
 
     override fun showVideo(item: CatalogItem, view: View) {
-        activity?.supportFragmentManager?.let {
-            Router.replaceFragment(
-                    it,
-                    this,
-                    VideoFragment.getInstance(item, ViewCompat.getTransitionName(view)),
-                    true,
-                    VideoFragment.FRAGMENT_TAG,
-                    view
-            )
-        }
+        val intent = VideoActivity.getInstance(item,
+                ViewCompat.getTransitionName(view), context!!)
+
+        Router.startActivityWithTransition(activity!!, intent, view)
     }
 
     override fun startSearch() {
@@ -97,7 +92,7 @@ class ExploreFragment : Fragment(), ExploreContract.View {
                     this,
                     fragment,
                     true,
-                    VideoFragment.FRAGMENT_TAG,
+                    VideoActivity.FRAGMENT_TAG,
                     view
             )
         }
@@ -118,6 +113,19 @@ class ExploreFragment : Fragment(), ExploreContract.View {
     ).show()
 
     override fun setList(items: PagedList<Catalog>) = adapter.submitList(items)
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putBoolean(RETAINED_KEY, true)
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        if (savedInstanceState?.containsKey(RETAINED_KEY) == false) {
+            presenter.onCreated()
+
+        }
+        super.onViewStateRestored(savedInstanceState)
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

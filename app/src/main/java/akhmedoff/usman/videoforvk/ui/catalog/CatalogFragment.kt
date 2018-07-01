@@ -5,8 +5,7 @@ import akhmedoff.usman.data.model.CatalogItemType
 import akhmedoff.usman.data.utils.getCatalogRepository
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.Router
-import akhmedoff.usman.videoforvk.ui.album.AlbumFragment
-import akhmedoff.usman.videoforvk.ui.video.VideoFragment
+import akhmedoff.usman.videoforvk.ui.video.VideoActivity
 import akhmedoff.usman.videoforvk.ui.view.MarginItemDecorator
 import android.arch.paging.PagedList
 import android.os.Bundle
@@ -84,34 +83,17 @@ class CatalogFragment : Fragment(),
     }
 
     override fun showVideo(item: CatalogItem, view: View) {
-        val fragment = VideoFragment.getInstance(item,
-                ViewCompat.getTransitionName(view))
+        val intent = VideoActivity.getInstance(item,
+                ViewCompat.getTransitionName(view), context!!)
 
-        activity?.supportFragmentManager?.let {
-            Router.replaceFragment(
-                    it,
-                    this,
-                    fragment,
-                    true,
-                    VideoFragment.FRAGMENT_TAG,
-                    view
-            )
-        }
+        Router.startActivityWithTransition(activity!!, intent, view)
     }
 
     override fun showAlbum(album: CatalogItem, view: View) {
-        val fragment = AlbumFragment.getFragment(album, view.transitionName)
+        val intent = VideoActivity.getInstance(album,
+                ViewCompat.getTransitionName(view), context!!)
 
-        activity?.supportFragmentManager?.let {
-            Router.replaceFragment(
-                    it,
-                    this,
-                    fragment,
-                    true,
-                    VideoFragment.FRAGMENT_TAG,
-                    view
-            )
-        }
+        Router.startActivityWithTransition(activity!!, intent, view)
     }
 
     override fun getPageCategory() = arguments?.getString(PAGE_CATEGORY) ?: ""
@@ -124,7 +106,6 @@ class CatalogFragment : Fragment(),
     override fun showLoading(isRefreshing: Boolean) {
         update_catalog_layout?.isRefreshing = isRefreshing
     }
-
 
     override fun showErrorLoading() =
             Snackbar.make(update_catalog_layout,

@@ -4,7 +4,7 @@ import akhmedoff.usman.data.model.Video
 import akhmedoff.usman.data.utils.getVideoRepository
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.Router
-import akhmedoff.usman.videoforvk.ui.video.VideoFragment
+import akhmedoff.usman.videoforvk.ui.video.VideoActivity
 import akhmedoff.usman.videoforvk.ui.view.MarginItemDecorator
 import android.arch.paging.PagedList
 import android.os.Bundle
@@ -19,7 +19,6 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import kotlinx.android.synthetic.main.fragment_search.*
 import java.util.*
-
 
 class SearchFragment : Fragment(), SearchContract.View {
 
@@ -165,18 +164,9 @@ class SearchFragment : Fragment(), SearchContract.View {
     }
 
     override fun showVideo(item: Video, view: View) {
-        val fragment =
-                VideoFragment.getInstance(item, ViewCompat.getTransitionName(view))
+        val intent = VideoActivity.getInstance(item,
+                ViewCompat.getTransitionName(view), context!!)
 
-        activity?.supportFragmentManager?.let {
-            Router.replaceFragment(
-                    it,
-                    this,
-                    fragment,
-                    true,
-                    VideoFragment.FRAGMENT_TAG,
-                    view
-            )
-        }
+        Router.startActivityWithTransition(activity!!, intent, view)
     }
 }

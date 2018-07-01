@@ -196,7 +196,6 @@ class VideoPresenter(
                     }
 
                 }
-
             })
 
     private fun unlikeCurrentVideo() = unlikeVideo(video.ownerId.toString(),
@@ -450,6 +449,7 @@ class VideoPresenter(
         }
     }
 
+
     override fun openBrowser() {
         view?.let { view ->
             view.showVideoInBrowser(
@@ -460,4 +460,11 @@ class VideoPresenter(
     }
 
     override fun getVideo(): Video = video
+
+    override fun setVideo(video: Video) {
+        this.video = video
+        showVideo(video)
+        view?.showUi(true)
+        view?.showPlayer(true)
+    }
 }

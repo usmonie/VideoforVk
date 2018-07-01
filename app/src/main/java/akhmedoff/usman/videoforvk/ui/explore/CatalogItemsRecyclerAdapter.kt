@@ -12,24 +12,26 @@ import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 
 class CatalogItemsRecyclerAdapter(
-    private val picasso: Picasso,
-    private val clickListener: (CatalogItem, View) -> Unit
+        private val picasso: Picasso,
+        private val clickListener: (CatalogItem, View) -> Unit
 ) : RecyclerView.Adapter<VideoViewHolder>() {
 
     var items: List<CatalogItem>? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoViewHolder {
         val holder = VideoViewHolder(
-            picasso,
-            LayoutInflater.from(parent.context).inflate(
-                viewType,
-                parent,
-                false
-            )
+                picasso,
+                LayoutInflater.from(parent.context).inflate(
+                        viewType,
+                        parent,
+                        false
+                )
         )
 
         items?.let { items ->
             holder.itemView.setOnClickListener {
+
+                holder.poster.transitionName = "transition_name_${holder.adapterPosition}"
                 clickListener(items[holder.adapterPosition], holder.poster)
             }
         }
@@ -48,8 +50,6 @@ class CatalogItemsRecyclerAdapter(
             holder.itemView.layoutParams.width =
                     holder.itemView.resources.getDimensionPixelSize(R.dimen.width_main_list_first_video)
         }
-
-        holder.poster.transitionName = "transition_name_$position"
     }
 
     override fun getItemViewType(position: Int): Int = when {

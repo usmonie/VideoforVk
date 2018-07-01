@@ -40,8 +40,13 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".ui.main.MainActivity"
+            tools:ignore="UnusedAttribute" />
+
+        <activity
+            android:name=".ui.video.VideoActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:resizeableActivity="true"
             android:supportsPictureInPicture="true"
@@ -50,9 +55,10 @@
                 android:defaultWidth="330dp"
                 android:defaultHeight="640dp"
                 android:gravity="center"
-                android:minHeight="114dp"
-                android:minWidth="132dp" />
+                android:minWidth="132dp"
+                android:minHeight="114dp" />
         </activity>
+
         <activity
             android:name=".ui.login.LoginActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"

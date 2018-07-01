@@ -6,7 +6,7 @@ import akhmedoff.usman.data.model.Video
 import akhmedoff.usman.data.utils.getAlbumRepository
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.Router
-import akhmedoff.usman.videoforvk.ui.video.VideoFragment
+import akhmedoff.usman.videoforvk.ui.video.VideoActivity
 import akhmedoff.usman.videoforvk.ui.view.MarginItemDecorator
 import android.arch.paging.PagedList
 import android.os.Bundle
@@ -99,19 +99,10 @@ class AlbumFragment : Fragment(), AlbumContract.View {
             .into(app_bar_album_poster_image)
 
     override fun showVideo(video: Video, view: View) {
-        val fragment =
-                VideoFragment.getInstance(video, ViewCompat.getTransitionName(view))
+        val intent =
+                VideoActivity.getInstance(video, ViewCompat.getTransitionName(view), context!!)
 
-        activity?.supportFragmentManager?.let { fragmentManager ->
-            Router.replaceFragment(
-                    fragmentManager,
-                    this,
-                    fragment,
-                    true,
-                    VideoFragment.FRAGMENT_TAG,
-                    view
-            )
-        }
+        Router.startActivityWithTransition(activity!!, intent, view)
     }
 
     override fun setAdded(isAdded: Boolean) {

@@ -3,6 +3,19 @@
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="colorControlHighlight">?attr/colorAccent</item>
         <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowActivityTransitions">true</item>
+
+        <!-- specify enter and exit transitions -->
+        <item name="android:windowEnterTransition">@android:transition/explode</item>
+        <item name="android:windowExitTransition">@android:transition/explode</item>
+
+        <!-- specify shared element transitions -->
+        <item name="android:windowSharedElementEnterTransition">
+            @transition/image_shared_element_transition
+        </item>
+        <item name="android:windowSharedElementExitTransition">
+            @transition/image_shared_element_transition
+        </item>
     </style>
 
     <style name="LoginTheme" parent="AppTheme">

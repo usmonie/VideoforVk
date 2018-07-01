@@ -35,6 +35,7 @@ class CatalogRecyclerAdapter(
             )
         ).apply {
             itemView.setOnClickListener {
+                poster.transitionName = "transition_name_$adapterPosition"
                 getItem(adapterPosition)?.let {
                     clickListener(it, poster)
                 }
@@ -53,8 +54,6 @@ class CatalogRecyclerAdapter(
         getItem(position)?.let {
             holder.bind(it)
         }
-
-        holder.poster.transitionName = "transition_name_$position"
     }
 
     override fun getItemId(position: Int) = position.toLong()

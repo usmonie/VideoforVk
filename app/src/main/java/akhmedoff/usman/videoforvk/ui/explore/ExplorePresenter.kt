@@ -14,22 +14,20 @@ class ExplorePresenter(
     override fun refresh() {
         view?.let { view ->
             view.showLoading()
-            catalogRepository
-                    .getCatalog("ugc")
-                .observe(view, Observer { catalogs ->
-                    if (catalogs != null && catalogs.size > 0) {
-                        view.hideLoading()
-                        view.setList(catalogs)
-                    } else {
-                        view.hideLoading()
-                        view.showErrorLoading()
-                    }
-                })
+            catalogRepository.getCatalog("ugc")
+                    .observe(view, Observer { catalogs ->
+                        if (catalogs != null && catalogs.size > 0) {
+                            view.hideLoading()
+                            view.setList(catalogs)
+                        } else {
+                            view.hideLoading()
+                            view.showErrorLoading()
+                        }
+                    })
         }
     }
 
     override fun onCatalogItemClicked(item: CatalogItem) {
-
 
     }
 

@@ -86,7 +86,7 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/title"
+                    android:id="@+id/title_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -135,43 +135,47 @@
                         android:id="@+id/like_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:background="?selectableItemBackgroundBorderless"
                         android:padding="16dp"
-                        app:srcCompat="@drawable/ic_favorite_border" />
+                        app:srcCompat="@drawable/ic_favorite_border"
+                        app:tint="?colorControlNormal" />
 
                     <android.support.v7.widget.AppCompatImageView
                         android:id="@+id/share_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:background="?selectableItemBackgroundBorderless"
                         android:padding="16dp"
-                        app:srcCompat="@drawable/ic_share" />
+                        app:srcCompat="@drawable/ic_share"
+                        app:tint="?colorControlNormal" />
 
                     <android.support.v7.widget.AppCompatImageView
                         android:id="@+id/send_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:background="?selectableItemBackgroundBorderless"
                         android:padding="16dp"
                         android:visibility="gone"
-                        app:srcCompat="@drawable/ic_send" />
+                        app:srcCompat="@drawable/ic_send"
+                        app:tint="?colorControlNormal" />
 
                     <android.support.v7.widget.AppCompatImageView
                         android:id="@+id/add_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:background="?selectableItemBackgroundBorderless"
                         android:padding="16dp"
-                        app:srcCompat="@drawable/ic_add" />
+                        app:srcCompat="@drawable/ic_add"
+                        app:tint="?colorControlNormal" />
 
                     <android.support.v7.widget.AppCompatImageView
                         android:id="@+id/download_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:background="?selectableItemBackgroundBorderless"
                         android:padding="16dp"
                         app:srcCompat="@drawable/ic_file_download_white_24dp"
-                        app:tint="?attr/colorControlNormal" />
+                        app:tint="?colorControlNormal" />
                 </LinearLayout>
 
                 <TextView

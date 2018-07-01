@@ -5,7 +5,7 @@ import akhmedoff.usman.data.utils.getAlbumRepository
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.Router
 import akhmedoff.usman.videoforvk.ui.album.AlbumFragment
-import akhmedoff.usman.videoforvk.ui.video.VideoFragment
+import akhmedoff.usman.videoforvk.ui.video.VideoActivity
 import akhmedoff.usman.videoforvk.ui.view.MarginItemDecorator
 import akhmedoff.usman.videoforvk.ui.view.adapters.AlbumsRecyclerAdapter
 import android.arch.paging.PagedList
@@ -80,7 +80,7 @@ class AlbumsFragment : Fragment(), AlbumsContract.View {
                     this,
                     fragment,
                     true,
-                    VideoFragment.FRAGMENT_TAG,
+                    VideoActivity.FRAGMENT_TAG,
                     view
             )
         }

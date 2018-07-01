@@ -9,11 +9,12 @@ import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.Router
 import akhmedoff.usman.videoforvk.ui.album.AlbumFragment
 import akhmedoff.usman.videoforvk.ui.albums.AlbumsFragment
-import akhmedoff.usman.videoforvk.ui.video.VideoFragment
+import akhmedoff.usman.videoforvk.ui.video.VideoActivity
 import akhmedoff.usman.videoforvk.ui.view.MarginItemDecorator
 import android.arch.paging.PagedList
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.view.ViewCompat
 import android.support.v7.widget.DefaultItemAnimator
 import android.view.LayoutInflater
 import android.view.View
@@ -122,18 +123,11 @@ class ProfileFragment : Fragment(), ProfileContract.View {
     }
 
     private fun showVideo(video: Video, view: View) {
-        val fragment = VideoFragment.getInstance(video, view.transitionName)
 
-        activity?.supportFragmentManager?.let { fragmentManager ->
-            Router.replaceFragment(
-                    fragmentManager,
-                    this,
-                    fragment,
-                    true,
-                    VideoFragment.FRAGMENT_TAG,
-                    view
-            )
-        }
+        val intent = VideoActivity.getInstance(video,
+                ViewCompat.getTransitionName(view), context!!)
+
+        Router.startActivityWithTransition(activity!!, intent, view)
     }
 
     private fun showAlbum(album: Album, view: View) {
@@ -145,7 +139,7 @@ class ProfileFragment : Fragment(), ProfileContract.View {
                     this,
                     fragment,
                     true,
-                    VideoFragment.FRAGMENT_TAG,
+                    VideoActivity.FRAGMENT_TAG,
                     view
             )
         }
@@ -160,7 +154,7 @@ class ProfileFragment : Fragment(), ProfileContract.View {
                     this,
                     fragment,
                     true,
-                    VideoFragment.FRAGMENT_TAG,
+                    VideoActivity.FRAGMENT_TAG,
                     view
             )
         }
