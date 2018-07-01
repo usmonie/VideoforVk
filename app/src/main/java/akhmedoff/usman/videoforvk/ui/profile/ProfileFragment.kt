@@ -123,7 +123,6 @@ class ProfileFragment : Fragment(), ProfileContract.View {
     }
 
     private fun showVideo(video: Video, view: View) {
-
         val intent = VideoActivity.getInstance(video,
                 ViewCompat.getTransitionName(view), context!!)
 

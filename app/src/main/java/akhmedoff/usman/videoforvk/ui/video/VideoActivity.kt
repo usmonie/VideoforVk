@@ -81,12 +81,12 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
             return intent
         }
 
-        fun getInstance(item: Pair<Owner, Video>, transitionName: String, context: Context): Intent {
+        fun getInstance(item: Video, transitionName: String, context: Context): Intent {
             val intent = Intent(context, VideoActivity::class.java)
 
             intent.putExtra(TRANSITION_NAME_KEY, transitionName)
 
-            intent.putExtra(VIDEO_KEY, item.second)
+            intent.putExtra(VIDEO_KEY, item)
 
             return intent
         }
@@ -421,7 +421,7 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
         error_mode.isVisible = isError
         appbar.isVisible = !isError
         nested_scroll_view.isVisible = !isError
-        video_loading.isVisible = !isError
+        video_loading.isVisible = false
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -439,13 +439,15 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
     }
 
     override fun isPipMode() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
-            && isInPictureInPictureMode ?: false
+            && isInPictureInPictureMode
 
     override fun showUi(isShowing: Boolean) {
         nested_scroll_view?.isVisible = isShowing
         showLoadError(false)
         if (isShowing)
             video_exo_player.showController()
+        else
+            video_exo_player.hideController()
     }
 
     override fun showProgress(isLoading: Boolean) {
