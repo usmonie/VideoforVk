@@ -11,6 +11,10 @@ class ExplorePresenter(
 
     override fun onCreated() = refresh()
 
+    override fun onRetained() {
+        refresh()
+    }
+
     override fun refresh() {
         view?.let { view ->
             view.showLoading()

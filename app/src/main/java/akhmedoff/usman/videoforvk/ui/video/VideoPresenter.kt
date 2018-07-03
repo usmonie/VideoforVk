@@ -289,7 +289,12 @@ class VideoPresenter(
                                     view?.showPlayer(true)
                                 }
 
-                                else -> view?.showLoadError(true)
+                                else -> {
+                                    view?.showProgress(false)
+                                    view?.showUi(false)
+                                    view?.showPlayer(false)
+                                    view?.showLoadError(true)
+                                }
                             }
 
                             when {
@@ -321,8 +326,6 @@ class VideoPresenter(
                         }
                     }
                 })
-
-
     }
 
     private fun showVideo(video: Video) {

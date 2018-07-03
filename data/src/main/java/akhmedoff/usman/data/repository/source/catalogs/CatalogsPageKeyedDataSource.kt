@@ -12,24 +12,24 @@ import retrofit2.Response
 import java.util.Collections.emptyList
 
 class CatalogsPageKeyedDataSource(
-    private val vkApi: VkApi,
-    private val filters: String,
-    private val catalogDao: CatalogDao
+        private val vkApi: VkApi,
+        private val filters: String,
+        private val catalogDao: CatalogDao
 ) : PageKeyedDataSource<String, Catalog>() {
 
     override fun loadBefore(
-        params: LoadParams<String>,
-        callback: LoadCallback<String, Catalog>
+            params: LoadParams<String>,
+            callback: LoadCallback<String, Catalog>
     ) {
         // ignored, since we only ever append to our initial load
     }
 
     override fun loadAfter(params: LoadParams<String>, callback: LoadCallback<String, Catalog>) {
         vkApi.getCatalog(
-            count = params.requestedLoadSize,
-            itemsCount = 7,
-            from = params.key,
-            filters = filters
+                count = params.requestedLoadSize,
+                itemsCount = 7,
+                from = params.key,
+                filters = filters
         ).enqueue(object : Callback<ResponseCatalog> {
 
             override fun onFailure(call: Call<ResponseCatalog>?, t: Throwable?) {
@@ -37,34 +37,59 @@ class CatalogsPageKeyedDataSource(
             }
 
             override fun onResponse(
-                call: Call<ResponseCatalog>,
-                response: Response<ResponseCatalog>
+                    call: Call<ResponseCatalog>,
+                    response: Response<ResponseCatalog>
             ) {
-                response.body()?.let {
-                    callback.onResult(it.catalogs, it.next)
-                }
+
+                if (response.body() != null) {
+                    callback.onResult(response.body()!!.catalogs, response.body()!!.next)
+                    response.body()?.catalogs?.forEach {
+                        it.nextKey = params.key
+                    }
+
+                    catalogDao.insert(response.body()!!.catalogs)
+                } else
+                    callback.onResult(catalogDao.loadAll(params.requestedLoadSize, arrayOf(params.key)), response.body()?.next)
             }
         })
     }
 
     override fun loadInitial(
-        params: LoadInitialParams<String>,
-        callback: LoadInitialCallback<String, Catalog>
+            params: LoadInitialParams<String>,
+            callback: LoadInitialCallback<String, Catalog>
     ) {
         try {
             val response = vkApi.getCatalog(
-                count = params.requestedLoadSize,
-                itemsCount = 7,
-                filters = filters
+                    count = params.requestedLoadSize,
+                    itemsCount = 10,
+                    filters = filters
             ).execute()
 
             val items = response.body()?.catalogs ?: emptyList<Catalog>()
+            if (response.isSuccessful) {
+                callback.onResult(items, null, response.body()?.next)
+                items.forEach {
+                    it.nextKey = "${filters}_initial"
+                }
 
-            callback.onResult(items, null, response.body()?.next)
+                catalogDao.insert(items)
+            } else {
+                callback.onResult(
+                        catalogDao.loadAll(count = params.requestedLoadSize,
+                                nextKey = arrayOf("${filters}_initial")),
+                        null,
+                        response.body()?.next)
+            }
+
 
         } catch (exception: Exception) {
             Log.d(javaClass.simpleName, exception.toString())
-        }
 
+            callback.onResult(
+                    catalogDao.loadAll(count = params.requestedLoadSize,
+                            nextKey = arrayOf("${filters}_initial")),
+                    null,
+                    null)
+        }
     }
 }

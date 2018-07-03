@@ -1,6 +1,6 @@
 package akhmedoff.usman.videoforvk.ui.explore
 
-import akhmedoff.usman.data.model.Catalog
+import  akhmedoff.usman.data.model.Catalog
 import akhmedoff.usman.data.model.CatalogItem
 import akhmedoff.usman.data.model.CatalogItemType
 import akhmedoff.usman.data.utils.getCatalogRepository
@@ -23,8 +23,9 @@ import kotlinx.android.synthetic.main.fragment_explore.*
 class ExploreFragment : Fragment(), ExploreContract.View {
 
     companion object {
-        const val FRAGMENT_TAG = "looking_fragment_tag"
+        const val FRAGMENT_TAG = "explore_fragment_tag"
         const val RETAINED_KEY = "retained"
+        const val LIST_STATE_KEY = "list_state_key"
     }
 
     override lateinit var presenter: ExploreContract.Presenter
@@ -46,15 +47,20 @@ class ExploreFragment : Fragment(), ExploreContract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         presenter = ExplorePresenter(
                 this,
                 getCatalogRepository(context!!)
         )
 
-        if (savedInstanceState == null)
+        if (savedInstanceState == null || !savedInstanceState.containsKey(RETAINED_KEY)) {
             presenter.onCreated()
+        } else if (savedInstanceState.get(RETAINED_KEY) == true) {
+            presenter.onRetained()
+        }
 
+        if (savedInstanceState?.containsKey(LIST_STATE_KEY) == true) {
+            looking_recycler.layoutManager.onRestoreInstanceState(savedInstanceState.getParcelable(LIST_STATE_KEY))
+        }
         looking_recycler.adapter = adapter
         looking_recycler.itemAnimator = DefaultItemAnimator()
         search_box_collapsed.setOnClickListener { presenter.searchClicked() }
@@ -116,13 +122,21 @@ class ExploreFragment : Fragment(), ExploreContract.View {
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putBoolean(RETAINED_KEY, true)
+
+        val listState = looking_recycler?.layoutManager?.onSaveInstanceState()
+        outState.putParcelable(LIST_STATE_KEY, listState)
         super.onSaveInstanceState(outState)
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         if (savedInstanceState?.containsKey(RETAINED_KEY) == false) {
             presenter.onCreated()
+        } else if (savedInstanceState?.get(RETAINED_KEY) == true) {
+            presenter.onRetained()
+        }
 
+        if (savedInstanceState?.containsKey(LIST_STATE_KEY) == true) {
+            looking_recycler.layoutManager.onRestoreInstanceState(savedInstanceState.getParcelable(LIST_STATE_KEY))
         }
         super.onViewStateRestored(savedInstanceState)
     }

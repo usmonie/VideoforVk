@@ -1,14 +1,16 @@
 package akhmedoff.usman.data.db
 
+import akhmedoff.usman.data.model.CatalogItem
 import akhmedoff.usman.data.model.CatalogItemType
 import akhmedoff.usman.data.model.VideoUrl
 import android.arch.persistence.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.util.*
 
 
-class TypeConverters {
-    val gson = Gson()
+class SimpleTypeConverters {
+    private val gson = Gson()
 
     @TypeConverter
     fun toType(type: String) = when (type) {
@@ -41,4 +43,20 @@ class TypeConverters {
     fun fromUserIds(data: List<String>): String {
         return data.joinToString()
     }
+
+    @TypeConverter
+    fun stringToCatalogItemList(data: String?): List<CatalogItem> {
+        if (data == null) {
+            return Collections.emptyList()
+        }
+
+        val listType = object : TypeToken<List<CatalogItem>>() {
+
+        }.type
+
+        return gson.fromJson(data, listType)
+    }
+
+    @TypeConverter
+    fun fromCatalogItemsToString(catalogItems: List<CatalogItem>) = gson.toJson(catalogItems)
 }

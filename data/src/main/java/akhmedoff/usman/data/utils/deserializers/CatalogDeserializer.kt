@@ -13,9 +13,9 @@ import java.lang.reflect.Type
 class CatalogDeserializer : JsonDeserializer<ResponseCatalog> {
 
     override fun deserialize(
-        json: JsonElement,
-        typeOfT: Type,
-        context: JsonDeserializationContext
+            json: JsonElement,
+            typeOfT: Type,
+            context: JsonDeserializationContext
     ): ResponseCatalog {
 
         Log.d("DESERIALIZER catalog", "started")
@@ -83,14 +83,15 @@ class CatalogDeserializer : JsonDeserializer<ResponseCatalog> {
                 val type = catalogJson?.get("type")?.asString
 
                 if (videoList.isNotEmpty()) catalogs.add(
-                    Catalog(
-                        catalogId,
-                        videoList,
-                        name,
-                        view,
-                        canHide,
-                        type
-                    )
+                        Catalog().apply {
+                            id = catalogId
+                            items = videoList
+                            this.name = name
+                            this.view = view
+                            this.canHide = canHide
+                            this.type = type
+                        }
+
                 )
             }
         }

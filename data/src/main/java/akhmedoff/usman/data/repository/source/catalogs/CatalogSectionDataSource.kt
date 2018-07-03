@@ -13,20 +13,20 @@ import retrofit2.Response
 
 
 class CatalogSectionDataSource(
-    private val vkApi: VkApi,
-    private val catalogSection: String,
-    private val ownerDao: OwnerDao,
-    private val catalogDao: CatalogDao
+        private val vkApi: VkApi,
+        private val catalogSection: String,
+        private val ownerDao: OwnerDao,
+        private val catalogDao: CatalogDao
 ) : PageKeyedDataSource<String, CatalogItem>() {
 
     override fun loadInitial(
-        params: LoadInitialParams<String>,
-        callback: LoadInitialCallback<String, CatalogItem>
+            params: LoadInitialParams<String>,
+            callback: LoadInitialCallback<String, CatalogItem>
     ) {
         val apiSource = vkApi.getCatalog(
-            filters = catalogSection,
-            itemsCount = 16,
-            count = 1
+                filters = catalogSection,
+                itemsCount = 16,
+                count = 1
         )
 
         try {
@@ -41,13 +41,13 @@ class CatalogSectionDataSource(
     }
 
     override fun loadAfter(
-        params: LoadParams<String>,
-        callback: LoadCallback<String, CatalogItem>
+            params: LoadParams<String>,
+            callback: LoadCallback<String, CatalogItem>
     ) {
         vkApi.getCatalogSection(
-            from = params.key,
-            section_id = catalogSection,
-            count = params.requestedLoadSize
+                from = params.key,
+                section_id = catalogSection,
+                count = params.requestedLoadSize
         ).enqueue(object : Callback<ResponseCatalog> {
 
             override fun onFailure(call: Call<ResponseCatalog>?, t: Throwable?) {
@@ -55,31 +55,29 @@ class CatalogSectionDataSource(
             }
 
             override fun onResponse(
-                call: Call<ResponseCatalog>?,
-                response: Response<ResponseCatalog>?
+                    call: Call<ResponseCatalog>?,
+                    response: Response<ResponseCatalog>?
             ) {
-                response?.body()?.let {
-
-
-                    it.profiles?.forEach {
+                if (response?.body() != null) {
+                    response.body()?.profiles?.forEach {
                         ownerDao.insert(it)
                     }
 
-                    it.groups?.forEach {
+                    response.body()?.groups?.forEach {
                         ownerDao.insert(it)
                     }
 
-                    val items = if (it.catalogs.isNotEmpty()) it.catalogs[0].items else emptyList()
+                    val items: List<CatalogItem> = if (response.body()?.catalogs?.isNotEmpty() == true) response.body()?.catalogs?.get(0)?.items!! else emptyList()
 
-                    callback.onResult(items, it.next)
+                    callback.onResult(items, response.body()?.next)
                 }
             }
         })
     }
 
     override fun loadBefore(
-        params: LoadParams<String>,
-        callback: LoadCallback<String, CatalogItem>
+            params: LoadParams<String>,
+            callback: LoadCallback<String, CatalogItem>
     ) {
 
     }

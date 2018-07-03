@@ -18,9 +18,9 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="?actionBarSize"
+                android:layout_height="wrap_content"
                 android:gravity="center"
-                android:padding="@dimen/activity_horizontal_margin"
+                android:minHeight="?actionBarSize"
                 android:text="@string/navigation.home.title"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
         </android.support.design.widget.CollapsingToolbarLayout>

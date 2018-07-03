@@ -34,6 +34,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.systemService
+import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.Player.REPEAT_MODE_OFF
@@ -137,16 +138,13 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
                 getAlbumRepository(this)
         )
 
-        initPlayer()
 
+        initPlayer()
         if (savedInstanceState?.containsKey(VIDEO_KEY) == true) {
             presenter.setVideo(savedInstanceState.getParcelable(VIDEO_KEY))
         } else {
             presenter.onStart()
         }
-
-        video_exo_player.setControlDispatcher(simpleControlDispatcher)
-        video_exo_player.player = player
 
         pip_toggle.isVisible = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
 
@@ -258,7 +256,7 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
                 null
         )
 
-        val audioManager = systemService<AudioManager>()
+        val audioManager = systemService<AudioManager>()!!
 
         val audioFocusListener = AudioFocusListener { isOnFocus ->
             player?.playWhenReady = isOnFocus
@@ -268,8 +266,11 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
 
         simpleControlDispatcher =
                 SimpleControlDispatcher(audioFocusListener, audioManager) { url ->
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                    startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
                 }
+
+        video_exo_player.setControlDispatcher(simpleControlDispatcher)
+        video_exo_player.player = player
     }
 
 
@@ -291,6 +292,7 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
                     it.toString()
             )
         }
+
 
         video_desc.text = item.description
 

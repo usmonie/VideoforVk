@@ -1,5 +1,6 @@
 package akhmedoff.usman.data.model
 
+import akhmedoff.usman.data.db.SimpleTypeConverters
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Index
 import android.arch.persistence.room.TypeConverters
@@ -14,7 +15,7 @@ class CatalogItem : Item() {
     var platform: String? = null
     var catalogId: String? = null
 
-    @TypeConverters(akhmedoff.usman.data.db.TypeConverters::class)
+    @TypeConverters(SimpleTypeConverters::class)
     var type: CatalogItemType? = null
 
     override fun equals(other: Any?) = when {

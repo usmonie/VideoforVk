@@ -1,5 +1,6 @@
 package akhmedoff.usman.data.model
 
+import akhmedoff.usman.data.db.SimpleTypeConverters
 import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Index
@@ -8,9 +9,9 @@ import android.os.Parcel
 import android.os.Parcelable
 
 @Entity(
-    tableName = "videos",
-    primaryKeys = ["id", "ownerId"],
-    indices = [(Index(value = ["id", "ownerId"], unique = true))]
+        tableName = "videos",
+        primaryKeys = ["id", "ownerId"],
+        indices = [(Index(value = ["id", "ownerId"], unique = true))]
 )
 class Video() : Item() {
     var addingDate: Long = 0
@@ -19,7 +20,7 @@ class Video() : Item() {
     var firstFrame130: String? = null
     var firstFrame800: String? = null
 
-    @TypeConverters(akhmedoff.usman.data.db.TypeConverters::class)
+    @TypeConverters(SimpleTypeConverters::class)
     lateinit var files: List<VideoUrl>
 
     lateinit var player: String
@@ -33,10 +34,26 @@ class Video() : Item() {
     var reposts: Reposts? = null
     var repeat: Boolean = false
 
-    @TypeConverters(akhmedoff.usman.data.db.TypeConverters::class)
+    @TypeConverters(SimpleTypeConverters::class)
     var userIds: MutableList<String> = mutableListOf()
 
     constructor(parcel: Parcel) : this() {
+        id = parcel.readInt()
+        ownerId = parcel.readInt()
+        title = parcel.readString()
+        duration = parcel.readValue(Int::class.java.classLoader) as? Int
+        width = parcel.readValue(Int::class.java.classLoader) as? Int
+        height = parcel.readValue(Int::class.java.classLoader) as? Int
+        description = parcel.readString()
+        date = parcel.readLong()
+        comments = parcel.readInt()
+        views = parcel.readValue(Int::class.java.classLoader) as? Int
+        photo130 = parcel.readString()
+        photo320 = parcel.readString()
+        photo640 = parcel.readString()
+        photo800 = parcel.readString()
+        canAdd = parcel.readByte() != 0.toByte()
+        roomId = parcel.readInt()
         addingDate = parcel.readLong()
         firstFrame320 = parcel.readString()
         firstFrame160 = parcel.readString()

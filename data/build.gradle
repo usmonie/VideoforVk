@@ -39,9 +39,9 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation "android.arch.lifecycle:extensions:$archLifecycleVersion"
-    implementation 'android.arch.paging:runtime:1.0.0'
-    api 'android.arch.persistence.room:runtime:1.1.0'
-    kapt "android.arch.persistence.room:compiler:1.1.0"
+    implementation 'android.arch.paging:runtime:1.0.1'
+    api 'android.arch.persistence.room:runtime:1.1.1'
+    kapt "android.arch.persistence.room:compiler:1.1.1"
     kapt "android.arch.lifecycle:compiler:$archLifecycleVersion"
 
     implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'

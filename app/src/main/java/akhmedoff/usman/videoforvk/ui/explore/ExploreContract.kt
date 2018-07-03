@@ -30,6 +30,8 @@ interface ExploreContract {
 
         fun onCreated()
 
+        fun onRetained()
+
         fun searchClicked()
 
         fun onDestroyed()

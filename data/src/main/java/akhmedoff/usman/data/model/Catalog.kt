@@ -1,14 +1,24 @@
 package akhmedoff.usman.data.model
 
-import android.arch.persistence.room.Relation
+import akhmedoff.usman.data.db.SimpleTypeConverters
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.TypeConverters
 
-data class Catalog(
-    var id: String = "",
 
-    @Relation(parentColumn = "id", entityColumn = "catalogId")
-    var items: List<CatalogItem> = listOf(),
-    var name: String? = null,
-    var view: String? = null,
-    var canHide: Boolean? = false,
-    var type: String? = null
+@Entity(
+        tableName = "catalogs",
+        primaryKeys = ["id"]
 )
+class Catalog {
+    var id: String = ""
+
+    @TypeConverters(SimpleTypeConverters::class)
+    var items: List<CatalogItem> = listOf()
+
+    var name: String? = null
+    var view: String? = null
+    var canHide: Boolean? = false
+    var type: String? = null
+
+    var nextKey: String = ""
+}

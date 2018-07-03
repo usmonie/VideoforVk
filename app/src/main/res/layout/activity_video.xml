@@ -11,12 +11,12 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/exo_player_height">
+        android:layout_height="wrap_content">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsingToolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|enterAlways"
             app:layout_scrollInterpolator="@android:anim/decelerate_interpolator"
@@ -26,9 +26,10 @@
             <com.google.android.exoplayer2.ui.SimpleExoPlayerView
                 android:id="@+id/video_exo_player"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 app:controller_layout_id="@layout/playback_exo_control_view"
                 app:resize_mode="fit"
+                android:minHeight="@dimen/exo_player_height"
                 tools:visibility="visible" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
@@ -41,16 +42,17 @@
         android:visibility="gone"
         app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior"
         tools:visibility="visible">
-
-        <android.support.v7.widget.CardView
-            android:id="@+id/video_info_card"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:cardUseCompatPadding="true"
-            tools:visibility="visible">
+        <!--
+                <android.support.v7.widget.CardView
+                    android:id="@+id/video_info_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:cardUseCompatPadding="true"
+                    tools:visibility="visible">-->
 
             <LinearLayout
+                android:id="@+id/video_info_card"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
@@ -189,7 +191,7 @@
                     android:textSize="14sp" />
 
             </LinearLayout>
-        </android.support.v7.widget.CardView>
+        <!--</android.support.v7.widget.CardView>-->
     </android.support.v4.widget.NestedScrollView>
 
     <ProgressBar
