@@ -23,11 +23,13 @@
     <string name="two_factor_number">We sent a message with the code to the number %s</string>
 
     <plurals name="video_views">
-        <item quantity="one">%s view</item>
-        <item quantity="many">%s views</item>
-        <item quantity="other">%s views</item>
+        <item quantity="one">@string/plural_view</item>
+        <item quantity="many">@string/plural_views</item>
+        <item quantity="other">@string/plural_views</item>
     </plurals>
 
+    <string name="plural_view">%s view</string>
+    <string name="plural_views">%s views</string>
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 
@@ -88,5 +90,5 @@
     <string name="my_albums">Albums</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
 </resources>
