@@ -28,6 +28,7 @@ class VideoPresenter(
         view?.showUi(false)
         view?.let { view ->
             loadVideo("${view.getOwnerId()}_${view.getVideoId()}")
+            getAlbumsByVideo(view.getVideoId(), view.getOwnerId())
         }
     }
 
@@ -73,6 +74,10 @@ class VideoPresenter(
                                 call: Call<ApiResponse<List<Int>>>?,
                                 response: Response<ApiResponse<List<Int>>>?
                         ) {
+
+                            response?.body()?.response?.forEach {
+                                if (it == -2) view?.setAdded()
+                            }
                             response?.body()?.response?.let {
                                 view?.showSelectedAlbums(it)
                             }

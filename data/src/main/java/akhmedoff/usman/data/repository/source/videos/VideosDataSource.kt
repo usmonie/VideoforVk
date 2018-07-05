@@ -39,21 +39,6 @@ class VideosDataSource(
                     call: Call<ResponseVideo>?,
                     response: Response<ResponseVideo>?
             ) {
-                response?.body()?.let { responseVideo ->
-                    callback.onResult(responseVideo.items)
-                    videoDao.insert(responseVideo.items.mapIndexed { index, video ->
-                        ownerId?.toString()?.let { ownerId ->
-                            video.userIds.add(ownerId)
-                        }
-                        video.roomId = params.startPosition + index
-                        return@mapIndexed video
-                    })
-
-                    responseVideo.profiles?.let { ownerDao.insertAll(it) }
-
-                    responseVideo.groups?.let { ownerDao.insertAll(it) }
-
-                }
 
                 if (response?.body() != null) {
                     callback.onResult(response.body()!!.items)

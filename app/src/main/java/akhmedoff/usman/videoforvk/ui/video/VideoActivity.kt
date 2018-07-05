@@ -512,15 +512,15 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
     override fun showSelectedAlbums(ids: List<Int>) = addVideoDialog.setSelectedAlbums(ids)
 
     override fun setAdded() {
-        setDrawable(add_button, R.drawable.ic_done_black_24dp)
         popupAddMenu.menu.clear()
         popupAddMenu.inflate(R.menu.delete_video_menu)
+        setDrawable(add_button, R.drawable.ic_done_black_24dp)
     }
 
     override fun setDeleted() {
-        setDrawable(add_button, R.drawable.ic_add)
         popupAddMenu.menu.clear()
         popupAddMenu.inflate(R.menu.add_video_menu)
+        setDrawable(add_button, R.drawable.ic_add)
     }
 
     override fun showOwnerUser(owner: Owner) {
@@ -538,9 +538,8 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
             intent.getStringExtra(VIDEO_ID_KEY)
                     ?: intent.getParcelableExtra<Video>(VIDEO_ID_KEY)?.id?.toString() ?: ""
 
-    override fun getOwnerId(): String =
-            intent.getStringExtra(OWNER_ID_KEY)
-                    ?: intent.extras.getParcelable<Video>(VIDEO_ID_KEY)?.ownerId?.toString() ?: ""
+    override fun getOwnerId(): String = intent.getStringExtra(OWNER_ID_KEY)
+            ?: intent.extras.getParcelable<Video>(VIDEO_ID_KEY)?.ownerId?.toString() ?: ""
 
     override fun getVideoState() = player?.playWhenReady
 

@@ -12,29 +12,28 @@ import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.popup_add_video_dialog.*
 
 class AddVideoDialog(
-    context: Context,
-    private val cancelListener: () -> Unit,
-    private val selectedAlbumListener: (Album, Boolean) -> Unit,
-    private val okAlbumListener: () -> Unit
+        context: Context,
+        private val cancelListener: () -> Unit,
+        private val selectedAlbumListener: (Album, Boolean) -> Unit,
+        private val okAlbumListener: () -> Unit
 ) :
-    Dialog(context, true, { cancelListener() }) {
+        Dialog(context, true, { cancelListener() }) {
 
-    private lateinit var albumsAdapter: AlbumsRecyclerAdapter
+    private val albumsAdapter: AlbumsRecyclerAdapter = AlbumsRecyclerAdapter { album: Album, isChecked: Boolean ->
+        selectedAlbumListener(
+                album,
+                isChecked
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.popup_add_video_dialog)
         window.setLayout(
-            WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.WRAP_CONTENT
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.WRAP_CONTENT
         )
 
-        albumsAdapter = AlbumsRecyclerAdapter { album: Album, isChecked: Boolean ->
-            selectedAlbumListener(
-                album,
-                isChecked
-            )
-        }
         albums_recycler.adapter = albumsAdapter
         albums_recycler.itemAnimator = DefaultItemAnimator()
         cancel_add_popup.setOnClickListener { cancelListener() }
@@ -53,9 +52,9 @@ class AddVideoDialog(
 
     fun setSelectedAlbums(selectedAlbumIds: List<Int>) {
         albumsAdapter.notifyItemRangeChanged(
-            0,
-            albumsAdapter.currentList?.size ?: 0,
-            selectedAlbumIds
+                0,
+                albumsAdapter.currentList?.size ?: 0,
+                selectedAlbumIds
         )
     }
 }
