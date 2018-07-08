@@ -14,6 +14,7 @@
     <dimen name="normal_text_size_small_video_item">14sp</dimen>
     <dimen name="max_text_size_small_video_item">20sp</dimen>
     <dimen name="height_main_list_item">236dp</dimen>
+    <dimen name="height_catalog_list_item">198dp</dimen>
     <dimen name="width_video_item_poster">98dp</dimen>
 
     <dimen name="width_main_list_first_video">328dp</dimen>
@@ -71,4 +72,5 @@
     <dimen name="search_video_item_height">192dp</dimen>
     <dimen name="popup_elevation">16dp</dimen>
     <dimen name="popup_size">248dp</dimen>
+    <dimen name="normal_title_size_video_item">16sp</dimen>
 </resources>

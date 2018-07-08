@@ -2,7 +2,7 @@
 
 **Video for Vk (or VT) is client for Vk video API.** 
 
-[Google play](https://play.google.com/store/apps/details?id=akhmedoff.usman.videoforvk)
+[Google play](https://play.google.com/store/apps/details?id=thevt)
 
 Here I implement, as far as possible, the full functionality of the video directory Vk.
 
