@@ -7,16 +7,15 @@ import akhmedoff.usman.data.model.CatalogItem
 import android.arch.paging.DataSource
 
 class CatalogSectionDataSourceFactory(
-    private val vkApi: VkApi,
-    private val catalogSection: String,
-    private val ownerDao: OwnerDao,
-    private val catalogDao: CatalogDao
+        private val vkApi: VkApi,
+        private val catalogSection: String,
+        private val ownerDao: OwnerDao,
+        private val catalogDao: CatalogDao
 ) : DataSource.Factory<String, CatalogItem>() {
-    override fun create() =
-        CatalogSectionDataSource(
+    override fun create() = CatalogSectionDataSource(
             vkApi,
             catalogSection,
             ownerDao,
             catalogDao
-        )
+    )
 }

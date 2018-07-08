@@ -30,7 +30,7 @@ class ExploreFragment : Fragment(), ExploreContract.View {
 
     override lateinit var presenter: ExploreContract.Presenter
 
-    private val adapter: ExploreRecyclerAdapter by lazy {
+    private val adapter: ExploreRecyclerAdapter by lazy(LazyThreadSafetyMode.NONE) {
         ExploreRecyclerAdapter { item, view ->
             when (item.type) {
                 CatalogItemType.VIDEO -> showVideo(item, view)
@@ -59,7 +59,7 @@ class ExploreFragment : Fragment(), ExploreContract.View {
         }
 
         if (savedInstanceState?.containsKey(LIST_STATE_KEY) == true) {
-            looking_recycler.layoutManager.onRestoreInstanceState(savedInstanceState.getParcelable(LIST_STATE_KEY))
+            looking_recycler?.layoutManager?.onRestoreInstanceState(savedInstanceState.getParcelable(LIST_STATE_KEY))
         }
         looking_recycler.adapter = adapter
         looking_recycler.itemAnimator = DefaultItemAnimator()
@@ -136,7 +136,7 @@ class ExploreFragment : Fragment(), ExploreContract.View {
         }
 
         if (savedInstanceState?.containsKey(LIST_STATE_KEY) == true) {
-            looking_recycler.layoutManager.onRestoreInstanceState(savedInstanceState.getParcelable(LIST_STATE_KEY))
+            looking_recycler?.layoutManager?.onRestoreInstanceState(savedInstanceState.getParcelable(LIST_STATE_KEY))
         }
         super.onViewStateRestored(savedInstanceState)
     }

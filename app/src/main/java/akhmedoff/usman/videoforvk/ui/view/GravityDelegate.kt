@@ -20,14 +20,14 @@ internal class GravityDelegate(
     private var snapping = false
 
     private val mScrollListener = object : RecyclerView.OnScrollListener() {
-        override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
             super.onScrollStateChanged(recyclerView, newState)
             if (newState == RecyclerView.SCROLL_STATE_SETTLING) {
                 snapping = false
             }
 
             if (newState == RecyclerView.SCROLL_STATE_IDLE && snapping && listener != null) {
-                val position = getSnappedPosition(recyclerView!!)
+                val position = getSnappedPosition(recyclerView)
                 if (position != RecyclerView.NO_POSITION) {
                     listener.onSnap(position)
                 }

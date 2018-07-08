@@ -35,7 +35,7 @@ class AlbumsFragment : Fragment(), AlbumsContract.View {
 
     override lateinit var presenter: AlbumsContract.Presenter
 
-    private val adapter: AlbumsRecyclerAdapter by lazy {
+    private val adapter: AlbumsRecyclerAdapter by lazy(LazyThreadSafetyMode.NONE) {
         AlbumsRecyclerAdapter({ video, view -> showAlbum(video, view) }, R.layout.catalog_video_item_big)
     }
 

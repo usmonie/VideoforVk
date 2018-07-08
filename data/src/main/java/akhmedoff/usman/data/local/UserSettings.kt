@@ -23,7 +23,6 @@ object UserSettings {
     var isLogged = false
         get() = sharedPreferences.contains(USER_TOKEN)
 
-
     fun saveOwnerId(id: Long) = sharedPreferences.edit().putLong(OWNER_ID, id).apply()
 
     fun getOwnerId() = sharedPreferences.getLong(OWNER_ID, 0)
@@ -43,10 +42,10 @@ object UserSettings {
     fun saveUserName(name: String) = sharedPreferences.edit().putString(USER_NAME, name).apply()
 
     fun saveUserPhotoUrl(photoUrl: String) =
-        sharedPreferences.edit().putString(USER_PHOTO_URL, photoUrl).apply()
+            sharedPreferences.edit().putString(USER_PHOTO_URL, photoUrl).apply()
 
-    fun getUserName() = sharedPreferences.getString(USER_NAME, null)
+    fun getUserName(): String = sharedPreferences.getString(USER_NAME, null)
 
-    fun getUserPhotoUrl() =
-        sharedPreferences.getString(USER_PHOTO_URL, null)
+    fun getUserPhotoUrl(): String =
+            sharedPreferences.getString(USER_PHOTO_URL, null)
 }

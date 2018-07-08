@@ -7,7 +7,7 @@ import akhmedoff.usman.data.utils.getUserRepository
 import akhmedoff.usman.data.utils.getVideoRepository
 import akhmedoff.usman.videoforvk.CaptchaDialog
 import akhmedoff.usman.videoforvk.R
-import akhmedoff.usman.videoforvk.player.AudioFocusListener
+import akhmedoff.usman.videoforvk.player.AudioFocusExoPlayerDecorator
 import akhmedoff.usman.videoforvk.player.SimpleControlDispatcher
 import akhmedoff.usman.videoforvk.services.download.ACTION_DOWNLOAD
 import akhmedoff.usman.videoforvk.services.download.EXTRA_URL
@@ -26,6 +26,7 @@ import android.os.PersistableBundle
 import android.support.annotation.DrawableRes
 import android.support.annotation.RequiresApi
 import android.support.v4.content.ContextCompat
+import android.support.v4.media.AudioAttributesCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.PopupMenu
 import android.text.format.DateUtils
@@ -36,10 +37,12 @@ import android.widget.ImageView
 import androidx.core.content.systemService
 import androidx.core.net.toUri
 import androidx.core.view.isVisible
+import com.google.android.exoplayer2.DefaultLoadControl
+import com.google.android.exoplayer2.DefaultRenderersFactory
+import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.Player.REPEAT_MODE_OFF
 import com.google.android.exoplayer2.Player.REPEAT_MODE_ONE
-import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
@@ -51,6 +54,8 @@ import com.google.android.exoplayer2.upstream.cache.*
 import com.google.android.exoplayer2.util.Util
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_video.*
+import kotlinx.android.synthetic.main.activity_video_info.*
+import kotlinx.android.synthetic.main.activity_video_load_error.*
 import kotlinx.android.synthetic.main.playback_exo_control_view.*
 import java.io.File
 import java.util.*
@@ -72,7 +77,7 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
     companion object {
         const val FRAGMENT_TAG = "video_fragment_tag"
 
-        fun getInstance(item: CatalogItem, transitionName: String, context: Context): Intent {
+        fun getInstance(item: CatalogItem, transitionName: String?, context: Context): Intent {
             val intent = Intent(context, VideoActivity::class.java)
 
             intent.putExtra(TRANSITION_NAME_KEY, transitionName)
@@ -82,7 +87,7 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
             return intent
         }
 
-        fun getInstance(item: Video, transitionName: String, context: Context): Intent {
+        fun getInstance(item: Video, transitionName: String?, context: Context): Intent {
             val intent = Intent(context, VideoActivity::class.java)
 
             intent.putExtra(TRANSITION_NAME_KEY, transitionName)
@@ -95,20 +100,27 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
 
     private val selectedAlbums = mutableListOf<Album>()
 
+    private lateinit var simpleControlDispatcher: SimpleControlDispatcher
+
     override lateinit var presenter: VideoContract.Presenter
 
     private lateinit var cacheDataSourceFactory: CacheDataSourceFactory
 
-    private lateinit var simpleControlDispatcher: SimpleControlDispatcher
     private lateinit var simpleCache: Cache
 
-    private var player: SimpleExoPlayer? = null
+    private var player: ExoPlayer? = null
 
     private lateinit var popupAddMenu: PopupMenu
 
     private lateinit var popupDownloadQualityMenu: PopupMenu
 
-    private val addVideoDialog: AddVideoDialog by lazy {
+    private val captchaDialog: CaptchaDialog by lazy(LazyThreadSafetyMode.NONE) {
+        CaptchaDialog(this) {
+            presenter.enterCaptcha(it)
+        }
+    }
+
+    private val addVideoDialog: AddVideoDialog by lazy(LazyThreadSafetyMode.NONE) {
         AddVideoDialog(
                 this,
                 { addVideoDialog.hide() },
@@ -122,12 +134,6 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
                 })
     }
 
-    private val captchaDialog: CaptchaDialog by lazy {
-        CaptchaDialog(this) {
-            presenter.enterCaptcha(it)
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video)
@@ -137,8 +143,6 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
                 getUserRepository(this),
                 getAlbumRepository(this)
         )
-
-
         initPlayer()
         if (savedInstanceState?.containsKey(VIDEO_KEY) == true) {
             presenter.setVideo(savedInstanceState.getParcelable(VIDEO_KEY))
@@ -146,23 +150,30 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
             presenter.onStart()
         }
 
-        pip_toggle.isVisible = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
+        video_info_stub?.isVisible = true
 
         appbar.transitionName = intent.getStringExtra(TRANSITION_NAME_KEY)
+    }
 
+
+    override fun onStart() {
+        super.onStart()
         popupAddMenu = PopupMenu(this, add_button)
         popupAddMenu.inflate(R.menu.add_video_menu)
         popupAddMenu.setOnMenuItemClickListener {
             presenter.onClick(it.itemId)
             true
         }
-        setClickListeners()
+
+        popupDownloadQualityMenu = PopupMenu(this, add_button)
+
+        popupDownloadQualityMenu.inflate(R.menu.download_video_qualities)
+
+        pip_toggle.isVisible = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
+        setVideoClickListeners()
     }
 
-    private fun setClickListeners() {
-        error_button_reload.setOnClickListener { presenter.onStart() }
-
-        error_button_show_browser.setOnClickListener { presenter.openBrowser() }
+    private fun setVideoClickListeners() {
 
         like_button.setOnClickListener {
             presenter.onClick(it.id)
@@ -171,10 +182,12 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
         share_button.setOnClickListener {
             presenter.onClick(it.id)
         }
+/*
 
         send_button.setOnClickListener {
             presenter.onClick(it.id)
         }
+*/
 
         add_button.setOnClickListener {
             popupAddMenu.show()
@@ -191,6 +204,13 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
         download_button.setOnClickListener {
             popupDownloadQualityMenu.show()
         }
+    }
+
+    private fun setErrorClickListeners() {
+
+        error_button_reload.setOnClickListener { presenter.onStart() }
+
+        error_button_show_browser.setOnClickListener { presenter.openBrowser() }
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
@@ -218,7 +238,6 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
     override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
         outState?.putParcelable(VIDEO_KEY, presenter.getVideo())
         super.onSaveInstanceState(outState, outPersistentState)
-
     }
 
     override fun onPictureInPictureModeChanged(
@@ -226,24 +245,27 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
             newConfig: Configuration?
     ) = presenter.changedPipMode()
 
-    private fun initPlayer() {
+    override fun initPlayer() {
         val bandwidthMeter = DefaultBandwidthMeter()
 
-        player = ExoPlayerFactory.newSimpleInstance(
-                this,
-                DefaultTrackSelector(AdaptiveTrackSelection.Factory(bandwidthMeter))
-        )
+        val audioManager = systemService<AudioManager>()!!
 
-        val dataSourceFactory = DefaultDataSourceFactory(
-                this,
-                Util.getUserAgent(this, "yourApplicationName"), bandwidthMeter
-        )
+        val audioAttributes = AudioAttributesCompat.Builder()
+                .setContentType(AudioAttributesCompat.CONTENT_TYPE_MUSIC)
+                .setUsage(AudioAttributesCompat.USAGE_MEDIA)
+                .build()
+        player = AudioFocusExoPlayerDecorator(audioAttributes, audioManager,
+                player = ExoPlayerFactory.newSimpleInstance(
+                        DefaultRenderersFactory(this),
+                        DefaultTrackSelector(AdaptiveTrackSelection.Factory(bandwidthMeter)),
+                        DefaultLoadControl()
+                ))
 
-        simpleCache = SimpleCache(
-                File(cacheDir, "video"),
-                LeastRecentlyUsedCacheEvictor(1024 * 1024 * 1024))
-
+        val dataSourceFactory = DefaultDataSourceFactory(this, Util.getUserAgent(this, "yourApplicationName"), bandwidthMeter)
         val maxCacheFileSize: Long = 1024 * 1024 * 2048L
+
+        simpleCache = SimpleCache(File(cacheDir, "video"), LeastRecentlyUsedCacheEvictor(maxCacheFileSize))
+
         val cacheFlags = CacheDataSource.FLAG_BLOCK_ON_CACHE or
                 CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR
 
@@ -256,18 +278,10 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
                 null
         )
 
-        val audioManager = systemService<AudioManager>()!!
 
-        val audioFocusListener = AudioFocusListener { isOnFocus ->
-            player?.playWhenReady = isOnFocus
-
-            if (isPipMode()) video_exo_player?.hideController()
+        simpleControlDispatcher = SimpleControlDispatcher { url ->
+            startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
         }
-
-        simpleControlDispatcher =
-                SimpleControlDispatcher(audioFocusListener, audioManager) { url ->
-                    startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
-                }
 
         video_exo_player.setControlDispatcher(simpleControlDispatcher)
         video_exo_player.player = player
@@ -280,7 +294,7 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
         title_text_view.text = item.title
 
         video_date.text = DateUtils.getRelativeTimeSpanString(
-                item.date * 1000,
+                item.date * 1000L,
                 System.currentTimeMillis(),
                 DateUtils.DAY_IN_MILLIS
         )
@@ -293,10 +307,8 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
             )
         }
 
-
         video_desc.text = item.description
 
-        video_info_card.isVisible = true
         setDrawable(like_button, when (item.likes?.userLikes) {
             true -> R.drawable.ic_favorite_fill_24dp
             else -> R.drawable.ic_favorite_border
@@ -304,34 +316,32 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
 
         player?.repeatMode = if (item.repeat) REPEAT_MODE_ONE else REPEAT_MODE_OFF
 
-        popupDownloadQualityMenu = PopupMenu(this, add_button).apply {
-            inflate(R.menu.download_video_qualities)
-            val files = item.files.asReversed()
-            files.forEach {
-                when (it.quality) {
-                    FULLHD -> menu.findItem(R.id.download_quality_1080p).isEnabled = true
-                    HD -> menu.findItem(R.id.download_quality_720p).isEnabled = true
-                    qHD -> menu.findItem(R.id.download_quality_480p).isEnabled = true
-                    P360 -> menu.findItem(R.id.download_quality_360p).isEnabled = true
-                    P240 -> menu.findItem(R.id.download_quality_240p).isEnabled = true
-                    else -> {
-                    }
+        val files = item.files.asReversed()
+        files.forEach {
+            when (it.quality) {
+                FULLHD -> popupDownloadQualityMenu.menu.findItem(R.id.download_quality_1080p).isEnabled = true
+                HD -> popupDownloadQualityMenu.menu.findItem(R.id.download_quality_720p).isEnabled = true
+                qHD -> popupDownloadQualityMenu.menu.findItem(R.id.download_quality_480p).isEnabled = true
+                P360 -> popupDownloadQualityMenu.menu.findItem(R.id.download_quality_360p).isEnabled = true
+                P240 -> popupDownloadQualityMenu.menu.findItem(R.id.download_quality_240p).isEnabled = true
+                else -> {
                 }
             }
-
-            setOnMenuItemClickListener {
-                startService(item.title, when (it.itemId) {
-                    R.id.download_quality_240p -> files[0].url
-                    R.id.download_quality_360p -> files[1].url
-                    R.id.download_quality_480p -> files[2].url
-                    R.id.download_quality_720p -> files[3].url
-                    R.id.download_quality_1080p -> files[4].url
-                    else -> files[0].url
-                })
-
-                true
-            }
         }
+
+        popupDownloadQualityMenu.setOnMenuItemClickListener {
+            startService(item.title, when (it.itemId) {
+                R.id.download_quality_240p -> files[0].url
+                R.id.download_quality_360p -> files[1].url
+                R.id.download_quality_480p -> files[2].url
+                R.id.download_quality_720p -> files[3].url
+                R.id.download_quality_1080p -> files[4].url
+                else -> files[0].url
+            })
+
+            true
+        }
+
     }
 
     private fun setDrawable(imageView: ImageView, @DrawableRes id: Int) =
@@ -354,10 +364,8 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
         player?.prepare(
                 when (videoUrl.quality) {
                     HLS -> HlsMediaSource.Factory(cacheDataSourceFactory)
-                            .createMediaSource(Uri.parse(videoUrl.url))
                     else -> ExtractorMediaSource.Factory(cacheDataSourceFactory)
-                            .createMediaSource(Uri.parse(videoUrl.url))
-                }
+                }.createMediaSource(videoUrl.url.toUri())
         )
 
         when (videoUrl.quality) {
@@ -381,6 +389,7 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
         fullscreen_toggle.isVisible = false
         progress_layout.isVisible = false
         download_button.isVisible = false
+        player?.release()
     }
 
     override fun setSaved(saved: Boolean) {
@@ -390,7 +399,6 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
             exo_quality_toggle.setImageDrawable(ContextCompat.getDrawable(this, id))
 
     override fun showFullscreen() {
-        video_layout.fitsSystemWindows = false
         window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -400,7 +408,6 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
     }
 
     override fun showSmallScreen() {
-        video_layout.fitsSystemWindows = true
         window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
@@ -420,10 +427,12 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
     }
 
     override fun showLoadError(isError: Boolean) {
-        error_mode.isVisible = isError
+        video_error_loading_stub?.isVisible = isError
+        error_mode?.isVisible = isError
+        if (isError) setErrorClickListeners()
+
         appbar.isVisible = !isError
-        nested_scroll_view.isVisible = !isError
-        video_loading.isVisible = false
+        showProgress(false)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -594,12 +603,13 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
     override fun showVideoInBrowser(url: String) =
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
 
-    private fun startService(title: String, url: String) {
-        ContextCompat.startForegroundService(this,
-                Intent(this, VideoDownloadingService::class.java).apply {
-                    action = ACTION_DOWNLOAD
-                    putExtra(EXTRA_VIDEO_NAME, title)
-                    putExtra(EXTRA_URL, url)
-                })
-    }
+    private fun startService(title: String, url: String) =
+            ContextCompat.startForegroundService(this,
+                    Intent(this, VideoDownloadingService::class.java).apply {
+                        action = ACTION_DOWNLOAD
+                        putExtra(EXTRA_VIDEO_NAME, title)
+                        putExtra(EXTRA_URL, url)
+                    }
+            )
+
 }

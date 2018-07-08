@@ -25,7 +25,6 @@ class VideoPresenter(
     private lateinit var video: Video
 
     override fun onStart() {
-        view?.showUi(false)
         view?.let { view ->
             loadVideo("${view.getOwnerId()}_${view.getVideoId()}")
             getAlbumsByVideo(view.getVideoId(), view.getOwnerId())
@@ -66,28 +65,27 @@ class VideoPresenter(
                 })
     }
 
-    private fun getAlbumsByVideo(videoId: String, ownerId: String) =
-            albumRepository
-                    .getAlbumsByVideo(videoId = videoId, ownerId = ownerId)
-                    .enqueue(object : Callback<ApiResponse<List<Int>>> {
-                        override fun onResponse(
-                                call: Call<ApiResponse<List<Int>>>?,
-                                response: Response<ApiResponse<List<Int>>>?
-                        ) {
+    private fun getAlbumsByVideo(videoId: String, ownerId: String) = albumRepository
+            .getAlbumsByVideo(videoId = videoId, ownerId = ownerId)
+            .enqueue(object : Callback<ApiResponse<List<Int>>> {
+                override fun onResponse(
+                        call: Call<ApiResponse<List<Int>>>?,
+                        response: Response<ApiResponse<List<Int>>>?
+                ) {
 
-                            response?.body()?.response?.forEach {
-                                if (it == -2) view?.setAdded()
-                            }
-                            response?.body()?.response?.let {
-                                view?.showSelectedAlbums(it)
-                            }
-                        }
+                    response?.body()?.response?.forEach {
+                        if (it == -2) view?.setAdded()
+                    }
+                    response?.body()?.response?.let {
+                        view?.showSelectedAlbums(it)
+                    }
+                }
 
-                        override fun onFailure(call: Call<ApiResponse<List<Int>>>?,
-                                               t: Throwable?) {
-                        }
+                override fun onFailure(call: Call<ApiResponse<List<Int>>>?,
+                                       t: Throwable?) {
+                }
 
-                    })
+            })
 
 
     override fun onClick(itemView: Int) {
@@ -270,13 +268,13 @@ class VideoPresenter(
 
     override fun loadVideo(id: String) {
         view?.showProgress(true)
+        view?.showUi(false)
+        view?.showPlayer(false)
         videoRepository
                 .getVideo(id)
                 .enqueue(object : Callback<ResponseVideo> {
                     override fun onFailure(call: Call<ResponseVideo>?, t: Throwable?) {
                         view?.showProgress(false)
-                        view?.showUi(false)
-                        view?.showPlayer(false)
                         view?.showLoadError(true)
                     }
 
@@ -288,10 +286,7 @@ class VideoPresenter(
                         response?.body()?.let { responseVideo ->
                             when {
                                 responseVideo.items.isNotEmpty() -> {
-                                    video = responseVideo.items[0]
-                                    showVideo(video)
-                                    view?.showUi(true)
-                                    view?.showPlayer(true)
+                                    showVideo(responseVideo.items[0])
                                 }
 
                                 else -> {
@@ -302,38 +297,28 @@ class VideoPresenter(
                                 }
                             }
 
-                            when {
-                                responseVideo.groups != null
-                                        && responseVideo.groups!!.isNotEmpty() -> {
+                            responseVideo.groups?.forEach {
 
-                                    view?.showOwnerInfo(responseVideo.groups!![0])
-                                    view?.showProgress(false)
+                                view?.showOwnerInfo(it)
+                                view?.showProgress(false)
 
-                                    view?.let {
-                                        it.setVideoPosition(it.loadVideoPosition())
-                                    }
 
-                                    responseVideo.groups?.forEach {
-                                        videoRepository.saveOwner(it)
-                                    }
-                                    videoRepository
-                                            .saveOwnerId(responseVideo.groups!![0].id)
-
-                                }
-                                responseVideo.profiles != null
-                                        && responseVideo.profiles!!.isNotEmpty() -> {
-                                    responseVideo.profiles?.forEach {
-                                        videoRepository.saveOwner(it)
-                                    }
-                                    loadUser(responseVideo.profiles!![0])
-                                }
+                                videoRepository.saveOwnerId(it.id)
                             }
+
+                            responseVideo.profiles?.forEach {
+                                loadUser(it)
+                            }
+
                         }
                     }
                 })
     }
 
     private fun showVideo(video: Video) {
+        view?.showUi(true)
+        view?.showPlayer(true)
+        view?.showVideo(video)
         video.files.forEachIndexed { index, videoUrl ->
             when (videoUrl.quality) {
                 EXTERNAL -> view?.setExternalUi(videoUrl)
@@ -343,7 +328,6 @@ class VideoPresenter(
                 }
             }
         }
-        view?.showVideo(video)
     }
 
     private fun loadUser(user: User) = userRepository
@@ -471,8 +455,8 @@ class VideoPresenter(
 
     override fun setVideo(video: Video) {
         this.video = video
-        showVideo(video)
         view?.showUi(true)
+        showVideo(video)
         view?.showPlayer(true)
     }
 }

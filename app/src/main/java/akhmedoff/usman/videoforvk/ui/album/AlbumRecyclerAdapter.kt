@@ -11,27 +11,27 @@ import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 
 class AlbumRecyclerAdapter(
-    private val clickListener: (Video, View) -> Unit
+        private val clickListener: (Video, View) -> Unit
 ) : PagedListAdapter<Video, SearchViewHolder>(VIDEO_COMPARATOR) {
 
     companion object {
         val VIDEO_COMPARATOR = object : DiffUtil.ItemCallback<Video>() {
             override fun areContentsTheSame(oldItem: Video, newItem: Video) =
-                oldItem.title == newItem.title && oldItem.date == newItem.addingDate
+                    oldItem.title == newItem.title && oldItem.date == newItem.addingDate
 
             override fun areItemsTheSame(oldItem: Video, newItem: Video) =
-                oldItem.id == newItem.id
+                    oldItem.id == newItem.id && oldItem.ownerId == newItem.ownerId
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
         val holder = SearchViewHolder(
-            Picasso.get(),
-            LayoutInflater.from(parent.context).inflate(
-                R.layout.search_videos,
-                parent,
-                false
-            )
+                Picasso.get(),
+                LayoutInflater.from(parent.context).inflate(
+                        R.layout.search_videos,
+                        parent,
+                        false
+                )
         )
 
         holder.itemView.setOnClickListener {

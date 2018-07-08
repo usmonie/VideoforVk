@@ -13,6 +13,8 @@ interface VideoContract {
 
         fun showVideo(item: Video)
 
+        fun initPlayer()
+
         fun getVideoId(): String
 
         fun pauseVideo()

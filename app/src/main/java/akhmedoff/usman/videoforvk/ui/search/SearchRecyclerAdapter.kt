@@ -11,33 +11,31 @@ import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 
 class SearchRecyclerAdapter(
-    private val clickListener: (Video, View) -> Unit,
-    @LayoutRes private val layoutId: Int
+        private val clickListener: (Video, View) -> Unit,
+        @LayoutRes private val layoutId: Int
 ) : PagedListAdapter<Video, SearchViewHolder>(VIDEO_COMPARATOR) {
 
     companion object {
         val VIDEO_COMPARATOR = object : DiffUtil.ItemCallback<Video>() {
             override fun areContentsTheSame(oldItem: Video, newItem: Video) =
-                oldItem.description == newItem.description
+                    oldItem.title == newItem.title && oldItem.views == newItem.views
 
             override fun areItemsTheSame(oldItem: Video, newItem: Video) =
-                oldItem.id == newItem.id && oldItem.title == newItem.title
+                    oldItem.id == newItem.id && oldItem.ownerId == newItem.ownerId
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        SearchViewHolder(
-            Picasso.get(), LayoutInflater.from(parent.context).inflate(
-                layoutId, parent, false
-            )
-        ).apply {
-            itemView.setOnClickListener {
-                clickListener(
-                    getItem(adapterPosition)!!,
-                    videoFrame
-                )
+            SearchViewHolder(Picasso.get(),
+                    LayoutInflater.from(parent.context).inflate(layoutId, parent, false)
+            ).apply {
+                itemView.setOnClickListener {
+                    clickListener(
+                            getItem(adapterPosition)!!,
+                            videoFrame
+                    )
+                }
             }
-        }
 
     override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
         holder.bind(getItem(position)!!)

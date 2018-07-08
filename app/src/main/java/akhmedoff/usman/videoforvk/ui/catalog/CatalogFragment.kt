@@ -5,6 +5,7 @@ import akhmedoff.usman.data.model.CatalogItemType
 import akhmedoff.usman.data.utils.getCatalogRepository
 import akhmedoff.usman.videoforvk.R
 import akhmedoff.usman.videoforvk.Router
+import akhmedoff.usman.videoforvk.ui.album.AlbumFragment
 import akhmedoff.usman.videoforvk.ui.video.VideoActivity
 import akhmedoff.usman.videoforvk.ui.view.MarginItemDecorator
 import android.arch.paging.PagedList
@@ -37,7 +38,7 @@ class CatalogFragment : Fragment(),
 
     override lateinit var presenter: CatalogContract.Presenter
 
-    private val adapter: CatalogRecyclerAdapter by lazy {
+    private val adapter: CatalogRecyclerAdapter by lazy(LazyThreadSafetyMode.NONE) {
         CatalogRecyclerAdapter { item, view ->
             when (item.type) {
                 CatalogItemType.VIDEO -> showVideo(item, view)
@@ -83,17 +84,23 @@ class CatalogFragment : Fragment(),
     }
 
     override fun showVideo(item: CatalogItem, view: View) {
-        val intent = VideoActivity.getInstance(item,
-                ViewCompat.getTransitionName(view), context!!)
-
-        Router.startActivityWithTransition(activity!!, intent, view)
+        Router.startActivityWithTransition(activity!!, VideoActivity.getInstance(item,
+                ViewCompat.getTransitionName(view), context!!), view)
     }
 
     override fun showAlbum(album: CatalogItem, view: View) {
-        val intent = VideoActivity.getInstance(album,
-                ViewCompat.getTransitionName(view), context!!)
+        val fragment = AlbumFragment.getFragment(album, view.transitionName)
 
-        Router.startActivityWithTransition(activity!!, intent, view)
+        activity?.supportFragmentManager?.let {
+            Router.replaceFragment(
+                    it,
+                    this,
+                    fragment,
+                    true,
+                    VideoActivity.FRAGMENT_TAG,
+                    view
+            )
+        }
     }
 
     override fun getPageCategory() = arguments?.getString(PAGE_CATEGORY) ?: ""

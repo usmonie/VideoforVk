@@ -21,7 +21,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.View {
 
     private lateinit var twoFactorDialog: TwoFactorAuthenticationDialog
 
-    private val captchaDialog: CaptchaDialog by lazy {
+    private val captchaDialog: CaptchaDialog by lazy(LazyThreadSafetyMode.NONE) {
         CaptchaDialog(this) {
             loginPresenter.enterCaptcha(it)
         }

@@ -13,11 +13,7 @@ class SimpleTypeConverters {
     private val gson = Gson()
 
     @TypeConverter
-    fun toType(type: String) = when (type) {
-        "VIDEO" -> CatalogItemType.VIDEO
-        "ALBUM" -> CatalogItemType.ALBUM
-        else -> throw IllegalArgumentException("Could not recognize status")
-    }
+    fun toType(type: String) = CatalogItemType.valueOf(type)
 
     @TypeConverter
     fun toText(type: CatalogItemType) = type.name
@@ -30,19 +26,13 @@ class SimpleTypeConverters {
     }
 
     @TypeConverter
-    fun fromVideoUrls(data: List<VideoUrl>): String {
-        return gson.toJson(data)
-    }
+    fun fromVideoUrls(data: List<VideoUrl>): String = gson.toJson(data)
 
     @TypeConverter
-    fun toUsers(data: String): List<String> {
-        return data.split(", ")
-    }
+    fun toUsers(data: String): List<String> = data.split(", ")
 
     @TypeConverter
-    fun fromUserIds(data: List<String>): String {
-        return data.joinToString()
-    }
+    fun fromUserIds(data: List<String>): String = data.joinToString()
 
     @TypeConverter
     fun stringToCatalogItemList(data: String?): List<CatalogItem> {
@@ -58,5 +48,5 @@ class SimpleTypeConverters {
     }
 
     @TypeConverter
-    fun fromCatalogItemsToString(catalogItems: List<CatalogItem>) = gson.toJson(catalogItems)
+    fun fromCatalogItemsToString(catalogItems: List<CatalogItem>): String = gson.toJson(catalogItems)
 }

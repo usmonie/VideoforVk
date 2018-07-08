@@ -51,7 +51,7 @@ class AlbumFragment : Fragment(), AlbumContract.View {
         }
     }
 
-    private val adapter: AlbumRecyclerAdapter by lazy {
+    private val adapter: AlbumRecyclerAdapter by lazy(mode = LazyThreadSafetyMode.NONE) {
         val adapter = AlbumRecyclerAdapter { video, view -> showVideo(video, view) }
 
         adapter.setHasStableIds(true)
@@ -99,8 +99,7 @@ class AlbumFragment : Fragment(), AlbumContract.View {
             .into(app_bar_album_poster_image)
 
     override fun showVideo(video: Video, view: View) {
-        val intent =
-                VideoActivity.getInstance(video, ViewCompat.getTransitionName(view), context!!)
+        val intent = VideoActivity.getInstance(video, ViewCompat.getTransitionName(view), context!!)
 
         Router.startActivityWithTransition(activity!!, intent, view)
     }

@@ -9,21 +9,19 @@ import android.content.Context
 @Database(
         entities = [Owner::class, Video::class, Album::class, Catalog::class, CatalogItem::class],
         version = 10,
-    exportSchema = false
+        exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
     companion object {
 
-        fun getInstance(context: Context) =
-            Room
+        fun getInstance(context: Context) = Room
                 .databaseBuilder(
-                    context.applicationContext,
-                    AppDatabase::class.java, "vt_database.db"
+                        context.applicationContext,
+                        AppDatabase::class.java, "vt_database.db"
                 )
                 .allowMainThreadQueries()
                 .fallbackToDestructiveMigration()
                 .build()
-
     }
 
     abstract fun albumDao(): AlbumDao

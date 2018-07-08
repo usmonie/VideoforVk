@@ -34,7 +34,7 @@ class VideosFragment : Fragment(), VideosContract.View {
 
     override lateinit var presenter: VideosContract.Presenter
 
-    private val adapter by lazy {
+    private val adapter: VideosRecyclerAdapter by lazy(LazyThreadSafetyMode.NONE) {
         VideosRecyclerAdapter(
                 { video, view -> showVideo(video, view) },
                 R.layout.catalog_video_item_big

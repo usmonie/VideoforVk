@@ -13,7 +13,6 @@ import android.os.Environment
 import android.support.v4.app.NotificationCompat
 import androidx.core.content.systemService
 
-
 const val ACTION_DOWNLOAD = "akhmedoff.usman.videoforvk.services.download.action.DOWNLOAD"
 
 const val EXTRA_VIDEO_NAME = "akhmedoff.usman.videoforvk.services.download.extra.VIDEO_NAME"

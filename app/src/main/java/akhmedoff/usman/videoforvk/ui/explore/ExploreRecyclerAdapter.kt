@@ -25,18 +25,17 @@ class ExploreRecyclerAdapter(
     }
 
     override fun onBindViewHolder(holder: CatalogViewHolder, position: Int) {
-        if (getItem(position)?.items!!.isNotEmpty()) {
+        if (getItem(position)?.items?.isNotEmpty() == true) {
             holder.bind(getItem(position)!!)
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-            CatalogViewHolder(
-                    LayoutInflater.from(parent.context).inflate(
-                            R.layout.catalog_item,
-                            parent,
-                            false
-                    ), clickListener
-            )
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = CatalogViewHolder(
+            LayoutInflater.from(parent.context).inflate(
+                    R.layout.catalog_item,
+                    parent,
+                    false
+            ), clickListener
+    )
 
 }

@@ -18,10 +18,10 @@ class CatalogRecyclerAdapter(
     companion object {
         val CATALOG_COMPARATOR = object : DiffUtil.ItemCallback<CatalogItem>() {
             override fun areItemsTheSame(oldItem: CatalogItem, newItem: CatalogItem) =
-                oldItem.id == newItem.id
+                    oldItem.id == newItem.id && oldItem.ownerId == newItem.ownerId
 
             override fun areContentsTheSame(oldItem: CatalogItem, newItem: CatalogItem) =
-                oldItem.accessKey == newItem.accessKey
+                    oldItem.title == newItem.title
         }
     }
 

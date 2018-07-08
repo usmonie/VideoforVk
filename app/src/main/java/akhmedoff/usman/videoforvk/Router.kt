@@ -17,9 +17,6 @@ import android.view.View
 
 object Router {
 
-    private const val FADE_DEFAULT_TIME = 300L
-    private const val MOVE_DEFAULT_TIME = 500L
-
     fun hideFragment(fragmentManager: FragmentManager, fragment: Fragment) {
         fragmentManager.beginTransaction()
                 .hide(fragment)
@@ -27,11 +24,8 @@ object Router {
                 .commit()
     }
 
-    fun startActivityWithTransition(activity: Activity, intent: Intent, view: View) {
-        val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, Pair(view, view.transitionName))
-
-        activity.startActivity(intent, optionsCompat.toBundle())
-    }
+    fun startActivityWithTransition(activity: Activity, intent: Intent, view: View) =
+            activity.startActivity(intent, ActivityOptionsCompat.makeSceneTransitionAnimation(activity, Pair(view, view.transitionName)).toBundle())
 
     fun replaceFragment(
             fragmentManager: FragmentManager,
@@ -57,7 +51,6 @@ object Router {
                 .addTransition(ChangeClipBounds())
                 .addTransition(ChangeImageTransform())
         enterTransitionSet.ordering = ORDERING_TOGETHER
-        enterTransitionSet.duration = 375L
 
         detailFragment.sharedElementEnterTransition = enterTransitionSet
 
@@ -69,14 +62,15 @@ object Router {
                 .addTransition(ChangeClipBounds())
                 .addTransition(ChangeImageTransform())
         enterTransitionSet.ordering = ORDERING_TOGETHER
-        enterTransitionSet.duration = 375L
         detailFragment.sharedElementReturnTransition = returnTransitionSet
         detailFragment.returnTransition = null
 
-        transaction.addSharedElement(
-                sharedElement,
-                ViewCompat.getTransitionName(sharedElement)
-        )
+        ViewCompat.getTransitionName(sharedElement)?.let {
+            transaction.addSharedElement(
+                    sharedElement,
+                    it
+            )
+        }
 
         transaction.commit()
     }

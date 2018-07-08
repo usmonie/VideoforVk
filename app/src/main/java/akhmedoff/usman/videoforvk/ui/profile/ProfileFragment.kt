@@ -41,7 +41,7 @@ class ProfileFragment : Fragment(), ProfileContract.View {
 
     override lateinit var presenter: ProfileContract.Presenter
 
-    private val recyclerAdapter: ProfileRecyclerAdapter by lazy {
+    private val recyclerAdapter: ProfileRecyclerAdapter by lazy(LazyThreadSafetyMode.NONE) {
         ProfileRecyclerAdapter({ video, view -> showVideo(video, view) },
                 { album, view -> showAlbum(album, view) },
                 { view -> showAlbumsPage(getUserId()!!, view) })

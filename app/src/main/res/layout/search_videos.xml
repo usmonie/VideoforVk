@@ -77,7 +77,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="2"
-            android:textAppearance="@style/TextAppearance.AppCompat.SearchResult.Title"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             app:autoSizeMaxTextSize="@dimen/max_text_size_big_video_item"
             app:autoSizeMinTextSize="@dimen/min_text_size_big_video_item"
             app:autoSizeStepGranularity="2sp"
