@@ -18,6 +18,11 @@
         </item>
     </style>
 
+    <style name="VideoTheme" parent="AppTheme">
+        <item name="colorPrimary">#000</item>
+        <item name="colorPrimaryDark">#000</item>
+    </style>
+
     <style name="LoginTheme" parent="AppTheme">
         <item name="android:windowTranslucentStatus">false</item>
     </style>

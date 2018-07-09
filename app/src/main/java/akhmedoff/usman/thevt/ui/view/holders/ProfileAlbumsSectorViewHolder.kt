@@ -19,9 +19,5 @@ class ProfileAlbumsSectorViewHolder(clickListener: (Album, View) -> Unit, itemVi
         itemView.albums_recycler.addItemDecoration(MarginItemDecorator(0, itemView.resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin)))
     }
 
-    init {
-
-    }
-
     override fun bind(item: PagedList<Album>) = adapter.submitList(item)
 }

@@ -51,6 +51,7 @@
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:resizeableActivity="true"
             android:launchMode="singleTask"
+            android:theme="@style/VideoTheme"
             android:supportsPictureInPicture="true"
             tools:ignore="UnusedAttribute">
             <layout

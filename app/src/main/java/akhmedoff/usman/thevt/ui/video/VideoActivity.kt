@@ -290,7 +290,6 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
                 null
         )
 
-
         simpleControlDispatcher = SimpleControlDispatcher { url ->
             startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
         }
