@@ -12,13 +12,14 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="@dimen/exo_player_height">
 
         <com.google.android.exoplayer2.ui.PlayerView
             android:id="@+id/video_exo_player"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/exo_player_height"
+            android:layout_height="match_parent"
             app:controller_layout_id="@layout/playback_exo_control_view"
+            app:player_layout_id="@layout/exo_player_custom_view"
             tools:visibility="visible" />
     </android.support.design.widget.AppBarLayout>
 

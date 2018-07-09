@@ -18,7 +18,7 @@ class ExplorePresenter(
     override fun refresh() {
         view?.let { view ->
             view.showLoading()
-            catalogRepository.getCatalog("ugc")
+            catalogRepository.getCatalog("other")
                     .observe(view, Observer { catalogs ->
                         if (catalogs != null && catalogs.size > 0) {
                             view.hideLoading()

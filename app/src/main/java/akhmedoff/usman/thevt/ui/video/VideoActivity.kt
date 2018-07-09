@@ -225,6 +225,15 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        presenter.onResume()
+    }
+
+    override fun setVideoState(state: Boolean) {
+        player?.playWhenReady = state
+    }
+
     override fun onStop() {
         super.onStop()
         presenter.onStop()
@@ -243,7 +252,10 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
     override fun onPictureInPictureModeChanged(
             isInPictureInPictureMode: Boolean,
             newConfig: Configuration?
-    ) = presenter.changedPipMode()
+    ) {
+        if (!isInPictureInPictureMode)
+            presenter.changedPipMode(false)
+    }
 
     override fun initPlayer() {
         val bandwidthMeter = DefaultBandwidthMeter()
@@ -264,7 +276,7 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
         val dataSourceFactory = DefaultDataSourceFactory(this, Util.getUserAgent(this, "yourApplicationName"), bandwidthMeter)
         val maxCacheFileSize: Long = 1024 * 1024 * 2048L
 
-        simpleCache = SimpleCache(File(cacheDir, "video"), LeastRecentlyUsedCacheEvictor(maxCacheFileSize))
+        simpleCache = SimpleCache(File(cacheDir, "video/${getVideoId() + getOwnerId()}"), LeastRecentlyUsedCacheEvictor(maxCacheFileSize))
 
         val cacheFlags = CacheDataSource.FLAG_BLOCK_ON_CACHE or
                 CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR
@@ -437,6 +449,7 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun enterPipMode(video: Video) {
+        presenter.changedPipMode(true)
         enterPictureInPictureMode(PictureInPictureParams.Builder()
                 .setAspectRatio(Rational(video.width ?: 16,
                         video.height ?: 9))
@@ -454,11 +467,13 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
 
     override fun showUi(isShowing: Boolean) {
         nested_scroll_view?.isVisible = isShowing
+        showProgress(false)
         showLoadError(false)
-        if (isShowing)
+        if (isShowing) {
             video_exo_player.showController()
-        else
+        } else {
             video_exo_player.hideController()
+        }
     }
 
     override fun showProgress(isLoading: Boolean) {
@@ -543,9 +558,23 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
         captchaDialog.loadCaptcha(captchaImg)
     }
 
-    override fun getVideoId(): String =
-            intent.getStringExtra(VIDEO_ID_KEY)
-                    ?: intent.getParcelableExtra<Video>(VIDEO_ID_KEY)?.id?.toString() ?: ""
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        this.intent = intent
+        player?.stop(true)
+        presenter.onStart()
+    }
+
+    override fun onUserLeaveHint() {
+        super.onUserLeaveHint()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !isPipMode() && player?.playWhenReady == true) {
+            enterPipMode(presenter.getVideo())
+        }
+    }
+
+    override fun getVideoId(): String = intent.getStringExtra(VIDEO_ID_KEY)
+            ?: intent.getParcelableExtra<Video>(VIDEO_ID_KEY)?.id?.toString() ?: ""
 
     override fun getOwnerId(): String = intent.getStringExtra(OWNER_ID_KEY)
             ?: intent.extras.getParcelable<Video>(VIDEO_ID_KEY)?.ownerId?.toString() ?: ""

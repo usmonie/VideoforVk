@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/video_item_cardView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="256dp"
     android:layout_margin="16dp"
     android:transitionName="video_player"
     app:cardCornerRadius="5dp">

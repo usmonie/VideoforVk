@@ -13,12 +13,12 @@
     <dimen name="min_text_size_small_video_item">10sp</dimen>
     <dimen name="normal_text_size_small_video_item">14sp</dimen>
     <dimen name="max_text_size_small_video_item">20sp</dimen>
-    <dimen name="height_main_list_item">236dp</dimen>
-    <dimen name="height_catalog_list_item">198dp</dimen>
+    <dimen name="height_main_list_item">160dp</dimen>
+    <dimen name="height_catalog_list_item">192dp</dimen>
     <dimen name="width_video_item_poster">98dp</dimen>
 
-    <dimen name="width_main_list_first_video">328dp</dimen>
-    <dimen name="height_main_list_small_item">108dp</dimen>
+    <dimen name="width_main_list_first_video">272dp</dimen>
+    <dimen name="height_main_list_small_item">384dp</dimen>
     <dimen name="width_main_list_small_item">192dp</dimen>
     <dimen name="main_app_bar_layout_height">298dp</dimen>
 

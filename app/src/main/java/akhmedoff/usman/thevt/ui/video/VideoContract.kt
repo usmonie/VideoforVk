@@ -57,6 +57,8 @@ interface VideoContract {
 
         fun saveVideoState(state: Boolean)
 
+        fun setVideoState(state: Boolean)
+
         fun saveVideoPosition(position: Long)
 
         fun saveIsFullscreen(isFullscreen: Boolean)
@@ -148,7 +150,7 @@ interface VideoContract {
 
         fun pipToggleButton()
 
-        fun changedPipMode()
+        fun changedPipMode(isOnPip: Boolean)
 
         fun ownerClicked()
 

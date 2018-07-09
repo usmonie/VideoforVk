@@ -53,9 +53,7 @@ class CatalogItemsRecyclerAdapter(
     }
 
     override fun getItemViewType(position: Int): Int = when {
-        items?.get(position)?.type == VIDEO && position == 0 -> R.layout.catalog_video_item_big
-
-        items?.get(position)?.type == VIDEO && position > 0 -> R.layout.catalog_video_item_min
+        items?.get(position)?.type == VIDEO -> R.layout.catalog_video_item_big
 
         items?.get(position)?.type == ALBUM -> R.layout.catalog_album_item
 

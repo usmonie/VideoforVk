@@ -33,6 +33,7 @@ class VideoPresenter(
 
     override fun onResume() {
         view?.setVideoPosition(view?.loadVideoPosition() ?: 0)
+        view?.setVideoState(view?.getVideoState() ?: false)
     }
 
     override fun onPause() {
@@ -286,7 +287,9 @@ class VideoPresenter(
                         response?.body()?.let { responseVideo ->
                             when {
                                 responseVideo.items.isNotEmpty() -> {
-                                    showVideo(responseVideo.items[0])
+                                    video = responseVideo.items[0]
+                                    showVideo(video)
+
                                 }
 
                                 else -> {
@@ -373,16 +376,13 @@ class VideoPresenter(
         )
     }
 
-    override fun changedPipMode() {
-        view?.showUi(
-                if (view?.isPipMode() == true) {
-                    view?.setPlayerFullscreen()
-                    false
-                } else {
-                    view?.setPlayerNormal()
-                    true
-                }
-        )
+    override fun changedPipMode(isOnPip: Boolean) {
+        if (isOnPip) {
+            view?.setPlayerFullscreen()
+        } else {
+            view?.setPlayerNormal()
+        }
+        view?.showUi(!isOnPip)
     }
 
     override fun onStop() {

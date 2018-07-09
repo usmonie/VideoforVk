@@ -20,7 +20,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
         <ImageView
             android:id="@+id/owner_avatar"
             android:layout_width="24dp"
@@ -37,33 +36,37 @@
         <TextView
             android:id="@+id/owner_name"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="16dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:lines="1"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textSize="16sp"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/owner_avatar"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/owner_avatar"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="@tools:sample/full_names" />
 
         <TextView
             android:id="@+id/title_text_view"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:ellipsize="end"
-            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:fontFamily="sans-serif"
+            android:paddingTop="0dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/owner_name"
             tools:text="@tools:sample/lorem" />
-
 
         <TextView
             android:id="@+id/video_date"
@@ -71,6 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/title_text_view"
             tools:text="@tools:sample/date/hhmm" />
@@ -81,6 +85,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             app:layout_constraintStart_toEndOf="@+id/video_date"
             app:layout_constraintTop_toBottomOf="@+id/title_text_view"
             tools:text="70k views" />
@@ -136,11 +141,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:layout_marginBottom="@dimen/activity_horizontal_margin"
             android:autoLink="web"
-            android:minHeight="0dp"
             android:textAppearance="@android:style/TextAppearance.Material.Body1"
-            android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/like_button" />
 

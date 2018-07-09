@@ -73,7 +73,7 @@ class LoginPresenter(
                             view.editTextEditable(editable = true)
                             view.onErrorLogin()
 
-                            if (view.isDialogShows()) view.hideDialogLoading()
+                            if (view.isDialogShows()) view.hideDialogs()
                         }
 
                         override fun onResponse(call: Call<Auth>?, response: Response<Auth>?) {
@@ -91,7 +91,7 @@ class LoginPresenter(
                                 }
                             }
 
-                            if (view.isDialogShows()) view.hideDialogLoading()
+                            if (view.isDialogShows()) view.hideDialogs()
 
                             response?.errorBody()?.let { errorConvert(it) }
                         }

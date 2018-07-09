@@ -127,6 +127,10 @@ class LoginActivity : AppCompatActivity(), LoginContract.View {
 
     override fun hideDialogLoading() = twoFactorDialog.hideLoading()
 
+    override fun hideDialogs() {
+        if (twoFactorDialog.isShowing) twoFactorDialog.hide() else if (captchaDialog.isShowing) captchaDialog.hide()
+    }
+
     override fun captcha(captchaUrl: String) {
         captchaDialog.show()
         captchaDialog.loadCaptcha(captchaUrl)

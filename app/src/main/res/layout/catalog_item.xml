@@ -1,35 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="8dp"
-    android:foreground="?attr/selectableItemBackground"
-    app:cardCornerRadius="0dp">
+    android:orientation="vertical">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/catalog_title"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="8dp"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:ellipsize="end"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        tools:text="@tools:sample/full_names" />
 
-        <TextView
-            android:id="@+id/catalog_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:ellipsize="end"
-            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-            tools:text="@tools:sample/full_names" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/catalog_recycler"
-            android:layout_width="match_parent"
-            android:layout_height="256dp"
-            android:overScrollMode="never"
-            tools:listitem="@layout/catalog_album_item" />
-    </LinearLayout>
-</android.support.v7.widget.CardView>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/catalog_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:overScrollMode="never"
+        tools:listitem="@layout/catalog_album_item" />
+</LinearLayout>

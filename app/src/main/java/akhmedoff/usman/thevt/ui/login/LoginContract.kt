@@ -40,6 +40,8 @@ interface LoginContract {
 
         fun hideDialogLoading()
 
+        fun hideDialogs()
+
         fun showCodeError()
 
         fun hideKeyboard()

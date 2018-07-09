@@ -47,6 +47,23 @@ class VideoDownloadingService : IntentService("VideoDownloadingService") {
         notificationManager = systemService<NotificationManager>()
 
         downloadQuery = DownloadManager.Query()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID,
+                    getString(R.string.notification_channel_download_name),
+                    NotificationManager.IMPORTANCE_LOW)
+            channel.description = getString(R.string.notification_channel_download_desc)
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID,
+                    getString(R.string.notification_channel_download_name),
+                    NotificationManager.IMPORTANCE_LOW)
+            channel.description = getString(R.string.notification_channel_download_desc)
+            notificationManager.createNotificationChannel(channel)
+        }
+
         notificationCompatBuilder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_file_download_white_24dp)
                 .setContentTitle(getString(R.string.notification_downloading_title))
@@ -54,9 +71,9 @@ class VideoDownloadingService : IntentService("VideoDownloadingService") {
                 .setOnlyAlertOnce(true)
                 .setCategory(NotificationCompat.CATEGORY_STATUS)
                 .setWhen(System.currentTimeMillis())
+        startForeground(NOTIFICATION_ID, notificationCompatBuilder.build())
         downloadManager = systemService<DownloadManager>()
 
-        startForeground(NOTIFICATION_ID, notificationCompatBuilder.build())
     }
 
     override fun onHandleIntent(intent: Intent?) {
@@ -78,17 +95,8 @@ class VideoDownloadingService : IntentService("VideoDownloadingService") {
                         .setContentText(name)
                         .setOngoing(isDownloading)
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID,
-                            getString(R.string.notification_channel_download_name),
-                            NotificationManager.IMPORTANCE_LOW)
-                    channel.description = getString(R.string.notification_channel_download_desc)
-                    notificationManager.createNotificationChannel(channel)
-                }
-
                 val totalFileSize = cursor.getInt(cursor
                         .getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
-
 
                 while (isDownloading) {
                     val currentSize = cursor.getInt(cursor.getColumnIndex(
@@ -104,6 +112,7 @@ class VideoDownloadingService : IntentService("VideoDownloadingService") {
                         DownloadManager.STATUS_SUCCESSFUL -> {
                             isDownloading = false
                             notificationCompatBuilder.setContentInfo(getString(R.string.notification_downloading_successful))
+                            stopForeground(false)
                         }
                         DownloadManager.STATUS_RUNNING -> {
                             isDownloading = true
