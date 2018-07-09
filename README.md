@@ -18,19 +18,19 @@ I use in the application:
  - MVP
  
  <p align="center">
-  <img width="480" height="720" src="https://github.com/ukakhmedoff/VideoforVk/blob/master/screenshots/device-2018-03-10-212659.png">
-   <img width="480" height="720" src="https://github.com/ukakhmedoff/VideoforVk/blob/master/screenshots/device-2018-07-08-232037.png">
+  <img width="360" height="640" src="https://github.com/ukakhmedoff/VideoforVk/blob/master/screenshots/device-2018-03-10-212659.png">
+   <img width="360" height="640" src="https://github.com/ukakhmedoff/VideoforVk/blob/master/screenshots/device-2018-07-08-232037.png">
 
 </p>
 
  <p align="center">
-  <img width="480" height="720" src="https://github.com/ukakhmedoff/VideoforVk/blob/master/screenshots/device-2018-07-09-104450.png">
-  <img width="480" height="720" src="https://github.com/ukakhmedoff/VideoforVk/blob/master/screenshots/device-2018-07-09-121044.png">
+  <img width="360" height="640" src="https://github.com/ukakhmedoff/VideoforVk/blob/master/screenshots/device-2018-07-09-104450.png">
+  <img width="360" height="640" src="https://github.com/ukakhmedoff/VideoforVk/blob/master/screenshots/device-2018-07-09-121044.png">
 
 </p>
 
  <p align="center">
-  <img width="480" height="720" src="https://github.com/ukakhmedoff/VideoforVk/blob/master/screenshots/device-2018-07-09-131337.png">
-  <img width="480" height="720" src="https://github.com/ukakhmedoff/VideoforVk/blob/master/screenshots/device-2018-07-09-130821.png">
+  <img width="360" height="640" src="https://github.com/ukakhmedoff/VideoforVk/blob/master/screenshots/device-2018-07-09-131337.png">
+  <img width="360" height="640" src="https://github.com/ukakhmedoff/VideoforVk/blob/master/screenshots/device-2018-07-09-130821.png">
 
 </p>
