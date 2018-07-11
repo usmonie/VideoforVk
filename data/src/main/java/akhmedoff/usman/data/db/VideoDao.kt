@@ -26,6 +26,9 @@ interface VideoDao {
     @Query("SELECT * FROM videos WHERE title LIKE :query ORDER BY roomId ASC LIMIT :count OFFSET :from")
     fun loadAll(count: Int, from: Int, query: String?): List<Video>
 
+    @Query("SELECT * FROM videos WHERE likesuserLikes = 1 ORDER BY roomId ASC LIMIT :count OFFSET :from")
+    fun loadFaveVideos(from: Int, count: Int): List<Video>
+
     @Query("DELETE FROM videos WHERE userIds LIKE :userId")
     fun clear(userId: Int)
 }

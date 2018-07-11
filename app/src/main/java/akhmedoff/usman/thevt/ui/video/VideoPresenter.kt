@@ -361,8 +361,8 @@ class VideoPresenter(
         view?.saveIsFullscreen(
                 when (view?.loadIsFullscreen() == true) {
                     true -> {
-                        view?.showSmallScreen()
                         view?.setPlayerNormal()
+                        view?.showSmallScreen()
 
                         false
                     }

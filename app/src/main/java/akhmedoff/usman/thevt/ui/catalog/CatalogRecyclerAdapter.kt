@@ -11,9 +11,9 @@ import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 
 class CatalogRecyclerAdapter(
-    private val clickListener: (CatalogItem, View) -> Unit
+        private val clickListener: (CatalogItem, View) -> Unit
 ) :
-    PagedListAdapter<CatalogItem, VideoViewHolder>(CATALOG_COMPARATOR) {
+        PagedListAdapter<CatalogItem, VideoViewHolder>(CATALOG_COMPARATOR) {
 
     companion object {
         val CATALOG_COMPARATOR = object : DiffUtil.ItemCallback<CatalogItem>() {
@@ -26,29 +26,29 @@ class CatalogRecyclerAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        VideoViewHolder(
-            Picasso.get(),
-            LayoutInflater.from(parent.context).inflate(
-                    R.layout.catalog_video_item,
-                parent,
-                false
-            )
-        ).apply {
-            itemView.setOnClickListener {
-                poster.transitionName = "transition_name_$adapterPosition"
-                getItem(adapterPosition)?.let {
-                    clickListener(it, poster)
+            VideoViewHolder(
+                    Picasso.get(),
+                    LayoutInflater.from(parent.context).inflate(
+                            R.layout.catalog_video_item,
+                            parent,
+                            false
+                    )
+            ).apply {
+                itemView.setOnClickListener {
+                    poster.transitionName = "transition_name_$adapterPosition"
+                    getItem(adapterPosition)?.let {
+                        clickListener(it, poster)
+                    }
                 }
-            }
 
-            itemView.isLongClickable = true
-            /*itemView.setOnLongClickListener {
-                getItem(adapterPosition)?.let {
-                    longClickListener(it, poster)
-                }
-                true
-            }*/
-        }
+                itemView.isLongClickable = true
+                /*itemView.setOnLongClickListener {
+                    getItem(adapterPosition)?.let {
+                        longClickListener(it, poster)
+                    }
+                    true
+                }*/
+            }
 
     override fun onBindViewHolder(holder: VideoViewHolder, position: Int) {
         getItem(position)?.let {

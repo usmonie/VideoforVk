@@ -65,4 +65,5 @@
     <string name="my_albums">Мои альбомы</string>
     <string name="plural_view">%s просмотр</string>
     <string name="plural_views">%s просмотров</string>
+    <string name="favourites">Избранное</string>
 </resources>

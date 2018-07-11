@@ -1,4 +1,4 @@
-package akhmedoff.usman.thevt.ui.search
+package akhmedoff.usman.thevt.ui.view.adapters
 
 import akhmedoff.usman.data.model.Video
 import akhmedoff.usman.thevt.ui.view.holders.SearchViewHolder
@@ -26,14 +26,12 @@ class SearchRecyclerAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-            SearchViewHolder(Picasso.get(),
+            SearchViewHolder(
+                    Picasso.get(),
                     LayoutInflater.from(parent.context).inflate(layoutId, parent, false)
             ).apply {
                 itemView.setOnClickListener {
-                    clickListener(
-                            getItem(adapterPosition)!!,
-                            videoFrame
-                    )
+                    clickListener(getItem(adapterPosition)!!, videoFrame)
                 }
             }
 

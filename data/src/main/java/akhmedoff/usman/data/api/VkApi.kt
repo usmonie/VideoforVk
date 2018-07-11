@@ -8,7 +8,7 @@ import retrofit2.http.Url
 
 interface VkApi {
     companion object {
-        const val API_VERSION = "5.73"
+        const val API_VERSION = "5.80"
     }
 
     @GET
@@ -56,9 +56,15 @@ interface VkApi {
             @Query("owner_id") ownerId: String?,
             @Query("videos") videos: String?,
             @Query("album_id") albumId: String?,
-            @Query("likes") count: Int,
+            @Query("count") count: Int,
             @Query("offset") offset: Long,
-            @Query("extended") extended: Boolean = true
+            @Query("extended") extended: Boolean = false
+    ): Call<ResponseVideo>
+
+    @GET("fave.getVideos")
+    fun getFaveVideos(
+            @Query("offset") offset: Int = 0,
+            @Query("count") count: Int = 10
     ): Call<ResponseVideo>
 
     @GET("video.getAlbumById")

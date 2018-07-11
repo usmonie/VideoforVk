@@ -1,13 +1,13 @@
-package akhmedoff.usman.thevt.ui.videos
+package akhmedoff.usman.thevt.ui.favourites
 
 import akhmedoff.usman.data.model.Video
 import akhmedoff.usman.data.repository.VideoRepository
 import android.arch.lifecycle.Observer
 
-class VideosPresenter(
-        override var view: VideosContract.View?,
+class FavouritesPresenter(
+        override var view: FavouritesContract.View?,
         private val videoRepository: VideoRepository
-) : VideosContract.Presenter {
+) : FavouritesContract.Presenter {
 
     override fun onCreated() = refresh()
 
@@ -15,7 +15,7 @@ class VideosPresenter(
         view?.let { view ->
             view.showLoading(true)
             videoRepository
-                    .getVideos(view.getOwnerId()?.toInt())
+                    .getFaveVideos()
                     .observe(view, Observer { pagedList ->
                         view.showLoading(false)
                         when {

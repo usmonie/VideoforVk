@@ -6,15 +6,15 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 
 class FragmentsViewPagerAdapter(fragmentManager: FragmentManager) :
-    FragmentPagerAdapter(fragmentManager) {
+        FragmentPagerAdapter(fragmentManager) {
 
     private val catalogs = mutableListOf<Pair<Fragment, String>>()
 
     fun addFragment(pageCategory: String, pageTitle: String) =
-        catalogs.add(Pair(CatalogFragment.createFragment(pageCategory), pageTitle))
+            catalogs.add(Pair(CatalogFragment.createFragment(pageCategory), pageTitle))
 
     fun addFragment(page: Fragment, pageTitle: String) =
-        catalogs.add(Pair(page, pageTitle))
+            catalogs.add(Pair(page, pageTitle))
 
     override fun getItem(position: Int) = catalogs[position].first
 

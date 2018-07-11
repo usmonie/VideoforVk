@@ -3,6 +3,7 @@ package akhmedoff.usman.thevt.ui.profile
 import akhmedoff.usman.data.model.Album
 import akhmedoff.usman.data.model.Video
 import akhmedoff.usman.thevt.R
+import akhmedoff.usman.thevt.ui.view.holders.FaveVideosSectorViewHolder
 import akhmedoff.usman.thevt.ui.view.holders.ProfileAlbumsSectorViewHolder
 import akhmedoff.usman.thevt.ui.view.holders.SearchViewHolder
 import android.arch.paging.PagedList
@@ -16,9 +17,16 @@ import com.squareup.picasso.Picasso
 
 class ProfileRecyclerAdapter(private val videoClickListener: (Video, View) -> Unit,
                              private val albumClickListener: (Album, View) -> Unit,
-                             private val albumsClickListener: (View) -> Unit) : PagedListAdapter<Video, RecyclerView.ViewHolder>(CATALOG_COMPARATOR) {
+                             private val albumsClickListener: (View) -> Unit,
+                             private val favouritesClickList: () -> Unit) : PagedListAdapter<Video, RecyclerView.ViewHolder>(CATALOG_COMPARATOR) {
 
     var albums: PagedList<Album>? = null
+        set(value) {
+            field = value
+            notifyItemChanged(0)
+        }
+
+    var faveVideos: PagedList<Video>? = null
         set(value) {
             field = value
             notifyItemChanged(0)
@@ -37,17 +45,23 @@ class ProfileRecyclerAdapter(private val videoClickListener: (Video, View) -> Un
     override fun getItemViewType(position: Int): Int = position
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
-            if (viewType == 0 && albums?.isNotEmpty() == true) {
+            if ((viewType == 0 && albums?.isNotEmpty() == true)) {
                 ProfileAlbumsSectorViewHolder(albumClickListener, LayoutInflater.from(parent.context).inflate(R.layout.albums_item, parent, false)).apply {
                     cardView.setOnClickListener {
                         cardView.transitionName = "transition_name_$adapterPosition"
                         albumsClickListener(cardView)
                     }
                 }
+            } else if (viewType == 1 && faveVideos?.isNotEmpty() == true) {
+                FaveVideosSectorViewHolder(videoClickListener, LayoutInflater.from(parent.context).inflate(R.layout.albums_item, parent, false)).apply {
+                    cardView.setOnClickListener {
+                        favouritesClickList()
+                    }
+                }
             } else {
                 SearchViewHolder(Picasso.get(), LayoutInflater.from(parent.context).inflate(R.layout.search_videos, parent, false)).apply {
                     videoFrame.setOnClickListener {
-                        getItem(adapterPosition)?.let {
+                        getItem(if (albums != null || faveVideos != null) adapterPosition - 1 else if (albums != null && faveVideos != null) adapterPosition - 2 else adapterPosition)?.let {
                             videoClickListener(it, videoFrame.apply { transitionName = "transition_name_$adapterPosition" })
                         }
                     }
@@ -61,10 +75,12 @@ class ProfileRecyclerAdapter(private val videoClickListener: (Video, View) -> Un
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder is ProfileAlbumsSectorViewHolder) {
-            albums?.let { holder.bind(it) }
+        if (holder is ProfileAlbumsSectorViewHolder && position == 0 && albums?.isNotEmpty() == true) {
+            holder.bind(albums!!)
+        } else if (holder is FaveVideosSectorViewHolder && position == 1 && faveVideos?.isNotEmpty() == true) {
+            holder.bind(faveVideos!!)
         } else if (holder is SearchViewHolder) {
-            getItem(if (albums != null) position - 1 else position)?.let { holder.bind(it) }
+            getItem(if (albums != null || faveVideos != null) position - 1 else if (albums != null && faveVideos != null) position - 2 else position)?.let { holder.bind(it) }
         }
     }
 }

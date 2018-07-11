@@ -15,13 +15,13 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.catalog_item.view.*
 
 class CatalogViewHolder(
-    itemView: View,
-    clickListener: (CatalogItem, View) -> Unit
+        itemView: View,
+        clickListener: (CatalogItem, View) -> Unit
 ) : AbstractViewHolder<Catalog>(itemView) {
 
     private val adapter = CatalogItemsRecyclerAdapter(
-        Picasso.get(),
-        clickListener
+            Picasso.get(),
+            clickListener
     )
 
     private val catalogTitle = itemView.catalog_title
@@ -34,10 +34,10 @@ class CatalogViewHolder(
         catalogRecycler.setHasFixedSize(true)
         catalogRecycler.adapter = adapter
         catalogRecycler.addItemDecoration(
-            MarginItemDecorator(
-                2,
-                itemView.context.resources.getDimensionPixelSize(R.dimen.catalog_videos_margin)
-            )
+                MarginItemDecorator(
+                        2,
+                        itemView.context.resources.getDimensionPixelSize(R.dimen.catalog_videos_margin)
+                )
         )
         catalogRecycler.layoutManager = linearLayoutManager
 

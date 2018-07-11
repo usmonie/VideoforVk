@@ -8,6 +8,7 @@ import akhmedoff.usman.data.model.ApiResponse
 import akhmedoff.usman.data.model.Owner
 import akhmedoff.usman.data.model.ResponseVideo
 import akhmedoff.usman.data.model.Video
+import akhmedoff.usman.data.repository.source.videos.FaveDataSourceFactory
 import akhmedoff.usman.data.repository.source.videos.SearchDataSourceFactory
 import akhmedoff.usman.data.repository.source.videos.VideosDataSourceFactory
 import android.arch.lifecycle.LiveData
@@ -45,6 +46,22 @@ class VideoRepositoryImpl(
                 videos,
                 albumId,
                 ownerDao,
+                videoDao
+        )
+
+        return LivePagedListBuilder(sourceFactory, pagedListConfig).build()
+    }
+
+    override fun getFaveVideos(): LiveData<PagedList<Video>> {
+        val pagedListConfig = PagedList.Config.Builder()
+                .setEnablePlaceholders(false)
+                .setPageSize(10)
+                .setPrefetchDistance(7)
+                .setInitialLoadSizeHint(16)
+                .build()
+
+        val sourceFactory = FaveDataSourceFactory(
+                vkApi,
                 videoDao
         )
 

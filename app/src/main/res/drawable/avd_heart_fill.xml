@@ -1,5 +1,4 @@
-<animated-vector
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:aapt="http://schemas.android.com/aapt"
     android:drawable="@drawable/vd_heart_full">
 
@@ -11,7 +10,7 @@
                 android:propertyName="pathData"
                 android:valueFrom="@string/heart_clip_hidden"
                 android:valueTo="@string/heart_clip_shown"
-                android:valueType="pathType"/>
+                android:valueType="pathType" />
         </aapt:attr>
     </target>
 

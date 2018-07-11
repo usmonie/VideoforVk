@@ -49,10 +49,10 @@
         <activity
             android:name=".ui.video.VideoActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:resizeableActivity="true"
             android:launchMode="singleTask"
-            android:theme="@style/VideoTheme"
+            android:resizeableActivity="true"
             android:supportsPictureInPicture="true"
+            android:theme="@style/VideoTheme"
             tools:ignore="UnusedAttribute">
             <layout
                 android:defaultWidth="330dp"

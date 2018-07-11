@@ -11,26 +11,26 @@ import kotlinx.android.synthetic.main.add_video_multiselect_item.view.*
 
 
 class AlbumsRecyclerAdapter(private val changedListener: (Album, Boolean) -> Unit) :
-    PagedListAdapter<Album, SelectableAlbumViewHolder>(ALBUM_COMPARATOR) {
+        PagedListAdapter<Album, SelectableAlbumViewHolder>(ALBUM_COMPARATOR) {
 
     companion object {
         val ALBUM_COMPARATOR = object : DiffUtil.ItemCallback<Album>() {
             override fun areContentsTheSame(oldItem: Album, newItem: Album) =
-                oldItem.description == newItem.description
+                    oldItem.description == newItem.description
 
             override fun areItemsTheSame(oldItem: Album, newItem: Album) =
-                oldItem.id == newItem.id && oldItem.title == newItem.title
+                    oldItem.id == newItem.id && oldItem.title == newItem.title
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        SelectableAlbumViewHolder(
-            LayoutInflater.from(parent.context).inflate(
-                R.layout.add_video_multiselect_item,
-                parent,
-                false
+            SelectableAlbumViewHolder(
+                    LayoutInflater.from(parent.context).inflate(
+                            R.layout.add_video_multiselect_item,
+                            parent,
+                            false
+                    )
             )
-        )
 
     override fun onBindViewHolder(holder: SelectableAlbumViewHolder, position: Int) {
         holder.itemView.checkBox.setOnCheckedChangeListener(null)
@@ -44,9 +44,9 @@ class AlbumsRecyclerAdapter(private val changedListener: (Album, Boolean) -> Uni
     }
 
     override fun onBindViewHolder(
-        holder: SelectableAlbumViewHolder,
-        position: Int,
-        payloads: MutableList<Any>
+            holder: SelectableAlbumViewHolder,
+            position: Int,
+            payloads: MutableList<Any>
     ) {
         if (payloads.isNotEmpty()) {
             val item = payloads[0]

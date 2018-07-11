@@ -22,6 +22,8 @@ interface ProfileContract {
 
         fun showVideos(videos: PagedList<Video>)
 
+        fun showFaveVideos(videos: PagedList<Video>)
+
         fun showLoadingError()
 
         fun showLoading(isLoading: Boolean)
@@ -29,6 +31,8 @@ interface ProfileContract {
         fun getUserId(): String?
 
         fun getIsUser(): Boolean
+
+        fun showUi(isVisible: Boolean)
     }
 
     interface Presenter {

@@ -6,8 +6,8 @@ import android.view.View
 
 
 class GravitySnapHelper @JvmOverloads constructor(
-    gravity: Int, enableSnapLastItem: Boolean = false,
-    snapListener: SnapListener? = null
+        gravity: Int, enableSnapLastItem: Boolean = false,
+        snapListener: SnapListener? = null
 ) : LinearSnapHelper() {
 
     private val delegate = GravityDelegate(gravity, enableSnapLastItem, snapListener)
@@ -19,12 +19,12 @@ class GravitySnapHelper @JvmOverloads constructor(
     }
 
     override fun calculateDistanceToFinalSnap(
-        layoutManager: RecyclerView.LayoutManager,
-        targetView: View
+            layoutManager: RecyclerView.LayoutManager,
+            targetView: View
     ): IntArray? = delegate.calculateDistanceToFinalSnap(layoutManager, targetView)
 
     override fun findSnapView(layoutManager: RecyclerView.LayoutManager): View? =
-        delegate.findSnapView(layoutManager)
+            delegate.findSnapView(layoutManager)
 
     /**
      * Enable snapping of the last item that's snappable.

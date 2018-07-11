@@ -10,6 +10,7 @@ import android.util.Log
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.concurrent.CountDownLatch
 
 class ProfilePresenter(
         override var view: ProfileContract.View? = null,
@@ -17,6 +18,7 @@ class ProfilePresenter(
         private val videoRepository: VideoRepository,
         private val albumRepository: AlbumRepository
 ) : ProfileContract.Presenter {
+
 
     override fun onCreated() {
     }
@@ -75,37 +77,45 @@ class ProfilePresenter(
     }
 
     override fun refresh() {
-        var albumsLoading = true
-        var videosLoading = true
-
+        val countDownLatch = CountDownLatch(3)
+        view?.showUi(false)
         view?.let { view ->
-            view.showLoading(albumsLoading && videosLoading)
+            view.showLoading(countDownLatch.count > 0)
             albumRepository
                     .getAlbums(view.getUserId())
                     .observe(view, Observer { pagedList ->
+                        countDownLatch.countDown()
                         when {
                             pagedList != null && pagedList.size > 0 -> {
                                 view.showAlbums(pagedList)
-                                albumsLoading = false
-                                view.showLoading(albumsLoading && videosLoading)
+                                view.showLoading(countDownLatch.count > 0)
                             }
-                            pagedList == null -> view.showLoadingError()
                         }
                     })
+            videoRepository.getFaveVideos().observe(view, Observer { pagedList ->
+                countDownLatch.countDown()
+                when {
+                    pagedList != null && pagedList.size > 0 -> {
+                        view.showFaveVideos(pagedList)
+                        view.showLoading(countDownLatch.count > 0)
+                    }
+                }
+            })
             videoRepository
                     .getVideos(view.getUserId()?.toInt())
                     .observe(view, Observer { pagedList ->
-                        view.showLoading(false)
+                        countDownLatch.countDown()
                         when {
                             pagedList != null && pagedList.size > 0 -> {
                                 view.showVideos(pagedList)
-                                videosLoading = false
-                                view.showLoading(albumsLoading && videosLoading)
+                                view.showLoading(countDownLatch.count > 0)
                             }
-
-                            pagedList == null -> view.showLoadingError()
                         }
                     })
+
+
+            view.showLoading(countDownLatch.count > 0)
+            view.showUi(countDownLatch.count > 0)
         }
 
     }

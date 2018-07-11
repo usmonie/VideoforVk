@@ -30,7 +30,6 @@ class CatalogItemsRecyclerAdapter(
 
         items?.let { items ->
             holder.itemView.setOnClickListener {
-
                 holder.poster.transitionName = "transition_name_${holder.adapterPosition}"
                 clickListener(items[holder.adapterPosition], holder.poster)
             }

@@ -19,6 +19,8 @@ interface VideoRepository {
             albumId: Int? = null
     ): LiveData<PagedList<Video>>
 
+    fun getFaveVideos(): LiveData<PagedList<Video>>
+
     fun getVideo(video: String): Call<ResponseVideo>
 
     fun saveOwner(owner: Owner)

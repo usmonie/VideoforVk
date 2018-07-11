@@ -10,18 +10,18 @@ import android.view.WindowManager
 import kotlinx.android.synthetic.main.two_factor_dialog.*
 
 class TwoFactorAuthenticationDialog(
-    context: Context,
-    private val listener: (String) -> Unit,
-    cancelListener: () -> Unit
+        context: Context,
+        private val listener: (String) -> Unit,
+        cancelListener: () -> Unit
 ) :
-    Dialog(context, false, DialogInterface.OnCancelListener { cancelListener() }) {
+        Dialog(context, false, DialogInterface.OnCancelListener { cancelListener() }) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.two_factor_dialog)
         window.setLayout(
-            WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.WRAP_CONTENT
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.WRAP_CONTENT
         )
         enter_code_button?.setOnClickListener { listener(code_input.text.toString()) }
         dismiss_code?.setOnClickListener { cancel() }

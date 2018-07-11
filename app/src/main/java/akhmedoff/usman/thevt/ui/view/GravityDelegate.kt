@@ -10,8 +10,8 @@ import android.view.View
 import java.util.*
 
 internal class GravityDelegate(
-    private val gravity: Int, private var snapLastItem: Boolean,
-    private val listener: GravitySnapHelper.SnapListener?
+        private val gravity: Int, private var snapLastItem: Boolean,
+        private val listener: GravitySnapHelper.SnapListener?
 ) {
 
     private var verticalHelper: OrientationHelper? = null
@@ -41,7 +41,7 @@ internal class GravityDelegate(
 
     init {
         if (gravity != Gravity.START && gravity != Gravity.END
-            && gravity != Gravity.BOTTOM && gravity != Gravity.TOP) {
+                && gravity != Gravity.BOTTOM && gravity != Gravity.TOP) {
             throw IllegalArgumentException("Invalid gravity value. Use START " + "| END | BOTTOM | TOP constants")
         }
     }
@@ -55,8 +55,8 @@ internal class GravityDelegate(
     }
 
     fun calculateDistanceToFinalSnap(
-        layoutManager: RecyclerView.LayoutManager,
-        targetView: View
+            layoutManager: RecyclerView.LayoutManager,
+            targetView: View
     ): IntArray {
         val out = IntArray(2)
 
@@ -107,18 +107,18 @@ internal class GravityDelegate(
     }
 
     private fun distanceToStart(
-        targetView: View,
-        helper: OrientationHelper,
-        fromEnd: Boolean
+            targetView: View,
+            helper: OrientationHelper,
+            fromEnd: Boolean
     ) = when {
         isRtlHorizontal && !fromEnd -> distanceToEnd(targetView, helper, true)
         else -> helper.getDecoratedStart(targetView) - helper.startAfterPadding
     }
 
     private fun distanceToEnd(
-        targetView: View,
-        helper: OrientationHelper,
-        fromStart: Boolean
+            targetView: View,
+            helper: OrientationHelper,
+            fromStart: Boolean
     ): Int = when {
         isRtlHorizontal && !fromStart -> distanceToStart(targetView, helper, true)
         else -> helper.getDecoratedEnd(targetView) - helper.endAfterPadding
@@ -132,8 +132,8 @@ internal class GravityDelegate(
      * @return the first view in the LayoutManager to snap to
      */
     private fun findStartView(
-        layoutManager: RecyclerView.LayoutManager,
-        helper: OrientationHelper
+            layoutManager: RecyclerView.LayoutManager,
+            helper: OrientationHelper
     ): View? {
 
         if (layoutManager is LinearLayoutManager) {
@@ -171,9 +171,9 @@ internal class GravityDelegate(
             val endOfList: Boolean
             endOfList = when {
                 !reverseLayout -> layoutManager
-                    .findLastCompletelyVisibleItemPosition() == layoutManager.getItemCount() - 1
+                        .findLastCompletelyVisibleItemPosition() == layoutManager.getItemCount() - 1
                 else -> layoutManager
-                    .findFirstCompletelyVisibleItemPosition() == 0
+                        .findFirstCompletelyVisibleItemPosition() == 0
             }
 
             return if (visibleWidth > 0.5f && !endOfList) {
@@ -196,8 +196,8 @@ internal class GravityDelegate(
     }
 
     private fun findEndView(
-        layoutManager: RecyclerView.LayoutManager,
-        helper: OrientationHelper
+            layoutManager: RecyclerView.LayoutManager,
+            helper: OrientationHelper
     ): View? {
 
         if (layoutManager is LinearLayoutManager) {
@@ -232,9 +232,9 @@ internal class GravityDelegate(
             val startOfList: Boolean
             startOfList = when {
                 !reverseLayout -> layoutManager
-                    .findFirstCompletelyVisibleItemPosition() == 0
+                        .findFirstCompletelyVisibleItemPosition() == 0
                 else -> layoutManager
-                    .findLastCompletelyVisibleItemPosition() == layoutManager.getItemCount() - 1
+                        .findLastCompletelyVisibleItemPosition() == layoutManager.getItemCount() - 1
             }
 
             return when {

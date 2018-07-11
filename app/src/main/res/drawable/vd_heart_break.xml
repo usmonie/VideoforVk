@@ -2,22 +2,22 @@
     android:width="24dp"
     android:height="24dp"
     android:tint="?attr/colorControlNormal"
-    android:viewportHeight="56"
-    android:viewportWidth="56">
+    android:viewportWidth="56"
+    android:viewportHeight="56">
 
     <!-- Stroked heart, 2 paths so can 'draw' them concurrently by animating trim. Initially hidden -->
     <path
         android:name="heart_stroke_left_atrium"
         android:pathData="@string/heart_stroke_left"
-        android:strokeColor="@android:color/white"
         android:strokeWidth="2"
+        android:strokeColor="@android:color/white"
         android:trimPathEnd="0" />
 
     <path
         android:name="heart_stroke_right_atrium"
         android:pathData="@string/heart_stroke_right"
-        android:strokeColor="@android:color/white"
         android:strokeWidth="2"
+        android:strokeColor="@android:color/white"
         android:trimPathEnd="0" />
 
     <!-- Left broken heart, need group to set pivot for rotation anim. -->

@@ -1,10 +1,10 @@
-package akhmedoff.usman.thevt.ui.videos
+package akhmedoff.usman.thevt.ui.favourites
 
 import akhmedoff.usman.data.model.Video
 import android.arch.lifecycle.LifecycleOwner
 import android.arch.paging.PagedList
 
-interface VideosContract {
+interface FavouritesContract {
 
     interface View : LifecycleOwner {
         var presenter: Presenter
@@ -15,7 +15,6 @@ interface VideosContract {
 
         fun showError()
 
-        fun getOwnerId(): String?
 
         fun showEmptyList()
 

@@ -16,11 +16,11 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         splashPresenter = SplashPresenter(
-            this,
-            UserRepository(
-                UserSettings.getUserSettings(applicationContext),
-                vkApi
-            )
+                this,
+                UserRepository(
+                        UserSettings.getUserSettings(applicationContext),
+                        vkApi
+                )
         )
 
         splashPresenter.onCreate()

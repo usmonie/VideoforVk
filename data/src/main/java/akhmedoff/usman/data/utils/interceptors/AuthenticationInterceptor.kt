@@ -32,11 +32,11 @@ class AuthenticationInterceptor(val context: Context) : Interceptor {
         val requestBuilder = original.newBuilder().url(url)
 
         var str = ""
-        var appbuild = 0
+        var appBuild = 0
         try {
             val pkgInfo = context.packageManager.getPackageInfo(context.packageName, 0)
             str = pkgInfo.versionName
-            appbuild = pkgInfo.versionCode
+            appBuild = pkgInfo.versionCode
         } catch (e: Exception) {
         }
 
@@ -47,7 +47,7 @@ class AuthenticationInterceptor(val context: Context) : Interceptor {
                                 Locale.US,
                                 "VKAndroidApp/%s-%d (Android %s; SDK %d; %s; %s %s; %s)",
                                 str,
-                                Integer.valueOf(appbuild),
+                                Integer.valueOf(appBuild),
                                 Build.VERSION.RELEASE,
                                 Integer.valueOf(Build.VERSION.SDK_INT),
                                 Build.CPU_ABI,

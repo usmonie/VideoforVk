@@ -10,9 +10,9 @@ import java.lang.reflect.Type
 class VideoDeserializer : JsonDeserializer<ResponseVideo> {
 
     override fun deserialize(
-        json: JsonElement,
-        typeOfT: Type,
-        context: JsonDeserializationContext
+            json: JsonElement,
+            typeOfT: Type,
+            context: JsonDeserializationContext
     ): ResponseVideo {
         val jsonObject = json.asJsonObject["response"].asJsonObject
 
@@ -26,15 +26,15 @@ class VideoDeserializer : JsonDeserializer<ResponseVideo> {
             val itemJson = it.asJsonObject
             val videoUrls = mutableListOf<VideoUrl>()
 
-            val fileJson = itemJson["files"].asJsonObject
+            val fileJson = itemJson["files"]?.asJsonObject
 
-            var external = fileJson["external"]?.asString
-            var mp4240 = fileJson["mp4_240"]?.asString
-            val mp4360 = fileJson["mp4_360"]?.asString
-            val mp4480 = fileJson["mp4_480"]?.asString
-            val mp4720 = fileJson["mp4_720"]?.asString
-            val mp41080 = fileJson["mp4_1080"]?.asString
-            val hls = fileJson["hls"]?.asString
+            var external = fileJson?.get("external")?.asString
+            var mp4240 = fileJson?.get("mp4_240")?.asString
+            val mp4360 = fileJson?.get("mp4_360")?.asString
+            val mp4480 = fileJson?.get("mp4_480")?.asString
+            val mp4720 = fileJson?.get("mp4_720")?.asString
+            val mp41080 = fileJson?.get("mp4_1080")?.asString
+            val hls = fileJson?.get("hls")?.asString
 
             if (external != null && (external.endsWith(".mp4") || external.contains("vk.com"))) {
                 mp4240 = external
@@ -108,7 +108,7 @@ class VideoDeserializer : JsonDeserializer<ResponseVideo> {
                 item.firstFrame800 = it.asString
             }
             item.files = videoUrls
-            item.player = itemJson["player"].asString
+            item.player = itemJson["player"]?.asString ?: ""
 
             item.canAdd = when (itemJson["can_add"]?.asInt) {
                 null -> false

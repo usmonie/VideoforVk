@@ -410,6 +410,7 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
             exo_quality_toggle.setImageDrawable(ContextCompat.getDrawable(this, id))
 
     override fun showFullscreen() {
+        video_layout.fitsSystemWindows = false
         window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -419,6 +420,7 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
     }
 
     override fun showSmallScreen() {
+        video_layout.fitsSystemWindows = true
         window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
@@ -569,6 +571,8 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !isPipMode() && player?.playWhenReady == true) {
             enterPipMode(presenter.getVideo())
+        } else {
+            presenter.onPause()
         }
     }
 

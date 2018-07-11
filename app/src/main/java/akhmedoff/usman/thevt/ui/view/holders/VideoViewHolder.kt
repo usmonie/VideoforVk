@@ -9,7 +9,7 @@ import android.widget.TextView
 import com.squareup.picasso.Picasso
 
 class VideoViewHolder(private val picasso: Picasso, itemView: View) :
-    AbstractViewHolder<Item>(itemView) {
+        AbstractViewHolder<Item>(itemView) {
 
     val poster = itemView.findViewById<ImageView>(R.id.poster)
     private val title = itemView.findViewById<TextView>(R.id.title)
@@ -22,10 +22,10 @@ class VideoViewHolder(private val picasso: Picasso, itemView: View) :
         }
 
         picasso
-            .load(imageUri)
-            .config(Bitmap.Config.RGB_565)
-            .centerCrop()
-            .fit()
+                .load(imageUri)
+                .config(Bitmap.Config.RGB_565)
+                .centerCrop()
+                .fit()
                 .into(poster)
 
         title.text = item.title

@@ -26,7 +26,6 @@ private const val TRANSITION_NAME = "transition_name"
 class AlbumFragment : Fragment(), AlbumContract.View {
 
     companion object {
-
         fun getFragment(item: CatalogItem, transitionName: String) =
                 getFragment(item.id.toString(), item.ownerId.toString(), item.title, transitionName)
 
@@ -62,8 +61,8 @@ class AlbumFragment : Fragment(), AlbumContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        albumPresenter =
-                AlbumPresenter(this, getAlbumRepository(context!!))
+        albumPresenter = AlbumPresenter(this, getAlbumRepository(context!!))
+        albumPresenter.onCreated()
     }
 
     override fun onCreateView(
@@ -83,7 +82,6 @@ class AlbumFragment : Fragment(), AlbumContract.View {
                 )
         )
         album_videos_recycler.adapter = adapter
-        albumPresenter.onCreated()
     }
 
     override fun showVideos(items: PagedList<Video>) = adapter.submitList(items)

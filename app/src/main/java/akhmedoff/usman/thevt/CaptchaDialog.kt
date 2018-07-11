@@ -13,13 +13,12 @@ class CaptchaDialog(context: Context, private val listener: (String) -> Unit) : 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.captcha_dialog)
         window.setLayout(
-            WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.WRAP_CONTENT
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.WRAP_CONTENT
         )
         enter_captcha_button.setOnClickListener { listener(captcha_input.text.toString()) }
     }
 
-    fun loadCaptcha(captchaUrl: String) =
-        Picasso.get().load(captchaUrl).into(captcha_image_view)
+    fun loadCaptcha(captchaUrl: String) = Picasso.get().load(captchaUrl).into(captcha_image_view)
 }
 

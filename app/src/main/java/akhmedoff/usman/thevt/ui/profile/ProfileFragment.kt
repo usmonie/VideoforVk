@@ -9,6 +9,7 @@ import akhmedoff.usman.thevt.R
 import akhmedoff.usman.thevt.Router
 import akhmedoff.usman.thevt.ui.album.AlbumFragment
 import akhmedoff.usman.thevt.ui.albums.AlbumsFragment
+import akhmedoff.usman.thevt.ui.favourites.FavouritesFragment
 import akhmedoff.usman.thevt.ui.video.VideoActivity
 import akhmedoff.usman.thevt.ui.view.MarginItemDecorator
 import android.arch.paging.PagedList
@@ -19,6 +20,7 @@ import android.support.v7.widget.DefaultItemAnimator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_profile.*
 
@@ -44,7 +46,8 @@ class ProfileFragment : Fragment(), ProfileContract.View {
     private val recyclerAdapter: ProfileRecyclerAdapter by lazy(LazyThreadSafetyMode.NONE) {
         ProfileRecyclerAdapter({ video, view -> showVideo(video, view) },
                 { album, view -> showAlbum(album, view) },
-                { view -> showAlbumsPage(getUserId()!!, view) })
+                { view -> showAlbumsPage(getUserId()!!, view) },
+                { showFavouritesPage() })
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,6 +77,7 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         profile_recycler.itemAnimator = DefaultItemAnimator()
         profile_recycler.addItemDecoration(MarginItemDecorator(1,
                 resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin)))
+        swipe_update.setOnRefreshListener { presenter.refresh() }
     }
 
     override fun onStart() {
@@ -86,13 +90,14 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         toolbar.title = name
     }
 
-    override fun showUserPhoto(photoUrl: String) {
-        Picasso.get().load(photoUrl).into(user_avatar)
-
-    }
+    override fun showUserPhoto(photoUrl: String) = Picasso.get().load(photoUrl).into(user_avatar)
 
     override fun setIsUser(isUser: Boolean) {
 
+    }
+
+    override fun showUi(isVisible: Boolean) {
+        profile_recycler.isVisible = isVisible
     }
 
     override fun getUserId() = arguments?.getString(USER_ID)
@@ -114,7 +119,10 @@ class ProfileFragment : Fragment(), ProfileContract.View {
 
     override fun showVideos(videos: PagedList<Video>) {
         recyclerAdapter.submitList(videos)
-        recyclerAdapter.notifyDataSetChanged()
+    }
+
+    override fun showFaveVideos(videos: PagedList<Video>) {
+        recyclerAdapter.faveVideos = videos
     }
 
     override fun onDestroyView() {
@@ -156,6 +164,15 @@ class ProfileFragment : Fragment(), ProfileContract.View {
                     VideoActivity.FRAGMENT_TAG,
                     view
             )
+        }
+    }
+
+
+    private fun showFavouritesPage() {
+        val fragment = FavouritesFragment()
+
+        activity?.supportFragmentManager?.let { fragmentManager ->
+            Router.replaceFragment(fragmentManager, fragment, true, null)
         }
     }
 

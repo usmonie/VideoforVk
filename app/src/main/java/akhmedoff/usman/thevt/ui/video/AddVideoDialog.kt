@@ -40,9 +40,7 @@ class AddVideoDialog(
         ok_add_popup.setOnClickListener { okAlbumListener() }
     }
 
-    fun showAlbums(albums: PagedList<Album>) {
-        albumsAdapter.submitList(albums)
-    }
+    fun showAlbums(albums: PagedList<Album>) = albumsAdapter.submitList(albums)
 
     fun showLoading(isLoading: Boolean) {
         albums_progress.isVisible = isLoading

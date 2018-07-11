@@ -6,6 +6,7 @@ import akhmedoff.usman.thevt.R
 import akhmedoff.usman.thevt.Router
 import akhmedoff.usman.thevt.ui.video.VideoActivity
 import akhmedoff.usman.thevt.ui.view.MarginItemDecorator
+import akhmedoff.usman.thevt.ui.view.adapters.SearchRecyclerAdapter
 import android.arch.paging.PagedList
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -64,7 +65,7 @@ class SearchFragment : Fragment(), SearchContract.View {
                             override fun run() {
                                 searchPresenter.search()
                             }
-                        }, 500L)
+                        }, 350L)
                     }
 
                     override fun beforeTextChanged(

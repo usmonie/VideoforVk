@@ -91,4 +91,6 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="favourites">Favourites</string>
+    <string name="empty_list_favourites">Your fave list is empty.</string>
 </resources>
