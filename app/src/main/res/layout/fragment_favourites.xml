@@ -9,14 +9,13 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
+        android:layout_height="wrap_content">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:fitsSystemWindows="true"
+            android:layout_height="match_parent"
+            android:minHeight="?actionBarSize"
             app:title="@string/favourites" />
     </android.support.design.widget.AppBarLayout>
 
@@ -24,39 +23,31 @@
         android:id="@+id/update_favourites_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
         app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior">
 
-        <LinearLayout
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/favourites_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-            android:orientation="vertical"
-            app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior">
+            android:clipChildren="false"
+            android:clipToPadding="true"
+            android:transitionGroup="false"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+            app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior"
+            tools:listitem="@layout/catalog_item"
+            tools:visibility="gone" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/favourites_recycler"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipChildren="false"
-                android:clipToPadding="true"
-                android:transitionGroup="false"
-                app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-                app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior"
-                tools:listitem="@layout/catalog_item"
-                tools:visibility="gone" />
-
-            <TextView
-                android:id="@+id/empty_state_text_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:gravity="center"
-                android:text="@string/empty_list_favourites"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                android:textSize="14sp"
-                android:visibility="gone"
-                tools:visibility="visible" />
-        </LinearLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <TextView
+        android:id="@+id/empty_state_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:gravity="center"
+        android:text="@string/empty_list_favourites"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        android:textSize="14sp"
+        android:visibility="gone"
+        tools:visibility="visible" />
 </android.support.design.widget.CoordinatorLayout>
