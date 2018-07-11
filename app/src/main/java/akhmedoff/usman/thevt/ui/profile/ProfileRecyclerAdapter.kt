@@ -61,7 +61,7 @@ class ProfileRecyclerAdapter(private val videoClickListener: (Video, View) -> Un
             } else {
                 SearchViewHolder(Picasso.get(), LayoutInflater.from(parent.context).inflate(R.layout.search_videos, parent, false)).apply {
                     videoFrame.setOnClickListener {
-                        getItem(if (albums != null || faveVideos != null) adapterPosition - 1 else if (albums != null && faveVideos != null) adapterPosition - 2 else adapterPosition)?.let {
+                        getItem(if (albums != null && faveVideos != null) adapterPosition - 2 else if (albums != null || faveVideos != null) adapterPosition - 1 else adapterPosition)?.let {
                             videoClickListener(it, videoFrame.apply { transitionName = "transition_name_$adapterPosition" })
                         }
                     }
