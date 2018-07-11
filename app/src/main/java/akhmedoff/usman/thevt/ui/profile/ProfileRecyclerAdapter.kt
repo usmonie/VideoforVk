@@ -29,7 +29,7 @@ class ProfileRecyclerAdapter(private val videoClickListener: (Video, View) -> Un
     var faveVideos: PagedList<Video>? = null
         set(value) {
             field = value
-            notifyItemChanged(0)
+            notifyItemChanged(1)
         }
 
     companion object {
@@ -80,7 +80,7 @@ class ProfileRecyclerAdapter(private val videoClickListener: (Video, View) -> Un
         } else if (holder is FaveVideosSectorViewHolder && position == 1 && faveVideos?.isNotEmpty() == true) {
             holder.bind(faveVideos!!)
         } else if (holder is SearchViewHolder) {
-            getItem(if (albums != null || faveVideos != null) position - 1 else if (albums != null && faveVideos != null) position - 2 else position)?.let { holder.bind(it) }
+            getItem(if (albums != null && faveVideos != null) position - 2 else if (albums != null || faveVideos != null) position - 1 else position)?.let { holder.bind(it) }
         }
     }
 }
