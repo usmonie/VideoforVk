@@ -49,7 +49,13 @@ class AlbumPresenter(private var view: AlbumContract.View?, private val albumRep
 
                         override fun onResponse(call: Call<ApiResponse<Album>?>?, response: Response<ApiResponse<Album>?>?) {
                             response?.body()?.response?.let { album ->
-                                album.photo130?.let { view.showAlbumImage(it) }
+                                view.showAlbumImage(when {
+                                    album.photo130 != null -> album.photo130!!
+                                    album.photo320 != null -> album.photo320!!
+                                    album.photo640 != null -> album.photo640!!
+                                    album.photo800 != null -> album.photo800!!
+                                    else -> ""
+                                })
                                 view.showAlbumTitle(view.getAlbumTitle() ?: album.title)
                             }
                         }

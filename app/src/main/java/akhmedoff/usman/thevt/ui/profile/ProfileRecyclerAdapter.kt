@@ -80,7 +80,9 @@ class ProfileRecyclerAdapter(private val videoClickListener: (Video, View) -> Un
         } else if (holder is FaveVideosSectorViewHolder && position == 1 && faveVideos?.isNotEmpty() == true) {
             holder.bind(faveVideos!!)
         } else if (holder is SearchViewHolder) {
-            getItem(if (albums != null && faveVideos != null) position - 2 else if (albums != null || faveVideos != null) position - 1 else position)?.let { holder.bind(it) }
+            val pos = if (albums?.isNotEmpty() == true && faveVideos?.isNotEmpty() == true) position - 2 else if (albums?.isNotEmpty() == true || faveVideos?.isNotEmpty() == true) position - 1 else position
+            if (pos < itemCount)
+                getItem(pos)?.let { holder.bind(it) }
         }
     }
 }

@@ -89,18 +89,22 @@ class ProfilePresenter(
                             pagedList != null && pagedList.size > 0 -> {
                                 view.showAlbums(pagedList)
                                 view.showLoading(countDownLatch.count > 0)
+                                view.showUi(countDownLatch.count > 0)
                             }
                         }
                     })
-            videoRepository.getFaveVideos().observe(view, Observer { pagedList ->
-                countDownLatch.countDown()
-                when {
-                    pagedList != null && pagedList.size > 0 -> {
-                        view.showFaveVideos(pagedList)
-                        view.showLoading(countDownLatch.count > 0)
-                    }
-                }
-            })
+            videoRepository
+                    .getFaveVideos()
+                    .observe(view, Observer { pagedList ->
+                        countDownLatch.countDown()
+                        when {
+                            pagedList != null && pagedList.size > 0 -> {
+                                view.showFaveVideos(pagedList)
+                                view.showLoading(countDownLatch.count > 0)
+                                view.showUi(countDownLatch.count > 0)
+                            }
+                        }
+                    })
             videoRepository
                     .getVideos(view.getUserId()?.toInt())
                     .observe(view, Observer { pagedList ->
@@ -109,13 +113,10 @@ class ProfilePresenter(
                             pagedList != null && pagedList.size > 0 -> {
                                 view.showVideos(pagedList)
                                 view.showLoading(countDownLatch.count > 0)
+                                view.showUi(countDownLatch.count > 0)
                             }
                         }
                     })
-
-
-            view.showLoading(countDownLatch.count > 0)
-            view.showUi(countDownLatch.count > 0)
         }
 
     }
