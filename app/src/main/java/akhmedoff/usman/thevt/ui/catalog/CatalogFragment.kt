@@ -123,4 +123,8 @@ class CatalogFragment : Fragment(),
                         presenter.refresh()
                     }
                     .show()
+
+    override fun upRecyclerView() {
+        catalog_recycler.scrollToPosition(0)
+    }
 }

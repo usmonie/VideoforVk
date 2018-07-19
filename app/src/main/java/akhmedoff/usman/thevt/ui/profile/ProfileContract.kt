@@ -33,6 +33,9 @@ interface ProfileContract {
         fun getIsUser(): Boolean
 
         fun showUi(isVisible: Boolean)
+
+        fun showStartPositionVideos()
+
     }
 
     interface Presenter {

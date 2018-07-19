@@ -289,7 +289,6 @@ class VideoPresenter(
                                 responseVideo.items.isNotEmpty() -> {
                                     video = responseVideo.items[0]
                                     showVideo(video)
-
                                 }
 
                                 else -> {

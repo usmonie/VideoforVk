@@ -18,6 +18,8 @@ import android.arch.paging.PagedList
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.media.AudioManager
 import android.net.Uri
 import android.os.Build
@@ -37,10 +39,7 @@ import android.widget.ImageView
 import androidx.core.content.systemService
 import androidx.core.net.toUri
 import androidx.core.view.isVisible
-import com.google.android.exoplayer2.DefaultLoadControl
-import com.google.android.exoplayer2.DefaultRenderersFactory
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.ExoPlayerFactory
+import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.Player.REPEAT_MODE_OFF
 import com.google.android.exoplayer2.Player.REPEAT_MODE_ONE
 import com.google.android.exoplayer2.source.ExtractorMediaSource
@@ -53,11 +52,13 @@ import com.google.android.exoplayer2.upstream.FileDataSourceFactory
 import com.google.android.exoplayer2.upstream.cache.*
 import com.google.android.exoplayer2.util.Util
 import com.squareup.picasso.Picasso
+import com.squareup.picasso.Target
 import kotlinx.android.synthetic.main.activity_video.*
 import kotlinx.android.synthetic.main.activity_video_info.*
 import kotlinx.android.synthetic.main.activity_video_load_error.*
 import kotlinx.android.synthetic.main.playback_exo_control_view.*
 import java.io.File
+import java.lang.Exception
 import java.util.*
 
 private const val TRANSITION_NAME_KEY = "transition_name"
@@ -150,7 +151,6 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
             presenter.onStart()
         }
 
-        video_info_stub?.isVisible = true
 
         appbar.transitionName = intent.getStringExtra(TRANSITION_NAME_KEY)
     }
@@ -170,11 +170,11 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
         popupDownloadQualityMenu.inflate(R.menu.download_video_qualities)
 
         pip_toggle.isVisible = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
-        setVideoClickListeners()
+        video_info_stub?.isVisible = true
     }
 
-    private fun setVideoClickListeners() {
 
+    private fun setVideoClickListeners() {
         like_button.setOnClickListener {
             presenter.onClick(it.id)
         }
@@ -207,7 +207,6 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
     }
 
     private fun setErrorClickListeners() {
-
         error_button_reload.setOnClickListener { presenter.onStart() }
 
         error_button_show_browser.setOnClickListener { presenter.openBrowser() }
@@ -228,6 +227,9 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
     override fun onResume() {
         super.onResume()
         presenter.onResume()
+
+        setVideoClickListeners()
+
     }
 
     override fun setVideoState(state: Boolean) {
@@ -237,12 +239,10 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
     override fun onStop() {
         super.onStop()
         presenter.onStop()
+        if (isFinishing)
+            simpleCache.release()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        simpleCache.release()
-    }
 
     override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
         outState?.putParcelable(VIDEO_KEY, presenter.getVideo())
@@ -294,12 +294,44 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
             startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
         }
 
+        player?.addListener(object : Player.DefaultEventListener() {
+
+            override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+                if (playbackState == Player.STATE_READY)
+                    video_exo_player.forceLayout()
+            }
+        })
         video_exo_player.setControlDispatcher(simpleControlDispatcher)
         video_exo_player.player = player
     }
 
 
     override fun showVideo(item: Video) {
+        val artWork = when {
+            item.photo800 != null -> item.photo800
+            item.firstFrame800 != null -> item.firstFrame800
+            item.photo640 != null -> item.photo640
+            item.firstFrame320 != null -> item.firstFrame320
+            item.photo320 != null -> item.photo320
+            item.firstFrame160 != null -> item.firstFrame160
+            item.photo130 != null -> item.photo130
+            item.firstFrame130 != null -> item.firstFrame130
+            else -> null
+        }
+
+        artWork?.let {
+            Picasso.get().load(it).into(object : Target {
+                override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
+                }
+
+                override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
+                }
+
+                override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
+                    video_exo_player.defaultArtwork = bitmap
+                }
+            })
+        }
         add_button.isVisible = item.canAdd
 
         title_text_view.text = item.title
@@ -410,7 +442,6 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
             exo_quality_toggle.setImageDrawable(ContextCompat.getDrawable(this, id))
 
     override fun showFullscreen() {
-        video_layout.fitsSystemWindows = false
         window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -420,7 +451,6 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
     }
 
     override fun showSmallScreen() {
-        video_layout.fitsSystemWindows = true
         window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
@@ -592,8 +622,8 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
 
     override fun loadVideoPosition() = intent.getLongExtra(VIDEO_POSITION_KEY, 1)
 
-    override fun getVideoQualities() =
-            intent.getStringArrayListExtra(VIDEO_QUALITIES_KEY) ?: emptyList<String>()
+    override fun getVideoQualities() = intent.getStringArrayListExtra(VIDEO_QUALITIES_KEY)
+            ?: emptyList<String>()
 
     override fun getCurrentQuality() = intent.getIntExtra(VIDEO_QUALITY_KEY, 0)
 

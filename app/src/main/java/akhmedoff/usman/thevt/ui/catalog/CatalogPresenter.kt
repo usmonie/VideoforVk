@@ -26,7 +26,10 @@ class CatalogPresenter(
                     .observe(view, Observer { pagedList ->
                         when {
                             pagedList == null -> view.showErrorLoading()
-                            pagedList.size > 0 -> view.showList(pagedList)
+                            pagedList.size > 0 -> {
+                                view.showList(pagedList)
+                                view.upRecyclerView()
+                            }
                             else -> view.showEmptyList()
                         }
 

@@ -4,7 +4,6 @@
         <item name="colorControlHighlight">?attr/colorAccent</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowActivityTransitions">true</item>
-        <item name="android:windowTranslucentStatus">true</item>
         <!-- specify enter and exit transitions -->
         <item name="android:windowEnterTransition">@android:transition/explode</item>
         <item name="android:windowExitTransition">@android:transition/explode</item>
@@ -19,8 +18,9 @@
     </style>
 
     <style name="VideoTheme" parent="AppTheme">
-        <item name="colorPrimary">#000</item>
-        <item name="colorPrimaryDark">#000</item>
+        <item name="colorPrimary">@android:color/black</item>
+        <item name="colorPrimaryDark">@android:color/black</item>
+        <item name="android:windowTranslucentStatus">false</item>
     </style>
 
     <style name="LoginTheme" parent="AppTheme">

@@ -24,6 +24,7 @@ interface CatalogContract {
 
         fun getPageCategory(): String
 
+        fun upRecyclerView()
     }
 
     interface Presenter {

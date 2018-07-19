@@ -89,7 +89,7 @@ class ProfilePresenter(
                             pagedList != null && pagedList.size > 0 -> {
                                 view.showAlbums(pagedList)
                                 view.showLoading(countDownLatch.count > 0)
-                                view.showUi(countDownLatch.count > 0)
+                                view.showUi(countDownLatch.count == 0L)
                             }
                         }
                     })
@@ -101,7 +101,7 @@ class ProfilePresenter(
                             pagedList != null && pagedList.size > 0 -> {
                                 view.showFaveVideos(pagedList)
                                 view.showLoading(countDownLatch.count > 0)
-                                view.showUi(countDownLatch.count > 0)
+                                view.showUi(countDownLatch.count == 0L)
                             }
                         }
                     })
@@ -113,7 +113,8 @@ class ProfilePresenter(
                             pagedList != null && pagedList.size > 0 -> {
                                 view.showVideos(pagedList)
                                 view.showLoading(countDownLatch.count > 0)
-                                view.showUi(countDownLatch.count > 0)
+                                view.showUi(countDownLatch.count == 0L)
+                                view.showStartPositionVideos()
                             }
                         }
                     })

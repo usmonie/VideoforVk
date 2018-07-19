@@ -87,7 +87,7 @@ class ProfileFragment : Fragment(), ProfileContract.View {
 
     override fun showUserName(name: String) {
         collapsingToolbar.title = name
-        toolbar.title = name
+        user_name.text = name
     }
 
     override fun showUserPhoto(photoUrl: String) = Picasso.get().load(photoUrl).into(user_avatar)
@@ -105,21 +105,22 @@ class ProfileFragment : Fragment(), ProfileContract.View {
     override fun showLoadingError() {
     }
 
+    override fun showStartPositionVideos() {
+        profile_recycler.scrollToPosition(0)
+    }
+
     override fun showLoading(isLoading: Boolean) {
         swipe_update.isRefreshing = isLoading
     }
 
     override fun showUserStatus(status: String) {
-        toolbar.subtitle = status
     }
 
     override fun showAlbums(albums: PagedList<Album>) {
         recyclerAdapter.albums = albums
     }
 
-    override fun showVideos(videos: PagedList<Video>) {
-        recyclerAdapter.submitList(videos)
-    }
+    override fun showVideos(videos: PagedList<Video>) = recyclerAdapter.submitList(videos)
 
     override fun showFaveVideos(videos: PagedList<Video>) {
         recyclerAdapter.faveVideos = videos
@@ -166,7 +167,6 @@ class ProfileFragment : Fragment(), ProfileContract.View {
             )
         }
     }
-
 
     private fun showFavouritesPage() {
         val fragment = FavouritesFragment()
