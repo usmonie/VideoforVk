@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.support.design.widget.AppBarLayout
+        <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="?attr/actionBarSize"
                 app:layout_scrollFlags="scroll|enterAlways">
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:id="@+id/search_box_collapsed"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -42,14 +42,14 @@
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
-                        <android.support.v7.widget.AppCompatImageButton
+                        <androidx.appcompat.widget.AppCompatImageButton
                             android:id="@+id/search_expanded_back_button"
                             android:layout_width="48dp"
                             android:layout_height="match_parent"
                             android:background="?attr/selectableItemBackground"
                             android:src="@drawable/ic_arrow_back" />
 
-                        <android.support.design.widget.TextInputEditText
+                        <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/search_expanded_edit_text"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
@@ -66,21 +66,21 @@
                             android:textSize="@dimen/search_text_size" />
 
                     </LinearLayout>
-                </android.support.v7.widget.CardView>
-            </android.support.v7.widget.Toolbar>
-        </android.support.design.widget.AppBarLayout>
+                </androidx.cardview.widget.CardView>
+            </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.AppBarLayout>
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/search_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipChildren="true"
             android:clipToPadding="true"
-            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:listitem="@layout/search_videos" />
 
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/filter_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -88,9 +88,9 @@
             android:layout_margin="@dimen/activity_vertical_margin"
             android:src="@drawable/ic_filter_list"
             app:fabSize="normal" />
-    </android.support.design.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <android.support.design.widget.NavigationView
+    <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_filter_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -148,6 +148,6 @@
 
         </LinearLayout>
 
-    </android.support.design.widget.NavigationView>
+    </com.google.android.material.navigation.NavigationView>
 
-</android.support.v4.widget.DrawerLayout>
+</androidx.drawerlayout.widget.DrawerLayout>

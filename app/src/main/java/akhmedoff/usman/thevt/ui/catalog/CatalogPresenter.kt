@@ -1,7 +1,7 @@
 package akhmedoff.usman.thevt.ui.catalog
 
 import akhmedoff.usman.data.repository.CatalogRepository
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 
 class CatalogPresenter(
         private var view: CatalogContract.View?,

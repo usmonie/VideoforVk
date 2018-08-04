@@ -1,8 +1,8 @@
 package akhmedoff.usman.data.repository
 
 import akhmedoff.usman.data.model.*
-import android.arch.lifecycle.LiveData
-import android.arch.paging.PagedList
+import androidx.lifecycle.LiveData
+import androidx.paging.PagedList
 import retrofit2.Call
 
 interface VideoRepository {

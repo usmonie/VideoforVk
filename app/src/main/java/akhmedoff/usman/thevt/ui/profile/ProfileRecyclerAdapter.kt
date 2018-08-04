@@ -6,13 +6,13 @@ import akhmedoff.usman.thevt.R
 import akhmedoff.usman.thevt.ui.view.holders.FaveVideosSectorViewHolder
 import akhmedoff.usman.thevt.ui.view.holders.ProfileAlbumsSectorViewHolder
 import akhmedoff.usman.thevt.ui.view.holders.SearchViewHolder
-import android.arch.paging.PagedList
-import android.arch.paging.PagedListAdapter
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.paging.PagedList
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 
 class ProfileRecyclerAdapter(private val videoClickListener: (Video, View) -> Unit,

@@ -1,12 +1,12 @@
 package akhmedoff.usman.thevt.ui.view
 
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.OrientationHelper
-import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.OrientationHelper
+import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 
 internal class GravityDelegate(

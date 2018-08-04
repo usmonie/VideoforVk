@@ -2,8 +2,8 @@ package akhmedoff.usman.thevt.ui.profile
 
 import akhmedoff.usman.data.model.Album
 import akhmedoff.usman.data.model.Video
-import android.arch.lifecycle.LifecycleOwner
-import android.arch.paging.PagedList
+import androidx.lifecycle.LifecycleOwner
+import androidx.paging.PagedList
 
 interface ProfileContract {
 

@@ -2,7 +2,7 @@ package akhmedoff.usman.thevt.ui.search
 
 import akhmedoff.usman.data.model.Video
 import akhmedoff.usman.data.repository.VideoRepository
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 
 class SearchPresenter(
         private var view: SearchContract.View?,

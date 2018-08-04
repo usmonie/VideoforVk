@@ -1,9 +1,10 @@
 package akhmedoff.usman.data.db
 
 import akhmedoff.usman.data.model.Catalog
-import android.arch.persistence.room.*
+import androidx.room.*
 
 @Dao
+
 interface CatalogDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

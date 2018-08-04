@@ -5,9 +5,9 @@ import akhmedoff.usman.data.model.Album
 import akhmedoff.usman.data.model.ApiResponse
 import akhmedoff.usman.data.model.Video
 import akhmedoff.usman.data.repository.AlbumRepository
-import android.arch.lifecycle.Observer
-import android.arch.paging.PagedList
 import android.util.Log
+import androidx.lifecycle.Observer
+import androidx.paging.PagedList
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

@@ -10,8 +10,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
-import android.support.v4.app.NotificationCompat
-import androidx.core.content.systemService
+import androidx.core.app.NotificationCompat
+import androidx.core.content.getSystemService
 
 const val ACTION_DOWNLOAD = "akhmedoff.usman.thevt.services.download.action.DOWNLOAD"
 
@@ -44,7 +44,7 @@ class VideoDownloadingService : IntentService("VideoDownloadingService") {
 
     override fun onCreate() {
         super.onCreate()
-        notificationManager = systemService<NotificationManager>()
+        notificationManager = getSystemService()!!
 
         downloadQuery = DownloadManager.Query()
 
@@ -72,7 +72,7 @@ class VideoDownloadingService : IntentService("VideoDownloadingService") {
                 .setCategory(NotificationCompat.CATEGORY_STATUS)
                 .setWhen(System.currentTimeMillis())
         startForeground(NOTIFICATION_ID, notificationCompatBuilder.build())
-        downloadManager = systemService<DownloadManager>()
+        downloadManager = getSystemService()!!
 
     }
 

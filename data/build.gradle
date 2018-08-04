@@ -11,7 +11,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
 
         buildConfigField('String', 'VK_APP_ID', vk_app_id)
@@ -38,11 +38,11 @@ kapt {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation "android.arch.lifecycle:extensions:$archLifecycleVersion"
-    implementation 'android.arch.paging:runtime:1.0.1'
-    api 'android.arch.persistence.room:runtime:1.1.1'
-    kapt "android.arch.persistence.room:compiler:1.1.1"
-    kapt "android.arch.lifecycle:compiler:$archLifecycleVersion"
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0-beta01'
+    implementation 'androidx.paging:paging-runtime:2.0.0-beta01'
+    api 'androidx.room:room-runtime:2.0.0-beta01'
+    kapt "androidx.room:room-compiler:2.0.0-beta01"
+    kapt 'androidx.lifecycle:lifecycle-compiler:2.0.0-beta01'
 
     implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'

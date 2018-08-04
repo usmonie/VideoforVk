@@ -5,6 +5,7 @@
     android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center"
     android:background="@drawable/video_fullscreen_background"
     android:orientation="vertical">
 
@@ -12,7 +13,15 @@
         android:id="@id/exo_play"
         style="@style/ExoMediaButton.Play"
         android:layout_gravity="center"
-        android:background="?attr/selectableItemBackgroundBorderless"
+        android:background="?selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true" />
+
+    <ImageButton
+        android:id="@id/exo_pause"
+        style="@style/ExoMediaButton.Pause"
+        android:layout_gravity="center"
+        android:background="?selectableItemBackgroundBorderless"
         android:clickable="true"
         android:focusable="true" />
 
@@ -21,27 +30,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|start"
-        android:background="?attr/selectableItemBackgroundBorderless"
+        android:background="?selectableItemBackgroundBorderless"
         android:clickable="true"
         android:focusable="true"
         android:padding="16dp"
         android:tint="@android:color/white"
         app:srcCompat="@drawable/ic_arrow_back_24dp" />
-
-    <ImageView
-        android:id="@+id/video_frame"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone" />
-
-    <ImageButton
-        android:id="@id/exo_pause"
-        style="@style/ExoMediaButton.Pause"
-        android:layout_gravity="center"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:focusable="true" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -53,7 +47,7 @@
             android:id="@+id/pip_toggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="?selectableItemBackgroundBorderless"
             android:clickable="true"
             android:focusable="true"
             android:padding="16dp"
@@ -64,7 +58,7 @@
             android:id="@+id/exo_quality_toggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="?selectableItemBackgroundBorderless"
             android:clickable="true"
             android:focusable="true"
             android:padding="16dp"
@@ -104,7 +98,6 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="4dp"
             android:layout_marginBottom="8dp"
             android:gravity="center"
             android:textAlignment="center"
@@ -116,12 +109,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="?selectableItemBackgroundBorderless"
             android:clickable="true"
             android:focusable="true"
+            android:paddingStart="8dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="8dp"
             app:srcCompat="@drawable/ic_fullscreen_white_24dp" />
     </LinearLayout>
 

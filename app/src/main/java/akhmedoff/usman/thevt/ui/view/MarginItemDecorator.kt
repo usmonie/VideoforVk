@@ -1,10 +1,10 @@
 package akhmedoff.usman.thevt.ui.view
 
 import android.graphics.Rect
-import android.support.annotation.IntRange
-import android.support.annotation.Px
-import android.support.v7.widget.RecyclerView
 import android.view.View
+import androidx.annotation.IntRange
+import androidx.annotation.Px
+import androidx.recyclerview.widget.RecyclerView
 
 class MarginItemDecorator(@IntRange(from = 0) private val columnsCount: Int = 1, @Px private val margin: Int) :
         RecyclerView.ItemDecoration() {

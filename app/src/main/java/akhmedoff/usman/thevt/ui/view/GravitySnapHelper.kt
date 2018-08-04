@@ -1,8 +1,8 @@
 package akhmedoff.usman.thevt.ui.view
 
-import android.support.v7.widget.LinearSnapHelper
-import android.support.v7.widget.RecyclerView
 import android.view.View
+import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.RecyclerView
 
 
 class GravitySnapHelper @JvmOverloads constructor(

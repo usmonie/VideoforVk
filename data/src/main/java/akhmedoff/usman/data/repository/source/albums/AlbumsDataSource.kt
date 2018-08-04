@@ -4,21 +4,21 @@ import akhmedoff.usman.data.api.VkApi
 import akhmedoff.usman.data.model.Album
 import akhmedoff.usman.data.model.AlbumsResponse
 import akhmedoff.usman.data.model.ApiResponse
-import android.arch.paging.PositionalDataSource
 import android.util.Log
+import androidx.paging.PositionalDataSource
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class AlbumsDataSource(
-    private val vkApi: VkApi,
-    private val ownerId: String?
+        private val vkApi: VkApi,
+        private val ownerId: String?
 ) : PositionalDataSource<Album>() {
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Album>) {
         val apiSource = vkApi.getAlbums(
-            ownerId = ownerId,
-            count = params.requestedLoadSize.toLong(),
-            offset = 0
+                ownerId = ownerId,
+                count = params.requestedLoadSize.toLong(),
+                offset = 0
         )
 
         try {
@@ -34,17 +34,17 @@ class AlbumsDataSource(
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Album>) {
         vkApi.getAlbums(
-            ownerId = ownerId,
-            count = params.loadSize.toLong(),
-            offset = params.startPosition.toLong()
+                ownerId = ownerId,
+                count = params.loadSize.toLong(),
+                offset = params.startPosition.toLong()
         ).enqueue(object : Callback<ApiResponse<AlbumsResponse>> {
             override fun onFailure(call: Call<ApiResponse<AlbumsResponse>>?, t: Throwable?) {
                 Log.e(javaClass.simpleName, "ERROR: " + t.toString())
             }
 
             override fun onResponse(
-                call: Call<ApiResponse<AlbumsResponse>>?,
-                response: Response<ApiResponse<AlbumsResponse>>?
+                    call: Call<ApiResponse<AlbumsResponse>>?,
+                    response: Response<ApiResponse<AlbumsResponse>>?
             ) {
                 response?.body()?.response?.let {
                     callback.onResult(it.items)

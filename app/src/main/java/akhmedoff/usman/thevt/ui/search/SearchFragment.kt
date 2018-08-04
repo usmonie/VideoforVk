@@ -7,10 +7,7 @@ import akhmedoff.usman.thevt.Router
 import akhmedoff.usman.thevt.ui.video.VideoActivity
 import akhmedoff.usman.thevt.ui.view.MarginItemDecorator
 import akhmedoff.usman.thevt.ui.view.adapters.SearchRecyclerAdapter
-import android.arch.paging.PagedList
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.view.ViewCompat
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
@@ -18,6 +15,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import androidx.core.view.ViewCompat
+import androidx.fragment.app.Fragment
+import androidx.paging.PagedList
 import kotlinx.android.synthetic.main.fragment_search.*
 import java.util.*
 

@@ -1,12 +1,12 @@
 package akhmedoff.usman.data.model
 
 import akhmedoff.usman.data.db.SimpleTypeConverters
-import android.arch.persistence.room.Embedded
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.Index
-import android.arch.persistence.room.TypeConverters
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.Index
+import androidx.room.TypeConverters
 
 @Entity(
         tableName = "videos",

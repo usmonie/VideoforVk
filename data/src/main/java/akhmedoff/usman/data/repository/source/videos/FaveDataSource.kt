@@ -4,8 +4,8 @@ import akhmedoff.usman.data.api.VkApi
 import akhmedoff.usman.data.db.VideoDao
 import akhmedoff.usman.data.model.ResponseVideo
 import akhmedoff.usman.data.model.Video
-import android.arch.paging.PositionalDataSource
 import android.util.Log
+import androidx.paging.PositionalDataSource
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

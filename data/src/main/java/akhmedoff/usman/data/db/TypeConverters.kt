@@ -3,7 +3,7 @@ package akhmedoff.usman.data.db
 import akhmedoff.usman.data.model.CatalogItem
 import akhmedoff.usman.data.model.CatalogItemType
 import akhmedoff.usman.data.model.VideoUrl
-import android.arch.persistence.room.TypeConverter
+import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.util.*

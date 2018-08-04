@@ -11,9 +11,9 @@ import akhmedoff.usman.data.model.Video
 import akhmedoff.usman.data.repository.source.videos.FaveDataSourceFactory
 import akhmedoff.usman.data.repository.source.videos.SearchDataSourceFactory
 import akhmedoff.usman.data.repository.source.videos.VideosDataSourceFactory
-import android.arch.lifecycle.LiveData
-import android.arch.paging.LivePagedListBuilder
-import android.arch.paging.PagedList
+import androidx.lifecycle.LiveData
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import retrofit2.Call
 
 class VideoRepositoryImpl(

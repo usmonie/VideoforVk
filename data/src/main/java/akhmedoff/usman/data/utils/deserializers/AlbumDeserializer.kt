@@ -10,9 +10,9 @@ import java.lang.reflect.Type
 class AlbumDeserializer : JsonDeserializer<Album> {
 
     override fun deserialize(
-        json: JsonElement,
-        typeOfT: Type,
-        context: JsonDeserializationContext?
+            json: JsonElement,
+            typeOfT: Type,
+            context: JsonDeserializationContext?
     ): Album {
         Log.d("deserialize album", "start")
         val jsonObject = json.asJsonObject

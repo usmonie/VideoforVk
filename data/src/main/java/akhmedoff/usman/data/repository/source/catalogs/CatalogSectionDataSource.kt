@@ -5,8 +5,8 @@ import akhmedoff.usman.data.db.CatalogDao
 import akhmedoff.usman.data.db.OwnerDao
 import akhmedoff.usman.data.model.CatalogItem
 import akhmedoff.usman.data.model.ResponseCatalog
-import android.arch.paging.PageKeyedDataSource
 import android.util.Log
+import androidx.paging.PageKeyedDataSource
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

@@ -8,8 +8,8 @@ import akhmedoff.usman.data.repository.UserRepository
 import akhmedoff.usman.data.repository.VideoRepository
 import akhmedoff.usman.data.utils.gson
 import akhmedoff.usman.thevt.R
-import android.arch.lifecycle.Observer
 import android.util.Log
+import androidx.lifecycle.Observer
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback

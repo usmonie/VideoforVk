@@ -5,8 +5,8 @@ import akhmedoff.usman.data.local.UserSettings
 
 
 class GroupRepository(
-    private val api: VkApi,
-    userSettings: UserSettings
+        private val api: VkApi,
+        userSettings: UserSettings
 ) {
     fun getGroup(id: String) = api.getGroups(groupId = id)
 

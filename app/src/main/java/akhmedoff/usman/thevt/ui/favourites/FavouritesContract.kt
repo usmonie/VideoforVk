@@ -1,8 +1,8 @@
 package akhmedoff.usman.thevt.ui.favourites
 
 import akhmedoff.usman.data.model.Video
-import android.arch.lifecycle.LifecycleOwner
-import android.arch.paging.PagedList
+import androidx.lifecycle.LifecycleOwner
+import androidx.paging.PagedList
 
 interface FavouritesContract {
 

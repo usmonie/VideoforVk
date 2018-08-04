@@ -12,15 +12,15 @@ import akhmedoff.usman.thevt.ui.albums.AlbumsFragment
 import akhmedoff.usman.thevt.ui.favourites.FavouritesFragment
 import akhmedoff.usman.thevt.ui.video.VideoActivity
 import akhmedoff.usman.thevt.ui.view.MarginItemDecorator
-import android.arch.paging.PagedList
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.view.ViewCompat
-import android.support.v7.widget.DefaultItemAnimator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.paging.PagedList
+import androidx.recyclerview.widget.DefaultItemAnimator
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_profile.*
 
