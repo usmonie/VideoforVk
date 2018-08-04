@@ -1,12 +1,11 @@
 package akhmedoff.usman.data.utils;
 
-import android.arch.lifecycle.LiveData;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 import akhmedoff.usman.data.model.ApiResponse;
+import androidx.lifecycle.LiveData;
 import retrofit2.CallAdapter;
 import retrofit2.Retrofit;
 

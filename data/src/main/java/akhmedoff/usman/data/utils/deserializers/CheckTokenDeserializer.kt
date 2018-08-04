@@ -8,9 +8,9 @@ import java.lang.reflect.Type
 
 class CheckTokenDeserializer : JsonDeserializer<CheckTokenResponse> {
     override fun deserialize(
-        json: JsonElement,
-        typeOfT: Type,
-        context: JsonDeserializationContext
+            json: JsonElement,
+            typeOfT: Type,
+            context: JsonDeserializationContext
     ): CheckTokenResponse {
         val response = json.asJsonObject["response"]?.asJsonObject
         if (response != null) throw NullPointerException()

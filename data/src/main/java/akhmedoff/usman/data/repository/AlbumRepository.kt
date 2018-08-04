@@ -4,8 +4,8 @@ import akhmedoff.usman.data.model.Album
 import akhmedoff.usman.data.model.ApiResponse
 import akhmedoff.usman.data.model.Owner
 import akhmedoff.usman.data.model.Video
-import android.arch.lifecycle.LiveData
-import android.arch.paging.PagedList
+import androidx.lifecycle.LiveData
+import androidx.paging.PagedList
 import retrofit2.Call
 
 
@@ -23,14 +23,14 @@ interface AlbumRepository {
     fun getAlbums(ownerId: String? = null): LiveData<PagedList<Album>>
 
     fun getAlbumsByVideo(
-        targetId: String? = null,
-        ownerId: String,
-        videoId: String
+            targetId: String? = null,
+            ownerId: String,
+            videoId: String
     ): Call<ApiResponse<List<Int>>>
 
     fun getVideos(
-        ownerId: Int?,
-        videos: String?,
-        albumId: Int?
+            ownerId: Int?,
+            videos: String?,
+            albumId: Int?
     ): LiveData<PagedList<Video>>
 }

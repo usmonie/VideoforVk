@@ -11,9 +11,9 @@ import java.lang.reflect.Type
 class AuthDeserializer : JsonDeserializer<Auth> {
 
     override fun deserialize(
-        json: JsonElement,
-        typeOfT: Type,
-        context: JsonDeserializationContext?
+            json: JsonElement,
+            typeOfT: Type,
+            context: JsonDeserializationContext?
     ): Auth {
         val jsonObject = json.asJsonObject
 

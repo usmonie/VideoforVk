@@ -1,14 +1,14 @@
 package akhmedoff.usman.data.model
 
 import akhmedoff.usman.data.db.SimpleTypeConverters
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.Index
-import android.arch.persistence.room.TypeConverters
+import androidx.room.Entity
+import androidx.room.Index
+import androidx.room.TypeConverters
 
 @Entity(
-    tableName = "catalog_items",
-    primaryKeys = ["id", "ownerId"],
-    indices = [(Index(value = ["id", "ownerId"], unique = true))]
+        tableName = "catalog_items",
+        primaryKeys = ["id", "ownerId"],
+        indices = [(Index(value = ["id", "ownerId"], unique = true))]
 )
 class CatalogItem : Item() {
     var accessKey: String? = null

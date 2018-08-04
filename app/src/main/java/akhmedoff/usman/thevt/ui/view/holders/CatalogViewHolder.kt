@@ -6,11 +6,11 @@ import akhmedoff.usman.thevt.R
 import akhmedoff.usman.thevt.ui.explore.CatalogItemsRecyclerAdapter
 import akhmedoff.usman.thevt.ui.view.GravitySnapHelper
 import akhmedoff.usman.thevt.ui.view.MarginItemDecorator
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.LinearLayoutManager.HORIZONTAL
-import android.support.v7.widget.RecyclerView
 import android.view.Gravity
 import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
+import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.catalog_item.view.*
 

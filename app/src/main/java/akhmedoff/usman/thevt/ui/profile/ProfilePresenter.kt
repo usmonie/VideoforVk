@@ -5,8 +5,8 @@ import akhmedoff.usman.data.model.User
 import akhmedoff.usman.data.repository.AlbumRepository
 import akhmedoff.usman.data.repository.UserRepository
 import akhmedoff.usman.data.repository.VideoRepository
-import android.arch.lifecycle.Observer
 import android.util.Log
+import androidx.lifecycle.Observer
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

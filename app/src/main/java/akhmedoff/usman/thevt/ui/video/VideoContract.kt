@@ -2,9 +2,9 @@ package akhmedoff.usman.thevt.ui.video
 
 import akhmedoff.usman.data.Error
 import akhmedoff.usman.data.model.*
-import android.arch.lifecycle.LifecycleOwner
-import android.arch.paging.PagedList
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
+import androidx.lifecycle.LifecycleOwner
+import androidx.paging.PagedList
 
 interface VideoContract {
 

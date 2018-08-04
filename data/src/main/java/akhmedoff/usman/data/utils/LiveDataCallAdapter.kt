@@ -1,8 +1,8 @@
 package akhmedoff.usman.data.utils
 
 import akhmedoff.usman.data.model.ApiResponse
-import android.arch.lifecycle.LiveData
 import android.util.Log
+import androidx.lifecycle.LiveData
 import retrofit2.Call
 import retrofit2.CallAdapter
 import retrofit2.Callback
@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicBoolean
  * @param <R>
  */
 class LiveDataCallAdapter<R>(private val responseType: Type) :
-    CallAdapter<R, LiveData<ApiResponse<R>>> {
+        CallAdapter<R, LiveData<ApiResponse<R>>> {
 
     override fun responseType() = responseType
 

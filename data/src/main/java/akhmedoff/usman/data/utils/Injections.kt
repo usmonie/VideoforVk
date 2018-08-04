@@ -33,11 +33,11 @@ private val okHttp: OkHttpClient by lazy {
 
 private val retrofit: Retrofit by lazy {
     Retrofit.Builder()
-        .baseUrl("https://api.vk.com/method/")
-        .client(okHttp)
-        .addConverterFactory(GsonConverterFactory.create(gson))
-        .addCallAdapterFactory(LiveDataCallAdapterFactory())
-        .build()
+            .baseUrl("https://api.vk.com/method/")
+            .client(okHttp)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addCallAdapterFactory(LiveDataCallAdapterFactory())
+            .build()
 }
 
 val vkApi: VkApi by lazy { retrofit.create(VkApi::class.java) }
@@ -46,63 +46,63 @@ val gson: Gson by lazy {
     GsonBuilder().apply {
 
         registerTypeAdapter(
-            User::class.java,
-            UserDeserializer()
+                User::class.java,
+                UserDeserializer()
         )
         registerTypeAdapter(
-            CheckTokenResponse::class.java,
-            CheckTokenDeserializer()
+                CheckTokenResponse::class.java,
+                CheckTokenDeserializer()
         )
         registerTypeAdapter(
-            Group::class.java,
-            GroupDeserializer()
+                Group::class.java,
+                GroupDeserializer()
         )
         registerTypeAdapter(
-            ResponseVideo::class.java,
-            VideoDeserializer()
+                ResponseVideo::class.java,
+                VideoDeserializer()
         )
         registerTypeAdapter(
-            ResponseCatalog::class.java,
-            CatalogDeserializer()
+                ResponseCatalog::class.java,
+                CatalogDeserializer()
         )
         registerTypeAdapter(
-            Auth::class.java,
-            AuthDeserializer()
+                Auth::class.java,
+                AuthDeserializer()
         )
 
         registerTypeAdapter(
-            Album::class.java,
-            AlbumDeserializer()
+                Album::class.java,
+                AlbumDeserializer()
         )
     }.create()
 }
 
 fun getVideoRepository(context: Context): VideoRepository =
-    VideoRepositoryImpl(
-        vkApi,
-        UserSettings.getUserSettings(context),
-        AppDatabase.getInstance(context).videoDao(),
-        AppDatabase.getInstance(context).ownerDao()
-    )
+        VideoRepositoryImpl(
+                vkApi,
+                UserSettings.getUserSettings(context),
+                AppDatabase.getInstance(context).videoDao(),
+                AppDatabase.getInstance(context).ownerDao()
+        )
 
 fun getCatalogRepository(context: Context): CatalogRepository =
-    CatalogRepositoryImpl(
-        vkApi,
-        AppDatabase.getInstance(context).ownerDao(),
-        AppDatabase.getInstance(context).catalogDao()
-    )
+        CatalogRepositoryImpl(
+                vkApi,
+                AppDatabase.getInstance(context).ownerDao(),
+                AppDatabase.getInstance(context).catalogDao()
+        )
 
 fun getAlbumRepository(context: Context): AlbumRepository =
-    AlbumRepositoryImpl(
-        vkApi,
-        UserSettings.getUserSettings(context),
-        AppDatabase.getInstance(context).ownerDao(),
-        AppDatabase.getInstance(context).albumDao(),
-        AppDatabase.getInstance(context).videoDao()
-    )
+        AlbumRepositoryImpl(
+                vkApi,
+                UserSettings.getUserSettings(context),
+                AppDatabase.getInstance(context).ownerDao(),
+                AppDatabase.getInstance(context).albumDao(),
+                AppDatabase.getInstance(context).videoDao()
+        )
 
 fun getUserRepository(context: Context) =
-    UserRepository(UserSettings.getUserSettings(context), vkApi)
+        UserRepository(UserSettings.getUserSettings(context), vkApi)
 
 fun getGroupRepository(context: Context) =
-    GroupRepository(vkApi, UserSettings.getUserSettings(context))
+        GroupRepository(vkApi, UserSettings.getUserSettings(context))

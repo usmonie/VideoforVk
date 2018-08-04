@@ -2,17 +2,17 @@ package akhmedoff.usman.thevt
 
 import android.app.Activity
 import android.content.Intent
-import android.support.transition.*
-import android.support.transition.TransitionSet.ORDERING_TOGETHER
-import android.support.v4.app.ActivityOptionsCompat
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentTransaction
-import android.support.v4.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE
-import android.support.v4.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN
-import android.support.v4.util.Pair
-import android.support.v4.view.ViewCompat
 import android.view.View
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.util.Pair
+import androidx.core.view.ViewCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE
+import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN
+import androidx.transition.*
+import androidx.transition.TransitionSet.ORDERING_TOGETHER
 
 
 object Router {
@@ -43,18 +43,20 @@ object Router {
 
         if (addToBackStack) transaction.addToBackStack(fragmentTag)
 
-        prevFragment?.exitTransition = Explode()
+        val slide = Slide()
+        prevFragment?.exitTransition = slide
 
         val enterTransitionSet = TransitionSet()
                 .addTransition(ChangeBounds())
                 .addTransition(ChangeTransform())
                 .addTransition(ChangeClipBounds())
                 .addTransition(ChangeImageTransform())
+
         enterTransitionSet.ordering = ORDERING_TOGETHER
 
         detailFragment.sharedElementEnterTransition = enterTransitionSet
-
-        detailFragment.enterTransition = Slide()
+        slide.slideEdge = 80
+        detailFragment.enterTransition = slide
 
         val returnTransitionSet = TransitionSet()
                 .addTransition(ChangeBounds())

@@ -1,8 +1,8 @@
 package akhmedoff.usman.thevt.ui.catalog
 
 import akhmedoff.usman.data.model.CatalogItem
-import android.arch.lifecycle.LifecycleOwner
-import android.arch.paging.PagedList
+import androidx.lifecycle.LifecycleOwner
+import androidx.paging.PagedList
 
 interface CatalogContract {
 

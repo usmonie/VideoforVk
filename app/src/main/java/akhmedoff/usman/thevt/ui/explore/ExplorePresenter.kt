@@ -2,7 +2,7 @@ package akhmedoff.usman.thevt.ui.explore
 
 import akhmedoff.usman.data.model.CatalogItem
 import akhmedoff.usman.data.repository.CatalogRepository
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 
 class ExplorePresenter(
         override var view: ExploreContract.View?,

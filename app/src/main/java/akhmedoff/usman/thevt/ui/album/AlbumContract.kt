@@ -2,8 +2,8 @@ package akhmedoff.usman.thevt.ui.album
 
 import akhmedoff.usman.data.Error
 import akhmedoff.usman.data.model.Video
-import android.arch.lifecycle.LifecycleOwner
-import android.arch.paging.PagedList
+import androidx.lifecycle.LifecycleOwner
+import androidx.paging.PagedList
 
 interface AlbumContract {
 

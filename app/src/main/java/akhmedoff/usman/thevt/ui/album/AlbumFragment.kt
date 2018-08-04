@@ -8,13 +8,13 @@ import akhmedoff.usman.thevt.R
 import akhmedoff.usman.thevt.Router
 import akhmedoff.usman.thevt.ui.video.VideoActivity
 import akhmedoff.usman.thevt.ui.view.MarginItemDecorator
-import android.arch.paging.PagedList
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.view.ViewCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
+import androidx.fragment.app.Fragment
+import androidx.paging.PagedList
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_album.*
 

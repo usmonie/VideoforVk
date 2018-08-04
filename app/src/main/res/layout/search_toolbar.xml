@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
@@ -8,7 +8,7 @@
     android:minHeight="?attr/actionBarSize"
     app:layout_scrollFlags="scroll|enterAlways">
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/search_box_collapsed"
         android:layout_width="match_parent"
         android:layout_height="44dp"
@@ -34,5 +34,5 @@
             android:text="@string/search"
             android:textSize="@dimen/search_text_size" />
 
-    </android.support.v7.widget.CardView>
-</android.support.v7.widget.Toolbar>
+    </androidx.cardview.widget.CardView>
+</androidx.appcompat.widget.Toolbar>

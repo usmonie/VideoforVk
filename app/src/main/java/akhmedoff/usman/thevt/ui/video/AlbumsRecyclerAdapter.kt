@@ -3,10 +3,10 @@ package akhmedoff.usman.thevt.ui.video
 import akhmedoff.usman.data.model.Album
 import akhmedoff.usman.thevt.R
 import akhmedoff.usman.thevt.ui.view.holders.SelectableAlbumViewHolder
-import android.arch.paging.PagedListAdapter
-import android.support.v7.util.DiffUtil
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import kotlinx.android.synthetic.main.add_video_multiselect_item.view.*
 
 

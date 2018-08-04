@@ -3,12 +3,12 @@ package akhmedoff.usman.thevt.ui.video
 import akhmedoff.usman.data.model.Album
 import akhmedoff.usman.thevt.R
 import android.app.Dialog
-import android.arch.paging.PagedList
 import android.content.Context
 import android.os.Bundle
-import android.support.v7.widget.DefaultItemAnimator
 import android.view.WindowManager
 import androidx.core.view.isVisible
+import androidx.paging.PagedList
+import androidx.recyclerview.widget.DefaultItemAnimator
 import kotlinx.android.synthetic.main.popup_add_video_dialog.*
 
 class AddVideoDialog(

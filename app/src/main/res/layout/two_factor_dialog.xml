@@ -25,7 +25,7 @@
         android:text="@string/two_factor_number"
         android:visibility="gone" />
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/code_input_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -33,14 +33,14 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp">
 
-        <android.support.design.widget.TextInputEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/code_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/enter_code"
             android:inputType="number"
             android:singleLine="true" />
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <ProgressBar
         android:id="@+id/dialog_progress"

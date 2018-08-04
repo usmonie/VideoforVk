@@ -2,7 +2,7 @@ package akhmedoff.usman.thevt.ui.favourites
 
 import akhmedoff.usman.data.model.Video
 import akhmedoff.usman.data.repository.VideoRepository
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 
 class FavouritesPresenter(
         override var view: FavouritesContract.View?,

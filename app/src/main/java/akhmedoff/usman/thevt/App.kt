@@ -3,7 +3,7 @@ package akhmedoff.usman.thevt
 import akhmedoff.usman.data.utils.interceptor
 import akhmedoff.usman.data.utils.interceptors.AuthenticationInterceptor
 import android.app.Application
-import android.support.v7.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatDelegate
 
 class App : Application() {
     companion object {

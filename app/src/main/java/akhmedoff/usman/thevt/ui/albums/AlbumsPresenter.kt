@@ -2,7 +2,7 @@ package akhmedoff.usman.thevt.ui.albums
 
 import akhmedoff.usman.data.model.Album
 import akhmedoff.usman.data.repository.AlbumRepository
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 
 class AlbumsPresenter(
         override var view: AlbumsContract.View?,

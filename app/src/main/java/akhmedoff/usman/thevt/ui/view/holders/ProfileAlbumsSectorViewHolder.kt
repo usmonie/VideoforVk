@@ -5,10 +5,10 @@ import akhmedoff.usman.thevt.R
 import akhmedoff.usman.thevt.ui.view.GravitySnapHelper
 import akhmedoff.usman.thevt.ui.view.MarginItemDecorator
 import akhmedoff.usman.thevt.ui.view.adapters.AlbumsRecyclerAdapter
-import android.arch.paging.PagedList
-import android.support.v7.widget.DefaultItemAnimator
 import android.view.Gravity
 import android.view.View
+import androidx.paging.PagedList
+import androidx.recyclerview.widget.DefaultItemAnimator
 import kotlinx.android.synthetic.main.albums_item.view.*
 
 class ProfileAlbumsSectorViewHolder(clickListener: (Album, View) -> Unit, itemView: View) : AbstractViewHolder<PagedList<Album>>(itemView) {

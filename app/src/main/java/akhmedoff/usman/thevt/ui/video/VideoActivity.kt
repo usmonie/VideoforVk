@@ -14,31 +14,30 @@ import akhmedoff.usman.thevt.services.download.EXTRA_URL
 import akhmedoff.usman.thevt.services.download.EXTRA_VIDEO_NAME
 import akhmedoff.usman.thevt.services.download.VideoDownloadingService
 import android.app.PictureInPictureParams
-import android.arch.paging.PagedList
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.media.AudioManager
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
-import android.support.annotation.DrawableRes
-import android.support.annotation.RequiresApi
-import android.support.v4.content.ContextCompat
-import android.support.v4.media.AudioAttributesCompat
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.PopupMenu
 import android.text.format.DateUtils
 import android.util.Rational
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.core.content.systemService
+import android.widget.PopupMenu
+import androidx.annotation.DrawableRes
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.content.getSystemService
 import androidx.core.net.toUri
 import androidx.core.view.isVisible
+import androidx.media.AudioAttributesCompat
+import androidx.paging.PagedList
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.Player.REPEAT_MODE_OFF
 import com.google.android.exoplayer2.Player.REPEAT_MODE_ONE
@@ -155,7 +154,6 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
         appbar.transitionName = intent.getStringExtra(TRANSITION_NAME_KEY)
     }
 
-
     override fun onStart() {
         super.onStart()
         popupAddMenu = PopupMenu(this, add_button)
@@ -239,8 +237,6 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
     override fun onStop() {
         super.onStop()
         presenter.onStop()
-        if (isFinishing)
-            simpleCache.release()
     }
 
 
@@ -260,7 +256,7 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
     override fun initPlayer() {
         val bandwidthMeter = DefaultBandwidthMeter()
 
-        val audioManager = systemService<AudioManager>()!!
+        val audioManager = getSystemService<AudioManager>()!!
 
         val audioAttributes = AudioAttributesCompat.Builder()
                 .setContentType(AudioAttributesCompat.CONTENT_TYPE_MUSIC)
@@ -442,6 +438,7 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
             exo_quality_toggle.setImageDrawable(ContextCompat.getDrawable(this, id))
 
     override fun showFullscreen() {
+        video_layout.fitsSystemWindows = false
         window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -451,6 +448,7 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
     }
 
     override fun showSmallScreen() {
+        video_layout.fitsSystemWindows = true
         window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
@@ -519,6 +517,7 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
     override fun setPlayerFullscreen() {
         appbar.layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
         appbar.requestLayout()
+        video_exo_player.requestLayout()
     }
 
     override fun setPlayerNormal() {
@@ -606,6 +605,13 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+
+        if (isFinishing)
+            simpleCache.release()
+    }
+
     override fun getVideoId(): String = intent.getStringExtra(VIDEO_ID_KEY)
             ?: intent.getParcelableExtra<Video>(VIDEO_ID_KEY)?.id?.toString() ?: ""
 
@@ -657,13 +663,16 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
 
     override fun loadCaptchaSid(): String = intent.getStringExtra(CAPTCHA_SID) ?: ""
 
-    override fun back() = onBackPressed()
+    override fun back() = super.onBackPressed()
 
-    override fun getString(id: Int, vararg items: String): String =
-            resources.getString(id, *items)
+    override fun onBackPressed() {
+        presenter.onBackListener()
+    }
+
+    override fun getString(id: Int, vararg items: String): String = resources.getString(id, *items)
 
     override fun showVideoInBrowser(url: String) =
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+            startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
 
     private fun startService(title: String, url: String) =
             ContextCompat.startForegroundService(this,

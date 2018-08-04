@@ -5,10 +5,10 @@ import akhmedoff.usman.data.model.CatalogItemType.ALBUM
 import akhmedoff.usman.data.model.CatalogItemType.VIDEO
 import akhmedoff.usman.thevt.R
 import akhmedoff.usman.thevt.ui.view.holders.VideoViewHolder
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 
 class CatalogItemsRecyclerAdapter(

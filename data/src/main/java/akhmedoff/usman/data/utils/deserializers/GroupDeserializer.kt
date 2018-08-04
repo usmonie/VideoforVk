@@ -8,9 +8,9 @@ import java.lang.reflect.Type
 
 class GroupDeserializer : JsonDeserializer<Group> {
     override fun deserialize(
-        json: JsonElement,
-        typeOfT: Type,
-        context: JsonDeserializationContext
+            json: JsonElement,
+            typeOfT: Type,
+            context: JsonDeserializationContext
     ): Group {
         val groups = mutableListOf<Group>()
         val groupJson = json.asJsonObject

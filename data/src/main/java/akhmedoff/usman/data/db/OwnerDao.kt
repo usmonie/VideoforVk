@@ -1,8 +1,8 @@
 package akhmedoff.usman.data.db
 
 import akhmedoff.usman.data.model.Owner
-import android.arch.lifecycle.LiveData
-import android.arch.persistence.room.*
+import androidx.lifecycle.LiveData
+import androidx.room.*
 
 @Dao
 interface OwnerDao {

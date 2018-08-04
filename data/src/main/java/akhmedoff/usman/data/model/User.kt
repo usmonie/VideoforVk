@@ -1,6 +1,6 @@
 package akhmedoff.usman.data.model
 
-import android.arch.persistence.room.Entity
+import androidx.room.Entity
 
 @Entity(tableName = "users")
 class User : Owner() {

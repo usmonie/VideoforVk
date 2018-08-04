@@ -7,7 +7,7 @@ import akhmedoff.usman.thevt.ui.login.LoginActivity
 import akhmedoff.usman.thevt.ui.main.MainActivity
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 
 class SplashActivity : AppCompatActivity(), SplashContract.View {
 

@@ -4,7 +4,7 @@ import akhmedoff.usman.data.api.VkApi
 import akhmedoff.usman.data.db.CatalogDao
 import akhmedoff.usman.data.db.OwnerDao
 import akhmedoff.usman.data.model.CatalogItem
-import android.arch.paging.DataSource
+import androidx.paging.DataSource
 
 class CatalogSectionDataSourceFactory(
         private val vkApi: VkApi,

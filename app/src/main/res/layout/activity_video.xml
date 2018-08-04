@@ -5,24 +5,28 @@
     android:id="@+id/video_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
+    android:animateLayoutChanges="true"
     android:keepScreenOn="true"
     android:orientation="vertical"
     android:transitionGroup="true">
 
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/exo_player_height">
+        android:layout_height="@dimen/exo_player_height"
+
+        android:animateLayoutChanges="true">
 
         <com.google.android.exoplayer2.ui.PlayerView
             android:id="@+id/video_exo_player"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:animateLayoutChanges="true"
             app:controller_layout_id="@layout/playback_exo_control_view"
             app:player_layout_id="@layout/exo_player_custom_view"
+            app:resize_mode="fit"
             tools:visibility="visible" />
-    </android.support.design.widget.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <ViewStub
         android:id="@+id/video_info_stub"

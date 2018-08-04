@@ -3,11 +3,11 @@ package akhmedoff.usman.thevt.ui.album
 import akhmedoff.usman.data.model.Video
 import akhmedoff.usman.thevt.R
 import akhmedoff.usman.thevt.ui.view.holders.SearchViewHolder
-import android.arch.paging.PagedListAdapter
-import android.support.v7.util.DiffUtil
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import com.squareup.picasso.Picasso
 
 class AlbumRecyclerAdapter(

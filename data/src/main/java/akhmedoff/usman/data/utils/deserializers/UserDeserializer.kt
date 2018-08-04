@@ -10,9 +10,9 @@ import java.lang.reflect.Type
 class UserDeserializer : JsonDeserializer<User> {
 
     override fun deserialize(
-        json: JsonElement,
-        typeOfT: Type?,
-        context: JsonDeserializationContext?
+            json: JsonElement,
+            typeOfT: Type?,
+            context: JsonDeserializationContext?
     ): User {
         Log.d("deserialize user", "start")
         val responseJson = json.asJsonObject

@@ -1,8 +1,8 @@
 package akhmedoff.usman.data.model
 
 import akhmedoff.usman.data.db.SimpleTypeConverters
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.TypeConverters
+import androidx.room.Entity
+import androidx.room.TypeConverters
 
 
 @Entity(
