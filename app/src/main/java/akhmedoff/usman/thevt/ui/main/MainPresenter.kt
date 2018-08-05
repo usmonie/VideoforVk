@@ -25,10 +25,6 @@ class MainPresenter(
     override fun forwardTo(id: Int) {
         when (id) {
             R.id.navigation_home -> view?.showHome()
-
-            R.id.navigation_looking -> view?.showExplore()
-
-            R.id.navigation_person -> view?.showProfile()
         }
     }
 

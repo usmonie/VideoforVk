@@ -21,7 +21,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.DefaultItemAnimator
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_profile.*
 
 private const val USER_ID = "user_id"
@@ -78,6 +77,10 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         profile_recycler.addItemDecoration(MarginItemDecorator(1,
                 resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin)))
         swipe_update.setOnRefreshListener { presenter.refresh() }
+
+        main.setOnClickListener {
+            activity?.onBackPressed()
+        }
     }
 
     override fun onStart() {
@@ -90,7 +93,7 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         user_name.text = name
     }
 
-    override fun showUserPhoto(photoUrl: String) = Picasso.get().load(photoUrl).into(user_avatar)
+    override fun showUserPhoto(photoUrl: String) {}
 
     override fun setIsUser(isUser: Boolean) {
 
@@ -106,7 +109,7 @@ class ProfileFragment : Fragment(), ProfileContract.View {
     }
 
     override fun showStartPositionVideos() {
-        profile_recycler.scrollToPosition(0)
+        profile_recycler.smoothScrollToPosition(0)
     }
 
     override fun showLoading(isLoading: Boolean) {
@@ -120,7 +123,9 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         recyclerAdapter.albums = albums
     }
 
-    override fun showVideos(videos: PagedList<Video>) = recyclerAdapter.submitList(videos)
+    override fun showVideos(videos: PagedList<Video>) {
+        recyclerAdapter.submitList(videos)
+    }
 
     override fun showFaveVideos(videos: PagedList<Video>) {
         recyclerAdapter.faveVideos = videos

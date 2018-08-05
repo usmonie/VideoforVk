@@ -1,15 +1,30 @@
 package akhmedoff.usman.thevt.ui.home
 
-import akhmedoff.usman.thevt.R
+import akhmedoff.usman.data.repository.CatalogRepository
+import androidx.lifecycle.Observer
 
-class HomePresenter(override var view: HomeContract.View? = null) : HomeContract.Presenter {
+class HomePresenter(override var view: HomeContract.View? = null,
+                    private val catalogRepository: CatalogRepository) : HomeContract.Presenter {
 
-    override fun onCreated() {
+    override fun onCreated() = refresh()
+
+    override fun onRetained() {
+        refresh()
+    }
+
+    override fun refresh() {
         view?.let { view ->
-            view.initPage("feed", view.getResourcesString(R.string.tab_title_feed))
-            view.initPage("top", view.getResourcesString(R.string.tab_title_top))
-            view.initPage("ugc", view.getResourcesString(R.string.tab_title_ugc))
-            view.initPage("series", view.getResourcesString(R.string.tab_title_series_and_tv))
+            view.setLoading(true)
+            catalogRepository.getCatalog("feed,ugc,top,series,other")
+                    .observe(view, Observer { catalogs ->
+                        if (catalogs != null && catalogs.size > 0) {
+                            view.setLoading(false)
+                            view.setList(catalogs)
+                        } else {
+                            view.setLoading(false)
+                            view.showErrorLoading()
+                        }
+                    })
         }
     }
 

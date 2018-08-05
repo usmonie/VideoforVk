@@ -119,6 +119,5 @@ class ProfilePresenter(
                         }
                     })
         }
-
     }
 }

@@ -15,6 +15,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 
+private const val ALBUMS_TYPE = 1001
+private const val FAVE_VIDEOS_TYPE = 1002
+private const val VIDEOS_TYPE = 1003
+
 class ProfileRecyclerAdapter(private val videoClickListener: (Video, View) -> Unit,
                              private val albumClickListener: (Album, View) -> Unit,
                              private val albumsClickListener: (View) -> Unit,
@@ -23,13 +27,13 @@ class ProfileRecyclerAdapter(private val videoClickListener: (Video, View) -> Un
     var albums: PagedList<Album>? = null
         set(value) {
             field = value
-            notifyItemChanged(0)
+            notifyDataSetChanged()
         }
 
     var faveVideos: PagedList<Video>? = null
         set(value) {
             field = value
-            notifyItemChanged(1)
+            notifyDataSetChanged()
         }
 
     companion object {
@@ -38,51 +42,62 @@ class ProfileRecyclerAdapter(private val videoClickListener: (Video, View) -> Un
                     oldItem.id == newItem.id && oldItem.ownerId == newItem.ownerId
 
             override fun areContentsTheSame(oldItem: Video, newItem: Video): Boolean =
-                    oldItem.title == newItem.title && oldItem.photo130 == newItem.photo130
+                    oldItem.title == newItem.title && oldItem.photo320 == newItem.photo320
         }
     }
 
-    override fun getItemViewType(position: Int): Int = position
+    override fun getItemViewType(position: Int): Int = when {
+        checkList(albums, position, 0) -> ALBUMS_TYPE
+        checkList(faveVideos, position, if (checkList(albums, position - 1, 0)) 1 else 0) -> FAVE_VIDEOS_TYPE
+        else -> VIDEOS_TYPE
+    }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
-            if ((viewType == 0 && albums?.isNotEmpty() == true)) {
-                ProfileAlbumsSectorViewHolder(albumClickListener, LayoutInflater.from(parent.context).inflate(R.layout.albums_item, parent, false)).apply {
-                    cardView.setOnClickListener {
-                        cardView.transitionName = "transition_name_$adapterPosition"
-                        albumsClickListener(cardView)
-                    }
-                }
-            } else if (viewType == 1 && faveVideos?.isNotEmpty() == true) {
-                FaveVideosSectorViewHolder(videoClickListener, LayoutInflater.from(parent.context).inflate(R.layout.albums_item, parent, false)).apply {
-                    cardView.setOnClickListener {
-                        favouritesClickList()
-                    }
-                }
-            } else {
-                SearchViewHolder(Picasso.get(), LayoutInflater.from(parent.context).inflate(R.layout.search_videos, parent, false)).apply {
-                    videoFrame.setOnClickListener {
-                        getItem(if (albums != null && faveVideos != null) adapterPosition - 2 else if (albums != null || faveVideos != null) adapterPosition - 1 else adapterPosition)?.let {
-                            videoClickListener(it, videoFrame.apply { transitionName = "transition_name_$adapterPosition" })
-                        }
-                    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder = when {
+        checkList(albums, viewType, ALBUMS_TYPE) -> ProfileAlbumsSectorViewHolder(albumClickListener, LayoutInflater.from(parent.context).inflate(R.layout.albums_item, parent, false)).apply {
+            cardView.setOnClickListener {
+                cardView.transitionName = "transition_name_$adapterPosition"
+                albumsClickListener(cardView)
+            }
+        }
+        checkList(faveVideos, viewType, FAVE_VIDEOS_TYPE) -> FaveVideosSectorViewHolder(videoClickListener, LayoutInflater.from(parent.context).inflate(R.layout.albums_item, parent, false)).apply {
+            cardView.setOnClickListener {
+                favouritesClickList()
+            }
+        }
+        else -> SearchViewHolder(Picasso.get(), LayoutInflater.from(parent.context).inflate(R.layout.search_videos, parent, false)).apply {
+            videoFrame.setOnClickListener { _ ->
+                getItem(adapterPosition - minusPosition(albums, faveVideos))?.let {
+                    videoClickListener(it, videoFrame.apply { transitionName = "transition_name_$adapterPosition" })
                 }
             }
+        }
+    }
 
     override fun getItemCount(): Int = when {
-        super.getItemCount() == 0 && albums?.isNotEmpty() == true -> 1
-        albums?.isNotEmpty() == true -> super.getItemCount() + 1
+        albums?.isNotEmpty() == true && faveVideos?.isNotEmpty() == true -> 2 + super.getItemCount()
+        albums?.isNotEmpty() == true || faveVideos?.isNotEmpty() == true -> 1 + super.getItemCount()
+
         else -> super.getItemCount()
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder is ProfileAlbumsSectorViewHolder && position == 0 && albums?.isNotEmpty() == true) {
-            holder.bind(albums!!)
-        } else if (holder is FaveVideosSectorViewHolder && position == 1 && faveVideos?.isNotEmpty() == true) {
-            holder.bind(faveVideos!!)
-        } else if (holder is SearchViewHolder) {
-            val pos = if (albums?.isNotEmpty() == true && faveVideos?.isNotEmpty() == true) position - 2 else if (albums?.isNotEmpty() == true || faveVideos?.isNotEmpty() == true) position - 1 else position
-            if (pos < itemCount)
-                getItem(pos)?.let { holder.bind(it) }
+        when (holder) {
+            is ProfileAlbumsSectorViewHolder -> holder.bind(albums!!)
+            is FaveVideosSectorViewHolder -> holder.bind(faveVideos!!)
+            is SearchViewHolder -> {
+                val pos = position - minusPosition(albums, faveVideos)
+                if (pos in 0..(itemCount - 1))
+                    getItem(pos)?.let { holder.bind(it) }
+            }
         }
     }
+}
+
+private fun <T> checkList(items: List<T>?, currentPosition: Int, itemPosition: Int): Boolean =
+        items?.isNotEmpty() == true && currentPosition == itemPosition
+
+private fun <T, E> minusPosition(itemsA: List<T>?, itemsB: List<E>?): Int = when {
+    itemsA?.isNotEmpty() == true && itemsB?.isNotEmpty() == true -> 2
+    itemsA?.isNotEmpty() == true || itemsB?.isNotEmpty() == true -> 1
+    else -> 0
 }

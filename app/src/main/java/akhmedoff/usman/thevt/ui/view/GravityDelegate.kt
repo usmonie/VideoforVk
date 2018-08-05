@@ -10,7 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 
 internal class GravityDelegate(
-        private val gravity: Int, private var snapLastItem: Boolean,
+        private val gravity: Int,
+        private var snapLastItem: Boolean,
         private val listener: GravitySnapHelper.SnapListener?
 ) {
 

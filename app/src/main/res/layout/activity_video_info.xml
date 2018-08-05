@@ -135,7 +135,6 @@
             app:srcCompat="@drawable/ic_file_download_white_24dp"
             app:tint="?colorControlNormal" />
 
-
         <TextView
             android:id="@+id/video_desc"
             android:layout_width="match_parent"

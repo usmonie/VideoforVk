@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowActivityTransitions">true</item>
         <!-- specify enter and exit transitions -->
@@ -14,9 +14,10 @@
         <item name="android:windowSharedElementExitTransition">
             @transition/image_shared_element_transition
         </item>
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@android:color/white</item>
+        <item name="colorPrimaryDark">#c7c7c7</item>
         <item name="colorAccent">@color/colorAccent</item>
+
     </style>
 
     <style name="VideoTheme" parent="AppTheme">

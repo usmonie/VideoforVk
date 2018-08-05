@@ -73,4 +73,6 @@
     <dimen name="popup_elevation">16dp</dimen>
     <dimen name="popup_size">248dp</dimen>
     <dimen name="normal_title_size_video_item">16sp</dimen>
+    <dimen name="video_item_width">260dp</dimen>
+    <dimen name="video_item_height">160dp</dimen>
 </resources>

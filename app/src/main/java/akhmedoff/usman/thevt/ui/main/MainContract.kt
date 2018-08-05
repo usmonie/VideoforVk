@@ -10,11 +10,8 @@ interface MainContract {
 
         fun showProfile()
 
-        fun showExplore()
 
         fun showSettings()
-
-        fun hidePrevious()
 
         fun showLastFragment()
 
@@ -22,6 +19,7 @@ interface MainContract {
 
     interface Presenter {
         var view: View?
+
         fun onCreate()
 
         fun onRecreate()

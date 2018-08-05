@@ -1,4 +1,4 @@
-package akhmedoff.usman.thevt.ui.explore
+package akhmedoff.usman.thevt.ui.home
 
 import akhmedoff.usman.data.model.Catalog
 import akhmedoff.usman.data.model.CatalogItem
@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 
-class ExploreRecyclerAdapter(
+class HomeRecyclerAdapter(
         private val clickListener: (CatalogItem, View) -> Unit
 ) : PagedListAdapter<Catalog, CatalogViewHolder>(CATALOG_COMPARATOR) {
 
@@ -32,7 +32,7 @@ class ExploreRecyclerAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = CatalogViewHolder(
             LayoutInflater.from(parent.context).inflate(
-                    R.layout.catalog_item,
+                    R.layout.home_item_recycler,
                     parent,
                     false
             ), clickListener
