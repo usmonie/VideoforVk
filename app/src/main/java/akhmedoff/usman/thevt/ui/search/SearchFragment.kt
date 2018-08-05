@@ -63,7 +63,9 @@ class SearchFragment : Fragment(), SearchContract.View {
                         timer = Timer()
                         timer?.schedule(object : TimerTask() {
                             override fun run() {
-                                searchPresenter.search()
+                                activity?.runOnUiThread {
+                                    searchPresenter.search()
+                                }
                             }
                         }, 350L)
                     }

@@ -2,6 +2,7 @@ package akhmedoff.usman.thevt
 
 import android.app.Activity
 import android.content.Intent
+import android.view.Gravity
 import android.view.View
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
@@ -33,17 +34,18 @@ object Router {
             detailFragment: Fragment,
             addToBackStack: Boolean = false,
             fragmentTag: String?,
-            sharedElement: View
+            vararg sharedElements: View,
+            slideEdge: Int = Gravity.BOTTOM
     ) {
         val transaction = fragmentManager
                 .beginTransaction()
                 .setReorderingAllowed(true)
-                .replace(R.id.container, detailFragment, fragmentTag)
+                .replace(android.R.id.content, detailFragment, fragmentTag)
                 .setTransition(TRANSIT_FRAGMENT_FADE)
 
         if (addToBackStack) transaction.addToBackStack(fragmentTag)
 
-        val slide = Slide()
+        val slide = Fade()
         prevFragment?.exitTransition = slide
 
         val enterTransitionSet = TransitionSet()
@@ -55,7 +57,6 @@ object Router {
         enterTransitionSet.ordering = ORDERING_TOGETHER
 
         detailFragment.sharedElementEnterTransition = enterTransitionSet
-        slide.slideEdge = 80
         detailFragment.enterTransition = slide
 
         val returnTransitionSet = TransitionSet()
@@ -67,11 +68,10 @@ object Router {
         detailFragment.sharedElementReturnTransition = returnTransitionSet
         detailFragment.returnTransition = null
 
-        ViewCompat.getTransitionName(sharedElement)?.let {
-            transaction.addSharedElement(
-                    sharedElement,
-                    it
-            )
+        sharedElements.forEach { sharedElement ->
+            ViewCompat.getTransitionName(sharedElement)?.let {
+                transaction.addSharedElement(sharedElement, it)
+            }
         }
 
         transaction.commit()
@@ -86,7 +86,7 @@ object Router {
         val transaction = fragmentManager
                 .beginTransaction()
                 .setReorderingAllowed(true)
-                .replace(R.id.container, fragment, fragmentTag)
+                .replace(android.R.id.content, fragment, fragmentTag)
 
         if (addToBackStack) {
             transaction.addToBackStack(fragmentTag)

@@ -25,6 +25,7 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import android.text.format.DateUtils
 import android.util.Rational
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -156,17 +157,6 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
 
     override fun onStart() {
         super.onStart()
-        popupAddMenu = PopupMenu(this, add_button)
-        popupAddMenu.inflate(R.menu.add_video_menu)
-        popupAddMenu.setOnMenuItemClickListener {
-            presenter.onClick(it.itemId)
-            true
-        }
-
-        popupDownloadQualityMenu = PopupMenu(this, add_button)
-
-        popupDownloadQualityMenu.inflate(R.menu.download_video_qualities)
-
         pip_toggle.isVisible = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
         video_info_stub?.isVisible = true
     }
@@ -228,6 +218,16 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
 
         setVideoClickListeners()
 
+        popupAddMenu = PopupMenu(this, add_button)
+        popupAddMenu.inflate(R.menu.add_video_menu)
+        popupAddMenu.setOnMenuItemClickListener {
+            presenter.onClick(it.itemId)
+            true
+        }
+
+        popupDownloadQualityMenu = PopupMenu(this, download_button, Gravity.BOTTOM)
+
+        popupDownloadQualityMenu.inflate(R.menu.download_video_qualities)
     }
 
     override fun setVideoState(state: Boolean) {

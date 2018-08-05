@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#f44336</color>
     <color name="colorPrimaryDark">#ba000d</color>
-    <color name="colorAccent">#3d5afe</color>
+    <color name="colorAccent">#6d4c41</color>
 
     <!-- Text color of the search box text as entered by user  -->
     <color name="searchbox_text_color">#000000</color>
