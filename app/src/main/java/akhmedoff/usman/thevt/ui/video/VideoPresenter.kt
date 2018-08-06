@@ -96,7 +96,7 @@ class VideoPresenter(
                     likeCurrentVideo()
                 else unlikeCurrentVideo()
 
-            R.id.share_button -> shareCurrentVideo()
+            R.id.add_button -> shareCurrentVideo()
 
             R.id.add_to_videos -> addToMyVideos()
 
@@ -190,12 +190,12 @@ class VideoPresenter(
                         call: Call<ApiResponse<Likes>>?,
                         response: Response<ApiResponse<Likes>>?
                 ) {
-                    response?.body()?.let {
+                    response?.body()?.let { _ ->
                         video.likes?.userLikes = true
                         video.likes?.let { view?.setLiked(it) }
                     }
-                    response?.errorBody()?.let {
-                        errorConvert(it)
+                    response?.errorBody()?.let { body ->
+                        errorConvert(body)
                         video.likes?.let { view?.setLiked(it) }
                     }
 
@@ -221,35 +221,21 @@ class VideoPresenter(
                         call: Call<ApiResponse<Likes>>?,
                         response: Response<ApiResponse<Likes>>?
                 ) {
-                    response?.body()?.let {
+                    response?.body()?.let { _ ->
                         video.likes?.userLikes = false
                         video.likes?.let { view?.setLiked(it) }
                     }
-                    response?.errorBody()?.let {
-                        errorConvert(it)
+                    response?.errorBody()?.let { responseBody ->
+                        errorConvert(responseBody)
                         video.likes?.let { view?.setLiked(it) }
                     }
                 }
             })
 
-    override fun changeQuality() {
-        view?.saveVideoPosition(view?.getVideoPosition() ?: 0)
-
-        view?.let { view ->
-            changeQuality(
-                    if (video.files.size - 1 > view.getCurrentQuality()) {
-                        view.getCurrentQuality() + 1
-                    } else {
-                        video.files.size - view.getCurrentQuality()
-                    }
-            )
-
-        }
-    }
-
-    private fun changeQuality(index: Int) {
-        view?.setQuality(video.files[index])
-        view?.saveCurrentQuality(index)
+    override fun changeQuality(position: Int) {
+        val files = video.files.asReversed()
+        view?.setQuality(files[position])
+        view?.saveCurrentQuality(position)
         view?.setVideoPosition(view?.loadVideoPosition() ?: 0)
     }
 

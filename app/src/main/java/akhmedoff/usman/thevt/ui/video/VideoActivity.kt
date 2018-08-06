@@ -2,6 +2,7 @@ package akhmedoff.usman.thevt.ui.video
 
 import akhmedoff.usman.data.model.*
 import akhmedoff.usman.data.model.Quality.*
+import akhmedoff.usman.data.utils.Utils
 import akhmedoff.usman.data.utils.getAlbumRepository
 import akhmedoff.usman.data.utils.getUserRepository
 import akhmedoff.usman.data.utils.getVideoRepository
@@ -23,13 +24,11 @@ import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
-import android.text.format.DateUtils
 import android.util.Rational
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.PopupMenu
+import android.widget.*
 import androidx.annotation.DrawableRes
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -37,6 +36,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
 import androidx.core.view.isVisible
+import androidx.core.view.setMargins
 import androidx.media.AudioAttributesCompat
 import androidx.paging.PagedList
 import com.google.android.exoplayer2.*
@@ -107,7 +107,7 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
 
     private lateinit var cacheDataSourceFactory: CacheDataSourceFactory
 
-    private lateinit var simpleCache: Cache
+    private var simpleCache: Cache? = null
 
     private var player: ExoPlayer? = null
 
@@ -144,15 +144,15 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
                 getUserRepository(this),
                 getAlbumRepository(this)
         )
-        initPlayer()
+
         if (savedInstanceState?.containsKey(VIDEO_KEY) == true) {
             presenter.setVideo(savedInstanceState.getParcelable(VIDEO_KEY))
         } else {
             presenter.onStart()
+            initPlayer()
         }
 
-
-        appbar.transitionName = intent.getStringExtra(TRANSITION_NAME_KEY)
+        card_view_video.transitionName = intent.getStringExtra(TRANSITION_NAME_KEY)
     }
 
     override fun onStart() {
@@ -183,7 +183,14 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
 
         fullscreen_toggle.setOnClickListener { presenter.clickFullscreen() }
         pip_toggle.setOnClickListener { presenter.pipToggleButton() }
-        exo_quality_toggle.setOnClickListener { presenter.changeQuality() }
+        qualities_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+            }
+
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                presenter.changeQuality(p2)
+            }
+        }
 
         exo_arrow_back.setOnClickListener {
             presenter.onBackListener()
@@ -271,8 +278,13 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
 
         val dataSourceFactory = DefaultDataSourceFactory(this, Util.getUserAgent(this, "yourApplicationName"), bandwidthMeter)
         val maxCacheFileSize: Long = 1024 * 1024 * 2048L
+        val file = File(cacheDir, "video/${getVideoId() + getOwnerId()}")
+        if (!SimpleCache.isCacheFolderLocked(file)) {
+            simpleCache = SimpleCache(file, LeastRecentlyUsedCacheEvictor(maxCacheFileSize))
+        } else {
+            simpleCache?.release()
+        }
 
-        simpleCache = SimpleCache(File(cacheDir, "video/${getVideoId() + getOwnerId()}"), LeastRecentlyUsedCacheEvictor(maxCacheFileSize))
 
         val cacheFlags = CacheDataSource.FLAG_BLOCK_ON_CACHE or
                 CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR
@@ -291,7 +303,6 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
         }
 
         player?.addListener(object : Player.DefaultEventListener() {
-
             override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
                 if (playbackState == Player.STATE_READY)
                     video_exo_player.forceLayout()
@@ -300,7 +311,6 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
         video_exo_player.setControlDispatcher(simpleControlDispatcher)
         video_exo_player.player = player
     }
-
 
     override fun showVideo(item: Video) {
         val artWork = when {
@@ -329,14 +339,9 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
             })
         }
         add_button.isVisible = item.canAdd
+        add_button_desc.isVisible = item.canAdd
 
         title_text_view.text = item.title
-
-        video_date.text = DateUtils.getRelativeTimeSpanString(
-                item.date * 1000L,
-                System.currentTimeMillis(),
-                DateUtils.DAY_IN_MILLIS
-        )
 
         video_views.text = item.views?.let {
             resources.getQuantityString(
@@ -352,25 +357,54 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
             true -> R.drawable.ic_favorite_fill_24dp
             else -> R.drawable.ic_favorite_border
         })
+        val likes = item.likes?.likes ?: 0
+        like_button_desc.text = Utils.format(likes) + " " + resources.getQuantityString(R.plurals.likes, likes)
 
         player?.repeatMode = if (item.repeat) REPEAT_MODE_ONE else REPEAT_MODE_OFF
+
+        val qualitiesAdapter = object : ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item) {
+
+
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+                val textView = super.getView(position, convertView, parent)
+                (textView as? TextView)?.setTextColor(ContextCompat.getColor(this@VideoActivity, android.R.color.white))
+                return textView
+            }
+
+        }
 
         val files = item.files.asReversed()
         files.forEach {
             when (it.quality) {
-                FULLHD -> popupDownloadQualityMenu.menu.findItem(R.id.download_quality_1080p).isEnabled = true
-                HD -> popupDownloadQualityMenu.menu.findItem(R.id.download_quality_720p).isEnabled = true
-                qHD -> popupDownloadQualityMenu.menu.findItem(R.id.download_quality_480p).isEnabled = true
-                P360 -> popupDownloadQualityMenu.menu.findItem(R.id.download_quality_360p).isEnabled = true
-                P240 -> popupDownloadQualityMenu.menu.findItem(R.id.download_quality_240p).isEnabled = true
+                HLS -> qualitiesAdapter.add(getString(R.string.video_quality_title_hls))
+                FULLHD -> {
+                    qualitiesAdapter.add(getString(R.string.video_quality_title_1080p))
+                    popupDownloadQualityMenu.menu.findItem(R.id.download_quality_1080p).isEnabled = true
+                }
+                HD -> {
+                    qualitiesAdapter.add(getString(R.string.video_quality_title_720p))
+                    popupDownloadQualityMenu.menu.findItem(R.id.download_quality_720p).isEnabled = true
+                }
+                qHD -> {
+                    qualitiesAdapter.add(getString(R.string.video_quality_title_480p))
+                    popupDownloadQualityMenu.menu.findItem(R.id.download_quality_480p).isEnabled = true
+                }
+                P360 -> {
+                    qualitiesAdapter.add(getString(R.string.video_quality_title_360p))
+                    popupDownloadQualityMenu.menu.findItem(R.id.download_quality_360p).isEnabled = true
+                }
+                P240 -> {
+                    qualitiesAdapter.add(getString(R.string.video_quality_title_240p))
+                    popupDownloadQualityMenu.menu.findItem(R.id.download_quality_240p).isEnabled = true
+                }
                 else -> {
                 }
             }
         }
+        qualities_spinner.adapter = qualitiesAdapter
 
         popupDownloadQualityMenu.setOnMenuItemClickListener {
             startService(item.title, when (it.itemId) {
-                R.id.download_quality_240p -> files[0].url
                 R.id.download_quality_360p -> files[1].url
                 R.id.download_quality_480p -> files[2].url
                 R.id.download_quality_720p -> files[3].url
@@ -389,10 +423,7 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
     override fun showOwnerInfo(owner: Owner) {
         owner_name.text = owner.name
 
-        Picasso
-                .get()
-                .load(owner.photo100)
-                .into(owner_avatar)
+        Picasso.get().load(owner.photo100).into(owner_avatar)
     }
 
     override fun setVideoSource(videoUrl: VideoUrl) {
@@ -406,36 +437,22 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
                     else -> ExtractorMediaSource.Factory(cacheDataSourceFactory)
                 }.createMediaSource(videoUrl.url.toUri())
         )
-
-        when (videoUrl.quality) {
-            HLS -> setImageDrawable(R.drawable.ic_auto_quality_24dp)
-            FULLHD -> setImageDrawable(R.drawable.ic_high_quality_24dp)
-            HD -> setImageDrawable(R.drawable.ic_hd_24dp)
-            qHD -> setImageDrawable(R.drawable.ic_hd_24dp)
-            LOW -> setImageDrawable(R.drawable.ic_low_quality_24dp)
-            P360 -> setImageDrawable(R.drawable.ic_low_quality_24dp)
-            P240 -> setImageDrawable(R.drawable.ic_low_quality_24dp)
-            else -> {
-            }
-        }
     }
 
     override fun setExternalUi(videoUrl: VideoUrl) {
         pip_toggle?.isVisible = false
-        exo_quality_toggle?.isVisible = false
+        qualities_spinner?.isVisible = false
         simpleControlDispatcher.isExternal = true
         simpleControlDispatcher.url = videoUrl.url
         fullscreen_toggle.isVisible = false
         progress_layout.isVisible = false
         download_button.isVisible = false
+        download_button_desc.isVisible = false
         player?.release()
     }
 
     override fun setSaved(saved: Boolean) {
     }
-
-    private fun setImageDrawable(@DrawableRes id: Int) =
-            exo_quality_toggle.setImageDrawable(ContextCompat.getDrawable(this, id))
 
     override fun showFullscreen() {
         video_layout.fitsSystemWindows = false
@@ -465,6 +482,8 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
     override fun stopVideo() {
         player?.playWhenReady = false
         player?.release()
+        player = null
+        video_exo_player.player = null
     }
 
     override fun showLoadError(isError: Boolean) {
@@ -472,7 +491,7 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
         error_mode?.isVisible = isError
         if (isError) setErrorClickListeners()
 
-        appbar.isVisible = !isError
+        card_view_video.isVisible = !isError
         showProgress(false)
     }
 
@@ -515,15 +534,22 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
     }
 
     override fun setPlayerFullscreen() {
-        appbar.layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
-        appbar.requestLayout()
+        card_view_video.layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
+        card_view_video.radius = 0F
+        val linearLayoutParams = card_view_video.layoutParams as LinearLayout.LayoutParams
+        linearLayoutParams.setMargins(0)
+        card_view_video.layoutParams = linearLayoutParams
+        card_view_video.requestLayout()
         video_exo_player.requestLayout()
     }
 
     override fun setPlayerNormal() {
-        appbar.layoutParams.height = resources.getDimensionPixelSize(R.dimen.exo_player_height)
-
-        appbar.requestLayout()
+        card_view_video.layoutParams.height = resources.getDimensionPixelSize(R.dimen.exo_player_height)
+        card_view_video.radius = resources.getDimensionPixelSize(R.dimen.video_card_corner_radius).toFloat()
+        val linearLayoutParams = card_view_video.layoutParams as LinearLayout.LayoutParams
+        linearLayoutParams.setMargins(resources.getDimensionPixelSize(R.dimen.catalog_videos_margin))
+        card_view_video.layoutParams = linearLayoutParams
+        card_view_video.requestLayout()
     }
 
     override fun setLiked(likes: Likes) {
@@ -608,8 +634,10 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
     override fun onPause() {
         super.onPause()
 
-        if (isFinishing)
-            simpleCache.release()
+        if (isFinishing) {
+            simpleCache?.release()
+            presenter.onDestroyView()
+        }
     }
 
     override fun getVideoId(): String = intent.getStringExtra(VIDEO_ID_KEY)
@@ -648,6 +676,7 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
     override fun setVideoPosition(position: Long) {
         player?.seekTo(position)
     }
+
 
     override fun saveVideoQualities(qualities: ArrayList<String>) {
         intent.putStringArrayListExtra(VIDEO_QUALITIES_KEY, qualities)

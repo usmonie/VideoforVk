@@ -4,7 +4,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="video_fragment_vertical_margin">8dp</dimen>
 
-    <dimen name="exo_player_height">202dp</dimen>
+    <dimen name="exo_player_height">232dp</dimen>
 
     <dimen name="min_text_size_big_video_item">14sp</dimen>
     <dimen name="normal_text_size_big_video_item">18sp</dimen>
@@ -75,4 +75,5 @@
     <dimen name="normal_title_size_video_item">16sp</dimen>
     <dimen name="video_item_width">260dp</dimen>
     <dimen name="video_item_height">160dp</dimen>
+    <dimen name="video_card_corner_radius">12dp</dimen>
 </resources>

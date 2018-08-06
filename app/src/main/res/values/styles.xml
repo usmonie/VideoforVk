@@ -20,11 +20,6 @@
 
     </style>
 
-    <style name="VideoTheme" parent="AppTheme">
-        <item name="colorPrimary">@android:color/black</item>
-        <item name="colorPrimaryDark">@android:color/black</item>
-    </style>
-
     <style name="LoginTheme" parent="AppTheme">
         <item name="android:windowTranslucentStatus">false</item>
     </style>
@@ -51,5 +46,9 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="QualitiesSpinnerTheme" parent="Widget.AppCompat.DropDownItem.Spinner">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
 
 </resources>

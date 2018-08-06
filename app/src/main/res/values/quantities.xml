@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="likes">
+        <item quantity="one">@string/like</item>
+        <item quantity="other">@string/likes</item>
+    </plurals>
+</resources>

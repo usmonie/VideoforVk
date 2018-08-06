@@ -23,10 +23,10 @@
 
         <ImageView
             android:id="@+id/owner_avatar"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:adjustViewBounds="false"
             android:cropToPadding="false"
             android:scaleType="centerCrop"
@@ -39,9 +39,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:layout_weight="1"
+            android:fontFamily="sans-serif-light"
             android:gravity="center_vertical"
             android:lines="1"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -60,7 +61,6 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:ellipsize="end"
-            android:fontFamily="sans-serif"
             android:paddingTop="0dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:textSize="18sp"
@@ -70,24 +70,14 @@
             tools:text="@tools:sample/lorem" />
 
         <TextView
-            android:id="@+id/video_date"
+            android:id="@+id/video_views"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
+            android:fontFamily="sans-serif-thin"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/title_text_view"
-            tools:text="@tools:sample/date/hhmm" />
-
-        <TextView
-            android:id="@+id/video_views"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-            app:layout_constraintStart_toEndOf="@+id/video_date"
             app:layout_constraintTop_toBottomOf="@+id/title_text_view"
             tools:text="70k views" />
 
@@ -96,55 +86,116 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?selectableItemBackgroundBorderless"
-            android:padding="16dp"
+            android:paddingStart="16dp"
+            android:paddingTop="16dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/download_button"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/video_date"
-            app:srcCompat="@drawable/ic_favorite_border"
-            app:tint="?colorControlNormal" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/add_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?selectableItemBackgroundBorderless"
-            android:padding="16dp"
-            app:layout_constraintStart_toEndOf="@+id/like_button"
-            app:layout_constraintTop_toBottomOf="@+id/video_date"
-            app:srcCompat="@drawable/ic_add"
-            app:tint="?colorControlNormal" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/share_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?selectableItemBackgroundBorderless"
-            android:padding="16dp"
-            app:layout_constraintStart_toEndOf="@+id/add_button"
-            app:layout_constraintTop_toBottomOf="@+id/video_date"
-            app:srcCompat="@drawable/ic_share"
-            app:tint="?colorControlNormal" />
+            app:layout_constraintTop_toBottomOf="@+id/video_views"
+            app:srcCompat="@drawable/ic_favorite_border" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/download_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
             android:background="?selectableItemBackgroundBorderless"
-            android:padding="16dp"
-            app:layout_constraintStart_toEndOf="@+id/share_button"
-            app:layout_constraintTop_toBottomOf="@+id/video_date"
-            app:srcCompat="@drawable/ic_file_download_white_24dp"
-            app:tint="?colorControlNormal" />
+            android:paddingStart="16dp"
+            android:paddingTop="16dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/add_button"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintTop_toTopOf="@+id/like_button"
+            app:layout_constraintStart_toEndOf="@+id/like_button"
+            app:srcCompat="@drawable/ic_cloud_download_black_24dp" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/add_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:background="?selectableItemBackgroundBorderless"
+            android:paddingStart="16dp"
+            android:paddingTop="16dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/share_button"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/download_button"
+            app:layout_constraintTop_toTopOf="@+id/download_button"
+            app:srcCompat="@drawable/ic_add" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/share_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:background="?selectableItemBackgroundBorderless"
+            android:paddingStart="16dp"
+            android:paddingTop="16dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/add_button"
+            app:layout_constraintTop_toTopOf="@+id/add_button"
+            app:srcCompat="@drawable/ic_share" />
 
         <TextView
             android:id="@+id/video_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
             android:autoLink="web"
             android:textAppearance="@android:style/TextAppearance.Material.Body1"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/add_button_desc" />
+
+        <TextView
+            android:id="@+id/like_button_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:text="@string/like"
+            app:layout_constraintEnd_toEndOf="@+id/like_button"
+            app:layout_constraintStart_toStartOf="@+id/like_button"
             app:layout_constraintTop_toBottomOf="@+id/like_button" />
+
+        <TextView
+            android:id="@+id/add_button_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:text="@string/add"
+            app:layout_constraintEnd_toEndOf="@+id/add_button"
+            app:layout_constraintStart_toStartOf="@+id/add_button"
+            app:layout_constraintTop_toBottomOf="@+id/add_button" />
+
+        <TextView
+            android:id="@+id/share_button_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:text="@string/share"
+            app:layout_constraintEnd_toEndOf="@+id/share_button"
+            app:layout_constraintStart_toStartOf="@+id/share_button"
+            app:layout_constraintTop_toBottomOf="@+id/share_button" />
+
+        <TextView
+            android:id="@+id/download_button_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:text="@string/download"
+            app:layout_constraintEnd_toEndOf="@+id/download_button"
+            app:layout_constraintStart_toStartOf="@+id/download_button"
+            app:layout_constraintTop_toBottomOf="@+id/download_button" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
     <!--</androidx.cardview.widget.CardView>-->

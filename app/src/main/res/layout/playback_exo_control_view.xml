@@ -5,25 +5,56 @@
     android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center"
     android:background="@drawable/video_fullscreen_background"
     android:orientation="vertical">
 
-    <ImageButton
-        android:id="@id/exo_play"
-        style="@style/ExoMediaButton.Play"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="?selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:focusable="true" />
+        android:gravity="center">
 
-    <ImageButton
-        android:id="@id/exo_pause"
-        style="@style/ExoMediaButton.Pause"
-        android:layout_gravity="center"
-        android:background="?selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:focusable="true" />
+        <TextView
+            android:id="@id/exo_position"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            tools:text="13:30" />
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@id/exo_play"
+                style="@style/ExoMediaButton.Play"
+                android:background="?selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <ImageButton
+                android:id="@id/exo_pause"
+                style="@style/ExoMediaButton.Pause"
+                android:background="?selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@id/exo_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            tools:text="15:00" />
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/exo_arrow_back"
@@ -37,33 +68,17 @@
         android:tint="@android:color/white"
         app:srcCompat="@drawable/ic_arrow_back_24dp" />
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/pip_toggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|top"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/pip_toggle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true"
-            android:padding="16dp"
-            android:visibility="gone"
-            app:srcCompat="@drawable/ic_picture_in_picture_white_24dp" />
-
-        <ImageView
-            android:id="@+id/exo_quality_toggle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true"
-            android:padding="16dp"
-            app:srcCompat="@drawable/ic_hd_24dp" />
-    </LinearLayout>
+        android:background="?selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="16dp"
+        android:visibility="gone"
+        app:srcCompat="@drawable/ic_picture_in_picture_white_24dp" />
 
     <LinearLayout
         android:id="@+id/progress_layout"
@@ -71,38 +86,14 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom">
 
-        <TextView
-            android:id="@id/exo_position"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:gravity="center"
-            android:textColor="@android:color/white"
-            tools:text="13:30" />
-
         <com.google.android.exoplayer2.ui.DefaultTimeBar
             android:id="@id/exo_progress"
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginBottom="8dp"
-            android:layout_weight="1" />
-
-        <TextView
-            android:id="@id/exo_duration"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:gravity="center"
-            android:textAlignment="center"
-            android:textColor="@android:color/white"
-            tools:text="15:00" />
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="16dp"
+            android:layout_weight="5" />
 
         <ImageView
             android:id="@+id/fullscreen_toggle"
@@ -117,6 +108,16 @@
             android:paddingEnd="8dp"
             android:paddingBottom="8dp"
             app:srcCompat="@drawable/ic_fullscreen_white_24dp" />
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/qualities_spinner"
+            style="@style/QualitiesSpinnerTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:dropDownWidth="wrap_content"
+            android:spinnerMode="dropdown" />
     </LinearLayout>
 
 </FrameLayout>
