@@ -154,7 +154,7 @@ interface VideoContract {
 
         fun ownerClicked()
 
-        fun changeQuality()
+        fun changeQuality(position: Int)
 
         fun enterCaptcha(captchaCode: String)
 

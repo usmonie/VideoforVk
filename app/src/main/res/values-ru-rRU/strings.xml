@@ -66,4 +66,10 @@
     <string name="plural_view">%s просмотр</string>
     <string name="plural_views">%s просмотров</string>
     <string name="favourites">Избранное</string>
+    <string name="empty_list_favourites">Ваш список избранного пуст.</string>
+    <string name="like">лайк</string>
+    <string name="likes">лайков</string>
+    <string name="add">Добавить</string>
+    <string name="share">Поделиться</string>
+    <string name="download">Скачать</string>
 </resources>
