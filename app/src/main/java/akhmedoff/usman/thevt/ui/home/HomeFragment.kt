@@ -78,6 +78,8 @@ class HomeFragment : Fragment(), HomeContract.View {
         home_title.setOnClickListener {
             catalog_recycler.smoothScrollToPosition(0)
         }
+
+        update_looking_layout.setOnRefreshListener { presenter.refresh() }
     }
 
     override fun onStart() {

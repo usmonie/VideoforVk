@@ -17,10 +17,7 @@ class CatalogViewHolder(
         clickListener: (CatalogItem, View) -> Unit
 ) : AbstractViewHolder<Catalog>(itemView) {
 
-    private val adapter = CatalogItemsRecyclerAdapter(
-            Picasso.get(),
-            clickListener
-    )
+    private val adapter = CatalogItemsRecyclerAdapter(clickListener)
 
     private val catalogTitle = itemView.catalog_title
 
@@ -37,20 +34,18 @@ class CatalogViewHolder(
         catalogRecycler.addItemDecoration(object : RecyclerView.ItemDecoration() {
             override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
                 outRect.top = margin
-                outRect.bottom = margin
             }
         })
 
         val snapHelper = LinearSnapHelper()
         snapHelper.attachToRecyclerView(catalogRecycler)
-
     }
 
     override fun bind(item: Catalog) {
         catalogTitle.text = item.name
-
         adapter.items = item.items
         adapter.notifyDataSetChanged()
-        catalogRecycler.smoothScrollToPosition(2)
+
+        catalogRecycler.smoothScrollToPosition( 3)
     }
 }

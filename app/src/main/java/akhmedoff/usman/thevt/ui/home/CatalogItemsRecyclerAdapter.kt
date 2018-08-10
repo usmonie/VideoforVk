@@ -11,17 +11,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 
-class CatalogItemsRecyclerAdapter(
-        private val picasso: Picasso,
-        private val clickListener: (CatalogItem, View) -> Unit
+class CatalogItemsRecyclerAdapter(private val clickListener: (CatalogItem, View) -> Unit
 ) : RecyclerView.Adapter<VideoViewHolder>() {
 
     var items: List<CatalogItem> = listOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoViewHolder {
         val holder = VideoViewHolder(
-                picasso,
-                LayoutInflater.from(parent.context).inflate(
+                               LayoutInflater.from(parent.context).inflate(
                         R.layout.item_video,
                         parent,
                         false
