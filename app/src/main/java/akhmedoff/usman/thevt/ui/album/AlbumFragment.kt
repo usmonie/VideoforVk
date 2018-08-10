@@ -82,6 +82,7 @@ class AlbumFragment : Fragment(), AlbumContract.View {
                 )
         )
         album_videos_recycler.adapter = adapter
+
     }
 
     override fun showVideos(items: PagedList<Video>) = adapter.submitList(items)
@@ -90,11 +91,7 @@ class AlbumFragment : Fragment(), AlbumContract.View {
         album_title.text = title
     }
 
-    override fun showAlbumImage(poster: String) = Picasso
-            .get()
-            .load(poster)
-            .fit()
-            .into(app_bar_album_poster_image)
+    override fun showAlbumImage(poster: String) {}
 
     override fun showVideo(video: Video, view: View) {
         val intent = VideoActivity.getInstance(video, ViewCompat.getTransitionName(view), context!!)

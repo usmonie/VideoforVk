@@ -26,7 +26,6 @@ class VideosRecyclerAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = VideoViewHolder(
-            Picasso.get(),
             LayoutInflater.from(parent.context).inflate(layoutId, parent, false)
     ).apply {
         itemView.setOnClickListener {
