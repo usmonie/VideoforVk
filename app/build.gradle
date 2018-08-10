@@ -7,6 +7,12 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 android {
     signingConfigs {
+        config {
+            keyAlias 'vtelevizore'
+            keyPassword '9286774388Dd'
+            storeFile file('C:/Users/akhme/Creative Cloud Files/vtelevizore_key.jks')
+            storePassword '9286774388'
+        }
     }
     sourceSets {
         test.java.srcDirs += 'src/test/kotlin'
@@ -17,10 +23,11 @@ android {
         applicationId "akhmedoff.usman.thevt"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 20
-        versionName "2.1"
+        versionCode 21
+        versionName "3.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
+        resConfigs "en", "ru"
         buildConfigField('String', 'VK_APP_ID', vk_app_id)
         buildConfigField('String', 'VK_APP_KEY', vk_app_key)
     }
@@ -29,10 +36,12 @@ android {
             debuggable true
             applicationIdSuffix '.debug'
             versionNameSuffix '.debug'
+            signingConfig signingConfigs.config
         }
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
     compileOptions {

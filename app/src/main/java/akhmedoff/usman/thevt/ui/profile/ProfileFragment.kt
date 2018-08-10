@@ -45,7 +45,7 @@ class ProfileFragment : Fragment(), ProfileContract.View {
     private val recyclerAdapter: ProfileRecyclerAdapter by lazy(LazyThreadSafetyMode.NONE) {
         ProfileRecyclerAdapter({ video, view -> showVideo(video, view) },
                 { album, view -> showAlbum(album, view) },
-                { view -> showAlbumsPage(getUserId()!!, view) },
+                { view -> showAlbumsPage(getUserId(), view) },
                 { showFavouritesPage() })
     }
 
@@ -74,13 +74,10 @@ class ProfileFragment : Fragment(), ProfileContract.View {
 
         profile_recycler.adapter = recyclerAdapter
         profile_recycler.itemAnimator = DefaultItemAnimator()
-        profile_recycler.addItemDecoration(MarginItemDecorator(1,
-                resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin)))
+        profile_recycler.addItemDecoration(MarginItemDecorator(1, resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin)))
         swipe_update.setOnRefreshListener { presenter.refresh() }
 
-        main.setOnClickListener {
-            activity?.onBackPressed()
-        }
+        main.setOnClickListener { activity?.onBackPressed() }
     }
 
     override fun onStart() {
@@ -108,9 +105,7 @@ class ProfileFragment : Fragment(), ProfileContract.View {
     override fun showLoadingError() {
     }
 
-    override fun showStartPositionVideos() {
-        profile_recycler.smoothScrollToPosition(0)
-    }
+    override fun showStartPositionVideos() = profile_recycler.smoothScrollToPosition(0)
 
     override fun showLoading(isLoading: Boolean) {
         swipe_update.isRefreshing = isLoading
@@ -121,14 +116,17 @@ class ProfileFragment : Fragment(), ProfileContract.View {
 
     override fun showAlbums(albums: PagedList<Album>) {
         recyclerAdapter.albums = albums
+        profile_recycler.smoothScrollToPosition(0)
     }
 
     override fun showVideos(videos: PagedList<Video>) {
         recyclerAdapter.submitList(videos)
+        profile_recycler.smoothScrollToPosition(0)
     }
 
     override fun showFaveVideos(videos: PagedList<Video>) {
         recyclerAdapter.faveVideos = videos
+        profile_recycler.smoothScrollToPosition(0)
     }
 
     override fun onDestroyView() {
@@ -158,7 +156,7 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         }
     }
 
-    private fun showAlbumsPage(id: String, view: View) {
+    private fun showAlbumsPage(id: String?, view: View) {
         val fragment = AlbumsFragment.getFragment(id, view.transitionName)
 
         activity?.supportFragmentManager?.let { fragmentManager ->

@@ -9,7 +9,6 @@ import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.catalog_item.view.*
 
 class CatalogViewHolder(
@@ -34,6 +33,7 @@ class CatalogViewHolder(
         catalogRecycler.addItemDecoration(object : RecyclerView.ItemDecoration() {
             override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
                 outRect.top = margin
+                outRect.left = margin
             }
         })
 

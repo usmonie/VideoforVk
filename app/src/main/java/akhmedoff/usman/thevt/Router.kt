@@ -12,7 +12,12 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE
 import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN
-import androidx.transition.*
+import androidx.transition.ChangeBounds
+import androidx.transition.ChangeClipBounds
+import androidx.transition.ChangeImageTransform
+import androidx.transition.ChangeTransform
+import androidx.transition.Fade
+import androidx.transition.TransitionSet
 import androidx.transition.TransitionSet.ORDERING_TOGETHER
 
 
@@ -74,7 +79,7 @@ object Router {
             }
         }
 
-        transaction.commitNow()
+        transaction.commit()
     }
 
     fun replaceFragment(
