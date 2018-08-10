@@ -27,7 +27,7 @@ class CatalogsPageKeyedDataSource(
     override fun loadAfter(params: LoadParams<String>, callback: LoadCallback<String, Catalog>) {
         vkApi.getCatalog(
                 count = params.requestedLoadSize,
-                itemsCount = 7,
+                itemsCount = 15,
                 from = params.key,
                 filters = filters
         ).enqueue(object : Callback<ResponseCatalog> {
@@ -61,7 +61,7 @@ class CatalogsPageKeyedDataSource(
         try {
             val response = vkApi.getCatalog(
                     count = params.requestedLoadSize,
-                    itemsCount = 10,
+                    itemsCount = 15,
                     filters = filters
             ).execute()
 
