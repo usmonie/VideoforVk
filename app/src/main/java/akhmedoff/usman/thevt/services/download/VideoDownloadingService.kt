@@ -92,7 +92,7 @@ class VideoDownloadingService : IntentService("VideoDownloadingService") {
                         DownloadManager.STATUS_RUNNING
 
                 notificationCompatBuilder
-                        .setContentText(name)
+                        .setContentTitle(name)
                         .setOngoing(isDownloading)
 
                 val totalFileSize = cursor.getInt(cursor
@@ -132,7 +132,6 @@ class VideoDownloadingService : IntentService("VideoDownloadingService") {
                 notificationCompatBuilder.setOngoing(isDownloading)
             }
         }
-
     }
 
     private fun handleActionDownload(name: String, url: String): Long {

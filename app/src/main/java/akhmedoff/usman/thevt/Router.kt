@@ -74,7 +74,7 @@ object Router {
             }
         }
 
-        transaction.commit()
+        transaction.commitNow()
     }
 
     fun replaceFragment(
