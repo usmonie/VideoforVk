@@ -10,6 +10,7 @@ import akhmedoff.usman.thevt.Router
 import akhmedoff.usman.thevt.ui.album.AlbumFragment
 import akhmedoff.usman.thevt.ui.albums.AlbumsFragment
 import akhmedoff.usman.thevt.ui.favourites.FavouritesFragment
+import akhmedoff.usman.thevt.ui.settings.SettingsFragment
 import akhmedoff.usman.thevt.ui.video.VideoActivity
 import akhmedoff.usman.thevt.ui.view.MarginItemDecorator
 import android.os.Bundle
@@ -42,6 +43,8 @@ class ProfileFragment : Fragment(), ProfileContract.View {
 
     override lateinit var presenter: ProfileContract.Presenter
 
+    private lateinit var settingsFragment: SettingsFragment
+
     private val recyclerAdapter: ProfileRecyclerAdapter by lazy(LazyThreadSafetyMode.NONE) {
         ProfileRecyclerAdapter({ video, view -> showVideo(video, view) },
                 { album, view -> showAlbum(album, view) },
@@ -56,6 +59,8 @@ class ProfileFragment : Fragment(), ProfileContract.View {
                 getVideoRepository(context!!),
                 getAlbumRepository(context!!))
         presenter.view = this
+
+        settingsFragment = SettingsFragment()
 
         if (savedInstanceState == null || !savedInstanceState.containsKey(RETAINED_KEY))
             presenter.onCreated()
@@ -78,6 +83,8 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         swipe_update.setOnRefreshListener { presenter.refresh() }
 
         main.setOnClickListener { activity?.onBackPressed() }
+
+        user_settings.setOnClickListener { presenter.openSettings() }
     }
 
     override fun onStart() {
@@ -98,6 +105,10 @@ class ProfileFragment : Fragment(), ProfileContract.View {
 
     override fun showUi(isVisible: Boolean) {
         profile_recycler.isVisible = isVisible
+    }
+
+    override fun showSettings() {
+        settingsFragment.show(fragmentManager, SettingsFragment.FRAGMENT_TAG)
     }
 
     override fun getUserId() = arguments?.getString(USER_ID)

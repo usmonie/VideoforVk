@@ -25,7 +25,11 @@ class CatalogViewHolder(
     init {
         catalogRecycler.setHasFixedSize(true)
         catalogRecycler.adapter = adapter
-        val layoutManager = CenterZoomLayoutManager(itemView.context)
+
+        val snapHelper = LinearSnapHelper()
+        snapHelper.attachToRecyclerView(catalogRecycler)
+
+        val layoutManager = CenterZoomLayoutManager(itemView.context, 0.1f, 0.199999f)
         catalogRecycler.layoutManager = layoutManager
 
         val margin = itemView.resources.getDimensionPixelSize(R.dimen.activity_vertical_margin)
@@ -36,9 +40,6 @@ class CatalogViewHolder(
                 outRect.left = margin
             }
         })
-
-        val snapHelper = LinearSnapHelper()
-        snapHelper.attachToRecyclerView(catalogRecycler)
     }
 
     override fun bind(item: Catalog) {
@@ -46,6 +47,6 @@ class CatalogViewHolder(
         adapter.items = item.items
         adapter.notifyDataSetChanged()
 
-        catalogRecycler.smoothScrollToPosition( 3)
+        catalogRecycler.smoothScrollToPosition(item.items.size / 2)
     }
 }
