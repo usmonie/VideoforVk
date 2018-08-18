@@ -38,6 +38,7 @@ interface ProfileContract {
 
         fun showSettings()
 
+        fun showEmptyState(isEmpty: Boolean)
     }
 
     interface Presenter {

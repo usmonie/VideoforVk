@@ -102,6 +102,7 @@
     <string name="video_default_quality">Default video quality</string>
     <string name="video_default_save_path">Video save path</string>
     <string name="cache_size">Clear cache</string>
-    <string name="created_by" translatable="false">Created by Usman</string>
+    <string name="created_by">Created by Usman</string>
     <string name="sign_out">Sign out</string>
+    <string name="empty_profile_videos_list">You do not have any videos.</string>
 </resources>

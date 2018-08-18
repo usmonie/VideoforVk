@@ -88,10 +88,11 @@ class ProfilePresenter(
                         when {
                             pagedList != null && pagedList.size > 0 -> {
                                 view.showAlbums(pagedList)
-                                view.showLoading(countDownLatch.count > 0)
-                                view.showUi(countDownLatch.count == 0L)
+                                view.showEmptyState(false)
                             }
                         }
+                        view.showLoading(countDownLatch.count > 0)
+                        view.showUi(countDownLatch.count == 0L)
                     })
 
             videoRepository
@@ -101,10 +102,11 @@ class ProfilePresenter(
                         when {
                             pagedList != null && pagedList.size > 0 -> {
                                 view.showFaveVideos(pagedList)
-                                view.showLoading(countDownLatch.count > 0)
-                                view.showUi(countDownLatch.count == 0L)
+                                view.showEmptyState(false)
                             }
                         }
+                        view.showLoading(countDownLatch.count > 0)
+                        view.showUi(countDownLatch.count == 0L)
                     })
 
             videoRepository
@@ -114,11 +116,13 @@ class ProfilePresenter(
                         when {
                             pagedList != null && pagedList.size > 0 -> {
                                 view.showVideos(pagedList)
-                                view.showLoading(countDownLatch.count > 0)
-                                view.showUi(countDownLatch.count == 0L)
                                 view.showStartPositionVideos()
+                                view.showEmptyState(false)
                             }
+                            else -> view.showEmptyState(pagedList == null || pagedList.size <= 0)
                         }
+                        view.showLoading(countDownLatch.count > 0)
+                        view.showUi(countDownLatch.count == 0L)
                     })
         }
     }

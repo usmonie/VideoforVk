@@ -76,4 +76,6 @@
     <string name="video_default_save_path">Путь сохранения видео</string>
     <string name="cache_size">Очистить кэш</string>
     <string name="sign_out">Выйти из аккаунта</string>
+    <string name="empty_profile_videos_list">У Вас нет ни одного видео.</string>
+    <string name="created_by">Создано Усманом</string>
 </resources>

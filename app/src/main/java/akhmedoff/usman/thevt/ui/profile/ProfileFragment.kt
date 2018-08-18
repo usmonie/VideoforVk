@@ -116,6 +116,10 @@ class ProfileFragment : Fragment(), ProfileContract.View {
     override fun showLoadingError() {
     }
 
+    override fun showEmptyState(isEmpty: Boolean) {
+        empty_state_text_view.isVisible = isEmpty
+    }
+
     override fun showStartPositionVideos() = profile_recycler.smoothScrollToPosition(0)
 
     override fun showLoading(isLoading: Boolean) {
