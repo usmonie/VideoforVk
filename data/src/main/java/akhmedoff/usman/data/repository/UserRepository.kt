@@ -59,4 +59,13 @@ class UserRepository(
     fun getUsers(users_id: String? = null) = api.getUsers(listOfNotNull(users_id))
 
     fun getUsers(ids: List<String>) = api.getUsers(ids)
+
+
+    fun saveVideoQuality(qualityPosition: Int) = userSettings.saveVideoQuality(qualityPosition)
+
+    fun saveVideoSavePath(path: String) = userSettings.saveVideoSavePath(path)
+
+    fun getVideoQuality(): Int = userSettings.getVideoQuality()
+
+    fun getVideoSavePath(): String = userSettings.getVideoSavePath()
 }

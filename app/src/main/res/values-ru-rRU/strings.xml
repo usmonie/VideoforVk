@@ -44,7 +44,7 @@
     <string name="video_quality_title_hls">Авто</string>
     <string name="send_to">Отправить</string>
     <string name="add_to_albums_title">Добавить в альбом</string>
-    <string name="shared_with_vt" formatted="false">Посмотрите видео %s: %s. Отправлено из приложения ВТелевизоре: https://play.google.com/store/apps/details?id=akhmedoff.usman.videoforvk</string>
+    <string name="shared_with_vt" formatted="false">Посмотрите видео %s: %s. Отправлено из приложения The ВТелевизоре: https://play.google.com/store/apps/details?id=akhmedoff.usman.thevt</string>
     <string name="my_album">Мой альбом</string>
     <string name="album_added">Добавлено</string>
     <string name="add_to_my_videos">Добавить к себе</string>
@@ -72,4 +72,8 @@
     <string name="add">Добавить</string>
     <string name="share">Поделиться</string>
     <string name="download">Скачать</string>
+    <string name="video_default_quality">Качество видео по умолчанию</string>
+    <string name="video_default_save_path">Путь сохранения видео</string>
+    <string name="cache_size">Очистить кэш</string>
+    <string name="sign_out">Выйти из аккаунта</string>
 </resources>

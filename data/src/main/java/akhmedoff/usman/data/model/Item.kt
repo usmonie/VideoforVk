@@ -65,12 +65,8 @@ open class Item() : Parcelable {
     }
 
     companion object CREATOR : Parcelable.Creator<Item> {
-        override fun createFromParcel(parcel: Parcel): Item {
-            return Item(parcel)
-        }
+        override fun createFromParcel(parcel: Parcel): Item = Item(parcel)
 
-        override fun newArray(size: Int): Array<Item?> {
-            return arrayOfNulls(size)
-        }
+        override fun newArray(size: Int): Array<Item?> = arrayOf(Item())
     }
 }

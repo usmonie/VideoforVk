@@ -50,7 +50,6 @@ class HomeFragment : Fragment(), HomeContract.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter = HomePresenter(this, getCatalogRepository(context!!))
-
         presenter.onCreated()
 
         home_recycler.adapter = adapter

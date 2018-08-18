@@ -93,6 +93,7 @@ class ProfilePresenter(
                             }
                         }
                     })
+
             videoRepository
                     .getFaveVideos()
                     .observe(view, Observer { pagedList ->
@@ -105,6 +106,7 @@ class ProfilePresenter(
                             }
                         }
                     })
+
             videoRepository
                     .getVideos(view.getUserId()?.toInt())
                     .observe(view, Observer { pagedList ->
@@ -119,5 +121,9 @@ class ProfilePresenter(
                         }
                     })
         }
+    }
+
+    override fun openSettings() {
+        view?.showSettings()
     }
 }

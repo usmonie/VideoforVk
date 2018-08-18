@@ -1,7 +1,11 @@
 package akhmedoff.usman.thevt.ui.video
 
 import akhmedoff.usman.data.Error
-import akhmedoff.usman.data.model.*
+import akhmedoff.usman.data.model.Album
+import akhmedoff.usman.data.model.Likes
+import akhmedoff.usman.data.model.Owner
+import akhmedoff.usman.data.model.Video
+import akhmedoff.usman.data.model.VideoUrl
 import androidx.annotation.StringRes
 import androidx.lifecycle.LifecycleOwner
 import androidx.paging.PagedList
@@ -112,6 +116,8 @@ interface VideoContract {
         fun saveCurrentQuality(quality: Int)
 
         fun setQuality(videoUrl: VideoUrl)
+
+        fun setQualityPosition(position: Int)
 
         fun saveCaptchaSid(sid: String)
 

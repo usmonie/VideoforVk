@@ -37,5 +37,4 @@ class HomeRecyclerAdapter(
                     false
             ), clickListener
     )
-
 }

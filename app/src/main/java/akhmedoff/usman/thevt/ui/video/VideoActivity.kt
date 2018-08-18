@@ -1,7 +1,17 @@
 package akhmedoff.usman.thevt.ui.video
 
-import akhmedoff.usman.data.model.*
-import akhmedoff.usman.data.model.Quality.*
+import akhmedoff.usman.data.model.Album
+import akhmedoff.usman.data.model.CatalogItem
+import akhmedoff.usman.data.model.Likes
+import akhmedoff.usman.data.model.Owner
+import akhmedoff.usman.data.model.Quality.FULLHD
+import akhmedoff.usman.data.model.Quality.HD
+import akhmedoff.usman.data.model.Quality.HLS
+import akhmedoff.usman.data.model.Quality.P240
+import akhmedoff.usman.data.model.Quality.P360
+import akhmedoff.usman.data.model.Quality.qHD
+import akhmedoff.usman.data.model.Video
+import akhmedoff.usman.data.model.VideoUrl
 import akhmedoff.usman.data.utils.Utils
 import akhmedoff.usman.data.utils.getAlbumRepository
 import akhmedoff.usman.data.utils.getUserRepository
@@ -28,7 +38,12 @@ import android.util.Rational
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.PopupMenu
+import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -39,7 +54,11 @@ import androidx.core.view.isVisible
 import androidx.core.view.setMargins
 import androidx.media.AudioAttributesCompat
 import androidx.paging.PagedList
-import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.DefaultLoadControl
+import com.google.android.exoplayer2.DefaultRenderersFactory
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.ExoPlayerFactory
+import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.Player.REPEAT_MODE_OFF
 import com.google.android.exoplayer2.Player.REPEAT_MODE_ONE
 import com.google.android.exoplayer2.source.ExtractorMediaSource
@@ -49,7 +68,12 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.FileDataSourceFactory
-import com.google.android.exoplayer2.upstream.cache.*
+import com.google.android.exoplayer2.upstream.cache.Cache
+import com.google.android.exoplayer2.upstream.cache.CacheDataSinkFactory
+import com.google.android.exoplayer2.upstream.cache.CacheDataSource
+import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory
+import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor
+import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import com.google.android.exoplayer2.util.Util
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
@@ -161,7 +185,6 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
         video_info_stub?.isVisible = true
     }
 
-
     private fun setVideoClickListeners() {
         like_button.setOnClickListener {
             presenter.onClick(it.id)
@@ -245,7 +268,6 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
         super.onStop()
         presenter.onStop()
     }
-
 
     override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
         outState?.putParcelable(VIDEO_KEY, presenter.getVideo())
@@ -471,6 +493,8 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
     }
 
+    override fun setQualityPosition(position: Int) = qualities_spinner.setSelection(position)
+
     override fun pauseVideo() {
         player?.playWhenReady = false
     }
@@ -644,7 +668,7 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
             ?: intent.getParcelableExtra<Video>(VIDEO_ID_KEY)?.id?.toString() ?: ""
 
     override fun getOwnerId(): String = intent.getStringExtra(OWNER_ID_KEY)
-            ?: intent.extras.getParcelable<Video>(VIDEO_ID_KEY)?.ownerId?.toString() ?: ""
+            ?: intent?.extras?.getParcelable<Video>(VIDEO_ID_KEY)?.ownerId?.toString() ?: ""
 
     override fun getVideoState() = player?.playWhenReady
 
@@ -676,7 +700,6 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
     override fun setVideoPosition(position: Long) {
         player?.seekTo(position)
     }
-
 
     override fun saveVideoQualities(qualities: ArrayList<String>) {
         intent.putStringArrayListExtra(VIDEO_QUALITIES_KEY, qualities)

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">The VTelevizore</string>
+    <string name="app_name">The Vt</string>
 
     <string name="login.button.text">Login with VK</string>
     <string name="error.login">Error login, check your login or password</string>
@@ -70,7 +70,7 @@
     <string name="send_to">Send to</string>
     <string name="add_to_albums_title">Add to albums</string>
 
-    <string name="shared_with_vt" formatted="false">Watch the video %s: %s from VT: https://play.google.com/store/apps/details?id=akhmedoff.usman.videoforvk</string>
+    <string name="shared_with_vt" formatted="false">Watch the video %s: %s from TheVt: https://play.google.com/store/apps/details?id=akhmedoff.usman.thevt</string>
     <string name="my_album">My album</string>
     <string name="album_added">Added</string>
     <string name="add_to_my_videos">Add to my videos</string>
@@ -99,4 +99,9 @@
     <string name="add">Add</string>
     <string name="share">Share</string>
     <string name="download">Download</string>
+    <string name="video_default_quality">Default video quality</string>
+    <string name="video_default_save_path">Video save path</string>
+    <string name="cache_size">Clear cache</string>
+    <string name="created_by" translatable="false">Created by Usman</string>
+    <string name="sign_out">Sign out</string>
 </resources>

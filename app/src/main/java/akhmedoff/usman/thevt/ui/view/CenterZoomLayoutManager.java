@@ -8,15 +8,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class CenterZoomLayoutManager extends LinearLayoutManager {
 
-    private final float mShrinkAmount = 0.17f;
-    private final float mShrinkDistance = 0.9f;
+    private final float mShrinkAmount;
+    private final float mShrinkDistance;
 
     public CenterZoomLayoutManager(Context context) {
-        super(context, LinearLayoutManager.HORIZONTAL, false);
+        this(context, 0.9f, 0.17f);
     }
 
-    public CenterZoomLayoutManager(Context context, int orientation, boolean reverseLayout) {
+    public CenterZoomLayoutManager(Context context, float shrinkDistance, float shrinkAmount) {
+        this(context, LinearLayoutManager.HORIZONTAL, false, shrinkDistance, shrinkAmount);
+
+    }
+
+    public CenterZoomLayoutManager(Context context, int orientation, boolean reverseLayout, float shrinkDistance, float shrinkAmount) {
         super(context, orientation, reverseLayout);
+        mShrinkAmount = shrinkAmount;
+        mShrinkDistance = shrinkDistance;
     }
 
     @Override
@@ -69,6 +76,10 @@ public class CenterZoomLayoutManager extends LinearLayoutManager {
         } else {
             return 0;
         }
+    }
 
+    @Override
+    public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state, int position) {
+        super.smoothScrollToPosition(recyclerView, state, position);
     }
 }
