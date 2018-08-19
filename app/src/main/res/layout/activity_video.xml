@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/video_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -28,8 +27,7 @@
             app:controller_layout_id="@layout/playback_exo_control_view"
             app:player_layout_id="@layout/exo_player_custom_view"
             app:resize_mode="fit"
-            app:use_artwork="true"
-            tools:visibility="visible" />
+            app:use_artwork="true" />
     </androidx.cardview.widget.CardView>
 
     <ViewStub
