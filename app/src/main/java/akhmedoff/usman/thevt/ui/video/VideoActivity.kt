@@ -16,14 +16,15 @@ import akhmedoff.usman.data.utils.Utils
 import akhmedoff.usman.data.utils.getAlbumRepository
 import akhmedoff.usman.data.utils.getUserRepository
 import akhmedoff.usman.data.utils.getVideoRepository
+import akhmedoff.usman.thevt.BuildConfig
 import akhmedoff.usman.thevt.CaptchaDialog
 import akhmedoff.usman.thevt.R
 import akhmedoff.usman.thevt.player.AudioFocusExoPlayerDecorator
-import akhmedoff.usman.thevt.player.SimpleControlDispatcher
 import akhmedoff.usman.thevt.services.download.ACTION_DOWNLOAD
 import akhmedoff.usman.thevt.services.download.EXTRA_URL
 import akhmedoff.usman.thevt.services.download.EXTRA_VIDEO_NAME
 import akhmedoff.usman.thevt.services.download.VideoDownloadingService
+import android.annotation.SuppressLint
 import android.app.PictureInPictureParams
 import android.content.Context
 import android.content.Intent
@@ -54,6 +55,7 @@ import androidx.core.view.isVisible
 import androidx.core.view.setMargins
 import androidx.media.AudioAttributesCompat
 import androidx.paging.PagedList
+import com.google.android.exoplayer2.DefaultControlDispatcher
 import com.google.android.exoplayer2.DefaultLoadControl
 import com.google.android.exoplayer2.DefaultRenderersFactory
 import com.google.android.exoplayer2.ExoPlayer
@@ -75,6 +77,9 @@ import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory
 import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor
 import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import com.google.android.exoplayer2.util.Util
+import com.google.android.youtube.player.YouTubeInitializationResult
+import com.google.android.youtube.player.YouTubePlayer
+import com.google.android.youtube.player.YouTubePlayerFragment
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import kotlinx.android.synthetic.main.activity_video.*
@@ -123,21 +128,17 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
         }
     }
 
-    private val selectedAlbums = mutableListOf<Album>()
-
-    private lateinit var simpleControlDispatcher: SimpleControlDispatcher
-
     override lateinit var presenter: VideoContract.Presenter
 
-    private lateinit var cacheDataSourceFactory: CacheDataSourceFactory
-
-    private var simpleCache: Cache? = null
-
-    private var player: ExoPlayer? = null
-
     private lateinit var popupAddMenu: PopupMenu
-
     private lateinit var popupDownloadQualityMenu: PopupMenu
+
+    private lateinit var youtubePlayerFragment: YouTubePlayerFragment
+
+    private lateinit var cacheDataSourceFactory: CacheDataSourceFactory
+    private var simpleCache: Cache? = null
+    private var player: ExoPlayer? = null
+    private val selectedAlbums = mutableListOf<Album>()
 
     private val captchaDialog: CaptchaDialog by lazy(LazyThreadSafetyMode.NONE) {
         CaptchaDialog(this) {
@@ -177,6 +178,8 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
         }
 
         card_view_video.transitionName = intent.getStringExtra(TRANSITION_NAME_KEY)
+
+        youtubePlayerFragment = YouTubePlayerFragment.newInstance()
     }
 
     override fun onStart() {
@@ -238,7 +241,9 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
         }
 
         if (savedInstanceState?.containsKey(VIDEO_KEY) == true) {
-            presenter.setVideo(savedInstanceState.getParcelable(VIDEO_KEY))
+            savedInstanceState.getParcelable<Video>(VIDEO_KEY)?.let {
+                presenter.setVideo(it)
+            }
         }
     }
 
@@ -284,13 +289,12 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
 
     override fun initPlayer() {
         val bandwidthMeter = DefaultBandwidthMeter()
-
         val audioManager = getSystemService<AudioManager>()!!
-
         val audioAttributes = AudioAttributesCompat.Builder()
                 .setContentType(AudioAttributesCompat.CONTENT_TYPE_MUSIC)
                 .setUsage(AudioAttributesCompat.USAGE_MEDIA)
                 .build()
+
         player = AudioFocusExoPlayerDecorator(audioAttributes, audioManager,
                 player = ExoPlayerFactory.newSimpleInstance(
                         DefaultRenderersFactory(this),
@@ -307,7 +311,6 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
             simpleCache?.release()
         }
 
-
         val cacheFlags = CacheDataSource.FLAG_BLOCK_ON_CACHE or
                 CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR
 
@@ -320,20 +323,17 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
                 null
         )
 
-        simpleControlDispatcher = SimpleControlDispatcher { url ->
-            startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
-        }
-
         player?.addListener(object : Player.DefaultEventListener() {
             override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
                 if (playbackState == Player.STATE_READY)
                     video_exo_player.forceLayout()
             }
         })
-        video_exo_player.setControlDispatcher(simpleControlDispatcher)
+        video_exo_player.setControlDispatcher(DefaultControlDispatcher())
         video_exo_player.player = player
     }
 
+    @SuppressLint("SetTextI18n")
     override fun showVideo(item: Video) {
         val artWork = when {
             item.photo800 != null -> item.photo800
@@ -380,19 +380,16 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
             else -> R.drawable.ic_favorite_border
         })
         val likes = item.likes?.likes ?: 0
-        like_button_desc.text = Utils.format(likes) + " " + resources.getQuantityString(R.plurals.likes, likes)
+        like_button_desc.text = "${Utils.format(likes)} ${resources.getQuantityString(R.plurals.likes, likes)}"
 
         player?.repeatMode = if (item.repeat) REPEAT_MODE_ONE else REPEAT_MODE_OFF
 
         val qualitiesAdapter = object : ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item) {
-
-
-            override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                 val textView = super.getView(position, convertView, parent)
                 (textView as? TextView)?.setTextColor(ContextCompat.getColor(this@VideoActivity, android.R.color.white))
                 return textView
             }
-
         }
 
         val files = item.files.asReversed()
@@ -464,8 +461,21 @@ class VideoActivity : AppCompatActivity(), VideoContract.View {
     override fun setExternalUi(videoUrl: VideoUrl) {
         pip_toggle?.isVisible = false
         qualities_spinner?.isVisible = false
-        simpleControlDispatcher.isExternal = true
-        simpleControlDispatcher.url = videoUrl.url
+        video_exo_player.isVisible = false
+        fragmentManager
+                .beginTransaction()
+                .add(R.id.card_view_video, youtubePlayerFragment, "youTube")
+                .commit()
+
+        youtubePlayerFragment.initialize(BuildConfig.YOUTUBE_KEY, object : YouTubePlayer.OnInitializedListener {
+            override fun onInitializationSuccess(p0: YouTubePlayer.Provider?, player: YouTubePlayer?, p2: Boolean) {
+                player?.cueVideo(videoUrl.url.substring(videoUrl.url.lastIndexOf("=") + 1))
+            }
+
+            override fun onInitializationFailure(p0: YouTubePlayer.Provider?, p1: YouTubeInitializationResult?) {
+            }
+        })
+
         fullscreen_toggle.isVisible = false
         progress_layout.isVisible = false
         download_button.isVisible = false

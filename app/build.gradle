@@ -30,6 +30,7 @@ android {
         resConfigs "en", "ru"
         buildConfigField('String', 'VK_APP_ID', vk_app_id)
         buildConfigField('String', 'VK_APP_KEY', vk_app_key)
+        buildConfigField('String', 'YOUTUBE_KEY', youtube_key)
         proguardFiles 'proguard-rules.pro'
         signingConfig signingConfigs.config
     }
@@ -79,7 +80,7 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer-core:2.8.2'
     implementation 'com.google.android.exoplayer:exoplayer-hls:2.8.2'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.8.2'
-
+    implementation files('libs/YouTubeAndroidPlayerApi.jar')
 }
 
 apply plugin: 'com.google.gms.google-services'
