@@ -1,8 +1,14 @@
 package akhmedoff.usman.thevt.ui.video
 
 import akhmedoff.usman.data.Error
-import akhmedoff.usman.data.model.*
+import akhmedoff.usman.data.model.Album
+import akhmedoff.usman.data.model.ApiResponse
+import akhmedoff.usman.data.model.Auth
+import akhmedoff.usman.data.model.Likes
 import akhmedoff.usman.data.model.Quality.EXTERNAL
+import akhmedoff.usman.data.model.ResponseVideo
+import akhmedoff.usman.data.model.User
+import akhmedoff.usman.data.model.Video
 import akhmedoff.usman.data.repository.AlbumRepository
 import akhmedoff.usman.data.repository.UserRepository
 import akhmedoff.usman.data.repository.VideoRepository
@@ -96,7 +102,7 @@ class VideoPresenter(
                     likeCurrentVideo()
                 else unlikeCurrentVideo()
 
-            R.id.share_button -> shareCurrentVideo()
+            R.id.add_button -> shareCurrentVideo()
 
             R.id.add_to_videos -> addToMyVideos()
 
@@ -190,12 +196,12 @@ class VideoPresenter(
                         call: Call<ApiResponse<Likes>>?,
                         response: Response<ApiResponse<Likes>>?
                 ) {
-                    response?.body()?.let {
+                    response?.body()?.let { _ ->
                         video.likes?.userLikes = true
                         video.likes?.let { view?.setLiked(it) }
                     }
-                    response?.errorBody()?.let {
-                        errorConvert(it)
+                    response?.errorBody()?.let { body ->
+                        errorConvert(body)
                         video.likes?.let { view?.setLiked(it) }
                     }
 
@@ -221,35 +227,21 @@ class VideoPresenter(
                         call: Call<ApiResponse<Likes>>?,
                         response: Response<ApiResponse<Likes>>?
                 ) {
-                    response?.body()?.let {
+                    response?.body()?.let { _ ->
                         video.likes?.userLikes = false
                         video.likes?.let { view?.setLiked(it) }
                     }
-                    response?.errorBody()?.let {
-                        errorConvert(it)
+                    response?.errorBody()?.let { responseBody ->
+                        errorConvert(responseBody)
                         video.likes?.let { view?.setLiked(it) }
                     }
                 }
             })
 
-    override fun changeQuality() {
-        view?.saveVideoPosition(view?.getVideoPosition() ?: 0)
-
-        view?.let { view ->
-            changeQuality(
-                    if (video.files.size - 1 > view.getCurrentQuality()) {
-                        view.getCurrentQuality() + 1
-                    } else {
-                        video.files.size - view.getCurrentQuality()
-                    }
-            )
-
-        }
-    }
-
-    private fun changeQuality(index: Int) {
-        view?.setQuality(video.files[index])
-        view?.saveCurrentQuality(index)
+    override fun changeQuality(position: Int) {
+        val files = video.files.asReversed()
+        view?.setQuality(files[position])
+        view?.saveCurrentQuality(position)
         view?.setVideoPosition(view?.loadVideoPosition() ?: 0)
     }
 
@@ -300,10 +292,8 @@ class VideoPresenter(
                             }
 
                             responseVideo.groups?.forEach {
-
                                 view?.showOwnerInfo(it)
                                 view?.showProgress(false)
-
 
                                 videoRepository.saveOwnerId(it.id)
                             }
@@ -311,7 +301,6 @@ class VideoPresenter(
                             responseVideo.profiles?.forEach {
                                 loadUser(it)
                             }
-
                         }
                     }
                 })
@@ -321,14 +310,25 @@ class VideoPresenter(
         view?.showUi(true)
         view?.showPlayer(true)
         view?.showVideo(video)
-        video.files.forEachIndexed { index, videoUrl ->
-            when (videoUrl.quality) {
-                EXTERNAL -> view?.setExternalUi(videoUrl)
-                else -> {
-                    view?.setQuality(videoUrl)
-                    view?.saveCurrentQuality(index)
-                }
+
+        val qualityPosition = userRepository.getVideoQuality()
+
+        video.files.forEach { videoUrl ->
+            if (videoUrl.quality == EXTERNAL) {
+                view?.setExternalUi(videoUrl)
             }
+        }
+
+        if (video.files.size > qualityPosition) {
+            val quality = video.files[qualityPosition]
+            view?.setQuality(quality)
+            view?.saveCurrentQuality(qualityPosition)
+            view?.setQualityPosition(qualityPosition)
+        } else if (video.files.isNotEmpty()) {
+            val quality = video.files[video.files.size - 1]
+            view?.setQuality(quality)
+            view?.saveCurrentQuality(video.files.size - 1)
+            view?.setQualityPosition(video.files.size - 1)
         }
     }
 
@@ -440,12 +440,10 @@ class VideoPresenter(
         }
     }
 
-
     override fun openBrowser() {
         view?.let { view ->
             view.showVideoInBrowser(
-                    "https://vk.com/video?z=video${view.getOwnerId()}" +
-                            "_${view.getVideoId()}"
+                    "https://vk.com/video?z=video${view.getOwnerId()}_${view.getVideoId()}"
             )
         }
     }

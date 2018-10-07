@@ -12,7 +12,7 @@ class CaptchaDialog(context: Context, private val listener: (String) -> Unit) : 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.captcha_dialog)
-        window.setLayout(
+        window?.setLayout(
                 WindowManager.LayoutParams.MATCH_PARENT,
                 WindowManager.LayoutParams.WRAP_CONTENT
         )

@@ -4,56 +4,67 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        android:minHeight="?actionBarSize">
+        android:minHeight="?actionBarSize"
+        app:elevation="0dp">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsingToolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
             android:minHeight="?actionBarSize"
             app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
+            app:layout_scrollFlags="scroll|snap"
             app:layout_scrollInterpolator="@android:anim/decelerate_interpolator"
             app:titleEnabled="false"
             app:titleTextAppearance="@style/ProfileCollapsingToolbar.TitleText"
             app:toolbarId="@+id/toolbar">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+
+            <ImageView
+                android:id="@+id/main"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginBottom="8dp"
+                android:fitsSystemWindows="true"
+                android:minHeight="?actionBarSize"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_whatshot_24dp"
+                android:transitionName="app" />
+
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:minHeight="?actionBarSize">
+                android:layout_gravity="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:transitionName="profiles"
+                tools:text="@tools:sample/full_names" />
 
-                <ImageView
-                    android:id="@+id/user_avatar"
-                    android:layout_width="48dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="@dimen/activity_horizontal_margin"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                    android:layout_marginBottom="8dp"
-                    android:fitsSystemWindows="true"
-                    android:minHeight="?actionBarSize"
-                    android:scaleType="centerCrop"
-                    app:layout_collapseMode="parallax"
-                    app:layout_collapseParallaxMultiplier="1.0"
-                    tools:src="@android:drawable/sym_def_app_icon" />
-
-                <TextView
-                    android:id="@+id/user_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
-            </LinearLayout>
+            <ImageView
+                android:id="@+id/user_settings"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_vertical|end"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginBottom="8dp"
+                android:background="?selectableItemBackgroundBorderless"
+                android:fitsSystemWindows="true"
+                android:minHeight="?actionBarSize"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_settings_black_24dp" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -73,4 +84,14 @@
             tools:listitem="@layout/recycler_view_item"
             tools:visibility="visible" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <TextView
+        android:id="@+id/empty_state_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:gravity="center"
+        android:text="@string/empty_profile_videos_list"
+        android:visibility="gone" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

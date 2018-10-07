@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.squareup.picasso.Picasso
 
-class VideoViewHolder(private val picasso: Picasso, itemView: View) :
+class VideoViewHolder(itemView: View) :
         AbstractViewHolder<Item>(itemView) {
 
     val poster = itemView.findViewById<ImageView>(R.id.poster)
@@ -21,7 +21,7 @@ class VideoViewHolder(private val picasso: Picasso, itemView: View) :
             else -> item.photo320
         }
 
-        picasso
+        Picasso.get()
                 .load(imageUri)
                 .config(Bitmap.Config.RGB_565)
                 .centerCrop()

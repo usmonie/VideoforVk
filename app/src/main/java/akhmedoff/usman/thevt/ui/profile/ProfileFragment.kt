@@ -10,6 +10,7 @@ import akhmedoff.usman.thevt.Router
 import akhmedoff.usman.thevt.ui.album.AlbumFragment
 import akhmedoff.usman.thevt.ui.albums.AlbumsFragment
 import akhmedoff.usman.thevt.ui.favourites.FavouritesFragment
+import akhmedoff.usman.thevt.ui.settings.SettingsFragment
 import akhmedoff.usman.thevt.ui.video.VideoActivity
 import akhmedoff.usman.thevt.ui.view.MarginItemDecorator
 import android.os.Bundle
@@ -21,7 +22,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.DefaultItemAnimator
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_profile.*
 
 private const val USER_ID = "user_id"
@@ -43,10 +43,12 @@ class ProfileFragment : Fragment(), ProfileContract.View {
 
     override lateinit var presenter: ProfileContract.Presenter
 
+    private lateinit var settingsFragment: SettingsFragment
+
     private val recyclerAdapter: ProfileRecyclerAdapter by lazy(LazyThreadSafetyMode.NONE) {
         ProfileRecyclerAdapter({ video, view -> showVideo(video, view) },
                 { album, view -> showAlbum(album, view) },
-                { view -> showAlbumsPage(getUserId()!!, view) },
+                { view -> showAlbumsPage(getUserId(), view) },
                 { showFavouritesPage() })
     }
 
@@ -57,6 +59,8 @@ class ProfileFragment : Fragment(), ProfileContract.View {
                 getVideoRepository(context!!),
                 getAlbumRepository(context!!))
         presenter.view = this
+
+        settingsFragment = SettingsFragment()
 
         if (savedInstanceState == null || !savedInstanceState.containsKey(RETAINED_KEY))
             presenter.onCreated()
@@ -75,9 +79,12 @@ class ProfileFragment : Fragment(), ProfileContract.View {
 
         profile_recycler.adapter = recyclerAdapter
         profile_recycler.itemAnimator = DefaultItemAnimator()
-        profile_recycler.addItemDecoration(MarginItemDecorator(1,
-                resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin)))
+        profile_recycler.addItemDecoration(MarginItemDecorator(1, resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin)))
         swipe_update.setOnRefreshListener { presenter.refresh() }
+
+        main.setOnClickListener { activity?.onBackPressed() }
+
+        user_settings.setOnClickListener { presenter.openSettings() }
     }
 
     override fun onStart() {
@@ -90,7 +97,7 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         user_name.text = name
     }
 
-    override fun showUserPhoto(photoUrl: String) = Picasso.get().load(photoUrl).into(user_avatar)
+    override fun showUserPhoto(photoUrl: String) {}
 
     override fun setIsUser(isUser: Boolean) {
 
@@ -100,14 +107,20 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         profile_recycler.isVisible = isVisible
     }
 
+    override fun showSettings() {
+        settingsFragment.show(fragmentManager, SettingsFragment.FRAGMENT_TAG)
+    }
+
     override fun getUserId() = arguments?.getString(USER_ID)
 
     override fun showLoadingError() {
     }
 
-    override fun showStartPositionVideos() {
-        profile_recycler.scrollToPosition(0)
+    override fun showEmptyState(isEmpty: Boolean) {
+        empty_state_text_view.isVisible = isEmpty
     }
+
+    override fun showStartPositionVideos() = profile_recycler.smoothScrollToPosition(0)
 
     override fun showLoading(isLoading: Boolean) {
         swipe_update.isRefreshing = isLoading
@@ -118,12 +131,17 @@ class ProfileFragment : Fragment(), ProfileContract.View {
 
     override fun showAlbums(albums: PagedList<Album>) {
         recyclerAdapter.albums = albums
+        profile_recycler.smoothScrollToPosition(0)
     }
 
-    override fun showVideos(videos: PagedList<Video>) = recyclerAdapter.submitList(videos)
+    override fun showVideos(videos: PagedList<Video>) {
+        recyclerAdapter.submitList(videos)
+        profile_recycler.smoothScrollToPosition(0)
+    }
 
     override fun showFaveVideos(videos: PagedList<Video>) {
         recyclerAdapter.faveVideos = videos
+        profile_recycler.smoothScrollToPosition(0)
     }
 
     override fun onDestroyView() {
@@ -153,7 +171,7 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         }
     }
 
-    private fun showAlbumsPage(id: String, view: View) {
+    private fun showAlbumsPage(id: String?, view: View) {
         val fragment = AlbumsFragment.getFragment(id, view.transitionName)
 
         activity?.supportFragmentManager?.let { fragmentManager ->

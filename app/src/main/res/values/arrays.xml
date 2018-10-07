@@ -13,4 +13,13 @@
         <item>@string/sort_by.relevance</item>
     </string-array>
 
+    <string-array name="qualities">
+        <item>@string/video_quality_title_hls</item>
+        <item>@string/video_quality_title_1080p</item>
+        <item>@string/video_quality_title_720p</item>
+        <item>@string/video_quality_title_480p</item>
+        <item>@string/video_quality_title_360p</item>
+        <item>@string/video_quality_title_240p</item>
+    </string-array>
+
 </resources>

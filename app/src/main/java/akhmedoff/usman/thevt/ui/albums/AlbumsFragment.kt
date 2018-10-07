@@ -24,7 +24,7 @@ class AlbumsFragment : Fragment(), AlbumsContract.View {
 
     companion object {
 
-        fun getFragment(ownerId: String, transitionName: String) = AlbumsFragment().apply {
+        fun getFragment(ownerId: String?, transitionName: String) = AlbumsFragment().apply {
             val bundle = Bundle()
             bundle.putString(OWNER_ID, ownerId)
             bundle.putString(TRANSITION_NAME, transitionName)

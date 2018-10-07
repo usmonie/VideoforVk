@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -13,7 +14,8 @@
 
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:elevation="0dp">
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -63,7 +65,8 @@
                             android:inputType="textFilter"
                             android:padding="8dp"
                             android:singleLine="true"
-                            android:textSize="@dimen/search_text_size" />
+                            android:textSize="@dimen/search_text_size"
+                            android:transitionName="search" />
 
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>

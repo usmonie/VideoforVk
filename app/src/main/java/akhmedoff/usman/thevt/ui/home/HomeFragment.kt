@@ -1,34 +1,44 @@
 package akhmedoff.usman.thevt.ui.home
 
-
+import akhmedoff.usman.data.model.Catalog
+import akhmedoff.usman.data.model.CatalogItem
+import akhmedoff.usman.data.model.CatalogItemType
+import akhmedoff.usman.data.utils.getCatalogRepository
 import akhmedoff.usman.thevt.R
-import akhmedoff.usman.thevt.ui.view.FragmentsViewPagerAdapter
+import akhmedoff.usman.thevt.Router
+import akhmedoff.usman.thevt.ui.album.AlbumFragment
+import akhmedoff.usman.thevt.ui.profile.ProfileFragment
+import akhmedoff.usman.thevt.ui.search.SearchFragment
+import akhmedoff.usman.thevt.ui.video.VideoActivity
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
+import androidx.paging.PagedList
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.catalog_item.*
 import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : Fragment(), HomeContract.View {
 
     companion object {
         const val FRAGMENT_TAG = "home_fragment_tag"
-        const val CURRENT_TAB_KEY = "current_tab"
         const val RETAINED_KEY = "retained"
     }
 
-    override var presenter: HomeContract.Presenter = HomePresenter()
+    override lateinit var presenter: HomeContract.Presenter
 
-    private lateinit var catalogsPagerAdapter: FragmentsViewPagerAdapter
+    private val adapter: HomeRecyclerAdapter by lazy(LazyThreadSafetyMode.NONE) {
+        HomeRecyclerAdapter { item, view ->
+            when (item.type) {
+                CatalogItemType.VIDEO -> showVideo(item, view)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        catalogsPagerAdapter = FragmentsViewPagerAdapter(childFragmentManager)
-        presenter.view = this
-
-        if (savedInstanceState == null || !savedInstanceState.containsKey(RETAINED_KEY)) {
-            presenter.onCreated()
+                CatalogItemType.ALBUM -> showAlbum(item, view)
+            }
         }
     }
 
@@ -39,41 +49,94 @@ class HomeFragment : Fragment(), HomeContract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.view = this
+        presenter = HomePresenter(this, getCatalogRepository(context!!))
+        presenter.onCreated()
 
-        view_pager.adapter = catalogsPagerAdapter
-        view_pager.offscreenPageLimit = 3
+        home_recycler.adapter = adapter
+        home_recycler.addItemDecoration(object : RecyclerView.ItemDecoration() {
+            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+                super.getItemOffsets(outRect, view, parent, state)
+                outRect.top = resources.getDimensionPixelSize(R.dimen.activity_vertical_margin)
+            }
+        })
 
-        tabs.setupWithViewPager(view_pager)
-
-        if (savedInstanceState != null && savedInstanceState.containsKey(CURRENT_TAB_KEY)) {
-            view_pager.setCurrentItem(savedInstanceState.getInt(CURRENT_TAB_KEY), false)
+        profile_button.setOnClickListener {
+            Router.replaceFragment(
+                    activity?.supportFragmentManager!!,
+                    this,
+                    ProfileFragment(),
+                    true,
+                    ProfileFragment.FRAGMENT_TAG,
+                    it,
+                    home_title
+            )
         }
+
+        search_button.setOnClickListener { startSearch() }
+
+        home_title.setOnClickListener {
+            catalog_recycler.smoothScrollToPosition(0)
+        }
+
+        update_looking_layout.setOnRefreshListener { presenter.refresh() }
     }
 
     override fun onStart() {
         super.onStart()
         presenter.view = this
-
     }
 
     override fun getResourcesString(id: Int) = context?.getString(id) ?: ""
 
-    override fun initPage(pageCategory: String, pageTitle: String) {
-        catalogsPagerAdapter.addFragment(pageCategory, pageTitle)
-        catalogsPagerAdapter.notifyDataSetChanged()
-    }
-
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        view_pager?.currentItem?.let {
-            outState.putInt(CURRENT_TAB_KEY, it)
-        }
-        super.onSaveInstanceState(outState)
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         presenter.onDestroyed()
+    }
+
+    override fun startSearch() {
+        Router.replaceFragment(
+                activity?.supportFragmentManager!!,
+                this,
+                SearchFragment(),
+                true,
+                SearchFragment.FRAGMENT_TAG,
+                search_button
+        )
+    }
+
+    override fun setLoading(isLoading: Boolean) {
+        update_looking_layout.isRefreshing = isLoading
+    }
+
+    override fun setList(items: PagedList<Catalog>) {
+        adapter.submitList(items)
+    }
+
+    override fun showErrorLoading() = Snackbar.make(
+            update_looking_layout,
+            getText(R.string.error_loading),
+            Snackbar.LENGTH_LONG
+    ).show()
+
+    private fun showAlbum(album: CatalogItem, view: View) {
+        val fragment = AlbumFragment.getFragment(album, view.transitionName)
+
+        activity?.supportFragmentManager?.let {
+            Router.replaceFragment(
+                    it,
+                    this,
+                    fragment,
+                    true,
+                    VideoActivity.FRAGMENT_TAG,
+                    view
+            )
+        }
+    }
+
+    private fun showVideo(item: CatalogItem, view: View) {
+        val intent = VideoActivity.getInstance(item,
+                ViewCompat.getTransitionName(view), context!!)
+
+        Router.startActivityWithTransition(activity!!, intent, view)
     }
 }

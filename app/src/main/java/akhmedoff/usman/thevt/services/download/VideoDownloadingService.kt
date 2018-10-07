@@ -1,5 +1,7 @@
 package akhmedoff.usman.thevt.services.download
 
+import akhmedoff.usman.data.repository.UserRepository
+import akhmedoff.usman.data.utils.getUserRepository
 import akhmedoff.usman.thevt.R
 import android.app.DownloadManager
 import android.app.IntentService
@@ -12,6 +14,7 @@ import android.os.Build
 import android.os.Environment
 import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
+import java.io.File
 
 const val ACTION_DOWNLOAD = "akhmedoff.usman.thevt.services.download.action.DOWNLOAD"
 
@@ -40,11 +43,14 @@ class VideoDownloadingService : IntentService("VideoDownloadingService") {
     private lateinit var downloadManager: DownloadManager
     private lateinit var notificationManager: NotificationManager
 
+    private lateinit var userRepository: UserRepository
     private var isDownloading = false
 
     override fun onCreate() {
         super.onCreate()
         notificationManager = getSystemService()!!
+
+        userRepository = getUserRepository(this)
 
         downloadQuery = DownloadManager.Query()
 
@@ -92,7 +98,7 @@ class VideoDownloadingService : IntentService("VideoDownloadingService") {
                         DownloadManager.STATUS_RUNNING
 
                 notificationCompatBuilder
-                        .setContentText(name)
+                        .setContentTitle(name)
                         .setOngoing(isDownloading)
 
                 val totalFileSize = cursor.getInt(cursor
@@ -132,7 +138,6 @@ class VideoDownloadingService : IntentService("VideoDownloadingService") {
                 notificationCompatBuilder.setOngoing(isDownloading)
             }
         }
-
     }
 
     private fun handleActionDownload(name: String, url: String): Long {
@@ -147,8 +152,7 @@ class VideoDownloadingService : IntentService("VideoDownloadingService") {
         request.setVisibleInDownloadsUi(true)
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
 
-        request.setDestinationInExternalFilesDir(this,
-                Environment.DIRECTORY_MOVIES, name)
+        request.setDestinationInExternalFilesDir(this, Environment.getExternalStorageState(File(userRepository.getVideoSavePath())), name)
         return downloadManager.enqueue(request)
     }
 }

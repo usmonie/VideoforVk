@@ -47,11 +47,10 @@
         <activity
             android:name=".ui.video.VideoActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:supportsPictureInPicture="true"
-            android:theme="@style/VideoTheme"
             tools:ignore="UnusedAttribute">
+
             <layout
                 android:defaultWidth="330dp"
                 android:defaultHeight="640dp"
@@ -67,12 +66,7 @@
         <service
             android:name=".services.download.VideoDownloadingService"
             android:enabled="true"
-            android:exported="false"></service>
-
-        <activity
-            android:name=".ui.video_new.VideoNewActivity"
-            android:label="@string/title_activity_video_new"
-            android:theme="@style/AppTheme"></activity>
+            android:exported="false"/>
     </application>
 
 </manifest>

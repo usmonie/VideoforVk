@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/video_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,12 +9,15 @@
     android:orientation="vertical"
     android:transitionGroup="true">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appbar"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_view_video"
         android:layout_width="match_parent"
         android:layout_height="@dimen/exo_player_height"
-
-        android:animateLayoutChanges="true">
+        android:layout_margin="8dp"
+        android:animateLayoutChanges="true"
+        android:background="@android:color/black"
+        app:cardBackgroundColor="@android:color/black"
+        app:cardCornerRadius="@dimen/video_card_corner_radius">
 
         <com.google.android.exoplayer2.ui.PlayerView
             android:id="@+id/video_exo_player"
@@ -25,8 +27,8 @@
             app:controller_layout_id="@layout/playback_exo_control_view"
             app:player_layout_id="@layout/exo_player_custom_view"
             app:resize_mode="fit"
-            tools:visibility="visible" />
-    </com.google.android.material.appbar.AppBarLayout>
+            app:use_artwork="true" />
+    </androidx.cardview.widget.CardView>
 
     <ViewStub
         android:id="@+id/video_info_stub"

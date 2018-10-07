@@ -1,14 +1,24 @@
 package akhmedoff.usman.thevt.ui.home
 
+import akhmedoff.usman.data.model.Catalog
+import androidx.lifecycle.LifecycleOwner
+import androidx.paging.PagedList
+
 interface HomeContract {
 
-    interface View {
+    interface View : LifecycleOwner {
 
         var presenter: Presenter
 
-        fun initPage(pageCategory: String, pageTitle: String)
-
         fun getResourcesString(id: Int): String
+
+        fun startSearch()
+
+        fun setLoading(isLoading: Boolean)
+
+        fun setList(items: PagedList<Catalog>)
+
+        fun showErrorLoading()
     }
 
     interface Presenter {
@@ -16,6 +26,10 @@ interface HomeContract {
         var view: View?
 
         fun onCreated()
+
+        fun onRetained()
+
+        fun refresh()
 
         fun onDestroyed()
     }

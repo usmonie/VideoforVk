@@ -36,6 +36,9 @@ interface ProfileContract {
 
         fun showStartPositionVideos()
 
+        fun showSettings()
+
+        fun showEmptyState(isEmpty: Boolean)
     }
 
     interface Presenter {
@@ -49,5 +52,6 @@ interface ProfileContract {
 
         fun refresh()
 
+        fun openSettings()
     }
 }

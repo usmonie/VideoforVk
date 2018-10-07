@@ -1,15 +1,18 @@
 package akhmedoff.usman.data.model
 
 import akhmedoff.usman.data.db.SimpleTypeConverters
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.TypeConverters
+import kotlinx.android.parcel.Parcelize
 
 
 @Entity(
         tableName = "catalogs",
         primaryKeys = ["id"]
 )
-class Catalog {
+@Parcelize
+class Catalog : Parcelable {
     var id: String = ""
 
     @TypeConverters(SimpleTypeConverters::class)
